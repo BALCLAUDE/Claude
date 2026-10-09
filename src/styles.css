@@ -531,7 +531,7 @@ main { padding-top: 20px; }
 .logo .mono.len-3 { font-size: 0.875rem; letter-spacing: 0; }
 
 /* Scale by size */
-.board.is-scaled .tile.is-big { grid-column: span 2; grid-row: span 2; align-content: center; gap: 8px; }
+.board.is-scaled .tile.is-big { grid-column: span 2; grid-row: span 2; grid-template-rows: auto auto auto; align-content: center; gap: 8px; }
 .board.is-scaled .tile.is-big .logo { width: 72px; height: 72px; border-radius: 16px; }
 .board.is-scaled .tile.is-big .logo .mono { font-size: 1.75rem; }
 .board.is-scaled .tile.is-big .name { font-size: var(--step--1); }
