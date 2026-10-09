@@ -551,4 +551,31 @@
     valuation: { evSales: 3.2, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-04-30', src: S('Fintel', 'https://fintel.io/s/jp/7011') },
     programs: [{ name: 'Mogami-class frigates for Australia', customer: 'Royal Australian Navy', role: 'Prime', year: 2025, status: 'Contracting' }]
   });
+  /* ---------------- Added from the private names list and public names sheet provided for this map (Oct 2026) ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+
+    DTM.add({
+      id: 'aevex', name: 'AEVEX', domain: 'aevex.com', status: 'public', ticker: 'AVEX', exchange: 'NYSE',
+      country: 'US', founded: null,
+      subsegments: ['primes.midtier', 'missiles.loitering', 'maritime.usv'],
+      oneLiner: 'Uncrewed systems and loitering munitions maker that IPO\'d in April 2026 and bought USV builder BlackSea.',
+      description: ['AEVEX builds uncrewed and autonomous defense systems, including loitering munitions, with the US government accounting for 78% of its $433M 2025 revenue. It listed on the NYSE in April 2026, raising $320M at $20 a share for a fully diluted value of about $2.2B. In August 2026 it agreed to buy BlackSea Technologies, maker of the Navy\'s GARC drone boats, for up to $650M, forming its Maritime Division.'],
+      marketCap: { usdM: 1796, asOf: '2026', undated: true, src: CSV },
+      financials: { cur: 'USD', fyEnd: 'Dec', periods: [{ label: 'FY2025', revenue: 433 }], notes: 'US government customers were 78% of 2025 revenue.', asOf: '2026-04', src: S('Renaissance Capital', 'https://www.renaissancecapital.com/IPO-Center/News/118365/Defense-systems-developer-Aevex-prices-IPO-at-$20-within-the-range') },
+      valuation: { evSales: 2.99, evEbitda: 20.64, basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 2.56×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV },
+      programs: [{ name: 'BlackSea acquisition (GARC USVs, SPDS)', ref: 'usv-navy', customer: 'US Navy', role: 'Prime', year: 2026, status: 'Acquired', src: S('Breaking Defense, Aug 2026', 'https://breakingdefense.com/2026/08/aevex-to-acquire-blacksea-technologies-for-up-to-650m/') }]
+    });
+
+    DTM.add({
+      id: 'robinson-helicopter', name: 'Robinson Helicopter Company', short: 'Robinson', domain: 'robinsonheli.com', status: 'private', stage: 'Privately held',
+      hq: 'Torrance, CA', country: 'US', founded: 1973,
+      subsegments: ['primes.midtier', 'uas.autonomy'],
+      oneLiner: 'Light-helicopter maker (R22, R44, R66) building uncrewed R44 and R66 variants for defense logistics with Skyryse and Sikorsky.',
+      description: ['Robinson builds the R22, R44 and R66 light helicopters. In March 2026 it formed Robinson Unmanned for remotely piloted and autonomous aircraft, folding in drone maker Ascent AeroSystems, acquired in 2024. Plans include uncrewed R44 cargo and agricultural variants and the R66 Turbinetruck for defense logistics with Sikorsky\'s MATRIX autonomy; in June 2026 it agreed with Skyryse to build an uncrewed R66 for ISR, manned-unmanned teaming and air-launched effects.'],
+      leadership: [['David Smith', 'CEO']],
+      funding: { totalUsdM: null, label: 'Privately held', asOf: '2026', src: S('Robinson Helicopter, Mar 2026', 'https://www.robinsonheli.com/unmanned/press/robinson-helicopter-company-establishes-robinson-unmanned-business-unit-formalizing-expansion-into-scalable-autonomous-aviation') },
+      programs: [{ name: 'Uncrewed R66 with Skyryse SkyOS', ref: 'launched-effects', customer: 'Defense customers', role: 'Prime', year: 2026, status: 'Development', src: S('The Aviationist, Jun 2026', 'https://theaviationist.com/2026/06/25/robinson-skyryse-uncrewed-r66-helicopter/') }]
+    });
+  }
 })();

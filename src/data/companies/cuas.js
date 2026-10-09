@@ -370,4 +370,15 @@
       ]
     });
   }
+  /* ---------------- Added from the private names list provided for this map (Oct 2026) ---------------- */
+  {
+    DTM.add({
+      id: 'skapion', name: 'Skapion', status: 'private', stage: 'Seed', hq: 'Washington, DC', country: 'US', founded: 2025,
+      subsegments: ['cuas.kinetic'],
+      oneLiner: 'Mobile counter-swarm air defense from former Iron Dome program leaders; $36M seed from Khosla and UP.Partners.',
+      description: ['Skapion, founded in late 2025 with headquarters in Washington, DC and R&D in Ramat Gan, Israel, is developing a mobile counter-swarm system designed for hundreds of simultaneous engagements at a much lower cost per intercept than conventional air defense. Its chief architect is retired Brig. Gen. Pini Yungman, former head of Rafael\'s air and missile defense division. It emerged from stealth in July 2026 with a $36M seed co-led by Khosla Ventures and UP.Partners.'],
+      leadership: [['Ido Bar-On', 'CEO'], ['Pini Yungman', 'Chief Architect']],
+      funding: { totalUsdM: 36, asOf: '2026-07', rounds: [{ date: '2026-07', type: 'Seed', amountUsdM: 36, leads: ['Khosla Ventures', 'UP.Partners'] }], src: S('Soldier Systems Daily, Jul 2026', 'https://soldiersystems.net/2026/07/10/skapion-secures-36-million-seed-funding-to-accelerate-mobile-counter-swarm-defense-system/') }
+    });
+  }
 })();

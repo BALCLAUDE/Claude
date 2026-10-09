@@ -92,6 +92,9 @@
     ].filter(Boolean).join(' ').toLowerCase();
   });
 
+  // Market caps taken from an undated sheet carry undated: true and are labeled as such instead of showing a year.
+  const capDate = (m) => (m && m.undated ? 'Undated sheet' : m && m.asOf ? date(m.asOf, true) : '');
+
   function latestRevenue(c) {
     if (c.isPublic && c.financials && c.financials.periods && c.financials.periods.length) {
       const ps = c.financials.periods.filter((p) => p.revenue != null);
@@ -181,11 +184,12 @@
   }
 
   const ERAS = [
-    { id: 'pre2000', name: 'Founded before 2000', test: (y) => y < 2000 },
+    { id: 'pre2000', name: 'Founded before 2000', test: (y) => y != null && y < 2000 },
     { id: '2000', name: 'Founded 2000–2015', test: (y) => y >= 2000 && y <= 2015 },
     { id: '2016', name: 'Founded 2016–2019', test: (y) => y >= 2016 && y <= 2019 },
     { id: '2020', name: 'Founded 2020–2022', test: (y) => y >= 2020 && y <= 2022 },
-    { id: '2023', name: 'Founded 2023 or later', test: (y) => y >= 2023 }
+    { id: '2023', name: 'Founded 2023 or later', test: (y) => y >= 2023 },
+    { id: 'unknown', name: 'Founding year not compiled', test: (y) => y == null }
   ];
   const STAGES = [
     { id: 'public', name: 'Public', test: (c) => c.isPublic },
@@ -235,7 +239,7 @@
       if (state.group === 'sub') {
         groups = seg.subsegments.map((sub) => ({ id: sub.id, name: sub.name, blurb: sub.blurb, items: inSeg.filter((c) => c.subs.includes(sub.id)) }));
       } else if (state.group === 'era') {
-        groups = ERAS.map((e) => ({ id: e.id, name: e.name, items: inSeg.filter((c) => c.founded && e.test(c.founded)) }));
+        groups = ERAS.map((e) => ({ id: e.id, name: e.name, items: inSeg.filter((c) => e.test(c.founded == null ? null : c.founded)) }));
       } else {
         groups = STAGES.map((s) => ({ id: s.id, name: s.name, items: inSeg.filter(s.test) }));
       }
@@ -370,7 +374,7 @@
     const also = c.subs.map((s) => subIndex[s].sub.name);
     const meta = [c.hq, c.founded ? `Founded ${c.founded}` : '', c.isPublic ? `${c.exchange}: ${c.ticker}` : c.stage].filter(Boolean).join(' · ');
     card.innerHTML = `<h3>${esc(c.name)}</h3><p class="hc-meta">${esc(meta)}</p>${c.flag ? `<p class="hc-flag">${esc(c.flag)}</p>` : ''}<p>${esc(c.oneLiner || '')}</p>
-      <div class="hc-metric">${esc(metricLong(c))}${c.isPublic && c.marketCap && c.marketCap.asOf ? ` <span class="src">(${esc(date(c.marketCap.asOf, true))})</span>` : ''}</div>
+      <div class="hc-metric">${esc(metricLong(c))}${c.isPublic && c.marketCap && (c.marketCap.asOf || c.marketCap.undated) ? ` <span class="src">(${esc(capDate(c.marketCap))})</span>` : ''}</div>
       ${!c.isPublic && c.lastPost ? `<div class="hc-metric">${money(c.lastPost.postUsdM)} last valuation <span class="src">(${esc(date(c.lastPost.date))})</span></div>` : ''}
       ${also.length > 1 ? `<div class="hc-also">Appears in: ${esc(also.join(', '))}</div>` : ''}
       <div class="hc-hint">Click for full profile</div>`;
@@ -415,9 +419,9 @@
     if (c.isPublic) {
       const v = c.valuation || {};
       const r = c.latestRevenue;
-      return kpi('Market cap', c.value == null ? NA : money(c.value), c.marketCap && c.marketCap.asOf ? esc(date(c.marketCap.asOf, true)) : '', true)
+      return kpi('Market cap', c.value == null ? NA : money(c.value), esc(capDate(c.marketCap)), true)
         + kpi('Enterprise value', v.evUsdM != null ? money(v.evUsdM) : NC, v.evUsdM != null && v.asOf ? esc(date(v.asOf, true)) : '')
-        + kpi('Revenue', r ? money(r.valueM, r.cur) : NA, r ? esc(r.label) : '')
+        + kpi('Revenue', r ? money(r.valueM, r.cur) : NC, r ? esc(r.label) : '')
         + kpi(salesLabel(v), v.evSales != null ? mult(v.evSales) : NC, v.evSales != null ? esc(v.basis || 'Trailing twelve months') : '');
     }
     const lr = c.lastRound;
@@ -432,7 +436,7 @@
   function overviewHTML(c) {
     const paras = Array.isArray(c.description) ? c.description : [c.description || c.oneLiner || ''];
     const facts = [];
-    facts.push(['Founded', c.founded || '—']);
+    facts.push(['Founded', c.founded || 'Not compiled']);
     facts.push(['Headquarters', esc([c.hq, D.countryNames[c.country] || c.country].filter(Boolean).join(', '))]);
     if (c.employees) facts.push(['Employees', esc(c.employees)]);
     if (c.leadership && c.leadership.length) facts.push(['Leadership', c.leadership.map((l) => `${esc(l[0])} <span class="src">${esc(l[1])}</span>`).join('<br>')]);
@@ -522,7 +526,7 @@
         ['Market cap', c.value != null ? money(c.value) : '—', c.marketCap && c.marketCap.local ? `${money(c.marketCap.local.valueM, c.marketCap.local.cur)} in local currency` : ''],
         ['Enterprise value', v.evUsdM != null ? money(v.evUsdM) : '—', v.evUsdM != null ? 'Market cap + net debt' : 'Not compiled'],
         [salesLabel(v), ratio(v.evSales), v.evSales != null ? (v.basis || 'Trailing twelve months') : 'Not compiled'],
-        ['EV / EBITDA', ratio(v.evEbitda), v.evEbitda != null ? 'Trailing twelve months' : 'Not compiled'],
+        ['EV / EBITDA', ratio(v.evEbitda), v.evEbitda != null ? (v.ebitdaBasis || 'Trailing twelve months') : 'Not compiled'],
         ['P / E', ratio(v.pe), v.pe != null ? (v.peBasis || 'Latest fiscal year earnings') : 'Not compiled'],
         ['Forward P / E', ratio(v.fwdPe), v.fwdPe != null ? 'Next twelve months, consensus' : 'Not compiled']
       ].filter((x, i) => i < 3 || x[1] !== '—');
@@ -532,7 +536,7 @@
       const chart = peers.length >= 3 && v.evSales != null
         ? `<div class="section"><h3 class="section-title">Sales multiple vs public peers in ${esc(seg.name)}</h3>${C.rows(peers.map((p) => ({ label: p.short || p.name, value: p.valuation.evSales, display: mult(p.valuation.evSales), highlight: p.id === c.id, tip: `${p.name}: ${mult(p.valuation.evSales)} (${salesLabel(p.valuation)}, ${p.valuation.basis || 'TTM'})` })), { format: mult, label: 'Sales multiple comparison' })}<p class="chart-caption">EV / Sales where enterprise value was compiled, otherwise market cap / sales. Each peer uses its own as-of date; hover a bar for its basis.</p></div>` : '';
       return `<div class="section stat-grid">${stats.map(([l, val, n]) => `<div class="stat"><span class="stat-label">${esc(l)}</span><span class="stat-value">${val}</span><span class="stat-note">${esc(n)}</span></div>`).join('')}</div>
-        ${chart}${v.note ? `<div class="section prose"><p>${esc(v.note)}</p></div>` : ''}${srcHTML(v.src, v.asOf)}
+        ${chart}${v.note ? `<div class="section prose"><p>${esc(v.note)}</p></div>` : ''}${srcHTML(v.src, v.undated ? null : v.asOf)}
         ${consensusHTML(c)}`;
     }
     const posts = c.rounds.filter((r) => r.postUsdM);

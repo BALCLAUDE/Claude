@@ -260,4 +260,393 @@
     valuation: { evSales: 11.2, basis: 'Market cap ÷ 2026 revenue outlook', note: 'EV not compiled; ratio shown uses market cap.', asOf: '2026-08-14', src: S('Webull', 'https://www.webull.ca/news-detail/15345485242459136') },
     programs: [{ name: 'NDAA-compliant drone batteries', customer: 'Defense Innovation Unit', role: 'Prime', value: '$18.1M', status: 'Active' }]
   });
+  /* ---------------- Added from the private names list provided for this map (Oct 2026) ---------------- */
+  {
+    DTM.add({
+      id: 'vulcanforms', name: 'VulcanForms', status: 'private', stage: 'Series D', country: 'US', founded: null,
+      subsegments: ['industrial.additive', 'industrial.manufacturing'],
+      oneLiner: 'Digital metal factories pairing high-power laser powder-bed fusion with machining for aerospace and defense parts.',
+      description: ['VulcanForms runs vertically integrated digital metal manufacturing: its own high-power laser powder-bed fusion systems plus machining and finishing, producing parts for aerospace, defense, medical and industrial customers. It closed an oversubscribed $220M Series D in February 2026, led by Eclipse and 1789 Capital, to expand US production, following a $355M round in 2022 that valued it above $1B.'],
+      funding: {
+        totalUsdM: 575, asOf: '2026-02',
+        rounds: [{ date: '2022-07', type: 'Growth', amountUsdM: 355 }, { date: '2026-02', type: 'Series D', amountUsdM: 220, leads: ['Eclipse', '1789 Capital'] }],
+        note: 'Secondary sources put total funding at about $575M across six rounds.',
+        src: [S('3D Printing Industry, Feb 2026', 'https://3dprintingindustry.com/news/vulcanforms-secures-220m-to-expand-u-s-production-cut-reliance-on-foreign-supply-chains-248717/'), S('TCT Magazine, 2022', 'https://www.tctmagazine.com/metal-3d-printing-firm-vulcanforms-raises-355-million/')]
+      }
+    });
+
+    DTM.add({
+      id: 'sprintray', name: 'SprintRay', status: 'private', stage: 'Series D', hq: 'Los Angeles, CA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Dental 3D printers, resins and design software for chairside crowns and dentures; no defense business.',
+      description: ['SprintRay makes 3D printers, resins and AI design software used by dental practices and labs to print crowns, dentures and models chairside. In 2025 it bought the EnvisionTEC dental portfolio. Its last reported round was a $100M Series D in October 2022; it has no disclosed defense work and is included because it appears on the list provided for this map.'],
+      funding: {
+        totalUsdM: 149.9, asOf: '2022-10',
+        note: 'Caplight figure. Other trackers report up to $238M.',
+        src: [S('Caplight', 'https://www.caplight.com/company/sprintray'), S('Preqin', 'https://preqin.com/data/profile/asset/sprintray-inc-/512464')]
+      }
+    });
+
+    DTM.add({
+      id: 'seurat', name: 'Seurat Technologies', short: 'Seurat', status: 'private', stage: 'Series B', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Area Printing: laser-patterned metal powder-bed fusion aiming at casting-like cost and volume.',
+      description: ['Seurat prints metal parts by projecting laser patterns across whole areas of the powder bed rather than scanning a single spot, aiming at production volumes and costs closer to casting and forging. In July 2026 it was selected for America Makes\' JAQS-SQ project call, funded by the Pentagon\'s Manufacturing Technology Office, to build the process controls and quality systems needed to qualify parts for the defense industrial base.'],
+      funding: {
+        totalUsdM: 79, asOf: '2022',
+        note: 'Series B total, including a $21M extension with Xerox Ventures and Porsche SE; earlier rounds not compiled.',
+        src: S('3D Printing Industry', 'https://3dprintingindustry.com/news/seurat-technologies-raises-21m-to-fast-track-the-commercialization-of-area-printing-technology-202850/')
+      },
+      programs: [{ name: 'America Makes JAQS-SQ qualification project', customer: 'DoD Manufacturing Technology Office (via America Makes / NCDMM)', role: 'Prime', year: 2026, status: 'Awarded', src: S('FinanzNachrichten, Jul 2026', 'https://www.finanznachrichten.de/nachrichten-2026-07/69147760-seurat-technologies-selected-for-america-makes-jaqs-sq-award-in-support-of-defense-additive-manufacturing-200.htm') }]
+    });
+
+    DTM.add({
+      id: 'fabric8labs', name: 'Fabric8Labs', status: 'private', stage: 'Venture', hq: 'San Diego, CA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Room-temperature electrochemical metal printing (ECAM) for cold plates, RF parts and power electronics.',
+      description: ['Fabric8Labs prints high-resolution copper and other metal parts at room temperature using electrochemical additive manufacturing (ECAM), based on electroplating, with little post-processing. It targets thermal management for AI and HPC hardware, RF components and power electronics. In November 2025 it raised $50M led by NEA and Intel Capital to expand US output from about 5 million to 22 million components a year.'],
+      funding: {
+        totalUsdM: 50, asOf: '2025-11',
+        rounds: [{ date: '2025-11', type: 'Venture', amountUsdM: 50, leads: ['NEA', 'Intel Capital'] }],
+        note: 'November 2025 round only; earlier rounds, including a reported $50M Series B, are not totaled here.',
+        src: S('Intel Capital, Nov 2025', 'https://www.intelcapital.com/fabric8labs-secures-50m-to-expand-u-s-advanced-manufacturing-capacity/')
+      }
+    });
+
+    DTM.add({
+      id: 'freeform', name: 'Freeform', status: 'private', stage: 'Series B', hq: 'Los Angeles, CA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'AI-controlled metal printing with 18-laser GoldenEye systems; demand exceeds its contract capacity.',
+      description: ['Freeform runs an AI-native metal printing platform: its GoldenEye system fuses metal powder with 18 lasers under machine-learning process control, and its successor, Skyfall, targets more than 25 times the throughput. It raised a $67M Series B in February 2026 from investors including Founders Fund, NVIDIA\'s NVentures and Two Sigma Ventures, saying demand consistently exceeds its capacity.'],
+      funding: {
+        totalUsdM: 81, asOf: '2026-02',
+        rounds: [{ date: '2026-02', type: 'Series B', amountUsdM: 67 }],
+        note: 'Seedtable puts total funding at about $81M, including a $14M round in October 2024.',
+        src: [S('TechCrunch, Feb 2026', 'https://techcrunch.com/2026/02/19/freeform-raises-67m-series-b-to-scale-up-laser-ai-manufacturing/'), S('Seedtable', 'https://seedtable.com/companies/freeform')]
+      }
+    });
+
+    DTM.add({
+      id: 'boston-micro-fabrication', name: 'Boston Micro Fabrication', short: 'BMF', domain: 'bmf3d.com', status: 'private', stage: 'Series D', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Micro-precision resin printing (projection micro-stereolithography) for tiny medical, electronics and connector parts.',
+      description: ['Boston Micro Fabrication makes printers that use projection micro-stereolithography to produce very small, high-precision parts for medical devices, electronics and connectors. Its last reported round was a $24M Series D in August 2023 led by Guotai Junan Securities, after a roughly $42M Series C led by Shenzhen Capital Group.'],
+      funding: {
+        totalUsdM: 80.1, asOf: '2023-08',
+        note: 'Caplight total.',
+        src: [S('Caplight', 'https://www.caplight.com/company/bmf3d'), S('Digital Engineering 24/7', 'https://www.digitalengineering247.com/article/boston-micro-fabrication-secures-24m-series-d-funding')]
+      }
+    });
+
+    DTM.add({
+      id: 'continuum-powders', name: 'Continuum Powders', short: 'Continuum', status: 'private', stage: 'Growth', hq: 'Houston, TX', country: 'US', founded: null,
+      subsegments: ['industrial.additive', 'industrial.materials'],
+      oneLiner: 'Turns nickel and titanium scrap into qualified metal powders for printing aerospace and defense parts.',
+      description: ['Continuum Powders melts and atomizes scrap such as nickel superalloy turnings into spherical powders for additive manufacturing, qualified on machines including Renishaw\'s RenAM 500. It raised $36M led by Ara Partners in late 2022 and has won about $3.3M of DoD SBIR and R&D awards, including Air Force work on printed landing gear components.'],
+      funding: {
+        totalUsdM: 36, asOf: '2022-12',
+        note: 'Latest disclosed round; earlier rounds not compiled.',
+        src: S('Recycling Today', 'https://recyclingtoday.com/article/metal-recycler-continuum-raises-36-million-dollars-in-funding')
+      },
+      programs: [{ name: 'DoD SBIR and R&D awards (10)', customer: 'US DoD (incl. Air Force)', role: 'Prime', value: '~$3.27M', status: 'Awarded', note: 'June 2022 to June 2024.', src: S('GovCon in a Box', 'https://govconinabox.com/explore/contractors/profile/continuum-powders-corporation-u9c1dr') }]
+    });
+
+    DTM.add({
+      id: 'alloy-enterprises', name: 'Alloy Enterprises', status: 'private', stage: 'Series A', hq: 'Burlington, MA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Powder-free aluminum additive manufacturing that laser-cuts and diffusion-bonds sheet into dense parts.',
+      description: ['Alloy Enterprises builds aluminum parts without powder: it laser-cuts sheet stock and diffusion-bonds the layers into near-fully dense components, using feedstock already produced at scale. Its $26M Series A in 2023, led by Piva Capital, brought total funding to $37M.'],
+      funding: { totalUsdM: 37, asOf: '2023-05', src: S('TCT Magazine', 'https://www.tctmagazine.com/alloy-enterprises-raises-26-million-as-it-prepares-to-ramp-u/') }
+    });
+
+    DTM.add({
+      id: 'quantica', name: 'Quantica', status: 'private', stage: 'Series A', hq: 'Berlin', country: 'DE', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'NovoJet multi-material jetting of high-viscosity resins, with teams in Berlin, Barcelona and Cambridge.',
+      description: ['Quantica develops NovoJet, a printhead that jets high-viscosity and particle-filled materials so several materials can be combined in one part. Its Series A, €14M in 2023 led by a dental-industry family office, was extended in 2024 to €19.7M with West Hill Capital.'],
+      funding: { totalUsdM: 22.9, asOf: '2024', note: '€19.7M Series A converted at about 1.16 USD per EUR.', src: S('3D Printing Industry', 'https://3dprintingindustry.com/news/quantica-announces-an-increase-in-its-series-a-funding-round-230826/') }
+    });
+
+    DTM.add({
+      id: 'inkbit', name: 'Inkbit', domain: 'inkbit3d.com', status: 'private', stage: 'Venture', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Vision-controlled jetting that scans every layer to print multi-material parts; Air Force-funded systems.',
+      description: ['Inkbit, an MIT spin-out, uses vision-controlled jetting (VCJ): a scanner checks each layer and corrects the next, allowing multi-material parts without rollers. The Air Force awarded a $1.7M SBIR in 2021 for three systems for Air Force bases, building on DARPA-funded work. Its latest round was $19M in 2024 led by Ingersoll Rand.'],
+      funding: { totalUsdM: 19, asOf: '2024-05', note: 'Latest round only; earlier rounds not compiled.', src: S('Turbomachinery Magazine, May 2024', 'https://www.turbomachinerymag.com/view/ingersoll-rand-closes-on-19m-funding-round-for-inkbit-s-vision-controlled-jetting-system') },
+      programs: [{ name: 'SBIR for three VCJ systems at Air Force bases', customer: 'US Air Force', role: 'Prime', value: '$1.7M', year: 2021, status: 'Awarded', src: S('Design World', 'https://www.designworldonline.com/inkbit-awarded-research-contract-from-the-united-states-air-force/') }]
+    });
+
+    DTM.add({
+      id: 'azul-3d', name: 'Azul 3D', status: 'private', stage: 'Series A', hq: 'Chicago, IL', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'HARP high-area rapid resin printing for electronic components and custom devices, backed by DuPont.',
+      description: ['Azul 3D develops High-Area Rapid Printing (HARP), a continuous vat-photopolymerization process for large, fast resin prints aimed at specialized electronic components and custom devices. DuPont, a partner since 2019, led its $15M Series A in October 2023, after a $12.5M seed in 2020.'],
+      funding: { totalUsdM: 27.5, asOf: '2023-10', src: [S('Business Wire, Oct 2023', 'https://www.businesswire.com/news/home/20231010246552/en/Azul-3D-Closes-15-Million-in-Series-A-Funding'), S('Pulse 2.0, 2020', 'https://pulse2.com/azul3d-raises-12-5-million/')] }
+    });
+
+    DTM.add({
+      id: 'caracol', name: 'Caracol', status: 'private', stage: 'Series B', hq: 'Milan', country: 'IT', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Robotic large-format printing in metal (wire-arc) and polymer, targeting aerospace, defense and marine.',
+      description: ['Caracol builds robotic large-format additive manufacturing systems, including the Vipra AM platform for wire-arc metal printing, with offices in Milan, Austin and Dubai. Its $40M Series B in October 2025, led by Omnes Capital and Move Capital, is aimed at scaling metal printing in aerospace and defense, energy and maritime.'],
+      funding: { totalUsdM: 55.7, asOf: '2025-10', note: 'CB Insights total; Caplight lists $59.6M.', src: S('Metal AM, Oct 2025', 'https://www.metal-am.com/caracol-raises-40m-to-ramp-up-metal-am-and-global-expansion/') }
+    });
+
+    DTM.add({
+      id: 'xolo', name: 'Xolo', status: 'private', stage: 'Series A', hq: 'Berlin', country: 'DE', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Xolography: volumetric printing that cures whole parts inside a resin vat with intersecting light.',
+      description: ['Xolo commercializes xolography, a volumetric process in which a light sheet and photoactive chemistry cure a part inside a resin cuvette rather than layer by layer, giving fast prints with very smooth surfaces. It raised an €8M Series A in February 2023 led by the DeepTech & Climate Fonds and HZG Group.'],
+      funding: { totalUsdM: 9.3, asOf: '2023-02', note: '€8M converted at about 1.16 USD per EUR.', src: S('TCT Magazine', 'https://www.tctmagazine.com/eight-million-euros-raised-xolo-gmbh-hzg-group/') }
+    });
+
+    DTM.add({
+      id: 'ai-build', name: 'Ai Build', domain: 'ai-build.com', status: 'private', stage: 'Seed', hq: 'London', country: 'UK', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'AiSync software that automates large-format robotic printing; works with Boeing, GKN Aerospace and Rolls-Royce.',
+      description: ['Ai Build makes AiSync, software that plans and monitors large-format robotic and industrial printing, used by aerospace and automotive manufacturers. It joined the ATI Boeing Accelerator and has worked with GKN Aerospace and Rolls-Royce. It raised about $1M in 2021 and $3.2M in June 2022 led by ACT Venture Partners.'],
+      funding: { totalUsdM: 4.2, asOf: '2022-06', src: S('Ai Build, Jun 2022', 'https://ai-build.com/resources/aibuild-secures-3-2m-investment-to-revolutionize-additive-manufacturing/') }
+    });
+
+    DTM.add({
+      id: 'rapid-liquid-print', name: 'Rapid Liquid Print', short: 'RLP', status: 'private', stage: 'Series A', hq: 'Boston, MA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'MIT spin-out printing silicone and foam parts inside a gel in minutes, with no support structures.',
+      description: ['Rapid Liquid Print, an MIT spin-out, injects industrial silicones, rubbers and foams into a gel bath that holds the part as it cures, so prints take minutes and need no supports. It sells to medical, automotive and consumer goods customers and raised a $7M Series A led by HZG Group.'],
+      funding: { totalUsdM: 7, asOf: '2024', src: S('3D Printing Industry', 'https://3dprintingindustry.com/news/rapid-liquid-print-raises-7-million-to-scale-its-support-free-gel-3d-printing-technology-230410/') }
+    });
+
+    DTM.add({
+      id: 'axtra3d', name: 'Axtra3D', status: 'private', stage: 'Series A', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Lumia resin printers using Hybrid PhotoSynthesis, combining laser and DLP light engines for speed and detail.',
+      description: ['Axtra3D makes Lumia resin printers that use Hybrid PhotoSynthesis, combining a laser with DLP projection to print fine features faster than conventional stereolithography; it has a second site in Vicenza, Italy. HZG Group led its $4.5M Series A2 in November 2024, taking total funding to $9.75M.'],
+      leadership: [['Gianni Zitelli', 'Founder & CEO']],
+      funding: { totalUsdM: 9.75, asOf: '2024-11', src: S('VoxelMatters', 'https://www.voxelmatters.com/axtra3d-completes-its-9-75m-series-a-round-led-by-hzg-group/') }
+    });
+
+    DTM.add({
+      id: 'fluent-metal', name: 'Fluent Metal', status: 'private', stage: 'Seed', hq: 'Cambridge, MA', country: 'US', founded: 2020,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Drop-on-demand liquid metal printing from wire feedstock, enabling multi-metal parts with no powder.',
+      description: ['Fluent Metal, founded in 2020 by veterans of Desktop Metal, VulcanForms and the MIT Media Lab, prints by jetting droplets of already-molten metal fed from wire, avoiding powders and lasers and allowing multi-metal parts. It launched from stealth in March 2024 with $5.5M raised, led by E15 VC.'],
+      leadership: [['Peter Schmitt', 'CEO']],
+      funding: { totalUsdM: 5.5, asOf: '2024-03', src: S('Pulse 2.0, Mar 2024', 'https://pulse2.com/fluent-metal-launches-with-5-5-million-in-total-funding') }
+    });
+
+    DTM.add({
+      id: 'wayland-additive', name: 'Wayland Additive', short: 'Wayland', status: 'private', stage: 'Venture', country: 'UK', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Calibur3 electron-beam powder-bed printer with NeuBeam charge neutralization for crack-prone alloys.',
+      description: ['Wayland Additive builds the Calibur3 electron-beam powder-bed fusion printer, whose NeuBeam process neutralizes charge build-up so a wider range of alloys can be printed, with in-situ monitoring. It closed a £4.6M round in 2023 with Metrea Discovery joining existing investors, after an earlier £3M.'],
+      funding: { totalUsdM: 10.2, asOf: '2023', note: '£7.6M converted at about 1.34 USD per GBP.', src: S('Metal AM', 'https://www.metal-am.com/wayland-additive-closes-4-6m-funding-round/') }
+    });
+
+    DTM.add({
+      id: 'triditive', name: 'Triditive', status: 'private', stage: 'Seed', hq: 'Gijón', country: 'ES', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'AMCELL automated print cells combining binder jetting and filament printing for on-demand parts.',
+      description: ['Triditive builds AMCELL, an automated cell of eight robotic print modules that combines binder jetting and fused filament printing in polymers, composites and metals, with EVAM software for digital warehouses. It runs a 2,000 m² plant in Asturias.'],
+      funding: { totalUsdM: 5.2, asOf: '2022-06', note: 'VCBacked total. Trade press also reports a €5M pre-Series A whose date could not be confirmed.', src: [S('VCBacked', 'https://www.vcbacked.co/company/triditive'), S('Metal AM', 'https://www.metal-am.com/triditive-closes-a-e5-million-preseries-a-investment-round/')] }
+    });
+
+    DTM.add({
+      id: 'toffeeam', name: 'TOffeeAM', status: 'private', stage: 'Series A', hq: 'London', country: 'UK', founded: 2019,
+      subsegments: ['industrial.additive', 'software.engineering'],
+      oneLiner: 'Imperial College spin-out making topology-optimization software for printed heat exchangers and parts.',
+      description: ['TOffeeAM, spun out of Imperial College London in 2019, sells topology-optimization software that designs printable parts such as heat exchangers and cold plates from physics simulations. It raised a £1M seed led by IQ Capital and a £5M Series A led by Presidio Ventures Europe and East Innovate, and holds an Innovate UK grant for next-generation heat exchangers.'],
+      funding: { totalUsdM: 8, asOf: '2026-03', note: '£6M converted at about 1.34 USD per GBP; Series A date per a March 2026 trade report.', src: [S('Manufactur3D, Mar 2026', 'https://manufactur3dmag.com/toffeeam-ai-3d-printing-design-software/'), S('Metal AM', 'https://www.metal-am.com/?p=77346')] }
+    });
+
+    DTM.add({
+      id: 'q5d', name: 'Q5D Technologies', short: 'Q5D', status: 'private', stage: 'Series A', country: 'UK', founded: null,
+      subsegments: ['industrial.additive', 'industrial.manufacturing'],
+      oneLiner: 'Robotic 5-axis printing of wiring harnesses and circuits into structures; Lockheed Martin Ventures backed.',
+      description: ['Q5D builds the CU500, a 5-axis robotic system that prints structures with integrated wiring and circuit traces, aiming to automate wire-harness production for vehicles and aircraft; it runs a technical center in Bristol. Its Series A in June 2025, co-led by Lockheed Martin Ventures, Chrysalix and Maven, raised about £10M including a £2M Innovate UK grant.'],
+      funding: { totalUsdM: 16, asOf: '2025-06', note: 'About $13.5M Series A (including the grant) plus a $2.5M seed.', src: [S('Maven, Jun 2025', 'https://www.mavencp.com/latest-news/swif-maven-equity-finance-backs-q5d-technologies-as-part-of-a-10m-fundraise'), S('EPDT', 'https://www.epdtonthenet.net/article/216036/-13-5-Million-Worth-of-Funding-Garnered-by-Q5D.aspx')] }
+    });
+
+    DTM.add({
+      id: 'additive-assurance', name: 'Additive Assurance', status: 'private', stage: 'Seed', hq: 'Melbourne', country: 'AU', founded: 2019,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'AMiRIS in-process quality assurance that flags defects in metal prints; sold a system to Australia\'s DST Group.',
+      description: ['Additive Assurance, a 2019 Monash University spin-out, makes AMiRIS, which monitors metal laser powder-bed printing and alerts on defects as parts are built. It sold a pre-production system to Australia\'s Defence Science and Technology Group and raised A$4.1M in December 2022 led by Significant Capital Ventures, after an A$1.6M round led by IP Group.'],
+      funding: { totalUsdM: 3.7, asOf: '2022-12', note: 'A$5.7M converted at about 0.65 USD per AUD.', src: S('Startup Daily, Dec 2022', 'https://archive.startupdaily.net/?p=107511') },
+      programs: [{ name: 'AMiRIS pre-production system', customer: 'Defence Science and Technology Group (Australia)', role: 'Vendor', status: 'Delivered', src: S('Australian Manufacturing', 'https://www.australianmanufacturing.com.au/?p=127718') }]
+    });
+
+    DTM.add({
+      id: 'syenta', name: 'Syenta', status: 'private', stage: 'Series A', hq: 'Sydney', country: 'AU', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'ANU spin-out that pivoted from 3D printers to electrochemical chip-packaging interconnects; In-Q-Tel backed.',
+      description: ['Syenta, an Australian National University spin-out, began with fast multi-material 3D printers and now develops Localised Electrochemical Manufacturing, a lithography-free way to build high-density interconnects for advanced chip packaging, with production targeted for 2027. It raised a A$36M (US$26M) Series A led by Playground Global and Australia\'s National Reconstruction Fund; investors also include In-Q-Tel.'],
+      funding: { totalUsdM: 34, asOf: '2026', note: 'Series A plus an A$8.8M pre-Series A and a 2022 seed of about A$3.7M, converted at about 0.65 USD per AUD.', src: S('SmartCompany', 'https://smartcompany.com.au/startupsmart/three-anz-startups-raised-61-4-million-this-week') }
+    });
+
+    DTM.add({
+      id: 'fortius-metals', name: 'Fortius Metals', status: 'private', stage: 'Seed', country: 'US', founded: null,
+      subsegments: ['industrial.additive', 'industrial.materials'],
+      oneLiner: 'Wire feedstock for wire-arc and DED printing; Air Force SBIR to qualify hypersonic-grade nickel wire.',
+      description: ['Fortius Metals, spun out of powder maker Elementum, produces alloy wire for wire-based additive manufacturing, prioritizing aerospace and defense. In March 2024 it won an Air Force SBIR to speed qualification of its IN625-RAM2 wire for hypersonic applications; customers include the US Army, Navy, Air Force and NASA. Its Seed+ round reached $5M in October 2024 with ArcelorMittal-backed Finindus.'],
+      funding: { totalUsdM: 5, asOf: '2024-10', src: S('Metal AM', 'https://www.metal-am.com/fortius-metals-funding-round-totals-5-million-to-bring-next-gen-wire-to-market/') },
+      programs: [{ name: 'SBIR: IN625-RAM2 wire for hypersonics', customer: 'US Air Force', role: 'Prime', year: 2024, status: 'Awarded', src: S('Metal AM', 'https://www.metal-am.com/fortius-metals-funding-round-totals-5-million-to-bring-next-gen-wire-to-market/') }]
+    });
+
+    DTM.add({
+      id: 'zaxe', name: 'Zaxe', status: 'private', stage: 'Venture', hq: 'Istanbul', country: 'TR', founded: 2015,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Turkish maker of filament 3D printers, materials and slicer software sold in more than 15 countries.',
+      description: ['Zaxe, founded in Istanbul in 2015 by Baki Gezgen, designs and builds filament 3D printers, materials and its own xDesktop slicer for education and industrial users in more than 15 countries. It raised $2M in 2023 led by a regional development fund under PCP Technology Opportunities Fund and the Türkiye Development Fund. It has no disclosed defense work.'],
+      funding: { totalUsdM: 4.6, asOf: '2023', note: 'CB Insights total; other trackers list $2.2M–$3.3M.', src: S('3DPrint.com, 2023', 'https://3dprint.com/303278/turkeys-zaxe-secures-2m-investment-to-accelerate-global-3d-printing-expansion/amp/') }
+    });
+
+    DTM.add({
+      id: 'vitro3d', name: 'Vitro3D', status: 'private', stage: 'Seed', hq: 'Boulder, CO', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'University of Colorado spin-out building cartridge-based volumetric resin printers for dental and bio uses.',
+      description: ['Vitro3D, a University of Colorado spin-out, develops cartridge-based volumetric resin printers, initially for dental aligners and scaffolds for 3D cell culture. It raised a $1.3M seed in November 2022 led by Buff Gold Ventures.'],
+      funding: { totalUsdM: 1.3, asOf: '2022-11', src: S('BizWest, Nov 2022', 'https://bizwest.com/2022/11/02/cu-spinout-vitro3d-raises-1-3m-to-develop-3d-printing-technology/') }
+    });
+
+    DTM.add({
+      id: 'amfg', name: 'AMFG', status: 'private', stage: 'Venture', hq: 'London', country: 'UK', founded: null,
+      subsegments: ['industrial.additive', 'software.engineering'],
+      oneLiner: 'Manufacturing execution and workflow software that automates ordering, scheduling and production for 3D-print shops.',
+      description: ['AMFG sells manufacturing execution and workflow automation software for additive manufacturing operations, from order intake and scheduling to post-processing and shipping. It has received Innovate UK funding, including a 2023 Knowledge Transfer Partnership with Imperial College London on autonomous manufacturing, and had about 79 employees in 2025.'],
+      employees: '~79 (2025)',
+      funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2025', src: [S('PitchBook', 'https://www.pitchbook.com/profiles/company/100721-17'), S('Imperial College London', 'https://imperial.ac.uk/news/243291/imperial-amfg-innovate-uk-funding-deliver')] }
+    });
+
+    DTM.add({
+      id: 'fortify', name: 'Fortify', status: 'private', stage: 'Series B', hq: 'Boston, MA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Flux-series DLP printers that magnetically align fibers in composite resins; In-Q-Tel investor.',
+      description: ['Fortify\'s Digital Composite Manufacturing aligns fibers in resin with magnetic fields during DLP printing, producing stiff, heat-resistant parts on its Flux-series printers. It raised a $10M Series A led by Accel in 2019 and $20M led by Cota Capital in 2021, and took a strategic investment from In-Q-Tel in 2022.'],
+      funding: { totalUsdM: 32.5, asOf: '2022', note: 'Seed, Series A and 2021 round; the In-Q-Tel amount was not disclosed.', src: [S('CompositesWorld, 2021', 'https://www.compositesworld.com/news/fortify-secures-20-million-funding-to-advance-3d-printing-composites'), S('AM Chronicle', 'https://amchronicle.com/news/fortify-announces-in-q-tel-investment-several-new-fluxprint-3d-printing-materials')] }
+    });
+
+    DTM.add({
+      id: 'edgecloudlink', name: 'EdgeCloudLink', short: 'ECL', status: 'private', stage: 'Seed', hq: 'Mountain View, CA', country: 'US', founded: null,
+      subsegments: ['industrial.power'],
+      oneLiner: 'Hydrogen fuel-cell powered modular data centers; dropped its plan to 3D-print the buildings.',
+      description: ['EdgeCloudLink builds modular data centers powered by hydrogen fuel cells on their own microgrids. It first planned to construction-print the buildings, but its 1 MW Mountain View site reused an existing warehouse instead, so it no longer does additive manufacturing. It raised a $7M seed from Hyperwise Ventures and Molex Ventures.'],
+      funding: { totalUsdM: 7, asOf: '2023', src: S('3DAdept', 'https://3dadept.com/startup-area-what-happened-to-3d-printing-ventures-that-turned-stealth-mode-off-in-2023/') }
+    });
+
+    DTM.add({
+      id: 'sila', name: 'Sila Nanotechnologies', short: 'Sila', status: 'private', stage: 'Series H', hq: 'Alameda, CA', country: 'US', founded: 2011,
+      subsegments: ['industrial.materials', 'industrial.power'],
+      oneLiner: 'Silicon-carbon battery anodes from Moses Lake, WA; conditional $1.4B Pentagon loan for anodes and drone cells.',
+      description: ['Sila makes silicon-carbon anode material that raises lithium-ion energy density, produced at its Moses Lake, Washington plant (about 2 GWh a year). In July 2026 it raised a $300M Series H led by Atreides and Sutter Hill, and in August the Pentagon\'s Office of Strategic Capital committed a conditional $1.4B loan to expand anode output and build a cell plant whose first cells target industrial and military drones.'],
+      funding: {
+        totalUsdM: 1610, asOf: '2026-07',
+        rounds: [{ date: '2026-07', type: 'Series H', amountUsdM: 300, leads: ['Atreides Management', 'Sutter Hill Ventures'] }],
+        note: 'Total from a Hiive-sourced tracker, which also put the valuation at $2.33B. Excludes the conditional $1.4B loan and a $100M 2022 DOE grant.',
+        src: [S('StockAnalysis (private)', 'https://stockanalysis.com/private/sila/'), S('electrive, Aug 2026', 'https://electrive.com/2026/08/11/us-government-offers-sila-up-to-1-4-billion-in-funding')]
+      },
+      programs: [{ name: 'Office of Strategic Capital loan (conditional)', customer: 'DoD Office of Strategic Capital', role: 'Borrower', value: 'Up to $1.4B', year: 2026, status: 'Conditional', note: 'Anode expansion and a lithium-ion cell plant at Moses Lake; not yet closed.', src: S('electrive, Aug 2026', 'https://electrive.com/2026/08/11/us-government-offers-sila-up-to-1-4-billion-in-funding') }]
+    });
+
+    DTM.add({
+      id: 'chariot-defense', name: 'Chariot Defense', status: 'private', stage: 'Series A', country: 'US', founded: 2024,
+      subsegments: ['industrial.power'],
+      oneLiner: 'Amphora hybrid power systems that store, convert and route battlefield power for radios, drones and lasers.',
+      description: ['Chariot Defense, founded in 2024, builds Amphora, a modular hybrid power system that integrates energy storage, conversion and distribution at the tactical edge for radios, drones, sensors and directed-energy weapons. After sales and contracts with the US Army and DIU\'s Project GI, it raised a $34M Series A led by Andreessen Horowitz in February 2026, bringing total funding to $41M.'],
+      funding: {
+        totalUsdM: 41, asOf: '2026-02',
+        rounds: [{ date: '2025-07', type: 'Seed', amountUsdM: 8, leads: ['General Catalyst', 'XYZ Venture Capital'] }, { date: '2026-02', type: 'Series A', amountUsdM: 34, leads: ['Andreessen Horowitz'] }],
+        src: S('Pulse 2.0, Feb 2026', 'https://pulse2.com/chariot-defense-34-million-series-a-raised-to-scale-battlefield-power-systems')
+      },
+      programs: [{ name: 'Army and DIU Project GI power systems', customer: 'US Army / DIU', role: 'Prime', status: 'Delivering', src: S('Pulse 2.0, Feb 2026', 'https://pulse2.com/chariot-defense-34-million-series-a-raised-to-scale-battlefield-power-systems') }]
+    });
+  }
+  /* ---------------- Public names sheet provided for this map (undated): additive and industrial tech ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+    const sheetVal = (evSales, evSalesFy2, extra) => Object.assign({
+      evSales, basis: 'EV / Sales, current fiscal year (sheet)',
+      note: `From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: ${evSalesFy2.toFixed(2)}×.`,
+      asOf: '2026', undated: true, src: CSV, ebitdaBasis: 'EV / EBITDA on the sheet (undated)'
+    }, extra || {});
+
+    DTM.add({
+      id: 'xometry', name: 'Xometry', domain: 'xometry.com', status: 'public', ticker: 'XMTR', exchange: 'NASDAQ',
+      hq: 'North Bethesda, MD', country: 'US', founded: 2013,
+      subsegments: ['industrial.additive', 'industrial.manufacturing'],
+      oneLiner: 'AI-driven marketplace that quotes and routes CNC, 3D printing, sheet metal and molding jobs to a supplier network.',
+      description: ['Xometry runs an online marketplace that instantly prices custom parts and routes the work, from CNC machining and 3D printing to sheet metal and injection molding, to a network of independent manufacturers. It serves engineers and buyers across industry, including aerospace and defense suppliers.'],
+      marketCap: { usdM: 6101, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(7.34, 5.33)
+    });
+
+    DTM.add({
+      id: 'materialise', name: 'Materialise', domain: 'materialise.com', status: 'public', ticker: 'MTLS', exchange: 'NASDAQ',
+      hq: 'Leuven', country: 'BE', founded: 1990,
+      subsegments: ['industrial.additive', 'software.engineering'],
+      oneLiner: '3D printing software (Magics, CO-AM), medical planning tools and industrial print services from Belgium.',
+      description: ['Materialise sells software that prepares and manages 3D printing production, including Magics and the CO-AM platform, medical software and patient-specific devices, and contract manufacturing services. Its build-preparation software is widely used by aerospace and defense printing shops.'],
+      marketCap: { usdM: 496, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(1.28, 1.23, { evEbitda: 11.73, pe: 31.26, peBasis: 'P / E on the sheet (undated)' })
+    });
+
+    DTM.add({
+      id: 'proto-labs', name: 'Proto Labs', domain: 'protolabs.com', status: 'public', ticker: 'PRLB', exchange: 'NYSE',
+      hq: 'Maple Plain, MN', country: 'US', founded: 1999,
+      subsegments: ['industrial.additive', 'industrial.manufacturing'],
+      oneLiner: 'Digital factory for quick-turn injection molding, CNC machining, 3D printing and sheet metal parts.',
+      description: ['Proto Labs runs automated factories and a partner network that turn uploaded CAD files into injection-molded, machined, printed and sheet metal parts in days, serving prototyping and low-volume production for industrial, medical and aerospace customers.'],
+      marketCap: { usdM: 2202, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(3.68, 3.29, { evEbitda: 27.94, pe: 74.53, peBasis: 'P / E on the sheet (undated)' })
+    });
+
+    DTM.add({
+      id: '3d-systems', name: '3D Systems', domain: '3dsystems.com', status: 'public', ticker: 'DDD', exchange: 'NYSE',
+      hq: 'Rock Hill, SC', country: 'US', founded: 1986,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Inventor of stereolithography; metal and polymer printers, materials and software for industrial and healthcare use.',
+      description: ['3D Systems, founded by stereolithography inventor Chuck Hull, sells metal and polymer printers, materials, software and on-demand parts for aerospace and defense, industrial and healthcare customers.'],
+      marketCap: { usdM: 547, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(1.47, 1.39)
+    });
+
+    DTM.add({
+      id: 'stratasys', name: 'Stratasys', domain: 'stratasys.com', status: 'public', ticker: 'SSYS', exchange: 'NASDAQ',
+      hq: 'Eden Prairie, MN and Rehovot', country: 'US', founded: 1989,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'FDM and PolyJet polymer printers, materials and software, widely used for aerospace and defense tooling and parts.',
+      description: ['Stratasys, the company behind fused deposition modeling (FDM) and PolyJet, sells polymer 3D printers, certified materials and software, with dual headquarters in Minnesota and Israel. Its printers are used by aerospace and defense manufacturers for tooling, prototypes and flight-qualified parts.'],
+      marketCap: { usdM: 709, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(0.95, 0.89)
+    });
+
+    DTM.add({
+      id: 'velo3d', name: 'Velo3D', domain: 'velo3d.com', status: 'public', ticker: 'VELO', exchange: 'NASDAQ',
+      country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Sapphire metal printers and production services; DIU Project FORGE and DLA contracts for weapon-system parts.',
+      description: ['Velo3D makes Sapphire laser powder-bed metal printers and now also produces parts for defense and space customers. 2025 revenue was $46M and it guides to $60M–$70M in 2026; Q1 2026 revenue rose 48% to $13.8M. Defense work includes a $32.6M DIU Project FORGE contract with the Navy to qualify printed weapon-system components, an $11.5M production contract from a defense prime and a $9.8M Defense Logistics Agency IDIQ.'],
+      marketCap: { usdM: 285, asOf: '2026', undated: true, src: CSV },
+      financials: {
+        cur: 'USD', fyEnd: 'Dec',
+        periods: [{ label: 'FY2025', revenue: 46 }],
+        notes: 'Q1 2026 revenue $13.8M (+48%), 17.2% gross margin; 2026 guidance $60M–$70M.',
+        asOf: '2026-05', src: [S('Velo3D FY2025 results, Barchart', 'https://www.barchart.com/story/news/928646/velo3d-announces-fourth-quarter-and-full-year-2025-financial-results-unveils-long-term-capacity-plan-envisioning-up-to-approximately-400-production-systems'), S('Velo3D 8-K, Mar 2026', 'https://www.sec.gov/Archives/edgar/data/1825079/000119312526121871/velo-ex99_1.htm')]
+      },
+      valuation: sheetVal(3.89, 2.43),
+      programs: [
+        { name: 'Project FORGE: printed weapon-system components', customer: 'DIU / US Navy', role: 'Prime', value: '$32.6M', year: 2026, status: 'Awarded', src: S('Velo3D 8-K, Mar 2026', 'https://www.sec.gov/Archives/edgar/data/1825079/000119312526121871/velo-ex99_1.htm') },
+        { name: 'JAMA Pilot Parts Program IDIQ', customer: 'Defense Logistics Agency', role: 'Prime', value: '$9.8M', status: 'Awarded', src: S('Velo3D 8-K, Mar 2026', 'https://www.sec.gov/Archives/edgar/data/1825079/000119312526121871/velo-ex99_1.htm') }
+      ]
+    });
+
+    DTM.add({
+      id: 'symbotic', name: 'Symbotic', domain: 'symbotic.com', status: 'public', ticker: 'SYM', exchange: 'NASDAQ',
+      hq: 'Wilmington, MA', country: 'US', founded: 2007,
+      subsegments: ['industrial.manufacturing'],
+      oneLiner: 'AI-driven robotic warehouse automation for retailers and distributors; Walmart is its largest customer.',
+      description: ['Symbotic builds AI-controlled robotic systems that store, retrieve and palletize cases in distribution centers, with Walmart as its largest customer. It appears on the public names sheet as disruptive industrial technology; it has no disclosed defense programs.'],
+      marketCap: { usdM: 25287, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(1.56, 1.15, { evEbitda: 50.37, pe: 469.62, peBasis: 'P / E on the sheet (undated)' })
+    });
+  }
 })();

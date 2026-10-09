@@ -54,7 +54,8 @@ export function validate(D) {
     if (!c.name) errors.push(`${w} missing name`);
     if (!['public', 'private'].includes(c.status)) errors.push(`${w} status must be public or private`);
     if (!D.countryNames[c.country]) errors.push(`${w} unknown country ${c.country}`);
-    if (!isNum(c.founded) || c.founded < 1800 || c.founded > 2026) errors.push(`${w} founded year invalid`);
+    if (c.founded == null) warnings.push(`${w} founding year not compiled`);
+    else if (!isNum(c.founded) || c.founded < 1800 || c.founded > 2026) errors.push(`${w} founded year invalid`);
     if (!Array.isArray(c.subsegments) || !c.subsegments.length) errors.push(`${w} needs at least one subsegment`);
     else for (const s of c.subsegments) if (!subs.has(s)) errors.push(`${w} unknown subsegment ${s}`);
     if (!c.oneLiner) errors.push(`${w} missing oneLiner`);

@@ -1185,4 +1185,77 @@
       ]
     });
   }
+  /* ---------------- Added from the private names list and public names sheet provided for this map (Oct 2026) ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+    const sheetVal = (evSales, evSalesFy2, extra) => Object.assign({
+      evSales, basis: 'EV / Sales, current fiscal year (sheet)',
+      note: `From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: ${evSalesFy2.toFixed(2)}×.`,
+      asOf: '2026', undated: true, src: CSV, ebitdaBasis: 'EV / EBITDA on the sheet (undated)'
+    }, extra || {});
+
+    DTM.add({
+      id: 'skyryse', name: 'Skyryse', domain: 'skyryse.com', status: 'private', stage: 'Series C', hq: 'El Segundo, CA', country: 'US', founded: 2016,
+      subsegments: ['uas.autonomy'],
+      oneLiner: 'SkyOS fly-by-wire automation for helicopters and planes, demonstrated on the Black Hawk; valued above $1B.',
+      description: ['Skyryse develops SkyOS, a universal fly-by-wire operating system that automates helicopters and fixed-wing aircraft. It integrated SkyOS on a Black Hawk in 91 days and works with the US Army and Cal Fire; the FAA granted final design approval for its flight control computers in 2025. In February 2026 it raised more than $300M in a Series C led by Autopilot Ventures and Fidelity at a valuation reported at $1.15B. In June 2026 it agreed to build an uncrewed R66 with Robinson.'],
+      funding: { totalUsdM: 605, asOf: '2026-02', rounds: [{ date: '2026-02', type: 'Series C', amountUsdM: 300, postUsdM: 1150, leads: ['Autopilot Ventures', 'Fidelity'] }], note: 'Company says total equity raised exceeds $605M.', src: S('Flying, Feb 2026', 'https://www.flyingmag.com/skyryse-raises-300m-automate-aircraft-skyos/') },
+      programs: [{ name: 'SkyOS on the UH-60 Black Hawk', customer: 'US Army', role: 'Prime', status: 'Demonstrated', src: S('Pulse 2.0, Feb 2026', 'https://pulse2.com/skyryse-300-million-series-c/') }]
+    });
+
+    DTM.add({
+      id: 'heven-aerotech', name: 'Heven AeroTech', short: 'Heven', formerly: 'Heven Drones', status: 'private', stage: 'Series B', hq: 'Sterling, VA', country: 'US', founded: null,
+      subsegments: ['uas.tactical'],
+      oneLiner: 'Hydrogen-powered heavy drones with long endurance; IonQ-led $100M Series B at a $1B valuation.',
+      description: ['Heven AeroTech, which began in Israel as Heven Drones, builds hydrogen fuel-cell drones for long-endurance and heavy-lift missions. It rebranded and moved its headquarters to Sterling, Virginia in 2025, and in September 2026 opened a 56,000 sq ft factory in Winchester, Virginia, adding to production in the Columbia River Gorge. It raised a $100M Series B led by IonQ in late 2025 at a reported $1B valuation.'],
+      funding: { totalUsdM: 115.3, asOf: '2025-12', rounds: [{ date: '2025-12', type: 'Series B', amountUsdM: 100, postUsdM: 1000, leads: ['IonQ'] }], note: 'Trackers report totals of $104.5M–$115.3M.', src: S('Tectonic Defense', 'https://www.tectonicdefense.com/hydrogen-drone-startup-heven-aerotech-raises-100m-series-b/') }
+    });
+
+    DTM.add({
+      id: 'poseidon-aerospace', name: 'Poseidon Aerospace', short: 'Poseidon', status: 'private', stage: 'Series A', country: 'US', founded: 2024,
+      subsegments: ['uas.tactical'],
+      oneLiner: 'Egret STOL and Heron seaplane uncrewed cargo aircraft for contested logistics, carrying 2 tons up to 1,500 miles.',
+      description: ['Poseidon Aerospace, founded in 2024 by former Amazon and Lockheed Martin engineers David Zagaynov and Parker Tenney, is building two uncrewed cargo aircraft, the Egret short-takeoff plane and the Heron seaplane, each designed to carry up to two tons up to 1,500 miles, for regional air cargo and contested military logistics. It raised a $60M Series A in September 2026 led by TQ Ventures, about ten months after an $11M seed.'],
+      funding: { totalUsdM: 71, asOf: '2026-09', rounds: [{ date: '2026-09', type: 'Series A', amountUsdM: 60, leads: ['TQ Ventures'] }], src: S('Tectonic Defense, Sep 2026', 'https://tectonicdefense.com/poseidon-raises-60m-to-build-big-ol-cargo-drones') }
+    });
+
+    DTM.add({
+      id: 'elroy-air', name: 'Elroy Air', status: 'private', stage: 'SPAC pending', hq: 'South San Francisco, CA', country: 'US', founded: 2016,
+      subsegments: ['uas.tactical'],
+      oneLiner: 'Chaparral hybrid-electric VTOL cargo drone; $46M Army contested-logistics contract and a pending SPAC listing.',
+      description: ['Elroy Air builds the Chaparral, a hybrid-electric vertical-takeoff cargo drone for autonomous middle-mile and contested military logistics. The US Army awarded a $46M contract to extend its contested-logistics capabilities, with $5.1M funded in fiscal 2026. It is merging with Inflection Point Acquisition Corp. VII, expected to close in Q4 2026, with PIPE commitments upsized to $175M, including Lockheed Martin Ventures.'],
+      funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2026-09', note: 'Raised a $40M Series A in 2022; $75M of the $175M PIPE was funded ahead of the merger closing.', src: [S('DroneDJ, Sep 2026', 'https://dronedj.com/2026/09/28/elroy-air-chaparral-drone-funding/'), S('FreightWaves', 'https://www.freightwaves.com/news/elroy-air-raises-40m-for-specialized-military-logistics-drone')] },
+      programs: [{ name: 'Chaparral contested logistics', customer: 'US Army', role: 'Prime', value: '$46M', year: 2026, status: 'Development', src: S('Aviation Week', 'https://aviationweek.com/defense/aircraft-propulsion/us-army-funds-enhancements-elroys-hybrid-cargo-evtol') }]
+    });
+
+    DTM.add({
+      id: 'infravision', name: 'Infravision', status: 'private', stage: 'Series B', country: 'AU', founded: 2018,
+      subsegments: ['uas.commercial'],
+      oneLiner: 'Drone-based TX System that strings high-voltage power lines in days; $91M Series B led by GIC.',
+      description: ['Infravision builds the TX System, which pairs drones with ground equipment and stringing hardware to string extra-high-voltage transmission lines in days rather than weeks. Founded in Australia in 2018, it is expanding in North America. It raised a $91M Series B in November 2025 led by GIC, after a $23M Series A led by Energy Impact Partners in 2023. It has no disclosed defense work.'],
+      funding: { totalUsdM: 115, asOf: '2025-11', note: 'Crunchbase puts the total at just under $115M.', src: S('GIC, Nov 2025', 'https://www.gic.com.sg/uploads/2025/11/Infravision-Raises-91-Million-Series-B-Led-by-GIC-to-Revolutionize-Power-Infrastructure-Construction-with-Aerial-Robotics.pdf') }
+    });
+
+    DTM.add({
+      id: 'lightpath', name: 'LightPath Technologies', short: 'LightPath', domain: 'lightpath.com', status: 'public', ticker: 'LPTH', exchange: 'NASDAQ',
+      hq: 'Orlando, FL', country: 'US', founded: null,
+      subsegments: ['uas.components', 'cuas.sensing'],
+      oneLiner: 'Germanium-free infrared optics and cooled IR cameras for counter-drone and defense systems; $90M+ backlog.',
+      description: ['LightPath makes infrared optics and camera systems and is moving customers from germanium, which China restricts, to its BlackDiamond glass. Orders include $18.2M and $22.1M IR camera orders from a global technology customer in September 2025, an $11M follow-on for counter-drone cameras in July 2026 and a $9.6M cooled-camera contract; management cited a backlog above $90M.'],
+      marketCap: { usdM: 688, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(8.58, 4.22, { evEbitda: 159.14 }),
+      programs: [{ name: 'IR cameras for counter-UAS (follow-on)', customer: 'Global technology customer', role: 'Supplier', value: '$11M', year: 2026, status: 'Ordered', src: S('The Defense Post, Jul 2026', 'https://thedefensepost.com/2026/07/20/lightpath-counter-drone-infrared-cameras/') }]
+    });
+
+    DTM.add({
+      id: 'lantronix', name: 'Lantronix', domain: 'lantronix.com', status: 'public', ticker: 'LTRX', exchange: 'NASDAQ',
+      hq: 'Irvine, CA', country: 'US', founded: 1989,
+      subsegments: ['uas.components'],
+      oneLiner: 'Edge compute modules powering Teal\'s Black Widow drones for the Army SRR program; NDAA/TAA compliant.',
+      description: ['Lantronix makes industrial IoT and edge compute products. Its Open-Q 5165N system-on-module was selected by Red Cat\'s Teal Drones for the Black Widow under the Army\'s Short Range Reconnaissance program, with shipments from June 2025. The company says it is working with more than 30 drone makers and projects drones at 15–20% of sales in fiscal 2027.'],
+      marketCap: { usdM: 319, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(2.21, 1.71),
+      programs: [{ name: 'Compute module for Teal Black Widow (SRR)', ref: 'srr', customer: 'Teal Drones (Red Cat) / US Army', role: 'Supplier', year: 2025, status: 'Production', src: S('Lantronix', 'https://www.lantronix.com/solutions/aerospace-defense/drones/') }]
+    });
+  }
 })();

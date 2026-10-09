@@ -1107,7 +1107,7 @@ DTM.meta = {
   title: 'Defense Tech Market Map',
   edition: 'Q4 2026',
   asOf: '2026-10-09',
-  note: 'Curated snapshot compiled in October 2026. Every figure carries its own as-of date and source, and values a company has not disclosed are marked as such. Where a figure is our own calculation or a third-party estimate, the profile says so. Non-USD market caps are converted to USD at approximate 2026 exchange rates. Companies added from the funding tables and comps sheet provided for this edition cite them as their source; the comps sheet is undated.'
+  note: 'Curated snapshot compiled in October 2026. Every figure carries its own as-of date and source, and values a company has not disclosed are marked as such. Where a figure is our own calculation or a third-party estimate, the profile says so. Non-USD market caps are converted to USD at approximate 2026 exchange rates. Companies added from the funding tables, comps sheet and public names sheet provided for this edition cite them as their source; both sheets are undated.'
 };
 
 DTM.segments = [
@@ -1197,6 +1197,7 @@ DTM.segments = [
     blurb: 'Factories, materials and power that let the industrial base produce at wartime rates.',
     subsegments: [
       { id: 'industrial.manufacturing', name: 'Advanced Manufacturing', blurb: 'Automated machining, additive and software-defined factories.' },
+      { id: 'industrial.additive', name: 'Additive Manufacturing', blurb: '3D printers, printed parts, materials and software for producing parts on demand.' },
       { id: 'industrial.materials', name: 'Materials & Critical Minerals', blurb: 'Rare-earth magnets, critical minerals and advanced materials.' },
       { id: 'industrial.nuclear', name: 'Nuclear & Microreactors', blurb: 'Microreactors and naval nuclear power for bases and the fleet.' },
       { id: 'industrial.power', name: 'Power & Batteries', blurb: 'Batteries, fuel cells and expeditionary power.' }
@@ -1218,7 +1219,7 @@ DTM.segments = [
 DTM.regions = [
   { id: 'us', name: 'United States', countries: ['US'] },
   { id: 'uk', name: 'United Kingdom', countries: ['UK'] },
-  { id: 'eu', name: 'Europe', countries: ['DE', 'FR', 'IT', 'SE', 'NO', 'FI', 'EE', 'PL', 'NL', 'ES', 'PT', 'DK', 'CH', 'LT', 'UA', 'CZ', 'BE', 'AT', 'BG', 'HR'] },
+  { id: 'eu', name: 'Europe', countries: ['DE', 'FR', 'IT', 'SE', 'NO', 'FI', 'EE', 'PL', 'NL', 'ES', 'PT', 'DK', 'CH', 'LT', 'UA', 'CZ', 'BE', 'AT', 'BG', 'HR', 'IE', 'TR'] },
   { id: 'il', name: 'Israel', countries: ['IL'] },
   { id: 'apac', name: 'Asia-Pacific', countries: ['AU', 'NZ', 'JP', 'KR', 'TW', 'SG', 'IN'] },
   { id: 'other', name: 'Canada & other', countries: ['CA'] },
@@ -1230,7 +1231,7 @@ DTM.countryNames = {
   NO: 'Norway', FI: 'Finland', EE: 'Estonia', PL: 'Poland', NL: 'Netherlands', ES: 'Spain', PT: 'Portugal',
   DK: 'Denmark', CH: 'Switzerland', LT: 'Lithuania', UA: 'Ukraine', CZ: 'Czechia', BE: 'Belgium', AT: 'Austria',
   IL: 'Israel', AU: 'Australia', NZ: 'New Zealand', JP: 'Japan', KR: 'South Korea', TW: 'Taiwan',
-  SG: 'Singapore', IN: 'India', CA: 'Canada', BG: 'Bulgaria', HR: 'Croatia', CN: 'China'
+  SG: 'Singapore', IN: 'India', CA: 'Canada', BG: 'Bulgaria', HR: 'Croatia', CN: 'China', IE: 'Ireland', TR: 'Türkiye'
 };
 
 </script>
@@ -2311,6 +2312,33 @@ DTM.programs = [
     funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2026-10', src: TBL },
     programs: [{ name: 'Space Force ground communications prototype', customer: 'US Space Force', role: 'Prime', value: '$9.5M', year: 2025, status: 'Prototype' }]
   });
+  /* ---------------- Added from the public names sheet provided for this map (undated) ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+
+    DTM.add({
+      id: 'spire-global', name: 'Spire Global', short: 'Spire', domain: 'spire.com', status: 'public', ticker: 'SPIR', exchange: 'NYSE',
+      hq: 'Vienna, VA', country: 'US', founded: 2012,
+      subsegments: ['space.isr'],
+      oneLiner: 'Nanosatellite constellation for weather, RF and space-based data; on MDA\'s SHIELD IDIQ after selling its maritime arm.',
+      description: ['Spire operates a large constellation of nanosatellites that collect radio occultation weather data and RF signals, and builds and operates satellites for others. It sold its maritime data business to Kpler for about $239M in April 2025, so 2025 revenue fell to $71.6M from $110.5M. It was selected for the Missile Defense Agency\'s SHIELD IDIQ, won an $11.2M NOAA data contract and expects more than 30% growth in 2026 for its remaining business.'],
+      marketCap: { usdM: 420, asOf: '2026', undated: true, src: CSV },
+      financials: { cur: 'USD', fyEnd: 'Dec', periods: [{ label: 'FY2024', revenue: 110.5 }, { label: 'FY2025', revenue: 71.6 }], notes: 'FY2025 includes $21.0M from the maritime business sold in April 2025.', asOf: '2026-03', src: S('Spire FY2025 results', 'https://seekingalpha.com/pr/20442235') },
+      valuation: { evSales: 5.18, basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 3.22×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV },
+      programs: [{ name: 'SHIELD IDIQ', ref: 'golden-dome', customer: 'Missile Defense Agency', role: 'Prime', status: 'Awarded', src: S('AeroMorning', 'https://aeromorning.com/en/spire-global-2025-results-a-transition-year-masks-early-signs-of-stabilization/') }]
+    });
+
+    DTM.add({
+      id: 'mda-space', name: 'MDA Space', domain: 'mda.space', status: 'public', ticker: 'MDA', exchange: 'TSX',
+      hq: 'Brampton, ON', country: 'CA', founded: 1969,
+      subsegments: ['space.buses', 'space.isr'],
+      oneLiner: 'Canadian satellite maker (Telesat Lightspeed, Globalstar), robotics and SAR; record C$1.6B revenue in 2025.',
+      description: ['MDA Space builds satellites and constellations, space robotics such as Canadarm, and radar Earth observation. 2025 revenue rose 51% to a record C$1,633M, driven by Telesat Lightspeed and Globalstar satellite programs, with a backlog of about C$4B. It guides to C$1.7B–C$1.9B for 2026 and set up 49North, a dedicated defense subsidiary.'],
+      marketCap: { usdM: 4569, local: { cur: 'CAD', valueM: 6346 }, asOf: '2026', undated: true, src: S('Public defense names sheet provided for this map (undated); CAD converted at about 0.72') },
+      financials: { cur: 'CAD', fyEnd: 'Dec', periods: [{ label: 'FY2025', revenue: 1633, ebitda: 324 }], notes: 'Backlog about C$4B at end-2025; 2026 guidance C$1.7B–C$1.9B.', asOf: '2026-03-04', src: S('MDA Space FY2025 results', 'https://mda-en.investorroom.com/2026-03-04-MDA-SPACE-REPORTS-FOURTH-QUARTER-AND-FISCAL-2025-RESULTS') },
+      valuation: { evSales: 3.38, evEbitda: 22.03, pe: 48.65, peBasis: 'P / E on the sheet (undated)', basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 2.31×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV }
+    });
+  }
 })();
 
 </script>
@@ -2939,6 +2967,18 @@ DTM.programs = [
         { name: 'Warheads and low-cost cruise missile co-production', customer: 'Global Technical Systems', role: 'Partner', status: 'Partnership', src: S('Tectonic', 'https://www.tectonicdefense.com/exclusive-aeon-teams-up-with-gts-on-new-warheads-and-missiles/') },
         { name: 'Tactical missiles and solid rocket motors', customer: 'X-Bow Systems', role: 'Partner', year: 2025, status: 'MOU', src: S('Axios, Sep 2025', 'https://www.axios.com/2025/09/09/aeon-xbow-missile-partnership-texas/') }
       ]
+    });
+  }
+  /* ---------------- Added from the private names list provided for this map (Oct 2026) ---------------- */
+  {
+    DTM.add({
+      id: 'covenant', name: 'Covenant', status: 'private', stage: 'Venture', country: 'US', founded: null,
+      subsegments: ['missiles.strike'],
+      oneLiner: 'Anthem ground-launched missile for mass production at a mid-six-figure price; factories in Dallas, Saxony and Israel.',
+      description: ['Covenant builds Anthem, a ground-launched missile carrying more than 441 lb of payload, meant to complement weapons such as Tomahawk at a target price in the mid six figures. Anthem first flew in August 2025 and has made more than 200 flights, including US Army tests, and Covenant holds a roughly $70M Navy contract for a maritime version. It plans 5,000 missiles a year from a Dallas factory starting in Q1 2027, plus sites in Saxony, Germany and northern Israel; it reports more than $250M raised and about $150M of orders.'],
+      leadership: [['Michael Kaufman', 'Co-founder & CEO']],
+      funding: { totalUsdM: 250, asOf: '2026', note: 'Company-reported: more than $250M across three rounds. Rests on a single syndicated report.', src: S('SupplyChain247 (Reuters)', 'https://www.supplychain247.com/article/covenant-anthem-missile-mass-production') },
+      programs: [{ name: 'Maritime Anthem development', customer: 'US Navy', role: 'Prime', value: '~$70M', status: 'Development', src: S('SupplyChain247 (Reuters)', 'https://www.supplychain247.com/article/covenant-anthem-missile-mass-production') }, { name: 'Anthem flight tests', ref: 'etv', customer: 'US Army', role: 'Prime', year: 2025, status: 'Flight test', src: S('SupplyChain247 (Reuters)', 'https://www.supplychain247.com/article/covenant-anthem-missile-mass-production') }]
     });
   }
 })();
@@ -4132,6 +4172,79 @@ DTM.programs = [
       ]
     });
   }
+  /* ---------------- Added from the private names list and public names sheet provided for this map (Oct 2026) ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+    const sheetVal = (evSales, evSalesFy2, extra) => Object.assign({
+      evSales, basis: 'EV / Sales, current fiscal year (sheet)',
+      note: `From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: ${evSalesFy2.toFixed(2)}×.`,
+      asOf: '2026', undated: true, src: CSV, ebitdaBasis: 'EV / EBITDA on the sheet (undated)'
+    }, extra || {});
+
+    DTM.add({
+      id: 'skyryse', name: 'Skyryse', domain: 'skyryse.com', status: 'private', stage: 'Series C', hq: 'El Segundo, CA', country: 'US', founded: 2016,
+      subsegments: ['uas.autonomy'],
+      oneLiner: 'SkyOS fly-by-wire automation for helicopters and planes, demonstrated on the Black Hawk; valued above $1B.',
+      description: ['Skyryse develops SkyOS, a universal fly-by-wire operating system that automates helicopters and fixed-wing aircraft. It integrated SkyOS on a Black Hawk in 91 days and works with the US Army and Cal Fire; the FAA granted final design approval for its flight control computers in 2025. In February 2026 it raised more than $300M in a Series C led by Autopilot Ventures and Fidelity at a valuation reported at $1.15B. In June 2026 it agreed to build an uncrewed R66 with Robinson.'],
+      funding: { totalUsdM: 605, asOf: '2026-02', rounds: [{ date: '2026-02', type: 'Series C', amountUsdM: 300, postUsdM: 1150, leads: ['Autopilot Ventures', 'Fidelity'] }], note: 'Company says total equity raised exceeds $605M.', src: S('Flying, Feb 2026', 'https://www.flyingmag.com/skyryse-raises-300m-automate-aircraft-skyos/') },
+      programs: [{ name: 'SkyOS on the UH-60 Black Hawk', customer: 'US Army', role: 'Prime', status: 'Demonstrated', src: S('Pulse 2.0, Feb 2026', 'https://pulse2.com/skyryse-300-million-series-c/') }]
+    });
+
+    DTM.add({
+      id: 'heven-aerotech', name: 'Heven AeroTech', short: 'Heven', formerly: 'Heven Drones', status: 'private', stage: 'Series B', hq: 'Sterling, VA', country: 'US', founded: null,
+      subsegments: ['uas.tactical'],
+      oneLiner: 'Hydrogen-powered heavy drones with long endurance; IonQ-led $100M Series B at a $1B valuation.',
+      description: ['Heven AeroTech, which began in Israel as Heven Drones, builds hydrogen fuel-cell drones for long-endurance and heavy-lift missions. It rebranded and moved its headquarters to Sterling, Virginia in 2025, and in September 2026 opened a 56,000 sq ft factory in Winchester, Virginia, adding to production in the Columbia River Gorge. It raised a $100M Series B led by IonQ in late 2025 at a reported $1B valuation.'],
+      funding: { totalUsdM: 115.3, asOf: '2025-12', rounds: [{ date: '2025-12', type: 'Series B', amountUsdM: 100, postUsdM: 1000, leads: ['IonQ'] }], note: 'Trackers report totals of $104.5M–$115.3M.', src: S('Tectonic Defense', 'https://www.tectonicdefense.com/hydrogen-drone-startup-heven-aerotech-raises-100m-series-b/') }
+    });
+
+    DTM.add({
+      id: 'poseidon-aerospace', name: 'Poseidon Aerospace', short: 'Poseidon', status: 'private', stage: 'Series A', country: 'US', founded: 2024,
+      subsegments: ['uas.tactical'],
+      oneLiner: 'Egret STOL and Heron seaplane uncrewed cargo aircraft for contested logistics, carrying 2 tons up to 1,500 miles.',
+      description: ['Poseidon Aerospace, founded in 2024 by former Amazon and Lockheed Martin engineers David Zagaynov and Parker Tenney, is building two uncrewed cargo aircraft, the Egret short-takeoff plane and the Heron seaplane, each designed to carry up to two tons up to 1,500 miles, for regional air cargo and contested military logistics. It raised a $60M Series A in September 2026 led by TQ Ventures, about ten months after an $11M seed.'],
+      funding: { totalUsdM: 71, asOf: '2026-09', rounds: [{ date: '2026-09', type: 'Series A', amountUsdM: 60, leads: ['TQ Ventures'] }], src: S('Tectonic Defense, Sep 2026', 'https://tectonicdefense.com/poseidon-raises-60m-to-build-big-ol-cargo-drones') }
+    });
+
+    DTM.add({
+      id: 'elroy-air', name: 'Elroy Air', status: 'private', stage: 'SPAC pending', hq: 'South San Francisco, CA', country: 'US', founded: 2016,
+      subsegments: ['uas.tactical'],
+      oneLiner: 'Chaparral hybrid-electric VTOL cargo drone; $46M Army contested-logistics contract and a pending SPAC listing.',
+      description: ['Elroy Air builds the Chaparral, a hybrid-electric vertical-takeoff cargo drone for autonomous middle-mile and contested military logistics. The US Army awarded a $46M contract to extend its contested-logistics capabilities, with $5.1M funded in fiscal 2026. It is merging with Inflection Point Acquisition Corp. VII, expected to close in Q4 2026, with PIPE commitments upsized to $175M, including Lockheed Martin Ventures.'],
+      funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2026-09', note: 'Raised a $40M Series A in 2022; $75M of the $175M PIPE was funded ahead of the merger closing.', src: [S('DroneDJ, Sep 2026', 'https://dronedj.com/2026/09/28/elroy-air-chaparral-drone-funding/'), S('FreightWaves', 'https://www.freightwaves.com/news/elroy-air-raises-40m-for-specialized-military-logistics-drone')] },
+      programs: [{ name: 'Chaparral contested logistics', customer: 'US Army', role: 'Prime', value: '$46M', year: 2026, status: 'Development', src: S('Aviation Week', 'https://aviationweek.com/defense/aircraft-propulsion/us-army-funds-enhancements-elroys-hybrid-cargo-evtol') }]
+    });
+
+    DTM.add({
+      id: 'infravision', name: 'Infravision', status: 'private', stage: 'Series B', country: 'AU', founded: 2018,
+      subsegments: ['uas.commercial'],
+      oneLiner: 'Drone-based TX System that strings high-voltage power lines in days; $91M Series B led by GIC.',
+      description: ['Infravision builds the TX System, which pairs drones with ground equipment and stringing hardware to string extra-high-voltage transmission lines in days rather than weeks. Founded in Australia in 2018, it is expanding in North America. It raised a $91M Series B in November 2025 led by GIC, after a $23M Series A led by Energy Impact Partners in 2023. It has no disclosed defense work.'],
+      funding: { totalUsdM: 115, asOf: '2025-11', note: 'Crunchbase puts the total at just under $115M.', src: S('GIC, Nov 2025', 'https://www.gic.com.sg/uploads/2025/11/Infravision-Raises-91-Million-Series-B-Led-by-GIC-to-Revolutionize-Power-Infrastructure-Construction-with-Aerial-Robotics.pdf') }
+    });
+
+    DTM.add({
+      id: 'lightpath', name: 'LightPath Technologies', short: 'LightPath', domain: 'lightpath.com', status: 'public', ticker: 'LPTH', exchange: 'NASDAQ',
+      hq: 'Orlando, FL', country: 'US', founded: null,
+      subsegments: ['uas.components', 'cuas.sensing'],
+      oneLiner: 'Germanium-free infrared optics and cooled IR cameras for counter-drone and defense systems; $90M+ backlog.',
+      description: ['LightPath makes infrared optics and camera systems and is moving customers from germanium, which China restricts, to its BlackDiamond glass. Orders include $18.2M and $22.1M IR camera orders from a global technology customer in September 2025, an $11M follow-on for counter-drone cameras in July 2026 and a $9.6M cooled-camera contract; management cited a backlog above $90M.'],
+      marketCap: { usdM: 688, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(8.58, 4.22, { evEbitda: 159.14 }),
+      programs: [{ name: 'IR cameras for counter-UAS (follow-on)', customer: 'Global technology customer', role: 'Supplier', value: '$11M', year: 2026, status: 'Ordered', src: S('The Defense Post, Jul 2026', 'https://thedefensepost.com/2026/07/20/lightpath-counter-drone-infrared-cameras/') }]
+    });
+
+    DTM.add({
+      id: 'lantronix', name: 'Lantronix', domain: 'lantronix.com', status: 'public', ticker: 'LTRX', exchange: 'NASDAQ',
+      hq: 'Irvine, CA', country: 'US', founded: 1989,
+      subsegments: ['uas.components'],
+      oneLiner: 'Edge compute modules powering Teal\'s Black Widow drones for the Army SRR program; NDAA/TAA compliant.',
+      description: ['Lantronix makes industrial IoT and edge compute products. Its Open-Q 5165N system-on-module was selected by Red Cat\'s Teal Drones for the Black Widow under the Army\'s Short Range Reconnaissance program, with shipments from June 2025. The company says it is working with more than 30 drone makers and projects drones at 15–20% of sales in fiscal 2027.'],
+      marketCap: { usdM: 319, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(2.21, 1.71),
+      programs: [{ name: 'Compute module for Teal Black Widow (SRR)', ref: 'srr', customer: 'Teal Drones (Red Cat) / US Army', role: 'Supplier', year: 2025, status: 'Production', src: S('Lantronix', 'https://www.lantronix.com/solutions/aerospace-defense/drones/') }]
+    });
+  }
 })();
 
 </script>
@@ -4508,6 +4621,17 @@ DTM.programs = [
       ]
     });
   }
+  /* ---------------- Added from the private names list provided for this map (Oct 2026) ---------------- */
+  {
+    DTM.add({
+      id: 'skapion', name: 'Skapion', status: 'private', stage: 'Seed', hq: 'Washington, DC', country: 'US', founded: 2025,
+      subsegments: ['cuas.kinetic'],
+      oneLiner: 'Mobile counter-swarm air defense from former Iron Dome program leaders; $36M seed from Khosla and UP.Partners.',
+      description: ['Skapion, founded in late 2025 with headquarters in Washington, DC and R&D in Ramat Gan, Israel, is developing a mobile counter-swarm system designed for hundreds of simultaneous engagements at a much lower cost per intercept than conventional air defense. Its chief architect is retired Brig. Gen. Pini Yungman, former head of Rafael\'s air and missile defense division. It emerged from stealth in July 2026 with a $36M seed co-led by Khosla Ventures and UP.Partners.'],
+      leadership: [['Ido Bar-On', 'CEO'], ['Pini Yungman', 'Chief Architect']],
+      funding: { totalUsdM: 36, asOf: '2026-07', rounds: [{ date: '2026-07', type: 'Seed', amountUsdM: 36, leads: ['Khosla Ventures', 'UP.Partners'] }], src: S('Soldier Systems Daily, Jul 2026', 'https://soldiersystems.net/2026/07/10/skapion-secures-36-million-seed-funding-to-accelerate-mobile-counter-swarm-defense-system/') }
+    });
+  }
 })();
 
 </script>
@@ -4591,7 +4715,7 @@ DTM.programs = [
   });
 
   DTM.add({
-    id: 'havoc', name: 'Havoc', domain: 'havocai.com', status: 'private', stage: 'Series A',
+    id: 'havoc', name: 'Havoc', tags: ['HavocAI'], domain: 'havocai.com', status: 'private', stage: 'Series A',
     hq: 'Providence, RI', country: 'US', founded: 2023,
     subsegments: ['maritime.usv', 'uas.autonomy'],
     oneLiner: 'Collaborative autonomy for swarms of uncrewed boats, expanding to all domains.',
@@ -4738,6 +4862,161 @@ DTM.programs = [
       { name: 'Offshore Patrol Cutter', customer: 'US Coast Guard', role: 'Prime', status: 'Production' }
     ]
   });
+  /* ---------------- Added from the private names list provided for this map (Oct 2026) ---------------- */
+  {
+    DTM.add({
+      id: 'xocean', name: 'XOCEAN', status: 'private', stage: 'Growth', hq: 'Greenore, Co. Louth', country: 'IE', founded: null,
+      subsegments: ['maritime.usv'],
+      oneLiner: 'Fleet of small uncrewed surface vessels selling ocean survey data for offshore energy and hydrography.',
+      description: ['XOCEAN operates a fleet of small uncrewed surface vessels, controlled remotely from shore, that collect seabed and ocean data for offshore wind, oil and gas, hydrography and government customers. It raised €115M in January 2025 from investors including S2G Ventures, Climate Investment and Morgan Stanley\'s 1GT fund, after €30M in June 2024 that included €20M of EIB venture debt.'],
+      funding: {
+        totalUsdM: 173.7, asOf: '2025-01',
+        rounds: [{ date: '2025-01', type: 'Growth', amountUsdM: 118 }],
+        note: 'CB Insights total, which includes venture debt.',
+        src: [S('ESG Today, Jan 2025', 'https://www.esgtoday.com/xocean-raises-118-million-to-meet-growing-demand-for-blue-economy-data'), S('CB Insights', 'https://www.cbinsights.com/company/xocean')]
+      }
+    });
+
+    DTM.add({
+      id: 'thayermahan', name: 'ThayerMahan', status: 'private', stage: 'Privately held', hq: 'Groton, CT', country: 'US', founded: 2016,
+      subsegments: ['maritime.uuv'],
+      oneLiner: 'Autonomous maritime sensing for undersea and seabed warfare; $19.3M ONR development contract.',
+      description: ['ThayerMahan, founded in Groton, Connecticut in 2016 by Mike Connor and others, builds long-endurance autonomous platforms, acoustic sensors and AI signal processing for maritime surveillance, anti-submarine and seabed warfare, and offers sensing as a service. The Office of Naval Research awarded it a $19.3M contract in October 2023 to develop autonomous mobile maritime systems through October 2027.'],
+      leadership: [['Mike Connor', 'Founder']],
+      funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2026', src: S('Hartford Business Journal', 'https://hartfordbusiness.com/article/thayermahan-receives-19m-defense-contract-for-maritime-sensing-technology/') },
+      programs: [{ name: 'Autonomous Mobile Maritime Systems for tactical surveillance and seabed warfare', customer: 'Office of Naval Research', role: 'Prime', value: '$19.3M', year: 2023, status: 'Development', src: S('Defense Daily', 'https://defensedaily.com/contract-awards/contract-award-thayermahan-inc-groton-connecticut-19296073') }]
+    });
+
+    DTM.add({
+      id: 'vatn-systems', name: 'Vatn Systems', short: 'Vatn', status: 'private', stage: 'Series A', hq: 'Portsmouth, RI', country: 'US', founded: 2023,
+      subsegments: ['maritime.uuv'],
+      oneLiner: 'Skelmir modular AUVs and underwater effectors with GPS-free INStinct navigation, built in Rhode Island.',
+      description: ['Vatn Systems builds the Skelmir S6 modular underwater effector and the larger Skelmir S12, which combines survey AUV functions with lightweight-torpedo maneuverability, both using its INStinct inertial navigation. It sells to the US Navy and Marine Corps and allies, with Singapore its first international customer. It raised a $60M Series A in December 2025 led by BVVC, bringing total funding to $76.5M.'],
+      leadership: [['Nelson Mills', 'CEO']],
+      funding: { totalUsdM: 76.5, asOf: '2025-12', rounds: [{ date: '2025-12', type: 'Series A', amountUsdM: 60, leads: ['Bravo Victor Venture Capital'] }], src: S('Pulse 2.0, Dec 2025', 'https://pulse2.com/vatn-systems-60-million-series-a/') }
+    });
+
+    DTM.add({
+      id: 'bedrock-ocean', name: 'Bedrock Ocean Exploration', short: 'Bedrock', status: 'private', stage: 'Series A', country: 'US', founded: 2020,
+      subsegments: ['maritime.uuv'],
+      oneLiner: 'Self-built AUVs and a cloud platform for seafloor mapping, starting with offshore wind sites.',
+      description: ['Bedrock, founded in 2020 by Anthony DiMare and Charles Chiau, designs its own autonomous underwater vehicles, each costing under $1M, that map the seafloor with sonar and magnetometers for 12-hour missions, and delivers the data through a cloud platform. It focused first on offshore wind. A $25M Series A-2 in June 2025, led by Primary and Northzone, followed a $25.5M Series A in 2023.'],
+      leadership: [['Anthony DiMare', 'Co-founder & CEO']],
+      funding: { totalUsdM: 60.5, asOf: '2025-06', src: [S('TechCrunch, Jun 2025', 'https://techcrunch.com/2025/06/10/bedrock-ocean-dredges-up-25m-to-map-the-seafloor-with-robots'), S('Robotics 24/7', 'https://robotics247.com/article/bedrock_raises_25.5m_series_a_robots_data_seafloor_exploration_offshore_wind_energy')] }
+    });
+
+    DTM.add({
+      id: 'sea-machines', name: 'Sea Machines Robotics', short: 'Sea Machines', status: 'private', stage: 'Venture', hq: 'Boston, MA', country: 'US', founded: 2015,
+      subsegments: ['maritime.usv'],
+      oneLiner: 'Autonomy kits for vessels and STEAMRACER attack craft in the final round of the Navy\'s MASC program.',
+      description: ['Sea Machines Robotics makes autonomy and remote-command systems that turn crewed vessels into autonomous or optionally crewed boats, and has turned toward defense since CEO Chip Wasson joined in late 2024. In February 2026 it advanced to the final competitive evaluation for the Navy\'s Modular Attack Surface Craft program with its STEAMRACER-class vessel. Investors include Toyota, Brunswick and Huntington Ingalls Industries.'],
+      funding: { totalUsdM: 57.3, asOf: '2024-02', note: 'CB Insights total; other trackers range from $44M to $57M.', src: S('CB Insights', 'https://www.cbinsights.com/investor/sea-machine-robotics') },
+      programs: [{ name: 'Modular Attack Surface Craft (final evaluation)', ref: 'usv-navy', customer: 'US Navy', role: 'Prime', year: 2026, status: 'Competing', src: S('Wikipedia: Sea Machines Robotics', 'https://en.wikipedia.org/wiki/Sea_Machines_Robotics') }]
+    });
+
+    DTM.add({
+      id: 'flux-marine', name: 'Flux Marine', status: 'private', stage: 'Series B', hq: 'Bristol, RI', country: 'US', founded: null,
+      subsegments: ['maritime.usv', 'industrial.power'],
+      oneLiner: 'High-voltage electric outboards and powertrains, now also sold for uncrewed boats and aerospace.',
+      description: ['Flux Marine builds high-voltage electric outboard motors and powertrains, which began as a Princeton engineering project supported by NSF, Air Force and Massachusetts grants. In November 2025 it raised $15M, with Collide Capital joining existing investors, to ramp production and expand technology sales into uncrewed platforms and aerospace; total funding exceeds $30M.'],
+      funding: { totalUsdM: 30, asOf: '2025-11', note: 'Company says total funding exceeds $30M since 2020.', src: S('ACCESS Newswire, Nov 2025', 'https://www.accessnewswire.com/newsroom/en/clean-technology/flux-marines-15m-infusion-fuels-production-ramp-to-meet-expanding-order-book-1103879') }
+    });
+
+    DTM.add({
+      id: 'terradepth', name: 'Terradepth', status: 'private', stage: 'Series A', hq: 'Cedar Park, TX', country: 'US', founded: 2018,
+      subsegments: ['maritime.uuv'],
+      oneLiner: 'Ocean data platform and AUVs from former Navy SEALs; on a Navy rapid-buy pathway since April 2026.',
+      description: ['Terradepth, founded in 2018 by former Navy SEALs Joe Wolfel and Judson Kauffman, combines autonomous underwater vehicles with Absolute Ocean, a cloud platform for subsea data. In April 2026 Absolute Ocean was placed in the Rapid Capabilities Cell Hopper at Naval Information Warfare Center Atlantic, letting a Navy sponsor buy it directly under an OTA for up to 24 months.'],
+      funding: { totalUsdM: 28, asOf: '2022', note: '$8M seed (2019) plus a $20M Series A.', src: S('Robotics 24/7', 'https://www.robotics247.com/article/terradepth_raises_series_a_funding_toward_ocean_mapping_service') },
+      programs: [{ name: 'NIWC Atlantic Rapid Capabilities Cell Hopper', customer: 'US Navy (NIWC Atlantic)', role: 'Prime', year: 2026, status: 'Eligible', src: S('Defense Forum (Substack)', 'https://defenseforum.substack.com/p/terradepth-at-sea-air-space-2026?open=false') }]
+    });
+
+    DTM.add({
+      id: 'seasats', name: 'Seasats', domain: 'seasats.com', status: 'private', stage: 'Series A', hq: 'San Diego, CA', country: 'US', founded: 2020,
+      subsegments: ['maritime.usv'],
+      oneLiner: 'Lightfish solar-powered small autonomous surface vessels; $24M APFIT award to scale production.',
+      description: ['Seasats, founded in San Diego in 2020, builds the Lightfish, an 11-foot solar-powered autonomous surface vessel for maritime surveillance, border protection and subsea mapping, which completed a 7,500-mile trans-Pacific mission in 2025. It won a $24M APFIT award on Navy and Marine Corps recommendation in December 2025 and raised a $20M Series A led by Konvoy Ventures in February 2026.'],
+      funding: { totalUsdM: 40, asOf: '2026-02', note: 'Pulse 2.0 reports more than $40M raised; the APFIT award is non-dilutive and not included.', src: [S('Pulse 2.0, Feb 2026', 'https://pulse2.com/seasats-20-million-series-a-closed-for-scaling-small-uncrewed-surface-vehicles'), S('Axios, Feb 2025', 'https://www.axios.com/2025/02/05/seasats-lightfish-drones-funding-japan')] },
+      programs: [{ name: 'APFIT production award', customer: 'DoD (Navy / Marine Corps recommendation)', role: 'Prime', value: '$24M', year: 2025, status: 'Awarded', src: S('WorkBoat', 'https://www.workboat.com/department-of-war-awards-24-million-to-scale-autonomous-vessels') }]
+    });
+
+    DTM.add({
+      id: 'maritime-robotics', name: 'Maritime Robotics', status: 'private', stage: 'Growth', hq: 'Trondheim', country: 'NO', founded: null,
+      subsegments: ['maritime.usv'],
+      oneLiner: 'Norwegian maker of Otter and Mariner uncrewed surface vessels; supplied survey USVs to Ukraine\'s navy.',
+      description: ['Maritime Robotics builds uncrewed surface vessels, from the small Otter survey boat to larger platforms, plus autonomy and control systems for civil and defense users. With Teledyne Marine it delivered USVs to Ukraine\'s navy in 2023. Revenue rose 72% to NOK 258.8M in 2025, and in June 2026 it announced a €28M growth investment led by MS+Partners, after $12M in September 2024.'],
+      revenue: { valueUsdM: 24.6, period: 'FY2025', kind: 'reported', note: 'NOK 258.8M at about 0.095 USD per NOK', src: S('Baird Maritime', 'https://www.bairdmaritime.com/amp/story/unmanned/unmanned-survey/omnes-capital-maritime-robotics-expansion') },
+      funding: { totalUsdM: 44.5, asOf: '2026-06', note: '$12M (Sep 2024) plus €28M (Jun 2026, about $32.5M); earlier funding not compiled.', src: [S('Baird Maritime', 'https://www.bairdmaritime.com/amp/story/unmanned/unmanned-survey/norwegian-unmanned-vehicle-manufacturer-secures-us12-million-capital-for-international-expansion'), S('Baird Maritime', 'https://www.bairdmaritime.com/amp/story/unmanned/unmanned-survey/omnes-capital-maritime-robotics-expansion')] },
+      programs: [{ name: 'USVs for Ukraine\'s navy (with Teledyne Marine)', ref: 'ukraine', customer: 'Ukrainian Navy', role: 'Prime', year: 2023, status: 'Delivered', src: S('GPS World', 'https://www.gpsworld.com/maritime-robotics-teledyne-marine-deliver-usvs-to-ukraine') }]
+    });
+
+    DTM.add({
+      id: 'albacore', name: 'Albacore', status: 'private', stage: 'Seed', hq: 'Philadelphia, PA', country: 'US', founded: 2025,
+      subsegments: ['maritime.uuv'],
+      oneLiner: 'Ghostfin long-range UUV (about 1,000 nm, 30 days) carrying kinetic payloads; first Navy order in 2026.',
+      description: ['Albacore, a 2025 Y Combinator company founded by John Huddleston and Dante Vaisbort, builds Ghostfin, a roughly 8-foot, 425-pound uncrewed underwater vehicle that can stay out for about 30 days and carry a kinetic payload. It raised a $6.5M seed in October 2025 led by Outlander VC, and the US Navy contracted it to buy Ghostfins in August 2026.'],
+      funding: { totalUsdM: 6.5, asOf: '2025-10', src: S('Tectonic Defense', 'https://www.tectonicdefense.com/exclusive-yc-backed-albacore-swims-into-6-5m-seed-round/') },
+      programs: [{ name: 'Ghostfin procurement', customer: 'US Navy', role: 'Prime', year: 2026, status: 'Awarded', src: S('The Defense Post, Aug 2026', 'https://thedefensepost.com/2026/08/27/us-subsea-drones-albacore/') }]
+    });
+
+    DTM.add({
+      id: 'ocean-aero', name: 'Ocean Aero', status: 'private', stage: 'Venture', hq: 'Gulfport, MS', country: 'US', founded: 2012,
+      subsegments: ['maritime.usv', 'maritime.uuv'],
+      oneLiner: 'Triton wind- and solar-powered vessel that sails on the surface and dives; four transferred to the Philippine Navy.',
+      description: ['Ocean Aero, founded by US Navy veterans in 2012 and based at the Port of Gulfport, builds Triton, an autonomous vessel powered by wind and sun that sails on the surface and submerges for subsea work. Teledyne and Lockheed Martin are investors. In June 2026 four Tritons, funded by the US, were handed to the Philippine Navy\'s Unmanned Surface Vessel Unit One.'],
+      leadership: [['Kevin Decker', 'CEO']],
+      funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2022', note: 'A 2022 report cites a $14M investment round; total funding is not disclosed.', src: S('Marine Technology News', 'https://www.marinetechnologynews.com/news/autonomy-subsea-holiday-hybrid-617791') },
+      programs: [{ name: 'Tritons for Philippine Navy USV Unit One', customer: 'Philippine Navy (US-funded)', role: 'Prime', year: 2026, status: 'Delivered', src: S('Naval News, Jun 2026', 'https://www.navalnews.com/naval-news/2026/06/u-s-transfers-ocean-aero-tritons-to-philippine-navy-usv-unit/') }]
+    });
+
+    DTM.add({
+      id: 'kraken-technology', name: 'Kraken Technology Group', short: 'Kraken Technology', status: 'private', stage: 'Series B', hq: 'London', country: 'UK', founded: 2020,
+      subsegments: ['maritime.usv'],
+      oneLiner: 'K3 Scout high-speed uncrewed boats, 8 m to 18.6 m; a $1B defense unicorn backed by Rheinmetall and NATO.',
+      description: ['Kraken Technology Group, founded in 2020 by former powerboat racer Mal Crease, builds the K3 Scout family of high-speed uncrewed surface vessels, from the 8 m Medium (600 kg payload, 55 knots) to the 18.6 m Max with a 2,000 nm range; K3 Scouts have run on NATO exercises. It raised a $175M Series B at a $1B valuation in July 2026 led by DTCP, with Rheinmetall, the NATO Innovation Fund and the British Business Bank.'],
+      leadership: [['Mal Crease', 'Founder & CEO']],
+      funding: { totalUsdM: 175, asOf: '2026-07', rounds: [{ date: '2026-07', type: 'Series B', amountUsdM: 175, postUsdM: 1000, leads: ['DTCP'] }], note: 'Series B only; a June 2025 strategic round from the NATO Innovation Fund and NSSIF was undisclosed.', src: [S('Tech.eu, Jul 2026', 'https://tech.eu/2026/07/09/maritime-defence-startup-kraken-technology-hits-unicorn-status/'), S('European Security & Defence, Jun 2025', 'https://euro-sd.com/2025/06/major-news/45125/kraken-secures-major-funding/')] }
+    });
+
+    DTM.add({
+      id: 'blacksea', name: 'BlackSea Technologies', short: 'BlackSea', status: 'private', stage: 'Acquired (AEVEX)', hq: 'Baltimore, MD', country: 'US', founded: 2022,
+      subsegments: ['maritime.usv', 'maritime.uuv'],
+      oneLiner: 'GARC drone boats for the Navy and underwater fuel systems; acquired by AEVEX for up to $650M in 2026.',
+      description: ['BlackSea builds the 16-foot Global Autonomous Reconnaissance Craft (GARC), operated by the Navy\'s Unmanned Surface Vessel Squadron 3 under a contract worth up to $213M, and won a five-year, $256M Navy contract in 2026 for five Seabased Petroleum Distribution Systems built in Baltimore. AEVEX agreed in August 2026 to buy it for up to $650M ($250M cash, $350M stock and a $50M earnout); it is now AEVEX\'s Maritime Division.'],
+      leadership: [['Bob Pudney', 'President, AEVEX Maritime']],
+      funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2026-08', note: 'Acquired by AEVEX; deal valued at up to $650M.', src: S('Breaking Defense, Aug 2026', 'https://breakingdefense.com/2026/08/aevex-to-acquire-blacksea-technologies-for-up-to-650m/') },
+      programs: [
+        { name: 'GARC uncrewed surface vessels', ref: 'usv-navy', customer: 'US Navy', role: 'Prime', value: 'Up to $213M', status: 'Production', src: S('The Baltimore Banner', 'https://www.thebanner.com/economy/blacksea-technologies-drone-boats-baltimore-navy-W3UK2NTVKNA7BCT4N7UGYY5QME/') },
+        { name: 'Seabased Petroleum Distribution System', customer: 'US Navy', role: 'Prime', value: '$256M', year: 2026, status: 'Awarded', src: S('Tectonic Defense', 'https://www.tectonicdefense.com/blacksea-scores-256m-navy-contract-for-spds/') }
+      ]
+    });
+
+    DTM.add({
+      id: 'martac', name: 'Maritime Tactical Systems', short: 'MARTAC', domain: 'martacsystems.com', status: 'private', stage: 'Privately held', hq: 'Melbourne, FL', country: 'US', founded: 2012,
+      subsegments: ['maritime.usv'],
+      oneLiner: 'Mantas T-12 and Devil Ray T38 high-speed USVs for the Navy and allies; projects 500% revenue growth in 2026.',
+      description: ['MARTAC, founded in 2012 by brothers Bruce and Tom Hanson, builds the Mantas T-12 and Devil Ray T38 high-speed uncrewed surface vessels; a Devil Ray completed a 192-hour autonomous mission for the Naval Air Warfare Center Weapons Division, and Mantas boats have been supplied to the Philippine Navy. It reported record first-half 2026 results, projects 500% revenue growth for 2026, and added production capacity with SŌLACE in September 2026.'],
+      funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2026-08', note: 'An aggregator lists about $10M of disclosed funding; not confirmed by the company.', src: S('MARTAC, Aug 2026', 'https://martacsystems.com/2026/08/04/') },
+      programs: [{ name: 'Devil Ray T38 autonomous endurance mission', ref: 'usv-navy', customer: 'Naval Air Warfare Center Weapons Division', role: 'Prime', status: 'Complete', src: S('Seapower, Aug 2026', 'https://seapowermagazine.org/27585-2/') }]
+    });
+
+    DTM.add({
+      id: 'ocean-infinity', name: 'Ocean Infinity', status: 'private', stage: 'Privately held', country: 'UK', founded: null,
+      subsegments: ['maritime.uuv', 'maritime.usv'],
+      oneLiner: 'Armada fleet of remotely operated robotic ships and AUVs; frontrunner for the UK\'s Atlantic Net ASW service.',
+      description: ['Ocean Infinity operates the Armada fleet of 14 remotely operated robotic vessels, completed in December 2025, which deploy AUVs for seabed survey and offshore work. In January 2026 it ordered four more multi-purpose robotic vessels from Vard for over €200M. Janes reports it leads the consortium the UK MoD picked as preferred partner for Atlantic Net, a contractor-run anti-submarine surveillance service in the Greenland-Iceland-UK gap.'],
+      funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2026', note: 'Aggregators cite $50M–$69M of disclosed funding; no audited figures are published.', src: S('Janes', 'https://www.janes.com/defence-intelligence-insights/defence-news/defence/ocean-infinity-in-frame-as-uks-atlantic-net-mission-partner') },
+      programs: [{ name: 'Atlantic Net undersea surveillance service', customer: 'UK Ministry of Defence / Royal Navy', role: 'Prime', year: 2026, status: 'Preferred bidder', note: 'Contract not yet signed as of the latest reports.', src: S('Janes', 'https://www.janes.com/defence-intelligence-insights/defence-news/defence/ocean-infinity-in-frame-as-uks-atlantic-net-mission-partner') }]
+    });
+
+    DTM.add({
+      id: 'valstad', name: 'Valstad Shipworks', short: 'Valstad', status: 'private', stage: 'Pre-seed', hq: 'Austin, TX', country: 'US', founded: 2025,
+      subsegments: ['maritime.shipbuilding'],
+      oneLiner: 'Robotic shipbuilding cells that turn CAD models into welded ship panels and structures automatically.',
+      description: ['Valstad Shipworks, founded in 2025, is building robotic factories that combine industrial robots, automated material handling, welding and AI planning software to produce ship panels and structural assemblies directly from CAD models. It is starting by building structures for customers from its Austin facility and raised a $2.6M pre-seed round.'],
+      funding: { totalUsdM: 2.6, asOf: '2025', src: S('Signalbase', 'https://www.trysignalbase.com/news/funding/valstad-shipworks-secures-26m-pre-seed-funding-to-revolutionize-shipbuilding-and-maritime-sustainability') }
+    });
+  }
 })();
 
 </script>
@@ -5010,6 +5289,55 @@ DTM.programs = [
     },
     programs: [{ name: 'Weapon system cyber monitoring', customer: 'US Army / USAF / US Navy', role: 'Prime', status: 'Deployed' }]
   });
+  /* ---------------- Added from the private names list and public names sheet provided for this map (Oct 2026) ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+
+    DTM.add({
+      id: 'twenty', name: 'Twenty', status: 'private', stage: 'Series B', country: 'US', founded: 2024,
+      subsegments: ['software.cyber'],
+      oneLiner: 'Venture-backed offensive cyber operations tools for US Cyber Command and the intelligence community.',
+      description: ['Twenty, founded in 2024 and co-founded by Joe Lin, previously head of public sector at Expanse, builds offensive cyber capabilities for the US military and intelligence community and calls itself America\'s first venture-backed cyber warfare startup. It emerged in 2025 with a $38M round and raised a $100M Series B led by Accel in June 2026 at a $1B valuation; a further $30M from Khosla Ventures at $1.2B has also been reported.'],
+      leadership: [['Joe Lin', 'Co-founder']],
+      funding: { totalUsdM: 138, asOf: '2026-06', rounds: [{ date: '2026-06', type: 'Series B', amountUsdM: 100, postUsdM: 1000, leads: ['Accel'] }], note: 'Excludes a reported $30M Khosla Ventures investment at $1.2B whose date could not be confirmed.', src: S('Axios, Jun 2026', 'https://axios.com/2026/06/17/twenty-cybersecurity-hacks-accel-venture') },
+      programs: [{ name: 'Offensive cyber capabilities', customer: 'US Cyber Command', role: 'Prime', value: 'Up to $12.6M (reported)', status: 'Awarded', src: S('GovConWire', 'https://www.govconwire.com/articles/twenty-100m-series-b-round-ai-cyber-warfare') }]
+    });
+
+    DTM.add({
+      id: 'picogrid', name: 'Picogrid', status: 'private', stage: 'Series A', hq: 'El Segundo, CA', country: 'US', founded: null,
+      subsegments: ['software.c2'],
+      oneLiner: 'Legion integration platform that connects 100+ sensors, drones and effectors from different vendors.',
+      description: ['Picogrid builds Legion, software and edge hardware that connect military sensors, cameras, radars, drones and effectors from different makers into one network, with more than 100 integrated systems from vendors including Skydio, Northrop Grumman, Echodyne, CX2 and Neros. It is deployed with US and allied forces and raised a $45M Series A led by Bessemer Venture Partners in May 2026.'],
+      funding: { totalUsdM: 45, asOf: '2026-05', rounds: [{ date: '2026-05', type: 'Series A', amountUsdM: 45, leads: ['Bessemer Venture Partners'] }], note: 'Series A only; earlier seed funding not compiled.', src: S('Washington Technology, Jun 2026', 'https://washingtontechnology.com/companies/2026/06/picogrid-collects-45m-series-round-integrate-defense-systems/413883/') }
+    });
+
+    DTM.add({
+      id: 'arkeus', name: 'Arkeus', status: 'private', stage: 'Series A', hq: 'Melbourne', country: 'AU', founded: 2020,
+      subsegments: ['software.intel', 'uas.components'],
+      oneLiner: 'Hyperspectral sensing with onboard AI that lets drones detect and track targets; on AV, Textron, Tekever and Insitu aircraft.',
+      description: ['Arkeus, founded in Melbourne in 2020 by CEO Simon Olsen and Dr Jonathan Nebauer, pairs hyperspectral sensors with onboard AI so drones and other autonomous platforms can detect and track objects in real time; its hardware is integrated with drones from AeroVironment, Textron, Tekever and Boeing\'s Insitu. In May 2026 it raised an A$25M (about US$18M) Series A led by QIC Ventures to scale manufacturing.'],
+      funding: { totalUsdM: 20.9, asOf: '2026-05', note: 'US$18M Series A plus a A$4.45M seed in 2023 (about US$2.9M).', src: S('QIC, May 2026', 'https://www.qic.com/News-and-Insights/QIC-Ventures-leads-A$25M-Series-A-for-Arkeus') }
+    });
+
+    DTM.add({
+      id: 'dominion-dynamics', name: 'Dominion Dynamics', status: 'private', stage: 'Series A', hq: 'Ottawa', country: 'CA', founded: 2025,
+      subsegments: ['software.c2', 'uas.cca'],
+      oneLiner: 'AuraNet Arctic sensor network and Scout autonomous aircraft for Canada\'s north; Canada\'s largest defense Series A.',
+      description: ['Dominion Dynamics, founded in Ottawa by former Anduril executive Eliot Pence, is building AuraNet, a network of ruggedized sensors and autonomous systems to monitor Canada\'s Arctic, and Scout, an autonomous aircraft meant to fly with fifth-generation fighters. After a C$21M seed in January 2026 it raised a C$139M (about US$100M) Series A in June 2026, the largest Canadian defense-tech Series A.'],
+      leadership: [['Eliot Pence', 'Founder & CEO']],
+      funding: { totalUsdM: 119, asOf: '2026-06', note: 'Axios total in USD.', src: S('Axios, Jul 2026', 'https://axios.com/2026/07/01/dominion-seriesa-canada-defense-industry') }
+    });
+
+    DTM.add({
+      id: 'impinj', name: 'Impinj', domain: 'impinj.com', status: 'public', ticker: 'PI', exchange: 'NASDAQ',
+      hq: 'Seattle, WA', country: 'US', founded: 2000,
+      subsegments: ['software.logistics'],
+      oneLiner: 'RAIN RFID chips and readers that tag and track items through supply chains and logistics.',
+      description: ['Impinj makes RAIN RFID tag chips, reader chips and readers that identify and track individual items through retail, logistics and industrial supply chains. It appears on the public names sheet as disruptive industrial technology; it has no disclosed defense programs.'],
+      marketCap: { usdM: 5607, asOf: '2026', undated: true, src: CSV },
+      valuation: { evSales: 15.45, evEbitda: 649.5, basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 12.26×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV }
+    });
+  }
 })();
 
 </script>
@@ -5279,6 +5607,40 @@ DTM.programs = [
       ]
     });
   }
+  /* ---------------- Added from the private names list and public names sheet provided for this map (Oct 2026) ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+
+    DTM.add({
+      id: 'matrixspace', name: 'MatrixSpace', status: 'private', stage: 'Series B', country: 'US', founded: null,
+      subsegments: ['sensors.radar', 'cuas.sensing'],
+      oneLiner: 'Portable low-power AI radar for detecting and classifying drones; L3Harris is a strategic investor.',
+      description: ['MatrixSpace builds compact, ultra-low-power radar with onboard AI for persistent detection and classification of drones and other targets, for defense, security and airspace users. It closed a $20M Series B in October 2025, co-led by The Raptor Group and OTB Ventures with L3Harris as a new strategic investor, bringing total funding to $58M.'],
+      funding: { totalUsdM: 58, asOf: '2025-10', rounds: [{ date: '2025-10', type: 'Series B', amountUsdM: 20, leads: ['The Raptor Group', 'OTB Ventures'] }], src: S('Security Systems News', 'https://www.securitysystemsnews.com/article/matrixspace-completes-20m-series-b-funding') }
+    });
+
+    DTM.add({
+      id: 'iridium', name: 'Iridium Communications', short: 'Iridium', domain: 'iridium.com', status: 'public', ticker: 'IRDM', exchange: 'NASDAQ',
+      hq: 'McLean, VA', country: 'US', founded: 2000,
+      subsegments: ['sensors.comms', 'sensors.pnt'],
+      oneLiner: 'LEO satellite voice and data network; the Pentagon\'s EMSS service and a growing GPS-backup PNT business.',
+      description: ['Iridium operates a 66-satellite low-Earth-orbit network for global voice and data. Its Enhanced Mobile Satellite Services contract with the US government pays a fixed $110.5M a year and expires in September 2026, with a renewal under discussion. Through its Satelles acquisition it sells satellite-based positioning, navigation and timing as a GPS backup, targeting $100M of PNT revenue by 2030, and does engineering work for the Space Development Agency.'],
+      marketCap: { usdM: 5037, asOf: '2026', undated: true, src: CSV },
+      valuation: { evSales: 7.48, evEbitda: 15.62, pe: 53.91, peBasis: 'P / E on the sheet (undated)', basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 6.89×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV },
+      programs: [{ name: 'Enhanced Mobile Satellite Services (EMSS)', customer: 'US government (DoD)', role: 'Prime', value: '$110.5M a year', status: 'Renewal pending', note: 'Expires September 2026, with an optional six-month extension.', src: S('Iridium 10-K FY2025', 'https://www.sec.gov/Archives/edgar/data/1418819/000141881926000009/irdm-20251231.htm') }]
+    });
+
+    DTM.add({
+      id: 'viasat', name: 'Viasat', domain: 'viasat.com', status: 'public', ticker: 'VSAT', exchange: 'NASDAQ',
+      hq: 'Carlsbad, CA', country: 'US', founded: 1986,
+      subsegments: ['sensors.comms', 'software.cyber'],
+      oneLiner: 'Satellite broadband operator whose $1.3B defense segment sells encryption, tactical datalinks and space systems.',
+      description: ['Viasat operates satellite broadband networks, including Inmarsat, and runs a Defense and Advanced Technologies segment that sells information security and cyber defense products, tactical networking and space and mission systems. In fiscal 2026 (ended March) total revenue reached a record $4.6B and the defense segment grew 10% to $1,340.6M, with record backlog.'],
+      marketCap: { usdM: 9283, asOf: '2026', undated: true, src: CSV },
+      financials: { cur: 'USD', fyEnd: 'Mar', periods: [{ label: 'FY2026', revenue: 4600 }], notes: 'Defense and Advanced Technologies segment revenue was $1,340.6M in FY2026, up from $1,221.1M.', asOf: '2026-05', src: S('Viasat 10-K FY2026', 'https://www.sec.gov/Archives/edgar/data/0000797721/000119312526248290/vsat-20260331.htm') },
+      valuation: { evSales: 3.15, evEbitda: 10.13, basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 2.87×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV }
+    });
+  }
 })();
 
 </script>
@@ -5545,6 +5907,395 @@ DTM.programs = [
     valuation: { evSales: 11.2, basis: 'Market cap ÷ 2026 revenue outlook', note: 'EV not compiled; ratio shown uses market cap.', asOf: '2026-08-14', src: S('Webull', 'https://www.webull.ca/news-detail/15345485242459136') },
     programs: [{ name: 'NDAA-compliant drone batteries', customer: 'Defense Innovation Unit', role: 'Prime', value: '$18.1M', status: 'Active' }]
   });
+  /* ---------------- Added from the private names list provided for this map (Oct 2026) ---------------- */
+  {
+    DTM.add({
+      id: 'vulcanforms', name: 'VulcanForms', status: 'private', stage: 'Series D', country: 'US', founded: null,
+      subsegments: ['industrial.additive', 'industrial.manufacturing'],
+      oneLiner: 'Digital metal factories pairing high-power laser powder-bed fusion with machining for aerospace and defense parts.',
+      description: ['VulcanForms runs vertically integrated digital metal manufacturing: its own high-power laser powder-bed fusion systems plus machining and finishing, producing parts for aerospace, defense, medical and industrial customers. It closed an oversubscribed $220M Series D in February 2026, led by Eclipse and 1789 Capital, to expand US production, following a $355M round in 2022 that valued it above $1B.'],
+      funding: {
+        totalUsdM: 575, asOf: '2026-02',
+        rounds: [{ date: '2022-07', type: 'Growth', amountUsdM: 355 }, { date: '2026-02', type: 'Series D', amountUsdM: 220, leads: ['Eclipse', '1789 Capital'] }],
+        note: 'Secondary sources put total funding at about $575M across six rounds.',
+        src: [S('3D Printing Industry, Feb 2026', 'https://3dprintingindustry.com/news/vulcanforms-secures-220m-to-expand-u-s-production-cut-reliance-on-foreign-supply-chains-248717/'), S('TCT Magazine, 2022', 'https://www.tctmagazine.com/metal-3d-printing-firm-vulcanforms-raises-355-million/')]
+      }
+    });
+
+    DTM.add({
+      id: 'sprintray', name: 'SprintRay', status: 'private', stage: 'Series D', hq: 'Los Angeles, CA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Dental 3D printers, resins and design software for chairside crowns and dentures; no defense business.',
+      description: ['SprintRay makes 3D printers, resins and AI design software used by dental practices and labs to print crowns, dentures and models chairside. In 2025 it bought the EnvisionTEC dental portfolio. Its last reported round was a $100M Series D in October 2022; it has no disclosed defense work and is included because it appears on the list provided for this map.'],
+      funding: {
+        totalUsdM: 149.9, asOf: '2022-10',
+        note: 'Caplight figure. Other trackers report up to $238M.',
+        src: [S('Caplight', 'https://www.caplight.com/company/sprintray'), S('Preqin', 'https://preqin.com/data/profile/asset/sprintray-inc-/512464')]
+      }
+    });
+
+    DTM.add({
+      id: 'seurat', name: 'Seurat Technologies', short: 'Seurat', status: 'private', stage: 'Series B', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Area Printing: laser-patterned metal powder-bed fusion aiming at casting-like cost and volume.',
+      description: ['Seurat prints metal parts by projecting laser patterns across whole areas of the powder bed rather than scanning a single spot, aiming at production volumes and costs closer to casting and forging. In July 2026 it was selected for America Makes\' JAQS-SQ project call, funded by the Pentagon\'s Manufacturing Technology Office, to build the process controls and quality systems needed to qualify parts for the defense industrial base.'],
+      funding: {
+        totalUsdM: 79, asOf: '2022',
+        note: 'Series B total, including a $21M extension with Xerox Ventures and Porsche SE; earlier rounds not compiled.',
+        src: S('3D Printing Industry', 'https://3dprintingindustry.com/news/seurat-technologies-raises-21m-to-fast-track-the-commercialization-of-area-printing-technology-202850/')
+      },
+      programs: [{ name: 'America Makes JAQS-SQ qualification project', customer: 'DoD Manufacturing Technology Office (via America Makes / NCDMM)', role: 'Prime', year: 2026, status: 'Awarded', src: S('FinanzNachrichten, Jul 2026', 'https://www.finanznachrichten.de/nachrichten-2026-07/69147760-seurat-technologies-selected-for-america-makes-jaqs-sq-award-in-support-of-defense-additive-manufacturing-200.htm') }]
+    });
+
+    DTM.add({
+      id: 'fabric8labs', name: 'Fabric8Labs', status: 'private', stage: 'Venture', hq: 'San Diego, CA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Room-temperature electrochemical metal printing (ECAM) for cold plates, RF parts and power electronics.',
+      description: ['Fabric8Labs prints high-resolution copper and other metal parts at room temperature using electrochemical additive manufacturing (ECAM), based on electroplating, with little post-processing. It targets thermal management for AI and HPC hardware, RF components and power electronics. In November 2025 it raised $50M led by NEA and Intel Capital to expand US output from about 5 million to 22 million components a year.'],
+      funding: {
+        totalUsdM: 50, asOf: '2025-11',
+        rounds: [{ date: '2025-11', type: 'Venture', amountUsdM: 50, leads: ['NEA', 'Intel Capital'] }],
+        note: 'November 2025 round only; earlier rounds, including a reported $50M Series B, are not totaled here.',
+        src: S('Intel Capital, Nov 2025', 'https://www.intelcapital.com/fabric8labs-secures-50m-to-expand-u-s-advanced-manufacturing-capacity/')
+      }
+    });
+
+    DTM.add({
+      id: 'freeform', name: 'Freeform', status: 'private', stage: 'Series B', hq: 'Los Angeles, CA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'AI-controlled metal printing with 18-laser GoldenEye systems; demand exceeds its contract capacity.',
+      description: ['Freeform runs an AI-native metal printing platform: its GoldenEye system fuses metal powder with 18 lasers under machine-learning process control, and its successor, Skyfall, targets more than 25 times the throughput. It raised a $67M Series B in February 2026 from investors including Founders Fund, NVIDIA\'s NVentures and Two Sigma Ventures, saying demand consistently exceeds its capacity.'],
+      funding: {
+        totalUsdM: 81, asOf: '2026-02',
+        rounds: [{ date: '2026-02', type: 'Series B', amountUsdM: 67 }],
+        note: 'Seedtable puts total funding at about $81M, including a $14M round in October 2024.',
+        src: [S('TechCrunch, Feb 2026', 'https://techcrunch.com/2026/02/19/freeform-raises-67m-series-b-to-scale-up-laser-ai-manufacturing/'), S('Seedtable', 'https://seedtable.com/companies/freeform')]
+      }
+    });
+
+    DTM.add({
+      id: 'boston-micro-fabrication', name: 'Boston Micro Fabrication', short: 'BMF', domain: 'bmf3d.com', status: 'private', stage: 'Series D', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Micro-precision resin printing (projection micro-stereolithography) for tiny medical, electronics and connector parts.',
+      description: ['Boston Micro Fabrication makes printers that use projection micro-stereolithography to produce very small, high-precision parts for medical devices, electronics and connectors. Its last reported round was a $24M Series D in August 2023 led by Guotai Junan Securities, after a roughly $42M Series C led by Shenzhen Capital Group.'],
+      funding: {
+        totalUsdM: 80.1, asOf: '2023-08',
+        note: 'Caplight total.',
+        src: [S('Caplight', 'https://www.caplight.com/company/bmf3d'), S('Digital Engineering 24/7', 'https://www.digitalengineering247.com/article/boston-micro-fabrication-secures-24m-series-d-funding')]
+      }
+    });
+
+    DTM.add({
+      id: 'continuum-powders', name: 'Continuum Powders', short: 'Continuum', status: 'private', stage: 'Growth', hq: 'Houston, TX', country: 'US', founded: null,
+      subsegments: ['industrial.additive', 'industrial.materials'],
+      oneLiner: 'Turns nickel and titanium scrap into qualified metal powders for printing aerospace and defense parts.',
+      description: ['Continuum Powders melts and atomizes scrap such as nickel superalloy turnings into spherical powders for additive manufacturing, qualified on machines including Renishaw\'s RenAM 500. It raised $36M led by Ara Partners in late 2022 and has won about $3.3M of DoD SBIR and R&D awards, including Air Force work on printed landing gear components.'],
+      funding: {
+        totalUsdM: 36, asOf: '2022-12',
+        note: 'Latest disclosed round; earlier rounds not compiled.',
+        src: S('Recycling Today', 'https://recyclingtoday.com/article/metal-recycler-continuum-raises-36-million-dollars-in-funding')
+      },
+      programs: [{ name: 'DoD SBIR and R&D awards (10)', customer: 'US DoD (incl. Air Force)', role: 'Prime', value: '~$3.27M', status: 'Awarded', note: 'June 2022 to June 2024.', src: S('GovCon in a Box', 'https://govconinabox.com/explore/contractors/profile/continuum-powders-corporation-u9c1dr') }]
+    });
+
+    DTM.add({
+      id: 'alloy-enterprises', name: 'Alloy Enterprises', status: 'private', stage: 'Series A', hq: 'Burlington, MA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Powder-free aluminum additive manufacturing that laser-cuts and diffusion-bonds sheet into dense parts.',
+      description: ['Alloy Enterprises builds aluminum parts without powder: it laser-cuts sheet stock and diffusion-bonds the layers into near-fully dense components, using feedstock already produced at scale. Its $26M Series A in 2023, led by Piva Capital, brought total funding to $37M.'],
+      funding: { totalUsdM: 37, asOf: '2023-05', src: S('TCT Magazine', 'https://www.tctmagazine.com/alloy-enterprises-raises-26-million-as-it-prepares-to-ramp-u/') }
+    });
+
+    DTM.add({
+      id: 'quantica', name: 'Quantica', status: 'private', stage: 'Series A', hq: 'Berlin', country: 'DE', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'NovoJet multi-material jetting of high-viscosity resins, with teams in Berlin, Barcelona and Cambridge.',
+      description: ['Quantica develops NovoJet, a printhead that jets high-viscosity and particle-filled materials so several materials can be combined in one part. Its Series A, €14M in 2023 led by a dental-industry family office, was extended in 2024 to €19.7M with West Hill Capital.'],
+      funding: { totalUsdM: 22.9, asOf: '2024', note: '€19.7M Series A converted at about 1.16 USD per EUR.', src: S('3D Printing Industry', 'https://3dprintingindustry.com/news/quantica-announces-an-increase-in-its-series-a-funding-round-230826/') }
+    });
+
+    DTM.add({
+      id: 'inkbit', name: 'Inkbit', domain: 'inkbit3d.com', status: 'private', stage: 'Venture', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Vision-controlled jetting that scans every layer to print multi-material parts; Air Force-funded systems.',
+      description: ['Inkbit, an MIT spin-out, uses vision-controlled jetting (VCJ): a scanner checks each layer and corrects the next, allowing multi-material parts without rollers. The Air Force awarded a $1.7M SBIR in 2021 for three systems for Air Force bases, building on DARPA-funded work. Its latest round was $19M in 2024 led by Ingersoll Rand.'],
+      funding: { totalUsdM: 19, asOf: '2024-05', note: 'Latest round only; earlier rounds not compiled.', src: S('Turbomachinery Magazine, May 2024', 'https://www.turbomachinerymag.com/view/ingersoll-rand-closes-on-19m-funding-round-for-inkbit-s-vision-controlled-jetting-system') },
+      programs: [{ name: 'SBIR for three VCJ systems at Air Force bases', customer: 'US Air Force', role: 'Prime', value: '$1.7M', year: 2021, status: 'Awarded', src: S('Design World', 'https://www.designworldonline.com/inkbit-awarded-research-contract-from-the-united-states-air-force/') }]
+    });
+
+    DTM.add({
+      id: 'azul-3d', name: 'Azul 3D', status: 'private', stage: 'Series A', hq: 'Chicago, IL', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'HARP high-area rapid resin printing for electronic components and custom devices, backed by DuPont.',
+      description: ['Azul 3D develops High-Area Rapid Printing (HARP), a continuous vat-photopolymerization process for large, fast resin prints aimed at specialized electronic components and custom devices. DuPont, a partner since 2019, led its $15M Series A in October 2023, after a $12.5M seed in 2020.'],
+      funding: { totalUsdM: 27.5, asOf: '2023-10', src: [S('Business Wire, Oct 2023', 'https://www.businesswire.com/news/home/20231010246552/en/Azul-3D-Closes-15-Million-in-Series-A-Funding'), S('Pulse 2.0, 2020', 'https://pulse2.com/azul3d-raises-12-5-million/')] }
+    });
+
+    DTM.add({
+      id: 'caracol', name: 'Caracol', status: 'private', stage: 'Series B', hq: 'Milan', country: 'IT', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Robotic large-format printing in metal (wire-arc) and polymer, targeting aerospace, defense and marine.',
+      description: ['Caracol builds robotic large-format additive manufacturing systems, including the Vipra AM platform for wire-arc metal printing, with offices in Milan, Austin and Dubai. Its $40M Series B in October 2025, led by Omnes Capital and Move Capital, is aimed at scaling metal printing in aerospace and defense, energy and maritime.'],
+      funding: { totalUsdM: 55.7, asOf: '2025-10', note: 'CB Insights total; Caplight lists $59.6M.', src: S('Metal AM, Oct 2025', 'https://www.metal-am.com/caracol-raises-40m-to-ramp-up-metal-am-and-global-expansion/') }
+    });
+
+    DTM.add({
+      id: 'xolo', name: 'Xolo', status: 'private', stage: 'Series A', hq: 'Berlin', country: 'DE', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Xolography: volumetric printing that cures whole parts inside a resin vat with intersecting light.',
+      description: ['Xolo commercializes xolography, a volumetric process in which a light sheet and photoactive chemistry cure a part inside a resin cuvette rather than layer by layer, giving fast prints with very smooth surfaces. It raised an €8M Series A in February 2023 led by the DeepTech & Climate Fonds and HZG Group.'],
+      funding: { totalUsdM: 9.3, asOf: '2023-02', note: '€8M converted at about 1.16 USD per EUR.', src: S('TCT Magazine', 'https://www.tctmagazine.com/eight-million-euros-raised-xolo-gmbh-hzg-group/') }
+    });
+
+    DTM.add({
+      id: 'ai-build', name: 'Ai Build', domain: 'ai-build.com', status: 'private', stage: 'Seed', hq: 'London', country: 'UK', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'AiSync software that automates large-format robotic printing; works with Boeing, GKN Aerospace and Rolls-Royce.',
+      description: ['Ai Build makes AiSync, software that plans and monitors large-format robotic and industrial printing, used by aerospace and automotive manufacturers. It joined the ATI Boeing Accelerator and has worked with GKN Aerospace and Rolls-Royce. It raised about $1M in 2021 and $3.2M in June 2022 led by ACT Venture Partners.'],
+      funding: { totalUsdM: 4.2, asOf: '2022-06', src: S('Ai Build, Jun 2022', 'https://ai-build.com/resources/aibuild-secures-3-2m-investment-to-revolutionize-additive-manufacturing/') }
+    });
+
+    DTM.add({
+      id: 'rapid-liquid-print', name: 'Rapid Liquid Print', short: 'RLP', status: 'private', stage: 'Series A', hq: 'Boston, MA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'MIT spin-out printing silicone and foam parts inside a gel in minutes, with no support structures.',
+      description: ['Rapid Liquid Print, an MIT spin-out, injects industrial silicones, rubbers and foams into a gel bath that holds the part as it cures, so prints take minutes and need no supports. It sells to medical, automotive and consumer goods customers and raised a $7M Series A led by HZG Group.'],
+      funding: { totalUsdM: 7, asOf: '2024', src: S('3D Printing Industry', 'https://3dprintingindustry.com/news/rapid-liquid-print-raises-7-million-to-scale-its-support-free-gel-3d-printing-technology-230410/') }
+    });
+
+    DTM.add({
+      id: 'axtra3d', name: 'Axtra3D', status: 'private', stage: 'Series A', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Lumia resin printers using Hybrid PhotoSynthesis, combining laser and DLP light engines for speed and detail.',
+      description: ['Axtra3D makes Lumia resin printers that use Hybrid PhotoSynthesis, combining a laser with DLP projection to print fine features faster than conventional stereolithography; it has a second site in Vicenza, Italy. HZG Group led its $4.5M Series A2 in November 2024, taking total funding to $9.75M.'],
+      leadership: [['Gianni Zitelli', 'Founder & CEO']],
+      funding: { totalUsdM: 9.75, asOf: '2024-11', src: S('VoxelMatters', 'https://www.voxelmatters.com/axtra3d-completes-its-9-75m-series-a-round-led-by-hzg-group/') }
+    });
+
+    DTM.add({
+      id: 'fluent-metal', name: 'Fluent Metal', status: 'private', stage: 'Seed', hq: 'Cambridge, MA', country: 'US', founded: 2020,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Drop-on-demand liquid metal printing from wire feedstock, enabling multi-metal parts with no powder.',
+      description: ['Fluent Metal, founded in 2020 by veterans of Desktop Metal, VulcanForms and the MIT Media Lab, prints by jetting droplets of already-molten metal fed from wire, avoiding powders and lasers and allowing multi-metal parts. It launched from stealth in March 2024 with $5.5M raised, led by E15 VC.'],
+      leadership: [['Peter Schmitt', 'CEO']],
+      funding: { totalUsdM: 5.5, asOf: '2024-03', src: S('Pulse 2.0, Mar 2024', 'https://pulse2.com/fluent-metal-launches-with-5-5-million-in-total-funding') }
+    });
+
+    DTM.add({
+      id: 'wayland-additive', name: 'Wayland Additive', short: 'Wayland', status: 'private', stage: 'Venture', country: 'UK', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Calibur3 electron-beam powder-bed printer with NeuBeam charge neutralization for crack-prone alloys.',
+      description: ['Wayland Additive builds the Calibur3 electron-beam powder-bed fusion printer, whose NeuBeam process neutralizes charge build-up so a wider range of alloys can be printed, with in-situ monitoring. It closed a £4.6M round in 2023 with Metrea Discovery joining existing investors, after an earlier £3M.'],
+      funding: { totalUsdM: 10.2, asOf: '2023', note: '£7.6M converted at about 1.34 USD per GBP.', src: S('Metal AM', 'https://www.metal-am.com/wayland-additive-closes-4-6m-funding-round/') }
+    });
+
+    DTM.add({
+      id: 'triditive', name: 'Triditive', status: 'private', stage: 'Seed', hq: 'Gijón', country: 'ES', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'AMCELL automated print cells combining binder jetting and filament printing for on-demand parts.',
+      description: ['Triditive builds AMCELL, an automated cell of eight robotic print modules that combines binder jetting and fused filament printing in polymers, composites and metals, with EVAM software for digital warehouses. It runs a 2,000 m² plant in Asturias.'],
+      funding: { totalUsdM: 5.2, asOf: '2022-06', note: 'VCBacked total. Trade press also reports a €5M pre-Series A whose date could not be confirmed.', src: [S('VCBacked', 'https://www.vcbacked.co/company/triditive'), S('Metal AM', 'https://www.metal-am.com/triditive-closes-a-e5-million-preseries-a-investment-round/')] }
+    });
+
+    DTM.add({
+      id: 'toffeeam', name: 'TOffeeAM', status: 'private', stage: 'Series A', hq: 'London', country: 'UK', founded: 2019,
+      subsegments: ['industrial.additive', 'software.engineering'],
+      oneLiner: 'Imperial College spin-out making topology-optimization software for printed heat exchangers and parts.',
+      description: ['TOffeeAM, spun out of Imperial College London in 2019, sells topology-optimization software that designs printable parts such as heat exchangers and cold plates from physics simulations. It raised a £1M seed led by IQ Capital and a £5M Series A led by Presidio Ventures Europe and East Innovate, and holds an Innovate UK grant for next-generation heat exchangers.'],
+      funding: { totalUsdM: 8, asOf: '2026-03', note: '£6M converted at about 1.34 USD per GBP; Series A date per a March 2026 trade report.', src: [S('Manufactur3D, Mar 2026', 'https://manufactur3dmag.com/toffeeam-ai-3d-printing-design-software/'), S('Metal AM', 'https://www.metal-am.com/?p=77346')] }
+    });
+
+    DTM.add({
+      id: 'q5d', name: 'Q5D Technologies', short: 'Q5D', status: 'private', stage: 'Series A', country: 'UK', founded: null,
+      subsegments: ['industrial.additive', 'industrial.manufacturing'],
+      oneLiner: 'Robotic 5-axis printing of wiring harnesses and circuits into structures; Lockheed Martin Ventures backed.',
+      description: ['Q5D builds the CU500, a 5-axis robotic system that prints structures with integrated wiring and circuit traces, aiming to automate wire-harness production for vehicles and aircraft; it runs a technical center in Bristol. Its Series A in June 2025, co-led by Lockheed Martin Ventures, Chrysalix and Maven, raised about £10M including a £2M Innovate UK grant.'],
+      funding: { totalUsdM: 16, asOf: '2025-06', note: 'About $13.5M Series A (including the grant) plus a $2.5M seed.', src: [S('Maven, Jun 2025', 'https://www.mavencp.com/latest-news/swif-maven-equity-finance-backs-q5d-technologies-as-part-of-a-10m-fundraise'), S('EPDT', 'https://www.epdtonthenet.net/article/216036/-13-5-Million-Worth-of-Funding-Garnered-by-Q5D.aspx')] }
+    });
+
+    DTM.add({
+      id: 'additive-assurance', name: 'Additive Assurance', status: 'private', stage: 'Seed', hq: 'Melbourne', country: 'AU', founded: 2019,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'AMiRIS in-process quality assurance that flags defects in metal prints; sold a system to Australia\'s DST Group.',
+      description: ['Additive Assurance, a 2019 Monash University spin-out, makes AMiRIS, which monitors metal laser powder-bed printing and alerts on defects as parts are built. It sold a pre-production system to Australia\'s Defence Science and Technology Group and raised A$4.1M in December 2022 led by Significant Capital Ventures, after an A$1.6M round led by IP Group.'],
+      funding: { totalUsdM: 3.7, asOf: '2022-12', note: 'A$5.7M converted at about 0.65 USD per AUD.', src: S('Startup Daily, Dec 2022', 'https://archive.startupdaily.net/?p=107511') },
+      programs: [{ name: 'AMiRIS pre-production system', customer: 'Defence Science and Technology Group (Australia)', role: 'Vendor', status: 'Delivered', src: S('Australian Manufacturing', 'https://www.australianmanufacturing.com.au/?p=127718') }]
+    });
+
+    DTM.add({
+      id: 'syenta', name: 'Syenta', status: 'private', stage: 'Series A', hq: 'Sydney', country: 'AU', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'ANU spin-out that pivoted from 3D printers to electrochemical chip-packaging interconnects; In-Q-Tel backed.',
+      description: ['Syenta, an Australian National University spin-out, began with fast multi-material 3D printers and now develops Localised Electrochemical Manufacturing, a lithography-free way to build high-density interconnects for advanced chip packaging, with production targeted for 2027. It raised a A$36M (US$26M) Series A led by Playground Global and Australia\'s National Reconstruction Fund; investors also include In-Q-Tel.'],
+      funding: { totalUsdM: 34, asOf: '2026', note: 'Series A plus an A$8.8M pre-Series A and a 2022 seed of about A$3.7M, converted at about 0.65 USD per AUD.', src: S('SmartCompany', 'https://smartcompany.com.au/startupsmart/three-anz-startups-raised-61-4-million-this-week') }
+    });
+
+    DTM.add({
+      id: 'fortius-metals', name: 'Fortius Metals', status: 'private', stage: 'Seed', country: 'US', founded: null,
+      subsegments: ['industrial.additive', 'industrial.materials'],
+      oneLiner: 'Wire feedstock for wire-arc and DED printing; Air Force SBIR to qualify hypersonic-grade nickel wire.',
+      description: ['Fortius Metals, spun out of powder maker Elementum, produces alloy wire for wire-based additive manufacturing, prioritizing aerospace and defense. In March 2024 it won an Air Force SBIR to speed qualification of its IN625-RAM2 wire for hypersonic applications; customers include the US Army, Navy, Air Force and NASA. Its Seed+ round reached $5M in October 2024 with ArcelorMittal-backed Finindus.'],
+      funding: { totalUsdM: 5, asOf: '2024-10', src: S('Metal AM', 'https://www.metal-am.com/fortius-metals-funding-round-totals-5-million-to-bring-next-gen-wire-to-market/') },
+      programs: [{ name: 'SBIR: IN625-RAM2 wire for hypersonics', customer: 'US Air Force', role: 'Prime', year: 2024, status: 'Awarded', src: S('Metal AM', 'https://www.metal-am.com/fortius-metals-funding-round-totals-5-million-to-bring-next-gen-wire-to-market/') }]
+    });
+
+    DTM.add({
+      id: 'zaxe', name: 'Zaxe', status: 'private', stage: 'Venture', hq: 'Istanbul', country: 'TR', founded: 2015,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Turkish maker of filament 3D printers, materials and slicer software sold in more than 15 countries.',
+      description: ['Zaxe, founded in Istanbul in 2015 by Baki Gezgen, designs and builds filament 3D printers, materials and its own xDesktop slicer for education and industrial users in more than 15 countries. It raised $2M in 2023 led by a regional development fund under PCP Technology Opportunities Fund and the Türkiye Development Fund. It has no disclosed defense work.'],
+      funding: { totalUsdM: 4.6, asOf: '2023', note: 'CB Insights total; other trackers list $2.2M–$3.3M.', src: S('3DPrint.com, 2023', 'https://3dprint.com/303278/turkeys-zaxe-secures-2m-investment-to-accelerate-global-3d-printing-expansion/amp/') }
+    });
+
+    DTM.add({
+      id: 'vitro3d', name: 'Vitro3D', status: 'private', stage: 'Seed', hq: 'Boulder, CO', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'University of Colorado spin-out building cartridge-based volumetric resin printers for dental and bio uses.',
+      description: ['Vitro3D, a University of Colorado spin-out, develops cartridge-based volumetric resin printers, initially for dental aligners and scaffolds for 3D cell culture. It raised a $1.3M seed in November 2022 led by Buff Gold Ventures.'],
+      funding: { totalUsdM: 1.3, asOf: '2022-11', src: S('BizWest, Nov 2022', 'https://bizwest.com/2022/11/02/cu-spinout-vitro3d-raises-1-3m-to-develop-3d-printing-technology/') }
+    });
+
+    DTM.add({
+      id: 'amfg', name: 'AMFG', status: 'private', stage: 'Venture', hq: 'London', country: 'UK', founded: null,
+      subsegments: ['industrial.additive', 'software.engineering'],
+      oneLiner: 'Manufacturing execution and workflow software that automates ordering, scheduling and production for 3D-print shops.',
+      description: ['AMFG sells manufacturing execution and workflow automation software for additive manufacturing operations, from order intake and scheduling to post-processing and shipping. It has received Innovate UK funding, including a 2023 Knowledge Transfer Partnership with Imperial College London on autonomous manufacturing, and had about 79 employees in 2025.'],
+      employees: '~79 (2025)',
+      funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2025', src: [S('PitchBook', 'https://www.pitchbook.com/profiles/company/100721-17'), S('Imperial College London', 'https://imperial.ac.uk/news/243291/imperial-amfg-innovate-uk-funding-deliver')] }
+    });
+
+    DTM.add({
+      id: 'fortify', name: 'Fortify', status: 'private', stage: 'Series B', hq: 'Boston, MA', country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Flux-series DLP printers that magnetically align fibers in composite resins; In-Q-Tel investor.',
+      description: ['Fortify\'s Digital Composite Manufacturing aligns fibers in resin with magnetic fields during DLP printing, producing stiff, heat-resistant parts on its Flux-series printers. It raised a $10M Series A led by Accel in 2019 and $20M led by Cota Capital in 2021, and took a strategic investment from In-Q-Tel in 2022.'],
+      funding: { totalUsdM: 32.5, asOf: '2022', note: 'Seed, Series A and 2021 round; the In-Q-Tel amount was not disclosed.', src: [S('CompositesWorld, 2021', 'https://www.compositesworld.com/news/fortify-secures-20-million-funding-to-advance-3d-printing-composites'), S('AM Chronicle', 'https://amchronicle.com/news/fortify-announces-in-q-tel-investment-several-new-fluxprint-3d-printing-materials')] }
+    });
+
+    DTM.add({
+      id: 'edgecloudlink', name: 'EdgeCloudLink', short: 'ECL', status: 'private', stage: 'Seed', hq: 'Mountain View, CA', country: 'US', founded: null,
+      subsegments: ['industrial.power'],
+      oneLiner: 'Hydrogen fuel-cell powered modular data centers; dropped its plan to 3D-print the buildings.',
+      description: ['EdgeCloudLink builds modular data centers powered by hydrogen fuel cells on their own microgrids. It first planned to construction-print the buildings, but its 1 MW Mountain View site reused an existing warehouse instead, so it no longer does additive manufacturing. It raised a $7M seed from Hyperwise Ventures and Molex Ventures.'],
+      funding: { totalUsdM: 7, asOf: '2023', src: S('3DAdept', 'https://3dadept.com/startup-area-what-happened-to-3d-printing-ventures-that-turned-stealth-mode-off-in-2023/') }
+    });
+
+    DTM.add({
+      id: 'sila', name: 'Sila Nanotechnologies', short: 'Sila', status: 'private', stage: 'Series H', hq: 'Alameda, CA', country: 'US', founded: 2011,
+      subsegments: ['industrial.materials', 'industrial.power'],
+      oneLiner: 'Silicon-carbon battery anodes from Moses Lake, WA; conditional $1.4B Pentagon loan for anodes and drone cells.',
+      description: ['Sila makes silicon-carbon anode material that raises lithium-ion energy density, produced at its Moses Lake, Washington plant (about 2 GWh a year). In July 2026 it raised a $300M Series H led by Atreides and Sutter Hill, and in August the Pentagon\'s Office of Strategic Capital committed a conditional $1.4B loan to expand anode output and build a cell plant whose first cells target industrial and military drones.'],
+      funding: {
+        totalUsdM: 1610, asOf: '2026-07',
+        rounds: [{ date: '2026-07', type: 'Series H', amountUsdM: 300, leads: ['Atreides Management', 'Sutter Hill Ventures'] }],
+        note: 'Total from a Hiive-sourced tracker, which also put the valuation at $2.33B. Excludes the conditional $1.4B loan and a $100M 2022 DOE grant.',
+        src: [S('StockAnalysis (private)', 'https://stockanalysis.com/private/sila/'), S('electrive, Aug 2026', 'https://electrive.com/2026/08/11/us-government-offers-sila-up-to-1-4-billion-in-funding')]
+      },
+      programs: [{ name: 'Office of Strategic Capital loan (conditional)', customer: 'DoD Office of Strategic Capital', role: 'Borrower', value: 'Up to $1.4B', year: 2026, status: 'Conditional', note: 'Anode expansion and a lithium-ion cell plant at Moses Lake; not yet closed.', src: S('electrive, Aug 2026', 'https://electrive.com/2026/08/11/us-government-offers-sila-up-to-1-4-billion-in-funding') }]
+    });
+
+    DTM.add({
+      id: 'chariot-defense', name: 'Chariot Defense', status: 'private', stage: 'Series A', country: 'US', founded: 2024,
+      subsegments: ['industrial.power'],
+      oneLiner: 'Amphora hybrid power systems that store, convert and route battlefield power for radios, drones and lasers.',
+      description: ['Chariot Defense, founded in 2024, builds Amphora, a modular hybrid power system that integrates energy storage, conversion and distribution at the tactical edge for radios, drones, sensors and directed-energy weapons. After sales and contracts with the US Army and DIU\'s Project GI, it raised a $34M Series A led by Andreessen Horowitz in February 2026, bringing total funding to $41M.'],
+      funding: {
+        totalUsdM: 41, asOf: '2026-02',
+        rounds: [{ date: '2025-07', type: 'Seed', amountUsdM: 8, leads: ['General Catalyst', 'XYZ Venture Capital'] }, { date: '2026-02', type: 'Series A', amountUsdM: 34, leads: ['Andreessen Horowitz'] }],
+        src: S('Pulse 2.0, Feb 2026', 'https://pulse2.com/chariot-defense-34-million-series-a-raised-to-scale-battlefield-power-systems')
+      },
+      programs: [{ name: 'Army and DIU Project GI power systems', customer: 'US Army / DIU', role: 'Prime', status: 'Delivering', src: S('Pulse 2.0, Feb 2026', 'https://pulse2.com/chariot-defense-34-million-series-a-raised-to-scale-battlefield-power-systems') }]
+    });
+  }
+  /* ---------------- Public names sheet provided for this map (undated): additive and industrial tech ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+    const sheetVal = (evSales, evSalesFy2, extra) => Object.assign({
+      evSales, basis: 'EV / Sales, current fiscal year (sheet)',
+      note: `From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: ${evSalesFy2.toFixed(2)}×.`,
+      asOf: '2026', undated: true, src: CSV, ebitdaBasis: 'EV / EBITDA on the sheet (undated)'
+    }, extra || {});
+
+    DTM.add({
+      id: 'xometry', name: 'Xometry', domain: 'xometry.com', status: 'public', ticker: 'XMTR', exchange: 'NASDAQ',
+      hq: 'North Bethesda, MD', country: 'US', founded: 2013,
+      subsegments: ['industrial.additive', 'industrial.manufacturing'],
+      oneLiner: 'AI-driven marketplace that quotes and routes CNC, 3D printing, sheet metal and molding jobs to a supplier network.',
+      description: ['Xometry runs an online marketplace that instantly prices custom parts and routes the work, from CNC machining and 3D printing to sheet metal and injection molding, to a network of independent manufacturers. It serves engineers and buyers across industry, including aerospace and defense suppliers.'],
+      marketCap: { usdM: 6101, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(7.34, 5.33)
+    });
+
+    DTM.add({
+      id: 'materialise', name: 'Materialise', domain: 'materialise.com', status: 'public', ticker: 'MTLS', exchange: 'NASDAQ',
+      hq: 'Leuven', country: 'BE', founded: 1990,
+      subsegments: ['industrial.additive', 'software.engineering'],
+      oneLiner: '3D printing software (Magics, CO-AM), medical planning tools and industrial print services from Belgium.',
+      description: ['Materialise sells software that prepares and manages 3D printing production, including Magics and the CO-AM platform, medical software and patient-specific devices, and contract manufacturing services. Its build-preparation software is widely used by aerospace and defense printing shops.'],
+      marketCap: { usdM: 496, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(1.28, 1.23, { evEbitda: 11.73, pe: 31.26, peBasis: 'P / E on the sheet (undated)' })
+    });
+
+    DTM.add({
+      id: 'proto-labs', name: 'Proto Labs', domain: 'protolabs.com', status: 'public', ticker: 'PRLB', exchange: 'NYSE',
+      hq: 'Maple Plain, MN', country: 'US', founded: 1999,
+      subsegments: ['industrial.additive', 'industrial.manufacturing'],
+      oneLiner: 'Digital factory for quick-turn injection molding, CNC machining, 3D printing and sheet metal parts.',
+      description: ['Proto Labs runs automated factories and a partner network that turn uploaded CAD files into injection-molded, machined, printed and sheet metal parts in days, serving prototyping and low-volume production for industrial, medical and aerospace customers.'],
+      marketCap: { usdM: 2202, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(3.68, 3.29, { evEbitda: 27.94, pe: 74.53, peBasis: 'P / E on the sheet (undated)' })
+    });
+
+    DTM.add({
+      id: '3d-systems', name: '3D Systems', domain: '3dsystems.com', status: 'public', ticker: 'DDD', exchange: 'NYSE',
+      hq: 'Rock Hill, SC', country: 'US', founded: 1986,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Inventor of stereolithography; metal and polymer printers, materials and software for industrial and healthcare use.',
+      description: ['3D Systems, founded by stereolithography inventor Chuck Hull, sells metal and polymer printers, materials, software and on-demand parts for aerospace and defense, industrial and healthcare customers.'],
+      marketCap: { usdM: 547, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(1.47, 1.39)
+    });
+
+    DTM.add({
+      id: 'stratasys', name: 'Stratasys', domain: 'stratasys.com', status: 'public', ticker: 'SSYS', exchange: 'NASDAQ',
+      hq: 'Eden Prairie, MN and Rehovot', country: 'US', founded: 1989,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'FDM and PolyJet polymer printers, materials and software, widely used for aerospace and defense tooling and parts.',
+      description: ['Stratasys, the company behind fused deposition modeling (FDM) and PolyJet, sells polymer 3D printers, certified materials and software, with dual headquarters in Minnesota and Israel. Its printers are used by aerospace and defense manufacturers for tooling, prototypes and flight-qualified parts.'],
+      marketCap: { usdM: 709, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(0.95, 0.89)
+    });
+
+    DTM.add({
+      id: 'velo3d', name: 'Velo3D', domain: 'velo3d.com', status: 'public', ticker: 'VELO', exchange: 'NASDAQ',
+      country: 'US', founded: null,
+      subsegments: ['industrial.additive'],
+      oneLiner: 'Sapphire metal printers and production services; DIU Project FORGE and DLA contracts for weapon-system parts.',
+      description: ['Velo3D makes Sapphire laser powder-bed metal printers and now also produces parts for defense and space customers. 2025 revenue was $46M and it guides to $60M–$70M in 2026; Q1 2026 revenue rose 48% to $13.8M. Defense work includes a $32.6M DIU Project FORGE contract with the Navy to qualify printed weapon-system components, an $11.5M production contract from a defense prime and a $9.8M Defense Logistics Agency IDIQ.'],
+      marketCap: { usdM: 285, asOf: '2026', undated: true, src: CSV },
+      financials: {
+        cur: 'USD', fyEnd: 'Dec',
+        periods: [{ label: 'FY2025', revenue: 46 }],
+        notes: 'Q1 2026 revenue $13.8M (+48%), 17.2% gross margin; 2026 guidance $60M–$70M.',
+        asOf: '2026-05', src: [S('Velo3D FY2025 results, Barchart', 'https://www.barchart.com/story/news/928646/velo3d-announces-fourth-quarter-and-full-year-2025-financial-results-unveils-long-term-capacity-plan-envisioning-up-to-approximately-400-production-systems'), S('Velo3D 8-K, Mar 2026', 'https://www.sec.gov/Archives/edgar/data/1825079/000119312526121871/velo-ex99_1.htm')]
+      },
+      valuation: sheetVal(3.89, 2.43),
+      programs: [
+        { name: 'Project FORGE: printed weapon-system components', customer: 'DIU / US Navy', role: 'Prime', value: '$32.6M', year: 2026, status: 'Awarded', src: S('Velo3D 8-K, Mar 2026', 'https://www.sec.gov/Archives/edgar/data/1825079/000119312526121871/velo-ex99_1.htm') },
+        { name: 'JAMA Pilot Parts Program IDIQ', customer: 'Defense Logistics Agency', role: 'Prime', value: '$9.8M', status: 'Awarded', src: S('Velo3D 8-K, Mar 2026', 'https://www.sec.gov/Archives/edgar/data/1825079/000119312526121871/velo-ex99_1.htm') }
+      ]
+    });
+
+    DTM.add({
+      id: 'symbotic', name: 'Symbotic', domain: 'symbotic.com', status: 'public', ticker: 'SYM', exchange: 'NASDAQ',
+      hq: 'Wilmington, MA', country: 'US', founded: 2007,
+      subsegments: ['industrial.manufacturing'],
+      oneLiner: 'AI-driven robotic warehouse automation for retailers and distributors; Walmart is its largest customer.',
+      description: ['Symbotic builds AI-controlled robotic systems that store, retrieve and palletize cases in distribution centers, with Walmart as its largest customer. It appears on the public names sheet as disruptive industrial technology; it has no disclosed defense programs.'],
+      marketCap: { usdM: 25287, asOf: '2026', undated: true, src: CSV },
+      valuation: sheetVal(1.56, 1.15, { evEbitda: 50.37, pe: 469.62, peBasis: 'P / E on the sheet (undated)' })
+    });
+  }
 })();
 
 </script>
@@ -6102,6 +6853,33 @@ DTM.programs = [
     valuation: { evSales: 3.2, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-04-30', src: S('Fintel', 'https://fintel.io/s/jp/7011') },
     programs: [{ name: 'Mogami-class frigates for Australia', customer: 'Royal Australian Navy', role: 'Prime', year: 2025, status: 'Contracting' }]
   });
+  /* ---------------- Added from the private names list and public names sheet provided for this map (Oct 2026) ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+
+    DTM.add({
+      id: 'aevex', name: 'AEVEX', domain: 'aevex.com', status: 'public', ticker: 'AVEX', exchange: 'NYSE',
+      country: 'US', founded: null,
+      subsegments: ['primes.midtier', 'missiles.loitering', 'maritime.usv'],
+      oneLiner: 'Uncrewed systems and loitering munitions maker that IPO\'d in April 2026 and bought USV builder BlackSea.',
+      description: ['AEVEX builds uncrewed and autonomous defense systems, including loitering munitions, with the US government accounting for 78% of its $433M 2025 revenue. It listed on the NYSE in April 2026, raising $320M at $20 a share for a fully diluted value of about $2.2B. In August 2026 it agreed to buy BlackSea Technologies, maker of the Navy\'s GARC drone boats, for up to $650M, forming its Maritime Division.'],
+      marketCap: { usdM: 1796, asOf: '2026', undated: true, src: CSV },
+      financials: { cur: 'USD', fyEnd: 'Dec', periods: [{ label: 'FY2025', revenue: 433 }], notes: 'US government customers were 78% of 2025 revenue.', asOf: '2026-04', src: S('Renaissance Capital', 'https://www.renaissancecapital.com/IPO-Center/News/118365/Defense-systems-developer-Aevex-prices-IPO-at-$20-within-the-range') },
+      valuation: { evSales: 2.99, evEbitda: 20.64, basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 2.56×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV },
+      programs: [{ name: 'BlackSea acquisition (GARC USVs, SPDS)', ref: 'usv-navy', customer: 'US Navy', role: 'Prime', year: 2026, status: 'Acquired', src: S('Breaking Defense, Aug 2026', 'https://breakingdefense.com/2026/08/aevex-to-acquire-blacksea-technologies-for-up-to-650m/') }]
+    });
+
+    DTM.add({
+      id: 'robinson-helicopter', name: 'Robinson Helicopter Company', short: 'Robinson', domain: 'robinsonheli.com', status: 'private', stage: 'Privately held',
+      hq: 'Torrance, CA', country: 'US', founded: 1973,
+      subsegments: ['primes.midtier', 'uas.autonomy'],
+      oneLiner: 'Light-helicopter maker (R22, R44, R66) building uncrewed R44 and R66 variants for defense logistics with Skyryse and Sikorsky.',
+      description: ['Robinson builds the R22, R44 and R66 light helicopters. In March 2026 it formed Robinson Unmanned for remotely piloted and autonomous aircraft, folding in drone maker Ascent AeroSystems, acquired in 2024. Plans include uncrewed R44 cargo and agricultural variants and the R66 Turbinetruck for defense logistics with Sikorsky\'s MATRIX autonomy; in June 2026 it agreed with Skyryse to build an uncrewed R66 for ISR, manned-unmanned teaming and air-launched effects.'],
+      leadership: [['David Smith', 'CEO']],
+      funding: { totalUsdM: null, label: 'Privately held', asOf: '2026', src: S('Robinson Helicopter, Mar 2026', 'https://www.robinsonheli.com/unmanned/press/robinson-helicopter-company-establishes-robinson-unmanned-business-unit-formalizing-expansion-into-scalable-autonomous-aviation') },
+      programs: [{ name: 'Uncrewed R66 with Skyryse SkyOS', ref: 'launched-effects', customer: 'Defense customers', role: 'Prime', year: 2026, status: 'Development', src: S('The Aviationist, Jun 2026', 'https://theaviationist.com/2026/06/25/robinson-skyryse-uncrewed-r66-helicopter/') }]
+    });
+  }
 })();
 
 </script>
@@ -6346,6 +7124,9 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     ].filter(Boolean).join(' ').toLowerCase();
   });
 
+  // Market caps taken from an undated sheet carry undated: true and are labeled as such instead of showing a year.
+  const capDate = (m) => (m && m.undated ? 'Undated sheet' : m && m.asOf ? date(m.asOf, true) : '');
+
   function latestRevenue(c) {
     if (c.isPublic && c.financials && c.financials.periods && c.financials.periods.length) {
       const ps = c.financials.periods.filter((p) => p.revenue != null);
@@ -6435,11 +7216,12 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
   }
 
   const ERAS = [
-    { id: 'pre2000', name: 'Founded before 2000', test: (y) => y < 2000 },
+    { id: 'pre2000', name: 'Founded before 2000', test: (y) => y != null && y < 2000 },
     { id: '2000', name: 'Founded 2000–2015', test: (y) => y >= 2000 && y <= 2015 },
     { id: '2016', name: 'Founded 2016–2019', test: (y) => y >= 2016 && y <= 2019 },
     { id: '2020', name: 'Founded 2020–2022', test: (y) => y >= 2020 && y <= 2022 },
-    { id: '2023', name: 'Founded 2023 or later', test: (y) => y >= 2023 }
+    { id: '2023', name: 'Founded 2023 or later', test: (y) => y >= 2023 },
+    { id: 'unknown', name: 'Founding year not compiled', test: (y) => y == null }
   ];
   const STAGES = [
     { id: 'public', name: 'Public', test: (c) => c.isPublic },
@@ -6489,7 +7271,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
       if (state.group === 'sub') {
         groups = seg.subsegments.map((sub) => ({ id: sub.id, name: sub.name, blurb: sub.blurb, items: inSeg.filter((c) => c.subs.includes(sub.id)) }));
       } else if (state.group === 'era') {
-        groups = ERAS.map((e) => ({ id: e.id, name: e.name, items: inSeg.filter((c) => c.founded && e.test(c.founded)) }));
+        groups = ERAS.map((e) => ({ id: e.id, name: e.name, items: inSeg.filter((c) => e.test(c.founded == null ? null : c.founded)) }));
       } else {
         groups = STAGES.map((s) => ({ id: s.id, name: s.name, items: inSeg.filter(s.test) }));
       }
@@ -6624,7 +7406,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     const also = c.subs.map((s) => subIndex[s].sub.name);
     const meta = [c.hq, c.founded ? `Founded ${c.founded}` : '', c.isPublic ? `${c.exchange}: ${c.ticker}` : c.stage].filter(Boolean).join(' · ');
     card.innerHTML = `<h3>${esc(c.name)}</h3><p class="hc-meta">${esc(meta)}</p>${c.flag ? `<p class="hc-flag">${esc(c.flag)}</p>` : ''}<p>${esc(c.oneLiner || '')}</p>
-      <div class="hc-metric">${esc(metricLong(c))}${c.isPublic && c.marketCap && c.marketCap.asOf ? ` <span class="src">(${esc(date(c.marketCap.asOf, true))})</span>` : ''}</div>
+      <div class="hc-metric">${esc(metricLong(c))}${c.isPublic && c.marketCap && (c.marketCap.asOf || c.marketCap.undated) ? ` <span class="src">(${esc(capDate(c.marketCap))})</span>` : ''}</div>
       ${!c.isPublic && c.lastPost ? `<div class="hc-metric">${money(c.lastPost.postUsdM)} last valuation <span class="src">(${esc(date(c.lastPost.date))})</span></div>` : ''}
       ${also.length > 1 ? `<div class="hc-also">Appears in: ${esc(also.join(', '))}</div>` : ''}
       <div class="hc-hint">Click for full profile</div>`;
@@ -6669,9 +7451,9 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     if (c.isPublic) {
       const v = c.valuation || {};
       const r = c.latestRevenue;
-      return kpi('Market cap', c.value == null ? NA : money(c.value), c.marketCap && c.marketCap.asOf ? esc(date(c.marketCap.asOf, true)) : '', true)
+      return kpi('Market cap', c.value == null ? NA : money(c.value), esc(capDate(c.marketCap)), true)
         + kpi('Enterprise value', v.evUsdM != null ? money(v.evUsdM) : NC, v.evUsdM != null && v.asOf ? esc(date(v.asOf, true)) : '')
-        + kpi('Revenue', r ? money(r.valueM, r.cur) : NA, r ? esc(r.label) : '')
+        + kpi('Revenue', r ? money(r.valueM, r.cur) : NC, r ? esc(r.label) : '')
         + kpi(salesLabel(v), v.evSales != null ? mult(v.evSales) : NC, v.evSales != null ? esc(v.basis || 'Trailing twelve months') : '');
     }
     const lr = c.lastRound;
@@ -6686,7 +7468,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
   function overviewHTML(c) {
     const paras = Array.isArray(c.description) ? c.description : [c.description || c.oneLiner || ''];
     const facts = [];
-    facts.push(['Founded', c.founded || '—']);
+    facts.push(['Founded', c.founded || 'Not compiled']);
     facts.push(['Headquarters', esc([c.hq, D.countryNames[c.country] || c.country].filter(Boolean).join(', '))]);
     if (c.employees) facts.push(['Employees', esc(c.employees)]);
     if (c.leadership && c.leadership.length) facts.push(['Leadership', c.leadership.map((l) => `${esc(l[0])} <span class="src">${esc(l[1])}</span>`).join('<br>')]);
@@ -6776,7 +7558,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
         ['Market cap', c.value != null ? money(c.value) : '—', c.marketCap && c.marketCap.local ? `${money(c.marketCap.local.valueM, c.marketCap.local.cur)} in local currency` : ''],
         ['Enterprise value', v.evUsdM != null ? money(v.evUsdM) : '—', v.evUsdM != null ? 'Market cap + net debt' : 'Not compiled'],
         [salesLabel(v), ratio(v.evSales), v.evSales != null ? (v.basis || 'Trailing twelve months') : 'Not compiled'],
-        ['EV / EBITDA', ratio(v.evEbitda), v.evEbitda != null ? 'Trailing twelve months' : 'Not compiled'],
+        ['EV / EBITDA', ratio(v.evEbitda), v.evEbitda != null ? (v.ebitdaBasis || 'Trailing twelve months') : 'Not compiled'],
         ['P / E', ratio(v.pe), v.pe != null ? (v.peBasis || 'Latest fiscal year earnings') : 'Not compiled'],
         ['Forward P / E', ratio(v.fwdPe), v.fwdPe != null ? 'Next twelve months, consensus' : 'Not compiled']
       ].filter((x, i) => i < 3 || x[1] !== '—');
@@ -6786,7 +7568,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
       const chart = peers.length >= 3 && v.evSales != null
         ? `<div class="section"><h3 class="section-title">Sales multiple vs public peers in ${esc(seg.name)}</h3>${C.rows(peers.map((p) => ({ label: p.short || p.name, value: p.valuation.evSales, display: mult(p.valuation.evSales), highlight: p.id === c.id, tip: `${p.name}: ${mult(p.valuation.evSales)} (${salesLabel(p.valuation)}, ${p.valuation.basis || 'TTM'})` })), { format: mult, label: 'Sales multiple comparison' })}<p class="chart-caption">EV / Sales where enterprise value was compiled, otherwise market cap / sales. Each peer uses its own as-of date; hover a bar for its basis.</p></div>` : '';
       return `<div class="section stat-grid">${stats.map(([l, val, n]) => `<div class="stat"><span class="stat-label">${esc(l)}</span><span class="stat-value">${val}</span><span class="stat-note">${esc(n)}</span></div>`).join('')}</div>
-        ${chart}${v.note ? `<div class="section prose"><p>${esc(v.note)}</p></div>` : ''}${srcHTML(v.src, v.asOf)}
+        ${chart}${v.note ? `<div class="section prose"><p>${esc(v.note)}</p></div>` : ''}${srcHTML(v.src, v.undated ? null : v.asOf)}
         ${consensusHTML(c)}`;
     }
     const posts = c.rounds.filter((r) => r.postUsdM);

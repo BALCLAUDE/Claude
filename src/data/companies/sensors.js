@@ -263,4 +263,38 @@
       ]
     });
   }
+  /* ---------------- Added from the private names list and public names sheet provided for this map (Oct 2026) ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+
+    DTM.add({
+      id: 'matrixspace', name: 'MatrixSpace', status: 'private', stage: 'Series B', country: 'US', founded: null,
+      subsegments: ['sensors.radar', 'cuas.sensing'],
+      oneLiner: 'Portable low-power AI radar for detecting and classifying drones; L3Harris is a strategic investor.',
+      description: ['MatrixSpace builds compact, ultra-low-power radar with onboard AI for persistent detection and classification of drones and other targets, for defense, security and airspace users. It closed a $20M Series B in October 2025, co-led by The Raptor Group and OTB Ventures with L3Harris as a new strategic investor, bringing total funding to $58M.'],
+      funding: { totalUsdM: 58, asOf: '2025-10', rounds: [{ date: '2025-10', type: 'Series B', amountUsdM: 20, leads: ['The Raptor Group', 'OTB Ventures'] }], src: S('Security Systems News', 'https://www.securitysystemsnews.com/article/matrixspace-completes-20m-series-b-funding') }
+    });
+
+    DTM.add({
+      id: 'iridium', name: 'Iridium Communications', short: 'Iridium', domain: 'iridium.com', status: 'public', ticker: 'IRDM', exchange: 'NASDAQ',
+      hq: 'McLean, VA', country: 'US', founded: 2000,
+      subsegments: ['sensors.comms', 'sensors.pnt'],
+      oneLiner: 'LEO satellite voice and data network; the Pentagon\'s EMSS service and a growing GPS-backup PNT business.',
+      description: ['Iridium operates a 66-satellite low-Earth-orbit network for global voice and data. Its Enhanced Mobile Satellite Services contract with the US government pays a fixed $110.5M a year and expires in September 2026, with a renewal under discussion. Through its Satelles acquisition it sells satellite-based positioning, navigation and timing as a GPS backup, targeting $100M of PNT revenue by 2030, and does engineering work for the Space Development Agency.'],
+      marketCap: { usdM: 5037, asOf: '2026', undated: true, src: CSV },
+      valuation: { evSales: 7.48, evEbitda: 15.62, pe: 53.91, peBasis: 'P / E on the sheet (undated)', basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 6.89×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV },
+      programs: [{ name: 'Enhanced Mobile Satellite Services (EMSS)', customer: 'US government (DoD)', role: 'Prime', value: '$110.5M a year', status: 'Renewal pending', note: 'Expires September 2026, with an optional six-month extension.', src: S('Iridium 10-K FY2025', 'https://www.sec.gov/Archives/edgar/data/1418819/000141881926000009/irdm-20251231.htm') }]
+    });
+
+    DTM.add({
+      id: 'viasat', name: 'Viasat', domain: 'viasat.com', status: 'public', ticker: 'VSAT', exchange: 'NASDAQ',
+      hq: 'Carlsbad, CA', country: 'US', founded: 1986,
+      subsegments: ['sensors.comms', 'software.cyber'],
+      oneLiner: 'Satellite broadband operator whose $1.3B defense segment sells encryption, tactical datalinks and space systems.',
+      description: ['Viasat operates satellite broadband networks, including Inmarsat, and runs a Defense and Advanced Technologies segment that sells information security and cyber defense products, tactical networking and space and mission systems. In fiscal 2026 (ended March) total revenue reached a record $4.6B and the defense segment grew 10% to $1,340.6M, with record backlog.'],
+      marketCap: { usdM: 9283, asOf: '2026', undated: true, src: CSV },
+      financials: { cur: 'USD', fyEnd: 'Mar', periods: [{ label: 'FY2026', revenue: 4600 }], notes: 'Defense and Advanced Technologies segment revenue was $1,340.6M in FY2026, up from $1,221.1M.', asOf: '2026-05', src: S('Viasat 10-K FY2026', 'https://www.sec.gov/Archives/edgar/data/0000797721/000119312526248290/vsat-20260331.htm') },
+      valuation: { evSales: 3.15, evEbitda: 10.13, basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 2.87×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV }
+    });
+  }
 })();

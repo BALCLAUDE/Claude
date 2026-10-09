@@ -266,4 +266,53 @@
     },
     programs: [{ name: 'Weapon system cyber monitoring', customer: 'US Army / USAF / US Navy', role: 'Prime', status: 'Deployed' }]
   });
+  /* ---------------- Added from the private names list and public names sheet provided for this map (Oct 2026) ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+
+    DTM.add({
+      id: 'twenty', name: 'Twenty', status: 'private', stage: 'Series B', country: 'US', founded: 2024,
+      subsegments: ['software.cyber'],
+      oneLiner: 'Venture-backed offensive cyber operations tools for US Cyber Command and the intelligence community.',
+      description: ['Twenty, founded in 2024 and co-founded by Joe Lin, previously head of public sector at Expanse, builds offensive cyber capabilities for the US military and intelligence community and calls itself America\'s first venture-backed cyber warfare startup. It emerged in 2025 with a $38M round and raised a $100M Series B led by Accel in June 2026 at a $1B valuation; a further $30M from Khosla Ventures at $1.2B has also been reported.'],
+      leadership: [['Joe Lin', 'Co-founder']],
+      funding: { totalUsdM: 138, asOf: '2026-06', rounds: [{ date: '2026-06', type: 'Series B', amountUsdM: 100, postUsdM: 1000, leads: ['Accel'] }], note: 'Excludes a reported $30M Khosla Ventures investment at $1.2B whose date could not be confirmed.', src: S('Axios, Jun 2026', 'https://axios.com/2026/06/17/twenty-cybersecurity-hacks-accel-venture') },
+      programs: [{ name: 'Offensive cyber capabilities', customer: 'US Cyber Command', role: 'Prime', value: 'Up to $12.6M (reported)', status: 'Awarded', src: S('GovConWire', 'https://www.govconwire.com/articles/twenty-100m-series-b-round-ai-cyber-warfare') }]
+    });
+
+    DTM.add({
+      id: 'picogrid', name: 'Picogrid', status: 'private', stage: 'Series A', hq: 'El Segundo, CA', country: 'US', founded: null,
+      subsegments: ['software.c2'],
+      oneLiner: 'Legion integration platform that connects 100+ sensors, drones and effectors from different vendors.',
+      description: ['Picogrid builds Legion, software and edge hardware that connect military sensors, cameras, radars, drones and effectors from different makers into one network, with more than 100 integrated systems from vendors including Skydio, Northrop Grumman, Echodyne, CX2 and Neros. It is deployed with US and allied forces and raised a $45M Series A led by Bessemer Venture Partners in May 2026.'],
+      funding: { totalUsdM: 45, asOf: '2026-05', rounds: [{ date: '2026-05', type: 'Series A', amountUsdM: 45, leads: ['Bessemer Venture Partners'] }], note: 'Series A only; earlier seed funding not compiled.', src: S('Washington Technology, Jun 2026', 'https://washingtontechnology.com/companies/2026/06/picogrid-collects-45m-series-round-integrate-defense-systems/413883/') }
+    });
+
+    DTM.add({
+      id: 'arkeus', name: 'Arkeus', status: 'private', stage: 'Series A', hq: 'Melbourne', country: 'AU', founded: 2020,
+      subsegments: ['software.intel', 'uas.components'],
+      oneLiner: 'Hyperspectral sensing with onboard AI that lets drones detect and track targets; on AV, Textron, Tekever and Insitu aircraft.',
+      description: ['Arkeus, founded in Melbourne in 2020 by CEO Simon Olsen and Dr Jonathan Nebauer, pairs hyperspectral sensors with onboard AI so drones and other autonomous platforms can detect and track objects in real time; its hardware is integrated with drones from AeroVironment, Textron, Tekever and Boeing\'s Insitu. In May 2026 it raised an A$25M (about US$18M) Series A led by QIC Ventures to scale manufacturing.'],
+      funding: { totalUsdM: 20.9, asOf: '2026-05', note: 'US$18M Series A plus a A$4.45M seed in 2023 (about US$2.9M).', src: S('QIC, May 2026', 'https://www.qic.com/News-and-Insights/QIC-Ventures-leads-A$25M-Series-A-for-Arkeus') }
+    });
+
+    DTM.add({
+      id: 'dominion-dynamics', name: 'Dominion Dynamics', status: 'private', stage: 'Series A', hq: 'Ottawa', country: 'CA', founded: 2025,
+      subsegments: ['software.c2', 'uas.cca'],
+      oneLiner: 'AuraNet Arctic sensor network and Scout autonomous aircraft for Canada\'s north; Canada\'s largest defense Series A.',
+      description: ['Dominion Dynamics, founded in Ottawa by former Anduril executive Eliot Pence, is building AuraNet, a network of ruggedized sensors and autonomous systems to monitor Canada\'s Arctic, and Scout, an autonomous aircraft meant to fly with fifth-generation fighters. After a C$21M seed in January 2026 it raised a C$139M (about US$100M) Series A in June 2026, the largest Canadian defense-tech Series A.'],
+      leadership: [['Eliot Pence', 'Founder & CEO']],
+      funding: { totalUsdM: 119, asOf: '2026-06', note: 'Axios total in USD.', src: S('Axios, Jul 2026', 'https://axios.com/2026/07/01/dominion-seriesa-canada-defense-industry') }
+    });
+
+    DTM.add({
+      id: 'impinj', name: 'Impinj', domain: 'impinj.com', status: 'public', ticker: 'PI', exchange: 'NASDAQ',
+      hq: 'Seattle, WA', country: 'US', founded: 2000,
+      subsegments: ['software.logistics'],
+      oneLiner: 'RAIN RFID chips and readers that tag and track items through supply chains and logistics.',
+      description: ['Impinj makes RAIN RFID tag chips, reader chips and readers that identify and track individual items through retail, logistics and industrial supply chains. It appears on the public names sheet as disruptive industrial technology; it has no disclosed defense programs.'],
+      marketCap: { usdM: 5607, asOf: '2026', undated: true, src: CSV },
+      valuation: { evSales: 15.45, evEbitda: 649.5, basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 12.26×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV }
+    });
+  }
 })();

@@ -624,4 +624,16 @@
       ]
     });
   }
+  /* ---------------- Added from the private names list provided for this map (Oct 2026) ---------------- */
+  {
+    DTM.add({
+      id: 'covenant', name: 'Covenant', status: 'private', stage: 'Venture', country: 'US', founded: null,
+      subsegments: ['missiles.strike'],
+      oneLiner: 'Anthem ground-launched missile for mass production at a mid-six-figure price; factories in Dallas, Saxony and Israel.',
+      description: ['Covenant builds Anthem, a ground-launched missile carrying more than 441 lb of payload, meant to complement weapons such as Tomahawk at a target price in the mid six figures. Anthem first flew in August 2025 and has made more than 200 flights, including US Army tests, and Covenant holds a roughly $70M Navy contract for a maritime version. It plans 5,000 missiles a year from a Dallas factory starting in Q1 2027, plus sites in Saxony, Germany and northern Israel; it reports more than $250M raised and about $150M of orders.'],
+      leadership: [['Michael Kaufman', 'Co-founder & CEO']],
+      funding: { totalUsdM: 250, asOf: '2026', note: 'Company-reported: more than $250M across three rounds. Rests on a single syndicated report.', src: S('SupplyChain247 (Reuters)', 'https://www.supplychain247.com/article/covenant-anthem-missile-mass-production') },
+      programs: [{ name: 'Maritime Anthem development', customer: 'US Navy', role: 'Prime', value: '~$70M', status: 'Development', src: S('SupplyChain247 (Reuters)', 'https://www.supplychain247.com/article/covenant-anthem-missile-mass-production') }, { name: 'Anthem flight tests', ref: 'etv', customer: 'US Army', role: 'Prime', year: 2025, status: 'Flight test', src: S('SupplyChain247 (Reuters)', 'https://www.supplychain247.com/article/covenant-anthem-missile-mass-production') }]
+    });
+  }
 })();

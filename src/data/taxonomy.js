@@ -7,7 +7,7 @@ DTM.meta = {
   title: 'Defense Tech Market Map',
   edition: 'Q4 2026',
   asOf: '2026-10-09',
-  note: 'Curated snapshot compiled in October 2026. Every figure carries its own as-of date and source, and values a company has not disclosed are marked as such. Where a figure is our own calculation or a third-party estimate, the profile says so. Non-USD market caps are converted to USD at approximate 2026 exchange rates. Companies added from the funding tables and comps sheet provided for this edition cite them as their source; the comps sheet is undated.'
+  note: 'Curated snapshot compiled in October 2026. Every figure carries its own as-of date and source, and values a company has not disclosed are marked as such. Where a figure is our own calculation or a third-party estimate, the profile says so. Non-USD market caps are converted to USD at approximate 2026 exchange rates. Companies added from the funding tables, comps sheet and public names sheet provided for this edition cite them as their source; both sheets are undated.'
 };
 
 DTM.segments = [
@@ -97,6 +97,7 @@ DTM.segments = [
     blurb: 'Factories, materials and power that let the industrial base produce at wartime rates.',
     subsegments: [
       { id: 'industrial.manufacturing', name: 'Advanced Manufacturing', blurb: 'Automated machining, additive and software-defined factories.' },
+      { id: 'industrial.additive', name: 'Additive Manufacturing', blurb: '3D printers, printed parts, materials and software for producing parts on demand.' },
       { id: 'industrial.materials', name: 'Materials & Critical Minerals', blurb: 'Rare-earth magnets, critical minerals and advanced materials.' },
       { id: 'industrial.nuclear', name: 'Nuclear & Microreactors', blurb: 'Microreactors and naval nuclear power for bases and the fleet.' },
       { id: 'industrial.power', name: 'Power & Batteries', blurb: 'Batteries, fuel cells and expeditionary power.' }
@@ -118,7 +119,7 @@ DTM.segments = [
 DTM.regions = [
   { id: 'us', name: 'United States', countries: ['US'] },
   { id: 'uk', name: 'United Kingdom', countries: ['UK'] },
-  { id: 'eu', name: 'Europe', countries: ['DE', 'FR', 'IT', 'SE', 'NO', 'FI', 'EE', 'PL', 'NL', 'ES', 'PT', 'DK', 'CH', 'LT', 'UA', 'CZ', 'BE', 'AT', 'BG', 'HR'] },
+  { id: 'eu', name: 'Europe', countries: ['DE', 'FR', 'IT', 'SE', 'NO', 'FI', 'EE', 'PL', 'NL', 'ES', 'PT', 'DK', 'CH', 'LT', 'UA', 'CZ', 'BE', 'AT', 'BG', 'HR', 'IE', 'TR'] },
   { id: 'il', name: 'Israel', countries: ['IL'] },
   { id: 'apac', name: 'Asia-Pacific', countries: ['AU', 'NZ', 'JP', 'KR', 'TW', 'SG', 'IN'] },
   { id: 'other', name: 'Canada & other', countries: ['CA'] },
@@ -130,5 +131,5 @@ DTM.countryNames = {
   NO: 'Norway', FI: 'Finland', EE: 'Estonia', PL: 'Poland', NL: 'Netherlands', ES: 'Spain', PT: 'Portugal',
   DK: 'Denmark', CH: 'Switzerland', LT: 'Lithuania', UA: 'Ukraine', CZ: 'Czechia', BE: 'Belgium', AT: 'Austria',
   IL: 'Israel', AU: 'Australia', NZ: 'New Zealand', JP: 'Japan', KR: 'South Korea', TW: 'Taiwan',
-  SG: 'Singapore', IN: 'India', CA: 'Canada', BG: 'Bulgaria', HR: 'Croatia', CN: 'China'
+  SG: 'Singapore', IN: 'India', CA: 'Canada', BG: 'Bulgaria', HR: 'Croatia', CN: 'China', IE: 'Ireland', TR: 'Türkiye'
 };

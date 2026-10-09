@@ -1043,4 +1043,31 @@
     funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2026-10', src: TBL },
     programs: [{ name: 'Space Force ground communications prototype', customer: 'US Space Force', role: 'Prime', value: '$9.5M', year: 2025, status: 'Prototype' }]
   });
+  /* ---------------- Added from the public names sheet provided for this map (undated) ---------------- */
+  {
+    const CSV = S('Public defense names sheet provided for this map (undated)');
+
+    DTM.add({
+      id: 'spire-global', name: 'Spire Global', short: 'Spire', domain: 'spire.com', status: 'public', ticker: 'SPIR', exchange: 'NYSE',
+      hq: 'Vienna, VA', country: 'US', founded: 2012,
+      subsegments: ['space.isr'],
+      oneLiner: 'Nanosatellite constellation for weather, RF and space-based data; on MDA\'s SHIELD IDIQ after selling its maritime arm.',
+      description: ['Spire operates a large constellation of nanosatellites that collect radio occultation weather data and RF signals, and builds and operates satellites for others. It sold its maritime data business to Kpler for about $239M in April 2025, so 2025 revenue fell to $71.6M from $110.5M. It was selected for the Missile Defense Agency\'s SHIELD IDIQ, won an $11.2M NOAA data contract and expects more than 30% growth in 2026 for its remaining business.'],
+      marketCap: { usdM: 420, asOf: '2026', undated: true, src: CSV },
+      financials: { cur: 'USD', fyEnd: 'Dec', periods: [{ label: 'FY2024', revenue: 110.5 }, { label: 'FY2025', revenue: 71.6 }], notes: 'FY2025 includes $21.0M from the maritime business sold in April 2025.', asOf: '2026-03', src: S('Spire FY2025 results', 'https://seekingalpha.com/pr/20442235') },
+      valuation: { evSales: 5.18, basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 3.22×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV },
+      programs: [{ name: 'SHIELD IDIQ', ref: 'golden-dome', customer: 'Missile Defense Agency', role: 'Prime', status: 'Awarded', src: S('AeroMorning', 'https://aeromorning.com/en/spire-global-2025-results-a-transition-year-masks-early-signs-of-stabilization/') }]
+    });
+
+    DTM.add({
+      id: 'mda-space', name: 'MDA Space', domain: 'mda.space', status: 'public', ticker: 'MDA', exchange: 'TSX',
+      hq: 'Brampton, ON', country: 'CA', founded: 1969,
+      subsegments: ['space.buses', 'space.isr'],
+      oneLiner: 'Canadian satellite maker (Telesat Lightspeed, Globalstar), robotics and SAR; record C$1.6B revenue in 2025.',
+      description: ['MDA Space builds satellites and constellations, space robotics such as Canadarm, and radar Earth observation. 2025 revenue rose 51% to a record C$1,633M, driven by Telesat Lightspeed and Globalstar satellite programs, with a backlog of about C$4B. It guides to C$1.7B–C$1.9B for 2026 and set up 49North, a dedicated defense subsidiary.'],
+      marketCap: { usdM: 4569, local: { cur: 'CAD', valueM: 6346 }, asOf: '2026', undated: true, src: S('Public defense names sheet provided for this map (undated); CAD converted at about 0.72') },
+      financials: { cur: 'CAD', fyEnd: 'Dec', periods: [{ label: 'FY2025', revenue: 1633, ebitda: 324 }], notes: 'Backlog about C$4B at end-2025; 2026 guidance C$1.7B–C$1.9B.', asOf: '2026-03-04', src: S('MDA Space FY2025 results', 'https://mda-en.investorroom.com/2026-03-04-MDA-SPACE-REPORTS-FOURTH-QUARTER-AND-FISCAL-2025-RESULTS') },
+      valuation: { evSales: 3.38, evEbitda: 22.03, pe: 48.65, peBasis: 'P / E on the sheet (undated)', basis: 'EV / Sales, current fiscal year (sheet)', note: 'From the public names sheet provided for this map (undated). EV / Sales on next fiscal year: 2.31×.', asOf: '2026', undated: true, ebitdaBasis: 'EV / EBITDA on the sheet (undated)', src: CSV }
+    });
+  }
 })();
