@@ -714,8 +714,8 @@
     programs: []
   });
 
-  /* ---------------- Added from the space and hypersonics funding tables you provided ---------------- */
-  const TBL = S('Funding table you provided (as of Oct 2026)');
+  /* ---------------- Added from the space and hypersonics funding tables provided for this map ---------------- */
+  const TBL = S('Space funding table provided for this map (Oct 2026)');
 
   DTM.add({
     id: 'sierra-space', name: 'Sierra Space', domain: 'sierraspace.com', status: 'private', stage: 'Series C',

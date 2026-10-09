@@ -189,4 +189,78 @@
     valuation: { note: 'Shares have been highly volatile (12-month volatility ~124% per Trefis).', asOf: '2026-08-20', src: S('Trefis', 'https://www.trefis.com/data/companies/infq') },
     programs: [{ name: 'Quantum timing and sensing for DoD', customer: 'DoD / DIU', role: 'Prime', status: 'Prototype' }]
   });
+  /* ---- Batch b1: satcom, PNT and tactical comms additions ---- */
+  {
+    const TBL = S('Space funding table provided for this map (Oct 2026)');
+    const DRN = S('Drone funding table provided for this map (data through Jun 2025)');
+
+    DTM.add({
+      id: 'kymeta', name: 'Kymeta', domain: 'kymetacorp.com', status: 'private', stage: 'Late stage',
+      hq: 'Redmond, WA', country: 'US', founded: 2012,
+      subsegments: ['sensors.comms', 'space.ground'],
+      oneLiner: 'Osprey u8 flat-panel satcom terminals with multi-orbit GEO and LEO service for Defense Department users.',
+      description: [
+        'Kymeta, based in Redmond, Washington, makes flat-panel satellite terminals, led by the Osprey u8, and sells multi-orbit GEO and LEO connectivity through its Kymeta Broadband network. Its terminals switch between TRANSEC and non-TRANSEC networks, and in 2025 the Army chose Kymeta as the multi-orbit satcom provider for its Next Generation Command and Control pilot.',
+        'Manny Mora became CEO in 2025, replacing Rick Bergman. In September 2026 an unnamed DoD branch ordered more than 100 Osprey u8 terminals with connectivity for $20M, taking that customer\'s 2026 purchases above $30M. The last disclosed raise, about $84M in March 2022, was led by Bill Gates with Hanwha Systems.'
+      ],
+      leadership: [['Manny Mora', 'President & CEO']],
+      products: ['Osprey u8', 'Kymeta Broadband (KBB)'],
+      funding: {
+        totalUsdM: 607.5, roundCount: 11, lastDate: '2022-03', asOf: '2022-03',
+        rounds: [{ date: '2022-03', type: 'Equity', amountUsdM: 84, leads: ['Bill Gates'] }],
+        investors: ['Bill Gates', 'Hanwha Systems'],
+        note: 'Table total. GeekWire put total funding at nearly $400M in 2025, so reported totals differ.',
+        src: [TBL, S('Business Wire, Mar 2022', 'https://www.businesswire.com/news/home/20220315005023/en'), S('GeekWire, 2025', 'https://www.geekwire.com/2025/satellite-communication-company-kymeta-names-new-ceo-as-it-ramps-up-defense-operations/')]
+      },
+      programs: [
+        { name: 'Osprey u8 terminals and multi-orbit service', customer: 'US DoD (branch undisclosed)', role: 'Prime', value: '$20M', year: 2026, status: 'Delivering', note: 'More than 100 terminals; over $30M delivered to this branch in 2026.', src: S('Via Satellite, Sep 2026', 'https://www.satellitetoday.com/technology/2026/09/01/kymeta-lands-20m-dod-order-for-osprey-u8-satcom-terminals/') },
+        { name: 'Army NGC2 pilot multi-orbit satcom', ref: 'ngc2', customer: 'US Army', role: 'Vendor', year: 2025, status: 'Pilot', src: S('GeekWire, 2025', 'https://www.geekwire.com/2025/satellite-communication-company-kymeta-names-new-ceo-as-it-ramps-up-defense-operations/') }
+      ]
+    });
+
+    DTM.add({
+      id: 'xona', name: 'Xona Space Systems', short: 'Xona', domain: 'xonaspace.com', status: 'private', stage: 'Series C',
+      hq: 'Burlingame, CA', country: 'US', founded: 2019,
+      subsegments: ['sensors.pnt', 'space.buses'],
+      oneLiner: 'Pulsar, a planned ~258-satellite LEO constellation broadcasting GPS-compatible navigation and timing signals.',
+      description: [
+        'Xona Space Systems, founded in 2019 by Stanford and SpaceX alumni, is building Pulsar, a low-Earth-orbit constellation that broadcasts positioning, navigation and timing signals as a backup and complement to GPS. A move from C-band to L-band lets Pulsar work with existing GPS receivers, which matters for military users facing jamming and spoofing.',
+        'Xona closed a $170M Series C in late March 2026, with Craft Ventures, ICONIQ, Woven Capital, NGP Capital, Samsung Next and Hexagon participating, to scale satellite production in Burlingame. The first US-built production satellites are due to launch later in 2026, with early service targeted for 2027.'
+      ],
+      leadership: [['Brian Manning', 'Co-founder & CEO'], ['Tyler Reid', 'Co-founder & CTO']],
+      products: ['Pulsar'],
+      funding: {
+        totalUsdM: 295, roundCount: 7, lastDate: '2026-03', asOf: '2026-03',
+        rounds: [{ date: '2026-03', type: 'Series C', amountUsdM: 170 }],
+        investors: ['Craft Ventures', 'ICONIQ', 'Woven Capital', 'NGP Capital', 'Samsung Next', 'Hexagon'],
+        note: 'Table total, which includes the $170M Series C. Other trackers list totals from $270M to $336M.',
+        src: [TBL, S('Raising.fi, Mar 2026', 'https://raising.fi/news/xona-space-systems-series-c-march-2026-1')]
+      },
+      programs: [
+        { name: 'Pulsar LEO PNT constellation', customer: 'Military and commercial PNT users', role: 'Prime', status: 'Deploying', note: 'First production satellites due to launch in 2026; early service targeted for 2027.', src: S('EBSCO / Xona Series C coverage', 'https://www.ebsco.com/articles/engineering/29593a98-34d2-5ddc-9c99-199557b6e9c6/xona-closes-170m-series-c-to-lead-next-era-of-global-navigation/') }
+      ]
+    });
+
+    DTM.add({
+      id: 'somewear', name: 'Somewear Labs', short: 'Somewear', domain: 'somewearlabs.com', status: 'private', stage: 'Series A',
+      hq: 'San Francisco, CA', country: 'US', founded: 2017,
+      subsegments: ['sensors.comms'],
+      oneLiner: 'Satellite and mesh hotspots with Grid software that keep tactical teams messaging and tracked beyond cell coverage.',
+      description: [
+        'Somewear Labs, founded in 2017 by former Tesla, Apple and Intuit engineers, builds pocket-sized satellite and mesh networking hotspots and the Grid software that manages them, so small units can message and share locations without cellular coverage.',
+        'Under Defense Innovation Unit sponsorship it holds a US Marine Corps contract to develop a modular, resilient tactical network for INDOPACOM, with Grid managing and configuring the network. Its last disclosed round was a $13.7M Series A in September 2022, backed by angel investors including former AT&T CEO David Dorman and Cisco CEO Chuck Robbins.'
+      ],
+      products: ['Satellite/mesh hotspot', 'Grid'],
+      funding: {
+        totalUsdM: 13.7, roundCount: 3, lastDate: '2022-09', asOf: '2022-09',
+        rounds: [{ date: '2022-09', type: 'Series A', amountUsdM: 13.7 }],
+        investors: ['David Dorman', 'Chuck Robbins'],
+        note: 'Table total; no later round found.',
+        src: [DRN, S('Built In SF, Sep 2022', 'https://www.builtinsf.com/articles/somewear-labs-raises-13m-tesla-founders')]
+      },
+      programs: [
+        { name: 'Resilient tactical network for INDOPACOM (DIU-sponsored)', customer: 'US Marine Corps', role: 'Prime', status: 'Development', src: S('Defence Industry Europe', 'https://defence-industry.eu/somewear-labs-secures-contract-to-develop-advanced-tactical-communications-for-u-s-marine-corps/') }
+      ]
+    });
+  }
 })();

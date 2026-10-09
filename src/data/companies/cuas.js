@@ -241,4 +241,133 @@
     },
     programs: []
   });
+  /* ---- Batch b1: missile defense, directed energy and kinetic counter-drone additions ---- */
+  {
+    const TBL = S('Space funding table provided for this map (Oct 2026)');
+    const DRN = S('Drone funding table provided for this map (data through Jun 2025)');
+
+    DTM.add({
+      id: 'long-wall', name: 'Long Wall', formerly: 'ABL Space Systems', domain: 'lwall.com', status: 'private', stage: 'Late stage',
+      hq: 'Long Beach, CA', country: 'US', founded: 2017,
+      subsegments: ['cuas.missiledefense', 'missiles.hypertest'],
+      oneLiner: 'Former ABL Space Systems, now building the Cyclops midcourse interceptor and RSX threat-replication boosters.',
+      description: [
+        'Long Wall, formerly ABL Space Systems, left commercial launch in November 2024 after RS1 setbacks in 2023 and 2024, and rebranded in February 2025. It is developing Cyclops, a surface-launched exoatmospheric kill vehicle for midcourse defense against threats from MRBMs to ICBMs and hypersonic glide vehicles, which it says can be mass-produced for far less than the Navy\'s SM-3. RS1 became RSX, a booster for flight testing and threat replication, and GS0 became the Ironwood ground system.',
+        'Long Wall unveiled Cyclops in December 2025 with a launcher that fits in a standard shipping container; no flight test had been reported. As ABL it won a $60M SpaceWERX STRATFI award in March 2023 for responsive launch. The funding table shows $519.7M raised over six rounds, the last in December 2023.'
+      ],
+      leadership: [['Dan Piemont', 'Co-founder & CEO']],
+      products: ['Cyclops', 'RSX', 'Ironwood'],
+      employees: '~50',
+      funding: {
+        totalUsdM: 519.7, roundCount: 6, lastDate: '2023-12', asOf: '2023-12',
+        note: 'Raised as ABL Space Systems; no round found since the February 2025 rebrand.',
+        src: [TBL, S('Wikipedia: Long Wall', 'https://en.wikipedia.org/wiki/Long_Wall_(aerospace_company)')]
+      },
+      programs: [
+        { name: 'Cyclops midcourse interceptor', customer: 'US and allied missile defense', role: 'Prime', year: 2025, status: 'Development', note: 'Unveiled December 2025; launcher test unit built, no flight test reported.', src: S('The Defense Post, Dec 2025', 'https://thedefensepost.com/2025/12/17/cyclops-missile-hunter/') },
+        { name: 'SpaceWERX STRATFI (responsive launch)', customer: 'US Space Force / Air Force', role: 'Prime', value: '$60M', year: 2023, status: 'Awarded', src: S('Wikipedia: Long Wall', 'https://en.wikipedia.org/wiki/Long_Wall_(aerospace_company)') }
+      ]
+    });
+
+    DTM.add({
+      id: 'aurelius-systems', name: 'Aurelius Systems', short: 'Aurelius', status: 'private', stage: 'Series A',
+      hq: 'San Francisco, CA', country: 'US', founded: 2024,
+      subsegments: ['cuas.de'],
+      oneLiner: 'Archimedes, an autonomous laser turret for vehicles or fixed sites that destroys small drones beyond one kilometer.',
+      description: [
+        'Aurelius Systems builds Archimedes, an autonomous high-energy laser turret that detects, tracks and destroys drones at more than a kilometer. It is built from commercially available components so it can be mass-produced and repaired in the field, and mounts on vehicles or fixed sites. In April 2026 the company opened a US manufacturing line for high-power fiber lasers.',
+        'It raised a $10M seed round in September 2025 and a $40M Series A in August 2026 led by Draper Associates and KAS Venture Partners. Archimedes downed more than 20 quadcopters at the DoD\'s T-REX 26-2 event and is being integrated on American Rheinmetall\'s Ox robotic vehicle for the Army\'s GOAT program. It had 19 employees in August 2026.'
+      ],
+      leadership: [['Michael LaFramboise', 'Co-founder & CEO'], ['John Marmaduke', 'Co-founder & CTO']],
+      products: ['Archimedes'],
+      employees: '~19',
+      funding: {
+        totalUsdM: 50, roundCount: 3, lastDate: '2026-08', asOf: '2026-08',
+        rounds: [
+          { date: '2025-09', type: 'Seed', amountUsdM: 10 },
+          { date: '2026-08', type: 'Series A', amountUsdM: 40, leads: ['Draper Associates', 'KAS Venture Partners'] }
+        ],
+        investors: ['Draper Associates', 'KAS Venture Partners', 'General Catalyst', 'Hanwha Asset Management', 'Outlander', 'Alumni Ventures', 'Bravo Victor', 'Detroit Venture Partners'],
+        src: [TBL, S('Business Wire, Aug 2026', 'https://www.businesswire.com/news/home/20260805445217/en/CORRECTING-and-REPLACING-Aurelius-Systems-Secures-%2440M-Series-A-to-Meet-Growing-Demand-for-Counter-Drone-Systems'), S('Axios, Sep 2025', 'https://www.axios.com/2025/09/03/aurelius-lasers-cuas-seed-money')]
+      },
+      programs: [
+        { name: 'Archimedes on Ox UGV (Army GOAT bid)', customer: 'American Rheinmetall / US Army', role: 'Partner', status: 'Development', src: S('Tectonic Defense', 'https://www.tectonicdefense.com/exclusive-aurelius-takes-its-drone-downing-lasers-mobile-with-rheinmetall/') },
+        { name: 'T-REX 26-2 experimentation', customer: 'DoD', role: 'Prime', year: 2026, status: 'Demonstrated', note: 'Downed more than 20 quadcopters and more than five Army-supplied drones at Camp Atterbury.', src: S('Business Wire, Aug 2026', 'https://www.businesswire.com/news/home/20260805445217/en/CORRECTING-and-REPLACING-Aurelius-Systems-Secures-%2440M-Series-A-to-Meet-Growing-Demand-for-Counter-Drone-Systems') },
+        { name: 'Army xTechDisrupt FUZE competition', customer: 'US Army', role: 'Prime', status: 'Winner', note: 'Won the Army\'s first FUZE competition, held at AUSA.' }
+      ]
+    });
+
+    DTM.add({
+      id: 'attalon', name: 'Attalon', status: 'private', stage: 'PE-owned (Advent)',
+      hq: 'Philadelphia, PA', country: 'US', founded: 2026,
+      subsegments: ['cuas.de'],
+      oneLiner: 'Valaris beam-combined high-energy lasers, precision optics and coatings, carved out of Coherent by Advent in 2026.',
+      description: [
+        'Attalon is Coherent\'s former aerospace and defense business, which launched as a standalone company in January 2026 after Advent International bought it. It makes directed energy lasers, precision optics and coatings for guided munitions and satellites. Its Valaris platform, launched in August 2026, spans about 10 kW to 50 kW, with the coherently combined Valaris X designed to scale beyond 300 kW.',
+        'A $17.1M Office of Naval Research modification in 2026 funds a 400 kW-class laser subsystem under the SONGBOW program. In September 2026 AeroVironment signed a long-term agreement to use Valaris lasers in its LOCUST system, Attalon committed $15M to expand laser production, and it shipped its first Valaris subsystem for an international defense program.'
+      ],
+      leadership: [['John Bergeron', 'President & CEO']],
+      products: ['Valaris X', 'Valaris S', 'Valaris D', 'kWIC Disconnect', 'Precision optics', 'Precision coatings'],
+      employees: '~550',
+      funding: {
+        totalUsdM: null, label: 'Undisclosed', asOf: '2026-01',
+        note: 'Coherent agreed in August 2025 to sell the business to Advent International for $400M; Attalon launched as a standalone company on 13 January 2026. No venture rounds disclosed.',
+        src: [TBL, S('Pulse 2.0, Aug 2025', 'https://pulse2.com/advent-400-million-deal-for-coherents-aerospace-and-defense-business'), S('Barchart (Business Wire), Jan 2026', 'https://www.barchart.com/story/news/37023005/attalon-launches-as-independent-defense-technology-leader-appoints-john-bergeron-as-ceo-to-strengthen-leadership-in-precision-optics-and-directed-energy')]
+      },
+      programs: [
+        { name: 'ONR SONGBOW high-energy laser', customer: 'Office of Naval Research', role: 'Prime', value: '$17.1M', year: 2026, status: 'Development', note: 'Contract modification to integrate a 50 kW laser with a beam control assembly into a 400 kW-class subsystem; the original award went to Coherent in June 2025.', src: S('Naval Technology', 'https://www.naval-technology.com/news/attalon-us-navy-songbow/') },
+        { name: 'AeroVironment LOCUST laser supply', ref: 'cuas-army', customer: 'AeroVironment', role: 'Supplier', year: 2026, status: 'Production', note: 'Long-term agreement to supply Valaris lasers for LOCUST and AV\'s wider laser line.', src: S('The Defense Post, Sep 2026', 'https://thedefensepost.com/2026/09/16/av-attalon-laser-subsystems/') },
+        { name: 'First Valaris subsystem, international program', customer: 'US customer for an international defense program', role: 'Supplier', year: 2026, status: 'Delivering', src: S('MyChesCo', 'https://www.mychesco.com/a/news/regional/attalon-ships-first-valaris-laser-for-international-program/') }
+      ]
+    });
+
+    DTM.add({
+      id: 'fibertek', name: 'Fibertek', domain: 'fibertek.com', status: 'private', stage: 'Privately held',
+      hq: 'Herndon, VA', country: 'US', founded: 1985,
+      subsegments: ['sensors.comms', 'cuas.de'],
+      oneLiner: 'Solid-state and fiber lasers, space lidar and laser communications for the Defense Department and NASA.',
+      description: [
+        'Fibertek, a privately held laser maker in Herndon, Virginia, builds diode-pumped solid-state and fiber lasers, lidar, laser communication and electro-optical sensor systems for the Defense Department and NASA. It built the lasers for NASA\'s CALIPSO and ICESat-2 missions, and its engineering services arm has supported the Army\'s Night Vision and Electronic Sensors Directorate at Fort Belvoir since 1996.',
+        'The ATLAS laser Fibertek built for ICESat-2 fired its two trillionth shot in March 2025. NASA awarded Fibertek an SBIR Phase III contract worth up to $3.2M in April 2025 for an Er:YAG laser transmitter. Contract databases list more than 580 federal awards worth about $251M in total.'
+      ],
+      products: ['Space lidar lasers', 'Fiber lasers', 'Laser communication systems', 'Electro-optical sensors'],
+      funding: {
+        totalUsdM: null, label: 'Undisclosed', asOf: '2026-10',
+        note: 'Privately held; no disclosed outside funding. The company gives 1985 as its founding year; some databases list 1983.',
+        src: [TBL, S('Craft.co', 'https://craft.co/fibertek')]
+      },
+      programs: [
+        { name: 'ICESat-2 ATLAS laser', customer: 'NASA', role: 'Supplier', status: 'Operating', note: 'Two trillionth laser shot in March 2025.', src: S('NASA ICESat-2 blog, Mar 2025', 'https://science.nasa.gov/blogs/icesat-2/2025/03/14/icesat-2s-laser-fires-2-trillionth-shot-spots-clouds/') },
+        { name: 'SBIR Phase III Er:YAG laser transmitter', customer: 'NASA', role: 'Prime', value: 'Up to $3.2M', year: 2025, status: 'Awarded', src: S('HigherGov', 'https://www.highergov.com/contract/80NSSC25CA055') },
+        { name: 'Night Vision and Electronic Sensors Directorate support', customer: 'US Army', role: 'Prime', status: 'Ongoing', note: 'Engineering support at Fort Belvoir since 1996.' }
+      ]
+    });
+
+    DTM.add({
+      id: 'fortem', name: 'Fortem Technologies', short: 'Fortem', domain: 'fortemtech.com', status: 'private', stage: 'Series B',
+      hq: 'Lindon, UT', country: 'US', founded: 2016,
+      subsegments: ['cuas.kinetic', 'cuas.sensing'],
+      oneLiner: 'DroneHunter net-firing interceptor drones and TrueView radar, bought by JIATF-401, the Army and DHS.',
+      description: [
+        'Fortem Technologies builds DroneHunter, an autonomous interceptor drone that captures hostile drones with nets, and TrueView radar, which it combines with command-and-control software in its SkyDome system. DroneHunter has been used operationally in Ukraine, the Middle East and East Asia, and Fortem says it is the only company authorized to fly a drone-on-drone kinetic interceptor in US airspace.',
+        'In January 2026 JIATF-401 made DroneHunter F700 the first Replicator 2 purchase, and deliveries of DroneHunter 5.0 began. In February the Army awarded a three-year, $18M contract and DHS ordered systems to protect 2026 FIFA World Cup venues. Lockheed Martin led a $50M Series B, investing $25M in April and closing the round in September 2026.'
+      ],
+      leadership: [['Jon Gruen', 'CEO']],
+      products: ['DroneHunter F700', 'DroneHunter 5.0', 'TrueView radar', 'SkyDome'],
+      funding: {
+        totalUsdM: 113.3, roundCount: 8, lastDate: '2026-09', asOf: '2026-09',
+        rounds: [{ date: '2026-09', type: 'Series B', amountUsdM: 50, leads: ['Lockheed Martin'] }],
+        investors: ['Lockheed Martin', 'Unusual Machines', 'Hanwha Aerospace', 'DCVC', 'AIM13 | Crumpton'],
+        note: 'Drone table total of $63.3M through Nov 2024, plus a $50M Series B led by Lockheed Martin ($25M first tranche in April 2026, closed September 2026). Fortem said the round valued it at under $1B.',
+        src: [DRN, S('DroneLife, Sep 2026', 'https://dronelife.com/2026/09/30/fortem-technologies-funding-50m-series-b/'), S('Washington Technology, Apr 2026', 'https://washingtontechnology.com/companies/2026/04/fortem-receives-new-lockheed-backing-reliable-robotics-completes-series-b-raise/413037/'), S('Tectonic Defense', 'https://tectonicdefense.com/exclusive-counter-drone-startup-fortem-raises-50m-series-b')]
+      },
+      programs: [
+        { name: 'JIATF-401 Replicator 2 first purchase', ref: 'replicator', customer: 'JIATF-401', role: 'Prime', year: 2026, status: 'Delivering', note: 'Two sets of DroneHunter F700 interceptors, delivery by April 2026.', src: S('Business Wire, Jan 2026', 'https://www.businesswire.com/news/home/20260114545608/en/Fortem-Technologies-Welcomes-JIATF-401s-Selection-of-DroneHunter-as-First-Replicator-2-Purchase') },
+        { name: 'Army counter-drone equipment and support', ref: 'cuas-army', customer: 'US Army', role: 'Prime', value: '$18M', year: 2026, status: 'Awarded', note: 'Three-year contract; first order nearly $4M.', src: S('DroneXL, Feb 2026', 'https://dronexl.co/2026/02/27/fortem-18m-army-counter-drone') },
+        { name: '2026 FIFA World Cup venue protection', customer: 'DHS', role: 'Prime', year: 2026, status: 'Complete', src: S('Business Wire, Feb 2026', 'https://secure.businesswire.com/news/home/20260212003799/en/Fortem-Receives-Multimillion-dollar-Order-to-Defend-2026-FIFA-World-Cup-Venues-From-Drone-Threats') },
+        { name: 'DroneHunter in Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Vendor', status: 'Fielded', src: S('DCVC', 'https://www.dcvc.com/news-insights/neutralizing-the-swarm-fortem-cements-its-position-as-the-go-to-for-drone-defense') },
+        { name: 'Lockheed Martin critical infrastructure C-UAS', customer: 'Lockheed Martin', role: 'Partner', year: 2026, status: 'Selected', src: S('Business Wire, Mar 2026', 'https://www.businesswire.com/news/home/20260319309623/en/Lockheed-Martin-Selects-Fortem-Technologies-to-Protect-Critical-Infrastructure-from-Drones') }
+      ]
+    });
+  }
 })();

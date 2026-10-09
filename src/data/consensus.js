@@ -2,7 +2,7 @@
    the sheet. Columns: price, mktCap, netCash, ev, sales [CY25E, CY26E], growth % [CY25E, CY26E],
    ebitdaMargin % [CY25E, CY26E], evSales x [CY25E, CY26E], evEbitda x [CY25E, CY26E]. null = NA on the sheet. */
 (function () {
-  const src = { t: 'Public comps sheet you provided (undated)' };
+  const src = { t: 'Public comps sheet provided for this map (undated)' };
   const groups = {
     unmanned: { name: 'Unmanned Defense Ecosystem', avg: { growth: [151, 89], evSales: [20.5, 10.5], evEbitda: [51.3, 141.9] } },
     traditional: { name: 'Traditional Defense Tech' }

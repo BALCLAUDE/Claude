@@ -525,7 +525,17 @@ main { padding-top: 20px; }
   letter-spacing: 0.04em;
 }
 .hovercard .hc-flag { color: var(--bad); font-weight: 600; font-size: var(--step--2); }
-.badge.flag { --c: var(--flag); }
+.d-flag {
+  margin: 8px 0 0;
+  max-width: 80ch;
+  padding: 6px 10px;
+  border-radius: 5px;
+  background: var(--flag);
+  color: var(--on-pill);
+  font-size: var(--step--2);
+  font-weight: 500;
+  line-height: 1.45;
+}
 
 .logo {
   position: relative;

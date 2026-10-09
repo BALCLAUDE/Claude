@@ -17,7 +17,7 @@ An interactive market map of the US and allied defense technology sector. It shi
   - Manufacturing & Energy
   - Primes & Mid-Tier (a separate column)
 - **Subsegments added in the Q4 2026 update:** Stations, Spaceplanes & Reentry and Ground Systems & Mission Ops (Space); Hypersonic Test & Reentry (Missiles); Commercial, Delivery & Public Safety and Airspace Management & UTM (Drones); and Missile Defense (Counter-UAS & Air Defense).
-- **135 companies.** 53 are public and show their **market cap** (blue). 82 are private and show **total funding raised** (orange).
+- **207 companies.** 61 are public and show their **market cap** (blue). 146 are private and show **total funding raised** (orange).
 - **Companies that span several subsegments** appear in each one. Hovering one copy highlights the others.
 - **Click any tile** for a profile with these tabs:
   - **Company description**

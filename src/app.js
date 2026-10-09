@@ -95,7 +95,9 @@
   function latestRevenue(c) {
     if (c.isPublic && c.financials && c.financials.periods && c.financials.periods.length) {
       const ps = c.financials.periods.filter((p) => p.revenue != null);
-      const p = ps.find((x) => /TTM|LTM/i.test(x.label)) || ps[ps.length - 1];
+      const fy = ps.filter((x) => /^FY/i.test(x.label));
+      // Prefer trailing twelve months, then the latest full fiscal year, so a half-year or quarter is never shown as 'revenue'.
+      const p = ps.find((x) => /TTM|LTM/i.test(x.label)) || fy[fy.length - 1] || ps[ps.length - 1];
       if (p) return { valueM: p.revenue, cur: c.financials.cur || 'USD', usdM: p.revenue * (c.financials.cur && c.financials.cur !== 'USD' ? c.fx : 1), label: p.label, kind: 'reported' };
     }
     if (!c.isPublic && c.revenue && c.revenue.valueUsdM != null) {
@@ -459,7 +461,10 @@
       if (!f || !f.periods || !f.periods.length) return `<p class="na">Financials not yet added for this company.</p>`;
       const cur = f.cur || 'USD';
       const ps = f.periods;
-      const chartData = ps.filter((p) => p.revenue != null).map((p) => ({ label: p.label, value: p.revenue, display: money(p.revenue, cur) }));
+      const withRev = ps.filter((p) => p.revenue != null);
+      const fullYears = withRev.filter((p) => /^FY/i.test(p.label));
+      // Chart full fiscal years only when there are enough of them; partial periods stay in the table below.
+      const chartData = (fullYears.length >= 2 ? fullYears : withRev).map((p) => ({ label: p.label, value: p.revenue, display: money(p.revenue, cur) }));
       const rowsDef = [
         ['Revenue', (p) => (p.revenue != null ? money(p.revenue, cur) : '—')],
         ['Revenue growth', (p, i) => {
@@ -619,7 +624,7 @@
         <div class="d-titles">
           <h2 class="d-name" id="detail-name">${esc(c.name)}</h2>
           <p class="d-one">${esc(c.oneLiner || '')}</p>
-          <div class="d-badges"><span class="badge ${c.status}">${esc(badge)}</span>${c.flag ? `<span class="badge flag">${esc(c.flag)}</span>` : ''}<span>${esc([c.hq, D.countryNames[c.country] || c.country].filter(Boolean).join(' · '))}</span>${c.founded ? `<span>Founded ${c.founded}</span>` : ''}${c.domain ? `<a href="https://${esc(c.domain)}" target="_blank" rel="noopener">${esc(c.domain)} ↗</a>` : ''}</div>
+          <div class="d-badges"><span class="badge ${c.status}">${esc(badge)}</span><span>${esc([c.hq, D.countryNames[c.country] || c.country].filter(Boolean).join(' · '))}</span>${c.founded ? `<span>Founded ${c.founded}</span>` : ''}${c.domain ? `<a href="https://${esc(c.domain)}" target="_blank" rel="noopener">${esc(c.domain)} ↗</a>` : ''}</div>${c.flag ? `<p class="d-flag" role="note">${esc(c.flag)}</p>` : ''}
         </div>
         <div class="d-actions">
           <button class="icon-btn" type="button" data-action="compare" aria-pressed="${inCompare}" title="${inCompare ? 'Remove from compare' : 'Add to compare'}" aria-label="${inCompare ? 'Remove from compare' : 'Add to compare'}">
