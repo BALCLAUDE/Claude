@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Defense Tech Market Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Saira+Condensed:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <div class="masthead-text">
+      <p class="eyebrow"><span id="edition">Q4 2026 edition</span> · <span id="asof">Data as of</span></p>
+      <h1 class="title">Defense Tech Market Map</h1>
+      <p class="dek" id="dek">Venture-backed challengers, public neo-primes and legacy primes across the US and allied defense industrial base. Click any company for its full profile.</p>
+      <p class="key"><span><i class="swatch swatch-public"></i>Public · market cap</span><span><i class="swatch swatch-private"></i>Private · total raised</span></p>
+    </div>
+    <dl class="headline-stats" id="headline-stats"></dl>
+  </header>
+
+  <div class="toolbar" id="toolbar" role="search">
+    <div class="toolbar-row">
+      <label class="search" for="q">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input id="q" type="search" placeholder="Search companies, tickers, programs, investors" autocomplete="off" spellcheck="false">
+        <kbd aria-hidden="true">/</kbd>
+      </label>
+      <div class="seg" role="radiogroup" aria-label="Ownership">
+        <input type="radio" name="own" id="own-all" value="all" checked><label for="own-all">All</label>
+        <input type="radio" name="own" id="own-public" value="public"><label for="own-public"><i class="swatch swatch-public"></i>Public</label>
+        <input type="radio" name="own" id="own-private" value="private"><label for="own-private"><i class="swatch swatch-private"></i>Private</label>
+      </div>
+      <div class="seg" role="radiogroup" aria-label="View">
+        <input type="radio" name="view" id="view-map" value="map" checked><label for="view-map">Map</label>
+        <input type="radio" name="view" id="view-table" value="table"><label for="view-table">Table</label>
+      </div>
+      <button class="icon-btn" id="theme-btn" type="button" aria-label="Switch color theme" title="Switch color theme">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5a7.5 7.5 0 1 0 0 15z" fill="currentColor"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+    <div class="toolbar-row toolbar-row-secondary">
+      <label class="field" for="region"><span>Region</span>
+        <select id="region"><option value="">All regions</option></select>
+      </label>
+      <label class="field field-lens" for="lens"><span>Program lens</span>
+        <select id="lens"><option value="">None</option></select>
+      </label>
+      <label class="field" for="group"><span>Group by</span>
+        <select id="group">
+          <option value="sub">Subsegment</option>
+          <option value="era">Founding era</option>
+          <option value="stage">Stage</option>
+        </select>
+      </label>
+      <label class="field" for="sort"><span>Sort</span>
+        <select id="sort">
+          <option value="value">Largest first</option>
+          <option value="name">A to Z</option>
+          <option value="founded">Newest first</option>
+        </select>
+      </label>
+      <label class="switch" for="scale" title="Enlarges public companies above $25B market cap and private companies that have raised $1.5B or more">
+        <input type="checkbox" id="scale"><span class="switch-track" aria-hidden="true"></span><span>Scale by size</span>
+      </label>
+      <p class="result-count" id="result-count" aria-live="polite"></p>
+      <button class="link-btn" id="reset-btn" type="button" hidden>Reset filters</button>
+    </div>
+    <div class="lens-banner" id="lens-banner" hidden></div>
+  </div>
+
+  <main id="main">
+    <div class="board" id="board" aria-label="Market map"></div>
+    <div class="table-wrap" id="table-view" hidden></div>
+    <p class="empty" id="empty" hidden>No companies match these filters. <button class="link-btn" type="button" data-action="reset">Reset filters</button></p>
+  </main>
+
+  <footer class="colophon">
+    <div class="legend" aria-label="Legend">
+      <span><i class="swatch swatch-public"></i>Public company · market capitalization</span>
+      <span><i class="swatch swatch-private"></i>Private company · total funding raised to date</span>
+    </div>
+    <p id="method-note"></p>
+    <p class="fine">Figures come from company filings, press releases and reporting linked in each profile. Market caps and multiples move daily. Check the as-of date and source shown in each profile before relying on a figure. Logos are trademarks of their owners.</p>
+  </footer>
+</div>
+
+<div class="hovercard" id="hovercard" role="tooltip" hidden></div>
+<div class="chart-tip" id="chart-tip" role="tooltip" hidden></div>
+
+<dialog class="detail" id="detail" aria-labelledby="detail-name">
+  <div class="detail-inner" id="detail-inner"></div>
+</dialog>
+
+<dialog class="detail compare" id="compare-dialog" aria-labelledby="compare-title">
+  <div class="detail-inner" id="compare-inner"></div>
+</dialog>
+
+<div class="compare-tray" id="compare-tray" hidden></div>
+
+<script src="data/taxonomy.js"></script>
+<script src="data/programs.js"></script>
+<script src="data/companies/space.js"></script>
+<script src="data/companies/missiles.js"></script>
+<script src="data/companies/uas.js"></script>
+<script src="data/companies/cuas.js"></script>
+<script src="data/companies/maritime.js"></script>
+<script src="data/companies/software.js"></script>
+<script src="data/companies/sensors.js"></script>
+<script src="data/companies/industrial.js"></script>
+<script src="data/companies/primes.js"></script>
+<script src="data/logos.js"></script>
+<script src="charts.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

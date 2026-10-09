@@ -1,0 +1,27 @@
+/* Program registry for the Program Lens. Company program entries link here via `ref`. */
+DTM.programs = [
+  { id: 'golden-dome', name: 'Golden Dome', customer: 'DoD / USSF / MDA', blurb: 'Layered homeland missile defense architecture, including space-based sensors and interceptors.' },
+  { id: 'pwsa', name: 'SDA PWSA Tranches', customer: 'Space Development Agency', blurb: 'Proliferated Warfighter Space Architecture: low-Earth-orbit transport and tracking layers bought in two-year tranches.' },
+  { id: 'nssl', name: 'National Security Space Launch', customer: 'US Space Force', blurb: 'Assured launch for national security payloads, split into Lane 1 (risk-tolerant) and Lane 2 (heavy, high-assurance).' },
+  { id: 'eocl', name: 'Commercial Imagery (EOCL & Luno)', customer: 'NRO / NGA', blurb: 'NRO Electro-Optical Commercial Layer and NGA Luno contracts that buy commercial satellite imagery and analytics.' },
+  { id: 'trs', name: 'Tactically Responsive Space', customer: 'US Space Force', blurb: 'Victus-series missions that prove launch and on-orbit maneuver on short notice.' },
+  { id: 'cca', name: 'Collaborative Combat Aircraft', customer: 'US Air Force', blurb: 'Uncrewed jet aircraft teamed with crewed fighters. Increment 1 went to Anduril (YFQ-44A) and General Atomics (YFQ-42A).' },
+  { id: 'replicator', name: 'Replicator', customer: 'DIU / DoD', blurb: 'DoD initiative to field thousands of attritable autonomous systems, followed by a counter-drone second phase.' },
+  { id: 'srr', name: 'Short Range Reconnaissance', customer: 'US Army', blurb: 'Army program of record for soldier-carried quadcopters.' },
+  { id: 'launched-effects', name: 'Launched Effects', customer: 'US Army', blurb: 'Air-launched and ground-launched uncrewed systems for reconnaissance, EW and strike.' },
+  { id: 'ngc2', name: 'Next Generation C2', customer: 'US Army', blurb: 'Army data-centric command-and-control prototype led by Anduril with Palantir and others.' },
+  { id: 'maven', name: 'Maven Smart System', customer: 'DoD / NGA', blurb: 'AI-enabled targeting and situational awareness platform used across the combatant commands.' },
+  { id: 'etv', name: 'Enterprise Test Vehicle', customer: 'US Air Force / DIU', blurb: 'Low-cost air-launched cruise missile prototypes, leading to the Family of Affordable Mass Missiles.' },
+  { id: 'hypersonic-test', name: 'Hypersonic Test & Prototypes', customer: 'DoD (TRMC, MDA, DIU)', blurb: 'Reusable hypersonic test beds and rapid hypersonic prototypes such as HyCAT and MACH-TB.' },
+  { id: 'srm', name: 'Solid Rocket Motor Base', customer: 'US Army / Navy / DoD', blurb: 'New-entrant solid rocket motor production for GMLRS, Standard Missile and other munitions.' },
+  { id: 'cuas-army', name: 'Army C-UAS', customer: 'US Army / JIATF-401', blurb: 'Counter-drone interceptors, high-power microwave and sensing fielded for Army and joint units.' },
+  { id: 'ngi', name: 'Next Generation Interceptor', customer: 'Missile Defense Agency', blurb: 'Replacement interceptor for Ground-based Midcourse Defense.' },
+  { id: 'f47', name: 'F-47 (NGAD)', customer: 'US Air Force', blurb: 'Sixth-generation crewed air dominance fighter awarded to Boeing in 2025.' },
+  { id: 'b21', name: 'B-21 Raider', customer: 'US Air Force', blurb: 'Stealth long-range strike bomber built by Northrop Grumman.' },
+  { id: 'sentinel', name: 'Sentinel ICBM', customer: 'US Air Force', blurb: 'LGM-35A replacement for the Minuteman III intercontinental ballistic missile.' },
+  { id: 'f35', name: 'F-35 Lightning II', customer: 'US and allied air forces', blurb: 'Fifth-generation multirole fighter built by Lockheed Martin.' },
+  { id: 'aukus', name: 'AUKUS / Submarine Industrial Base', customer: 'US Navy / Royal Australian Navy', blurb: 'Virginia- and Columbia-class submarine production and the AUKUS partnership.' },
+  { id: 'usv-navy', name: 'Navy Uncrewed Surface Vessels', customer: 'US Navy', blurb: 'Medium and small autonomous surface vessels, including Modular Attack Surface Craft.' },
+  { id: 'ukraine', name: 'Ukraine Operations', customer: 'Ukraine / allied donors', blurb: 'Systems fielded in combat in Ukraine.' },
+  { id: 'microreactors', name: 'DoD Microreactors', customer: 'DoD / Army / DOE', blurb: 'Project Pele and the Army Janus program for on-base microreactors.' }
+];
