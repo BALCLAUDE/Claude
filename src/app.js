@@ -102,13 +102,13 @@
   }
 
   function monogram(name) {
-    const words = name.replace(/[^A-Za-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w && !/^(the|of|and|inc|corp|co|ltd|plc|ag|se|sa|group|industries|technologies|systems|holdings)$/i.test(w));
+    const words = name.replace(/[^A-Za-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w && !/^(the|of|and|inc|corp|co|ltd|plc|ag|se|sa|group|industries|technologies|systems|holdings|defense|security)$/i.test(w));
     if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
     const w = words[0] || name;
+    if (w.length <= 4 && w === w.toUpperCase()) return w;
     const caps = w.match(/[A-Z0-9]/g) || [];
-    if (caps.length >= 2 && caps.length <= 3 && w.length > 3) return caps.join('');
-    if (w.length <= 3) return w.toUpperCase();
-    return w[0].toUpperCase();
+    if (caps.length >= 2 && caps.length <= 3) return caps.join('');
+    return w[0].toUpperCase() + (w[1] || '').toLowerCase();
   }
   function hue(id) { let h = 0; for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 360; return h; }
 
@@ -116,7 +116,7 @@
   let remoteLogos = false;
   const FAVICON = (d) => `https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=128`;
   function monoHTML(c) {
-    const m = monogram(c.name);
+    const m = monogram(c.short || c.name);
     return `<span class="mono${m.length >= 3 ? ' len-3' : ''}">${esc(m)}</span>`;
   }
   function logoHTML(c) {
@@ -127,7 +127,7 @@
       return `<span class="logo ${local.dark ? 'is-dark' : 'is-light'}" style="${style}"><img src="${local.src}" alt="" loading="lazy" decoding="async"></span>`;
     }
     if (remoteLogos && c.domain) {
-      return `<span class="logo is-light" style="${style}" data-mono="${esc(monogram(c.name))}"><img src="${FAVICON(c.domain)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"></span>`;
+      return `<span class="logo is-light" style="${style}" data-mono="${esc(monogram(c.short || c.name))}"><img src="${FAVICON(c.domain)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"></span>`;
     }
     return `<span class="logo" style="${style}">${monoHTML(c)}</span>`;
   }
@@ -268,7 +268,7 @@
     { key: 'value', label: 'Mkt cap / Raised', get: (c) => c.value, num: true },
     { key: 'val', label: 'EV / Last valuation', get: (c) => (c.isPublic ? c.valuation && c.valuation.evUsdM : c.lastPost && c.lastPost.postUsdM), num: true },
     { key: 'rev', label: 'Revenue (≈USD)', get: (c) => c.latestRevenue && c.latestRevenue.usdM, num: true },
-    { key: 'evs', label: 'EV / Sales', get: (c) => c.valuation && c.valuation.evSales, num: true }
+    { key: 'evs', label: 'Sales multiple', get: (c) => c.valuation && c.valuation.evSales, num: true }
   ];
   function renderTable(visible) {
     const { key, dir } = state.tableSort;
@@ -400,15 +400,18 @@
     return `<div class="kpi${headline ? ' is-headline' : ''}"><span class="kpi-label">${esc(label)}</span><span class="kpi-value">${value}</span>${note ? `<span class="kpi-note">${note}</span>` : ''}</div>`;
   }
   const NA = '<span class="na">Not disclosed</span>';
+  const NC = '<span class="na">Not compiled</span>';
+  const salesLabel = (v) => (v && /^Market cap/i.test(v.basis || '') ? 'Price / Sales' : 'EV / Sales');
+  const ratio = (x) => (x == null ? '—' : x > 0 ? mult(x) : 'n/m');
 
   function kpisHTML(c) {
     if (c.isPublic) {
       const v = c.valuation || {};
       const r = c.latestRevenue;
       return kpi('Market cap', c.value == null ? NA : money(c.value), c.marketCap && c.marketCap.asOf ? esc(date(c.marketCap.asOf, true)) : '', true)
-        + kpi('Enterprise value', v.evUsdM != null ? money(v.evUsdM) : NA, v.asOf ? esc(date(v.asOf, true)) : '')
+        + kpi('Enterprise value', v.evUsdM != null ? money(v.evUsdM) : NC, v.evUsdM != null && v.asOf ? esc(date(v.asOf, true)) : '')
         + kpi('Revenue', r ? money(r.valueM, r.cur) : NA, r ? esc(r.label) : '')
-        + kpi('EV / Sales', mult(v.evSales) || NA, v.evSales != null ? esc(v.basis || 'Trailing twelve months') : '');
+        + kpi(salesLabel(v), v.evSales != null ? mult(v.evSales) : NC, v.evSales != null ? esc(v.basis || 'Trailing twelve months') : '');
     }
     const lr = c.lastRound;
     const r = c.latestRevenue;
@@ -504,18 +507,18 @@
       const v = c.valuation;
       if (!v) return `<p class="na">Valuation data not yet added for this company.</p>`;
       const stats = [
-        ['Market cap', c.value != null ? money(c.value) : '—', c.marketCap && c.marketCap.local ? `${money(c.marketCap.local.valueM, c.marketCap.local.cur)} local` : ''],
-        ['Enterprise value', v.evUsdM != null ? money(v.evUsdM) : '—', 'Market cap + net debt'],
-        ['EV / Sales', mult(v.evSales) || 'n/m', v.basis || 'Trailing twelve months'],
-        ['EV / EBITDA', v.evEbitda != null && v.evEbitda > 0 ? mult(v.evEbitda) : 'n/m', 'Trailing twelve months'],
-        ['P / E', v.pe != null && v.pe > 0 ? mult(v.pe) : 'n/m', 'Trailing twelve months'],
-        ['Forward P / E', v.fwdPe != null && v.fwdPe > 0 ? mult(v.fwdPe) : 'n/m', 'Next twelve months, consensus']
-      ];
+        ['Market cap', c.value != null ? money(c.value) : '—', c.marketCap && c.marketCap.local ? `${money(c.marketCap.local.valueM, c.marketCap.local.cur)} in local currency` : ''],
+        ['Enterprise value', v.evUsdM != null ? money(v.evUsdM) : '—', v.evUsdM != null ? 'Market cap + net debt' : 'Not compiled'],
+        [salesLabel(v), ratio(v.evSales), v.evSales != null ? (v.basis || 'Trailing twelve months') : 'Not compiled'],
+        ['EV / EBITDA', ratio(v.evEbitda), v.evEbitda != null ? 'Trailing twelve months' : 'Not compiled'],
+        ['P / E', ratio(v.pe), v.pe != null ? (v.peBasis || 'Latest fiscal year earnings') : 'Not compiled'],
+        ['Forward P / E', ratio(v.fwdPe), v.fwdPe != null ? 'Next twelve months, consensus' : 'Not compiled']
+      ].filter((x, i) => i < 3 || x[1] !== '—');
       const seg = subIndex[c.subs[0]].seg;
       const peers = companies.filter((p) => p.isPublic && p.valuation && p.valuation.evSales != null && p.segs.includes(seg.id))
         .sort((a, b) => b.valuation.evSales - a.valuation.evSales);
       const chart = peers.length >= 3 && v.evSales != null
-        ? `<div class="section"><h3 class="section-title">EV / Sales vs public peers in ${esc(seg.name)}</h3>${C.rows(peers.map((p) => ({ label: p.short || p.name, value: p.valuation.evSales, display: mult(p.valuation.evSales), highlight: p.id === c.id })), { format: mult, label: 'EV to sales comparison' })}<p class="chart-caption">Peer multiples use each company's own as-of date. n/m = not meaningful (negative earnings).</p></div>` : '';
+        ? `<div class="section"><h3 class="section-title">Sales multiple vs public peers in ${esc(seg.name)}</h3>${C.rows(peers.map((p) => ({ label: p.short || p.name, value: p.valuation.evSales, display: mult(p.valuation.evSales), highlight: p.id === c.id, tip: `${p.name}: ${mult(p.valuation.evSales)} (${salesLabel(p.valuation)}, ${p.valuation.basis || 'TTM'})` })), { format: mult, label: 'Sales multiple comparison' })}<p class="chart-caption">EV / Sales where enterprise value was compiled, otherwise market cap / sales. Each peer uses its own as-of date; hover a bar for its basis.</p></div>` : '';
       return `<div class="section stat-grid">${stats.map(([l, val, n]) => `<div class="stat"><span class="stat-label">${esc(l)}</span><span class="stat-value">${val}</span><span class="stat-note">${esc(n)}</span></div>`).join('')}</div>
         ${chart}${v.note ? `<div class="section prose"><p>${esc(v.note)}</p></div>` : ''}${srcHTML(v.src, v.asOf)}`;
     }
@@ -639,7 +642,12 @@
     const dlg = $('#detail');
     if (dlg.open) dlg.close();
   }
-  $('#detail').addEventListener('close', () => { state.open = null; setHash(''); hideChartTip(); });
+  $('#detail').addEventListener('close', () => {
+    if ($('#detail').open) return; // reopened before the queued close event ran
+    state.open = null;
+    setHash('');
+    hideChartTip();
+  });
 
   function setHash(h) {
     try {
@@ -683,7 +691,7 @@
       ['Market cap / Raised', (c) => (c.value == null ? '—' : `${money(c.value)} <span class="src">${c.isPublic ? 'market cap' : 'raised'}</span>`)],
       ['EV / Last valuation', (c) => (c.isPublic ? (c.valuation && c.valuation.evUsdM != null ? money(c.valuation.evUsdM) + ' <span class="src">EV</span>' : '—') : (c.lastPost ? money(c.lastPost.postUsdM) + ` <span class="src">post · ${esc(date(c.lastPost.date))}</span>` : '—'))],
       ['Revenue', (c) => (c.latestRevenue ? `${money(c.latestRevenue.valueM, c.latestRevenue.cur)} <span class="src">${esc(c.latestRevenue.label)}${c.latestRevenue.kind === 'estimate' ? ' est.' : ''}</span>` : '—')],
-      ['EV / Sales', (c) => (c.valuation && mult(c.valuation.evSales)) || '—'],
+      ['Sales multiple', (c) => (c.valuation && c.valuation.evSales != null ? `${mult(c.valuation.evSales)} <span class="src">${salesLabel(c.valuation)}</span>` : '—')],
       ['P / E', (c) => (c.valuation && c.valuation.pe > 0 ? mult(c.valuation.pe) : '—')],
       ['Key programs', (c) => esc((c.programs || []).slice(0, 4).map((p) => p.name).join(' · ') || '—')]
     ];
@@ -745,7 +753,7 @@
       const a = act.dataset.action;
       if (a === 'close') closeDetail();
       else if (a === 'nav' && act.dataset.to) openCompany(act.dataset.to, { tab: state.tab });
-      else if (a === 'compare') { toggleCompare(state.open); renderDetail(); }
+      else if (a === 'compare' && state.open) { toggleCompare(state.open); renderDetail(); }
       else if (a === 'uncompare') toggleCompare(act.dataset.id);
       else if (a === 'clear-compare') { state.compare = []; renderTray(); }
       else if (a === 'open-compare') openCompare();

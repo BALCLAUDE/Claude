@@ -7,7 +7,7 @@ DTM.meta = {
   title: 'Defense Tech Market Map',
   edition: 'Q4 2026',
   asOf: '2026-10-09',
-  note: 'Curated snapshot. Every figure carries its own as-of date and source. Undisclosed values are shown as such, never estimated.'
+  note: 'Curated snapshot compiled in October 2026. Every figure carries its own as-of date and source, and values a company has not disclosed are marked as such. Where a figure is our own calculation or a third-party estimate, the profile says so. Non-USD market caps are converted to USD at approximate 2026 exchange rates.'
 };
 
 DTM.segments = [

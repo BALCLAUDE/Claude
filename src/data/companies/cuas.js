@@ -4,7 +4,7 @@
 
   /* ---------------- Kinetic interceptors ---------------- */
   DTM.add({
-    id: 'cambridge-aerospace', name: 'Cambridge Aerospace', domain: 'cambridgeaerospace.com', status: 'private', stage: 'Series C',
+    id: 'cambridge-aerospace', name: 'Cambridge Aerospace', status: 'private', stage: 'Series C',
     hq: 'Cambridge', country: 'UK', founded: 2024,
     subsegments: ['cuas.kinetic'],
     oneLiner: 'Skyhammer low-cost interceptors for drones and cruise missiles, scaling to thousands a month.',
@@ -48,7 +48,7 @@
   });
 
   DTM.add({
-    id: 'frankenburg', name: 'Frankenburg Technologies', short: 'Frankenburg', domain: 'frankenburg.tech', status: 'private', stage: 'Series A',
+    id: 'frankenburg', name: 'Frankenburg Technologies', short: 'Frankenburg', status: 'private', stage: 'Series A',
     hq: 'Tallinn', country: 'EE', founded: 2024,
     subsegments: ['cuas.kinetic'],
     oneLiner: 'Mass-producible mini-missiles to shoot down drones at drone-like prices.',
@@ -67,7 +67,7 @@
   });
 
   DTM.add({
-    id: 'tytan', name: 'Tytan Technologies', short: 'Tytan', domain: 'tytan-technologies.com', status: 'private', stage: 'Series A',
+    id: 'tytan', name: 'Tytan Technologies', short: 'Tytan', status: 'private', stage: 'Series A',
     hq: 'Munich', country: 'DE', founded: 2023,
     subsegments: ['cuas.kinetic'],
     oneLiner: 'AI-guided interceptor drones for European air defense, backed by the NATO Innovation Fund.',

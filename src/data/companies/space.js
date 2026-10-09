@@ -27,6 +27,7 @@
       asOf: '2026-09-19', src: S('Rankia', 'https://www.rankia.com/informacion/spacex')
     },
     programs: [
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'Space Systems Command OTA agreements; prototypes to be demonstrated by 2028.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') },
       { name: 'NSSL Phase 3 Lane 2', ref: 'nssl', customer: 'US Space Force', role: 'Prime', value: '$5.9B', year: 2025, status: 'Production', note: '28 heavy national security missions, the largest share of the Phase 3 Lane 2 award.' },
       { name: 'Starshield / NRO proliferated constellation', customer: 'NRO', role: 'Prime', status: 'Deploying', note: 'Hundreds of Starshield-based reconnaissance satellites launched for the National Reconnaissance Office.' },
       { name: 'SDA Tranche 1 Tracking Layer', ref: 'pwsa', customer: 'Space Development Agency', role: 'Prime', value: '$149M', year: 2022, status: 'On orbit', note: 'Four missile-warning tracking satellites.' }
@@ -86,6 +87,7 @@
     },
     valuation: { evSales: null, note: 'Trades at roughly 8× the midpoint of 2026 revenue guidance at the July 2026 market cap.', asOf: '2026-07-21', src: S('Google Finance', 'https://www.google.com/finance/quote/FLY%3ANASDAQ') },
     programs: [
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees (via SciTec)', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'SciTec, the missile-warning software business Firefly agreed to acquire, is one of the 12 awardees.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') },
       { name: 'Victus Nox', ref: 'trs', customer: 'US Space Force', role: 'Launch provider', year: 2023, status: 'Completed', note: 'Launched 27 hours after the call-up order, a US responsive-launch record.' },
       { name: 'SciTec missile warning & tracking', customer: 'US Space Force', role: 'Software & data processing', status: 'Operational', note: 'Acquired business that processes missile-warning sensor data for the Space Force.' }
     ]
@@ -233,7 +235,9 @@
       note: 'The September 2025 round was reported at "more than $1B".',
       src: [S('Payload, Jun 2026', 'https://payloadspace.com/apex-raises-200m-at-2-3b-valuation'), S('Satellite Today, Jun 2026', 'https://satellitetoday.com/manufacturing/2026/06/05/apex-hits-2-3b-valuation-with-latest-funding-raise/')]
     },
-    programs: []
+    programs: [
+      { name: 'Golden Dome interceptor buses (for Northrop Grumman)', ref: 'golden-dome', customer: 'Northrop Grumman', role: 'Bus supplier', year: 2026, status: 'Development', note: 'Supplies satellite platforms for Northrop\'s space-based interceptor demo planned for 2027.', src: S('The Defense Post, Jun 2026', 'https://thedefensepost.com/2026/06/05/northrup-apex-space-interceptor/amp/') }
+    ]
   });
 
   DTM.add({
@@ -415,7 +419,9 @@
       note: 'Total shows the Series B only; earlier seed rounds are not included.',
       src: S('Pulse 2.0, Apr 2026', 'https://pulse2.com/turion-space-75-million-series-b-to-scale-space-infrastructure-and-advance-space-domain-awareness/')
     },
-    programs: []
+    programs: [
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'Selected among 12 companies in April 2026.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') }
+    ]
   });
 
   /* ---------------- Mobility & servicing ---------------- */
@@ -440,7 +446,9 @@
       note: 'Valuation reported by Reuters from a person familiar with the matter. Company says lifetime funding exceeds $1B.',
       src: S('LA Business Journal, Jun 2026', 'https://labusinessjournal.com/featured/impulse-passes-1-billion-in-funding/')
     },
-    programs: []
+    programs: [
+      { name: 'Golden Dome space technology (with Anduril)', ref: 'golden-dome', customer: 'DoD', role: 'Partner', year: 2026, status: 'Development', src: S('Business Standard, Apr 2026', 'https://www.business-standard.com/world-news/impulse-space-anduril-building-technology-for-trump-s-golden-dome-126040500157_1.html') }
+    ]
   });
 
   DTM.add({

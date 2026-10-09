@@ -199,7 +199,7 @@
   });
 
   DTM.add({
-    id: 'stark', name: 'Stark', domain: 'stark-defence.com', status: 'private', stage: 'Series C',
+    id: 'stark', name: 'Stark', status: 'private', stage: 'Series C',
     hq: 'Berlin', country: 'DE', founded: 2024,
     subsegments: ['missiles.loitering', 'uas.small'],
     oneLiner: 'Virtus VTOL loitering munition; Bundeswehr contract and a Sequoia and Founders Fund backed €500M round.',
@@ -308,7 +308,7 @@
   });
 
   DTM.add({
-    id: 'scout-ai', name: 'Scout AI', domain: 'scoutco.ai', status: 'private', stage: 'Series A',
+    id: 'scout-ai', name: 'Scout AI', status: 'private', stage: 'Series A',
     hq: 'Sunnyvale, CA', country: 'US', founded: 2024,
     subsegments: ['uas.autonomy', 'maritime.ground'],
     oneLiner: 'Fury, a foundation model for controlling uncrewed vehicles across domains.',

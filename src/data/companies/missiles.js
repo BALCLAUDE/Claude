@@ -209,7 +209,7 @@
   });
 
   DTM.add({
-    id: 'karman', name: 'Karman Space & Defense', short: 'Karman', domain: 'karman-sd.com', status: 'public', ticker: 'KRMN', exchange: 'NYSE',
+    id: 'karman', name: 'Karman Space & Defense', short: 'Karman', status: 'public', ticker: 'KRMN', exchange: 'NYSE',
     hq: 'Huntington Beach, CA', country: 'US', founded: 1977,
     subsegments: ['missiles.propulsion', 'missiles.energetics'],
     oneLiner: 'Mission-critical subsystems for missiles, hypersonics and launch: payload protection, interstages, energetics.',
@@ -232,7 +232,7 @@
 
   /* ---------------- Low-cost strike ---------------- */
   DTM.add({
-    id: 'mach-industries', name: 'Mach Industries', short: 'Mach', domain: 'machindustries.com', status: 'private', stage: 'Series C',
+    id: 'mach-industries', name: 'Mach Industries', short: 'Mach', status: 'private', stage: 'Series C',
     hq: 'Huntington Beach, CA', country: 'US', founded: 2023,
     subsegments: ['missiles.strike'],
     oneLiner: 'Viper, a jet-powered VTOL one-way strike vehicle, and a distributed manufacturing network (Forge).',
@@ -256,7 +256,7 @@
   });
 
   DTM.add({
-    id: 'destinus', name: 'Destinus', domain: 'destinus.com', status: 'private', stage: 'Pre-IPO',
+    id: 'destinus', name: 'Destinus', status: 'private', stage: 'Pre-IPO',
     hq: 'Hoofddorp', country: 'NL', founded: 2021,
     subsegments: ['missiles.strike', 'uas.tactical'],
     oneLiner: 'European long-range strike: Ruta cruise missiles and Hornet drones, with a Rheinmetall joint venture.',

@@ -33,7 +33,7 @@
       { name: 'Soldier Borne Mission Command (formerly IVAS)', customer: 'US Army', role: 'Prime', year: 2025, status: 'Development' },
       { name: 'Counter-drone systems (Roadrunner, Anvil, Lattice)', ref: 'cuas-army', customer: 'USMC / SOCOM / US Army', role: 'Prime', status: 'Fielding' },
       { name: 'Barracuda for the Enterprise Test Vehicle', ref: 'etv', customer: 'US Air Force', role: 'Prime', status: 'Prototype' },
-      { name: 'Golden Dome team', ref: 'golden-dome', customer: 'DoD', role: 'Prime / team lead', status: 'Development' },
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'Also leads an industry team including K2 Space and Impulse Space.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') },
       { name: 'Altius and Ghost-X under Replicator', ref: 'replicator', customer: 'DIU', role: 'Supplier', status: 'Fielded' },
       { name: 'Ghost Shark XL-AUV', customer: 'Royal Australian Navy', role: 'Prime', status: 'Production' }
     ]
@@ -63,7 +63,7 @@
       notes: 'FY2025 US government revenue was $1.855B (+55%); adjusted operating income $2.254B.',
       asOf: '2026-02-02', src: S('Palantir Q4 2025 results (8-K)', 'https://www.sec.gov/Archives/edgar/data/1321655/000132165526000004/a2025q4ex991earningsrelease.htm')
     },
-    valuation: { evUsdM: 430000, evSales: 96, basis: 'EV ÷ FY2025 revenue', note: 'EV estimated as market cap less ~$2.3B of cash (no debt). On 2026 guidance the multiple is about 60×.', asOf: '2026-08-21', src: [S('Equibles', 'https://equibles.com/stocks/pltr/summary'), S('TIKR', 'https://www.tikr.com/blog/palantir-stock-has-dropped-31-from-its-peak-heres-where-pltr-could-go-in-2026')] },
+    valuation: { evUsdM: 430000, evSales: 96, pe: 266, peBasis: 'FY2025 GAAP net income', basis: 'EV ÷ FY2025 revenue', note: 'EV estimated as market cap less ~$2.3B of cash (no debt). On 2026 guidance the multiple is about 60×.', asOf: '2026-08-21', src: [S('Equibles', 'https://equibles.com/stocks/pltr/summary'), S('TIKR', 'https://www.tikr.com/blog/palantir-stock-has-dropped-31-from-its-peak-heres-where-pltr-could-go-in-2026')] },
     programs: [
       { name: 'Maven Smart System', ref: 'maven', customer: 'DoD / NGA / combatant commands', role: 'Prime', status: 'Operational', note: 'Contract ceiling raised in 2025 to meet demand.' },
       { name: 'Army Enterprise Agreement', customer: 'US Army', role: 'Prime', value: 'Up to $10B', year: 2025, status: 'Active', note: 'Ten-year agreement consolidating software contracts.' },
@@ -224,7 +224,7 @@
   });
 
   DTM.add({
-    id: 'edgerunner', name: 'EdgeRunner AI', short: 'EdgeRunner', domain: 'edgerunnerai.com', status: 'private', stage: 'Series A',
+    id: 'edgerunner', name: 'EdgeRunner AI', short: 'EdgeRunner', status: 'private', stage: 'Series A',
     hq: 'Seattle, WA', country: 'US', founded: 2023,
     subsegments: ['software.intel'],
     oneLiner: 'Air-gapped, on-device AI agents for warfighters who operate without connectivity.',

@@ -539,7 +539,7 @@ main { padding-top: 20px; }
   letter-spacing: 0.02em;
   line-height: 1;
 }
-.logo .mono.len-3 { font-size: 0.9375rem; }
+.logo .mono.len-3 { font-size: 0.875rem; letter-spacing: 0; }
 
 /* Scale by size */
 .board.is-scaled .tile.is-big { grid-column: span 2; grid-row: span 2; align-content: center; gap: 8px; }
@@ -1076,7 +1076,7 @@ DTM.meta = {
   title: 'Defense Tech Market Map',
   edition: 'Q4 2026',
   asOf: '2026-10-09',
-  note: 'Curated snapshot. Every figure carries its own as-of date and source. Undisclosed values are shown as such, never estimated.'
+  note: 'Curated snapshot compiled in October 2026. Every figure carries its own as-of date and source, and values a company has not disclosed are marked as such. Where a figure is our own calculation or a third-party estimate, the profile says so. Non-USD market caps are converted to USD at approximate 2026 exchange rates.'
 };
 
 DTM.segments = [
@@ -1257,6 +1257,7 @@ DTM.programs = [
       asOf: '2026-09-19', src: S('Rankia', 'https://www.rankia.com/informacion/spacex')
     },
     programs: [
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'Space Systems Command OTA agreements; prototypes to be demonstrated by 2028.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') },
       { name: 'NSSL Phase 3 Lane 2', ref: 'nssl', customer: 'US Space Force', role: 'Prime', value: '$5.9B', year: 2025, status: 'Production', note: '28 heavy national security missions, the largest share of the Phase 3 Lane 2 award.' },
       { name: 'Starshield / NRO proliferated constellation', customer: 'NRO', role: 'Prime', status: 'Deploying', note: 'Hundreds of Starshield-based reconnaissance satellites launched for the National Reconnaissance Office.' },
       { name: 'SDA Tranche 1 Tracking Layer', ref: 'pwsa', customer: 'Space Development Agency', role: 'Prime', value: '$149M', year: 2022, status: 'On orbit', note: 'Four missile-warning tracking satellites.' }
@@ -1316,6 +1317,7 @@ DTM.programs = [
     },
     valuation: { evSales: null, note: 'Trades at roughly 8× the midpoint of 2026 revenue guidance at the July 2026 market cap.', asOf: '2026-07-21', src: S('Google Finance', 'https://www.google.com/finance/quote/FLY%3ANASDAQ') },
     programs: [
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees (via SciTec)', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'SciTec, the missile-warning software business Firefly agreed to acquire, is one of the 12 awardees.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') },
       { name: 'Victus Nox', ref: 'trs', customer: 'US Space Force', role: 'Launch provider', year: 2023, status: 'Completed', note: 'Launched 27 hours after the call-up order, a US responsive-launch record.' },
       { name: 'SciTec missile warning & tracking', customer: 'US Space Force', role: 'Software & data processing', status: 'Operational', note: 'Acquired business that processes missile-warning sensor data for the Space Force.' }
     ]
@@ -1463,7 +1465,9 @@ DTM.programs = [
       note: 'The September 2025 round was reported at "more than $1B".',
       src: [S('Payload, Jun 2026', 'https://payloadspace.com/apex-raises-200m-at-2-3b-valuation'), S('Satellite Today, Jun 2026', 'https://satellitetoday.com/manufacturing/2026/06/05/apex-hits-2-3b-valuation-with-latest-funding-raise/')]
     },
-    programs: []
+    programs: [
+      { name: 'Golden Dome interceptor buses (for Northrop Grumman)', ref: 'golden-dome', customer: 'Northrop Grumman', role: 'Bus supplier', year: 2026, status: 'Development', note: 'Supplies satellite platforms for Northrop\'s space-based interceptor demo planned for 2027.', src: S('The Defense Post, Jun 2026', 'https://thedefensepost.com/2026/06/05/northrup-apex-space-interceptor/amp/') }
+    ]
   });
 
   DTM.add({
@@ -1645,7 +1649,9 @@ DTM.programs = [
       note: 'Total shows the Series B only; earlier seed rounds are not included.',
       src: S('Pulse 2.0, Apr 2026', 'https://pulse2.com/turion-space-75-million-series-b-to-scale-space-infrastructure-and-advance-space-domain-awareness/')
     },
-    programs: []
+    programs: [
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'Selected among 12 companies in April 2026.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') }
+    ]
   });
 
   /* ---------------- Mobility & servicing ---------------- */
@@ -1670,7 +1676,9 @@ DTM.programs = [
       note: 'Valuation reported by Reuters from a person familiar with the matter. Company says lifetime funding exceeds $1B.',
       src: S('LA Business Journal, Jun 2026', 'https://labusinessjournal.com/featured/impulse-passes-1-billion-in-funding/')
     },
-    programs: []
+    programs: [
+      { name: 'Golden Dome space technology (with Anduril)', ref: 'golden-dome', customer: 'DoD', role: 'Partner', year: 2026, status: 'Development', src: S('Business Standard, Apr 2026', 'https://www.business-standard.com/world-news/impulse-space-anduril-building-technology-for-trump-s-golden-dome-126040500157_1.html') }
+    ]
   });
 
   DTM.add({
@@ -2150,7 +2158,7 @@ DTM.programs = [
   });
 
   DTM.add({
-    id: 'karman', name: 'Karman Space & Defense', short: 'Karman', domain: 'karman-sd.com', status: 'public', ticker: 'KRMN', exchange: 'NYSE',
+    id: 'karman', name: 'Karman Space & Defense', short: 'Karman', status: 'public', ticker: 'KRMN', exchange: 'NYSE',
     hq: 'Huntington Beach, CA', country: 'US', founded: 1977,
     subsegments: ['missiles.propulsion', 'missiles.energetics'],
     oneLiner: 'Mission-critical subsystems for missiles, hypersonics and launch: payload protection, interstages, energetics.',
@@ -2173,7 +2181,7 @@ DTM.programs = [
 
   /* ---------------- Low-cost strike ---------------- */
   DTM.add({
-    id: 'mach-industries', name: 'Mach Industries', short: 'Mach', domain: 'machindustries.com', status: 'private', stage: 'Series C',
+    id: 'mach-industries', name: 'Mach Industries', short: 'Mach', status: 'private', stage: 'Series C',
     hq: 'Huntington Beach, CA', country: 'US', founded: 2023,
     subsegments: ['missiles.strike'],
     oneLiner: 'Viper, a jet-powered VTOL one-way strike vehicle, and a distributed manufacturing network (Forge).',
@@ -2197,7 +2205,7 @@ DTM.programs = [
   });
 
   DTM.add({
-    id: 'destinus', name: 'Destinus', domain: 'destinus.com', status: 'private', stage: 'Pre-IPO',
+    id: 'destinus', name: 'Destinus', status: 'private', stage: 'Pre-IPO',
     hq: 'Hoofddorp', country: 'NL', founded: 2021,
     subsegments: ['missiles.strike', 'uas.tactical'],
     oneLiner: 'European long-range strike: Ruta cruise missiles and Hornet drones, with a Rheinmetall joint venture.',
@@ -2484,7 +2492,7 @@ DTM.programs = [
   });
 
   DTM.add({
-    id: 'stark', name: 'Stark', domain: 'stark-defence.com', status: 'private', stage: 'Series C',
+    id: 'stark', name: 'Stark', status: 'private', stage: 'Series C',
     hq: 'Berlin', country: 'DE', founded: 2024,
     subsegments: ['missiles.loitering', 'uas.small'],
     oneLiner: 'Virtus VTOL loitering munition; Bundeswehr contract and a Sequoia and Founders Fund backed €500M round.',
@@ -2593,7 +2601,7 @@ DTM.programs = [
   });
 
   DTM.add({
-    id: 'scout-ai', name: 'Scout AI', domain: 'scoutco.ai', status: 'private', stage: 'Series A',
+    id: 'scout-ai', name: 'Scout AI', status: 'private', stage: 'Series A',
     hq: 'Sunnyvale, CA', country: 'US', founded: 2024,
     subsegments: ['uas.autonomy', 'maritime.ground'],
     oneLiner: 'Fury, a foundation model for controlling uncrewed vehicles across domains.',
@@ -2670,7 +2678,7 @@ DTM.programs = [
 
   /* ---------------- Kinetic interceptors ---------------- */
   DTM.add({
-    id: 'cambridge-aerospace', name: 'Cambridge Aerospace', domain: 'cambridgeaerospace.com', status: 'private', stage: 'Series C',
+    id: 'cambridge-aerospace', name: 'Cambridge Aerospace', status: 'private', stage: 'Series C',
     hq: 'Cambridge', country: 'UK', founded: 2024,
     subsegments: ['cuas.kinetic'],
     oneLiner: 'Skyhammer low-cost interceptors for drones and cruise missiles, scaling to thousands a month.',
@@ -2714,7 +2722,7 @@ DTM.programs = [
   });
 
   DTM.add({
-    id: 'frankenburg', name: 'Frankenburg Technologies', short: 'Frankenburg', domain: 'frankenburg.tech', status: 'private', stage: 'Series A',
+    id: 'frankenburg', name: 'Frankenburg Technologies', short: 'Frankenburg', status: 'private', stage: 'Series A',
     hq: 'Tallinn', country: 'EE', founded: 2024,
     subsegments: ['cuas.kinetic'],
     oneLiner: 'Mass-producible mini-missiles to shoot down drones at drone-like prices.',
@@ -2733,7 +2741,7 @@ DTM.programs = [
   });
 
   DTM.add({
-    id: 'tytan', name: 'Tytan Technologies', short: 'Tytan', domain: 'tytan-technologies.com', status: 'private', stage: 'Series A',
+    id: 'tytan', name: 'Tytan Technologies', short: 'Tytan', status: 'private', stage: 'Series A',
     hq: 'Munich', country: 'DE', founded: 2023,
     subsegments: ['cuas.kinetic'],
     oneLiner: 'AI-guided interceptor drones for European air defense, backed by the NATO Innovation Fund.',
@@ -3176,7 +3184,7 @@ DTM.programs = [
       { name: 'Soldier Borne Mission Command (formerly IVAS)', customer: 'US Army', role: 'Prime', year: 2025, status: 'Development' },
       { name: 'Counter-drone systems (Roadrunner, Anvil, Lattice)', ref: 'cuas-army', customer: 'USMC / SOCOM / US Army', role: 'Prime', status: 'Fielding' },
       { name: 'Barracuda for the Enterprise Test Vehicle', ref: 'etv', customer: 'US Air Force', role: 'Prime', status: 'Prototype' },
-      { name: 'Golden Dome team', ref: 'golden-dome', customer: 'DoD', role: 'Prime / team lead', status: 'Development' },
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'Also leads an industry team including K2 Space and Impulse Space.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') },
       { name: 'Altius and Ghost-X under Replicator', ref: 'replicator', customer: 'DIU', role: 'Supplier', status: 'Fielded' },
       { name: 'Ghost Shark XL-AUV', customer: 'Royal Australian Navy', role: 'Prime', status: 'Production' }
     ]
@@ -3206,7 +3214,7 @@ DTM.programs = [
       notes: 'FY2025 US government revenue was $1.855B (+55%); adjusted operating income $2.254B.',
       asOf: '2026-02-02', src: S('Palantir Q4 2025 results (8-K)', 'https://www.sec.gov/Archives/edgar/data/1321655/000132165526000004/a2025q4ex991earningsrelease.htm')
     },
-    valuation: { evUsdM: 430000, evSales: 96, basis: 'EV ÷ FY2025 revenue', note: 'EV estimated as market cap less ~$2.3B of cash (no debt). On 2026 guidance the multiple is about 60×.', asOf: '2026-08-21', src: [S('Equibles', 'https://equibles.com/stocks/pltr/summary'), S('TIKR', 'https://www.tikr.com/blog/palantir-stock-has-dropped-31-from-its-peak-heres-where-pltr-could-go-in-2026')] },
+    valuation: { evUsdM: 430000, evSales: 96, pe: 266, peBasis: 'FY2025 GAAP net income', basis: 'EV ÷ FY2025 revenue', note: 'EV estimated as market cap less ~$2.3B of cash (no debt). On 2026 guidance the multiple is about 60×.', asOf: '2026-08-21', src: [S('Equibles', 'https://equibles.com/stocks/pltr/summary'), S('TIKR', 'https://www.tikr.com/blog/palantir-stock-has-dropped-31-from-its-peak-heres-where-pltr-could-go-in-2026')] },
     programs: [
       { name: 'Maven Smart System', ref: 'maven', customer: 'DoD / NGA / combatant commands', role: 'Prime', status: 'Operational', note: 'Contract ceiling raised in 2025 to meet demand.' },
       { name: 'Army Enterprise Agreement', customer: 'US Army', role: 'Prime', value: 'Up to $10B', year: 2025, status: 'Active', note: 'Ten-year agreement consolidating software contracts.' },
@@ -3367,7 +3375,7 @@ DTM.programs = [
   });
 
   DTM.add({
-    id: 'edgerunner', name: 'EdgeRunner AI', short: 'EdgeRunner', domain: 'edgerunnerai.com', status: 'private', stage: 'Series A',
+    id: 'edgerunner', name: 'EdgeRunner AI', short: 'EdgeRunner', status: 'private', stage: 'Series A',
     hq: 'Seattle, WA', country: 'US', founded: 2023,
     subsegments: ['software.intel'],
     oneLiner: 'Air-gapped, on-device AI agents for warfighters who operate without connectivity.',
@@ -3413,20 +3421,1026 @@ DTM.programs = [
 
 </script>
 <script>/* data/companies/sensors.js */
-/* placeholder */
+/* Sensors, EW & Comms segment. HawkEye 360 (space.js) and Robin Radar (cuas.js) also appear here. */
+(function () {
+  const S = (t, u) => (u ? { t, u } : { t });
+
+  /* ---------------- Radar ---------------- */
+  DTM.add({
+    id: 'chaos-industries', name: 'Chaos Industries', short: 'Chaos', status: 'private', stage: 'Series D',
+    hq: 'Los Angeles, CA', country: 'US', founded: 2022,
+    subsegments: ['sensors.radar', 'cuas.sensing'],
+    oneLiner: 'Vanquish distributed early-warning radar, built expeditionary and relocatable, for drones and missiles.',
+    description: [
+      'Chaos builds software-defined, distributed radar systems. Its flagship Vanquish is an expeditionary early-warning radar marketed to track threats out to 250 km, and its Astria radar targets air and missile defense.',
+      'It raised a $510M Series D at $4.5B in November 2025, four months after a $275M Series C, taking total funding above $1B in three years.'
+    ],
+    leadership: [['John Tenet', 'Co-founder & CEO']],
+    products: ['Vanquish', 'Astria'],
+    funding: {
+      totalUsdM: 1000, asOf: '2025-11',
+      rounds: [
+        { date: '2025-07', type: 'Series C', amountUsdM: 275, postUsdM: 2000 },
+        { date: '2025-11', type: 'Series D', amountUsdM: 510, postUsdM: 4500, leads: ['Valor Equity Partners'] }
+      ],
+      investors: ['Valor Equity Partners', '8VC', 'Accel'],
+      note: 'Company reports more than $1B raised since founding.',
+      src: S('Business Wire, Nov 2025', 'https://www.businesswire.com/news/home/20251113579391/en/CHAOS-Industries-Raises-%24510-Million-Led-by-Valor-Equity-Partners-to-Accelerate-Next-Generation-Defense-Systems')
+    },
+    programs: [{ name: 'Astria instrumentation radar', customer: 'US Air Force', role: 'Prime', value: '$1.9M', status: 'Development' }]
+  });
+
+  DTM.add({
+    id: 'echodyne', name: 'Echodyne', domain: 'echodyne.com', status: 'private', stage: 'Growth',
+    hq: 'Kirkland, WA', country: 'US', founded: 2014,
+    subsegments: ['sensors.radar', 'cuas.sensing'],
+    oneLiner: 'Metamaterial ESA radars (EchoGuard, EchoShield) that are a default sensor in counter-drone systems.',
+    description: [
+      'Echodyne makes compact electronically scanned array radars based on metamaterials, widely integrated into counter-drone, border security and vehicle protection systems.',
+      'In 2026 it is opening an 86,350 sq ft factory in Kirkland designed for more than 30,000 radars a year. EchoShield is the radar inside the Air Force\'s SUADS counter-drone IDIQ (Trust Automation, $490M ceiling).'
+    ],
+    leadership: [['Eben Frankenberg', 'CEO']],
+    products: ['EchoGuard', 'EchoShield', 'EchoFlight'],
+    funding: {
+      totalUsdM: 202, asOf: '2022-06',
+      rounds: [{ date: '2022-06', type: 'Growth', amountUsdM: 135, leads: ['Baillie Gifford'] }],
+      investors: ['Baillie Gifford', 'Bill Gates', 'NEA', 'Madrona'],
+      note: 'Tracxn reports $202M across six rounds; the company has cited a smaller figure.',
+      src: [S('ExecutiveBiz', 'https://executivebiz.com/tag/nea/'), S('Robotics.press', 'https://www.robotics.press/news/echodyne-company-profile/')]
+    },
+    programs: [
+      { name: 'Air Force SUADS counter-drone (EchoShield)', ref: 'cuas-army', customer: 'US Air Force (via Trust Automation)', role: 'Subsystem supplier', value: '$490M ceiling (IDIQ)', status: 'Active' },
+      { name: 'Radars for Kyiv', ref: 'ukraine', customer: 'US State Department', role: 'Prime', value: '$15M', year: 2026, status: 'Delivering' }
+    ]
+  });
+
+  /* ---------------- EW & SIGINT ---------------- */
+  DTM.add({
+    id: 'cx2', name: 'CX2', status: 'private', stage: 'Series A',
+    hq: 'Los Angeles, CA', country: 'US', founded: 2023,
+    subsegments: ['sensors.ew', 'cuas.ew'],
+    oneLiner: 'Software-defined electronic warfare for the tactical edge: sensing, jamming and spectrum maneuver.',
+    description: [
+      'CX2 builds intelligent, multi-domain electronic warfare systems that sense, classify and jam signals, designed to be cheap and quick to update as the spectrum fight changes, a lesson from Ukraine.'
+    ],
+    leadership: [['Nathan Mintz', 'Co-founder & CEO']],
+    funding: {
+      totalUsdM: 46, asOf: '2025-05',
+      rounds: [
+        { date: '2024', type: 'Seed', amountUsdM: 15 },
+        { date: '2025-05', type: 'Series A', amountUsdM: 31, leads: ['Point72 Ventures'] }
+      ],
+      investors: ['Point72 Ventures', 'Andreessen Horowitz', '8VC', 'Upfront Ventures'],
+      src: S('Gunderson Dettmer', 'https://www.gunder.com/en/news-insights/client-news/point72-leads-dollar31m-series-a-of-defense-tech-cx2')
+    },
+    programs: []
+  });
+
+  /* ---------------- Comms & networking ---------------- */
+  DTM.add({
+    id: 'aalyria', name: 'Aalyria', domain: 'aalyria.com', status: 'private', stage: 'Series B',
+    hq: 'Livermore, CA', country: 'US', founded: 2022,
+    subsegments: ['sensors.comms'],
+    oneLiner: 'Google spinout: Spacetime network orchestration and Tightbeam laser links across air, sea and space.',
+    description: [
+      'Aalyria spun out of Google with two technologies: Spacetime, software that orchestrates networks of satellites, aircraft and ground stations in real time, and Tightbeam, free-space optical communications.',
+      'It raised a $100M Series B at $1.3B in February 2026.'
+    ],
+    leadership: [['Chris Taylor', 'CEO']],
+    products: ['Spacetime', 'Tightbeam'],
+    funding: {
+      totalUsdM: 100, asOf: '2026-02',
+      rounds: [{ date: '2026-02', type: 'Series B', amountUsdM: 100, postUsdM: 1300, leads: ['Battery Ventures', 'J2 Ventures'] }],
+      investors: ['Battery Ventures', 'J2 Ventures', 'DYNE'],
+      note: 'Total shows the Series B only; earlier funding not included.',
+      src: S('Satellite Today, Feb 2026', 'https://www.satellitetoday.com/finance/2026/02/23/aalyria-posts-100m-series-b-funding-round/')
+    },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'cesiumastro', name: 'CesiumAstro', domain: 'cesiumastro.com', status: 'private', stage: 'Series C',
+    hq: 'Austin, TX', country: 'US', founded: 2017,
+    subsegments: ['sensors.comms', 'space.buses'],
+    oneLiner: 'Software-defined phased-array antennas and payloads for satellites, aircraft and drones.',
+    description: [
+      'CesiumAstro builds active phased-array communications payloads and terminals for satellites, aircraft and uncrewed systems, plus multi-mission software-defined radios.',
+      'In February 2026 it closed $470M of growth capital: $270M equity led by Trousdale Ventures plus a $200M EXIM and J.P. Morgan financing package.'
+    ],
+    leadership: [['Shey Sabripour', 'Founder & CEO']],
+    products: ['Nightingale', 'Vireo'],
+    funding: {
+      totalUsdM: 270, asOf: '2026-02',
+      rounds: [{ date: '2026-02', type: 'Series C', amountUsdM: 270, leads: ['Trousdale Ventures'] }],
+      investors: ['Trousdale Ventures', 'Airbus Ventures', 'Janus Henderson', 'Woven Capital', 'MESH'],
+      note: 'Total shows Series C equity only; excludes the $200M EXIM/J.P. Morgan financing and earlier rounds.',
+      src: S('CesiumAstro', 'https://cesiumastro.com/press-release/cesiumastro-closes-470m-series-c')
+    },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'persistent-systems', name: 'Persistent Systems', short: 'Persistent', domain: 'persistentsystems.com', status: 'private', stage: 'Privately held',
+    hq: 'New York, NY', country: 'US', founded: 2007,
+    subsegments: ['sensors.comms'],
+    oneLiner: 'Wave Relay MANET radios (MPU5) that network soldiers, drones and robots.',
+    description: [
+      'Persistent Systems makes the MPU5 and related mobile ad hoc network (MANET) radios using its Wave Relay protocol, a standard data link for special operations, robots and drones.',
+      'Its radios form the transport layer for the Army\'s Next Generation Command and Control prototype.'
+    ],
+    products: ['MPU5', 'Wave Relay', 'Embedded Module'],
+    funding: { totalUsdM: null, label: 'Privately held', asOf: '2026-10', note: 'No disclosed venture funding.', src: S('Military Embedded Systems', 'https://militaryembedded.com/company/persistent-systems?page=1') },
+    programs: [{ name: 'MANET radios for NGC2', ref: 'ngc2', customer: 'US Army', role: 'Supplier', value: '$87.5M (second order)', status: 'Delivering', src: S('MEXC News', 'https://www.mexc.com/news/637734') }]
+  });
+
+  /* ---------------- PNT & quantum ---------------- */
+  DTM.add({
+    id: 'sandboxaq', name: 'SandboxAQ', domain: 'sandboxaq.com', status: 'private', stage: 'Series E',
+    hq: 'Palo Alto, CA', country: 'US', founded: 2022,
+    subsegments: ['sensors.pnt', 'software.cyber'],
+    oneLiner: 'Alphabet spinout: AQNav magnetic navigation without GPS, plus post-quantum cryptography.',
+    description: [
+      'SandboxAQ combines AI and quantum technology. For defense its main products are AQNav, which navigates aircraft by reading the Earth\'s magnetic field and is unaffected by GPS jamming, and AQtive Guard for post-quantum cryptographic security.',
+      'Its December 2024 round valued it at $5.3B. A 2026 Series F at a higher valuation has been reported by trackers but not confirmed.'
+    ],
+    leadership: [['Jack Hidary', 'CEO']],
+    products: ['AQNav', 'AQtive Guard', 'AQBioSim'],
+    funding: {
+      totalUsdM: 1450, asOf: '2025-04',
+      rounds: [
+        { date: '2023-02', type: 'Series D', amountUsdM: 500 },
+        { date: '2024-12', type: 'Series E', amountUsdM: 300, postUsdM: 5600 }
+      ],
+      investors: ['Eric Schmidt', 'NVIDIA', 'Google', 'T. Rowe Price', 'Fred Alger'],
+      note: 'The Series E was later extended to about $950M. A reported 2026 Series F ($500M at ~$9.8B) is not confirmed. Total is approximate.',
+      src: [S('SecurityWeek', 'https://www.securityweek.com/sandboxaq-raises-300-million-at-5-3-billion-valuation/'), S('DefiLlama', 'https://defillama.com/pre-ipo/sandbox-aq')]
+    },
+    programs: [{ name: 'AQNav flight trials', customer: 'US Air Force', role: 'Prime', status: 'Testing' }]
+  });
+
+  DTM.add({
+    id: 'q-ctrl', name: 'Q-CTRL', domain: 'q-ctrl.com', status: 'private', stage: 'Series B',
+    hq: 'Sydney', country: 'AU', founded: 2017,
+    subsegments: ['sensors.pnt'],
+    oneLiner: 'Ironstone Opal quantum navigation that keeps working when GPS is jammed.',
+    description: [
+      'Q-CTRL develops quantum control software and quantum sensors. Its Ironstone Opal system uses quantum magnetometers and AI to navigate without GPS, and it has been flight-tested with defense partners.',
+      'DARPA awarded it US$24.4M in 2025 under the Robust Quantum Sensors program.'
+    ],
+    leadership: [['Michael Biercuk', 'Founder & CEO']],
+    products: ['Ironstone Opal', 'Fire Opal', 'Boulder Opal'],
+    funding: {
+      totalUsdM: 132, asOf: '2025-08',
+      note: 'Total from CB Insights; round details not compiled.',
+      src: S('CB Insights', 'https://www.cbinsights.com/investor/q-ctrl')
+    },
+    programs: [{ name: 'DARPA Robust Quantum Sensors', customer: 'DARPA', role: 'Prime', value: 'US$24.4M', year: 2025, status: 'Development', src: S('Q-CTRL', 'https://q-ctrl.com/blog/darpa-selects-q-ctrl-to-develop-next-generation-quantum-sensors-for-navigation-on-advanced-defense-platforms?') }]
+  });
+
+  DTM.add({
+    id: 'infleqtion', name: 'Infleqtion', domain: 'infleqtion.com', status: 'public', ticker: 'INFQ', exchange: 'NYSE',
+    hq: 'Boulder, CO', country: 'US', founded: 2007,
+    subsegments: ['sensors.pnt'],
+    oneLiner: 'Neutral-atom quantum company selling atomic clocks, quantum RF sensors and quantum computers.',
+    description: [
+      'Infleqtion, formerly ColdQuanta, builds quantum hardware based on cold neutral atoms: compact atomic clocks for resilient timing, quantum RF receivers, inertial sensors and the Sqorpius quantum computer.',
+      'It listed on the NYSE in 2026 through a SPAC merger.'
+    ],
+    leadership: [['Matthew Kinsella', 'CEO']],
+    products: ['Tiqker clock', 'Quantum RF', 'Sqorpius'],
+    marketCap: { usdM: 2820, asOf: '2026-08-20', src: S('Equibles', 'https://equibles.com/stocks/INFQ') },
+    valuation: { note: 'Shares have been highly volatile (12-month volatility ~124% per Trefis).', asOf: '2026-08-20', src: S('Trefis', 'https://www.trefis.com/data/companies/infq') },
+    programs: [{ name: 'Quantum timing and sensing for DoD', customer: 'DoD / DIU', role: 'Prime', status: 'Prototype' }]
+  });
+})();
 
 </script>
 <script>/* data/companies/industrial.js */
-/* placeholder */
+/* Manufacturing & Energy segment. Relativity (space.js) and Firestorm (uas.js) also appear here. */
+(function () {
+  const S = (t, u) => (u ? { t, u } : { t });
+
+  /* ---------------- Advanced manufacturing ---------------- */
+  DTM.add({
+    id: 'hadrian', name: 'Hadrian', domain: 'hadrian.co', status: 'private', stage: 'Series D',
+    hq: 'Torrance, CA', country: 'US', founded: 2020,
+    subsegments: ['industrial.manufacturing'],
+    oneLiner: 'Highly automated precision-parts factories for defense and space, now expanding into munitions and ships.',
+    description: [
+      'Hadrian builds automated factories that machine precision components for defense and aerospace primes, using software and robotics to make up for the shortage of skilled machinists. It offers "Factories-as-a-Service" for munitions, shipbuilding and other priority programs.',
+      'It raised a $1.37B Series D at $7.87B in August 2026, anchored by JPMorganChase\'s Strategic Investment Group. Its sites in California, Arizona and Alabama total nearly 3 million square feet, including a 2.2 million sq ft factory opened with the US Navy in March 2026.'
+    ],
+    leadership: [['Chris Power', 'Founder & CEO']],
+    products: ['Automated precision machining', 'Factories-as-a-Service'],
+    funding: {
+      totalUsdM: 1900, asOf: '2026-08',
+      rounds: [
+        { date: '2024-01', type: 'Series B', amountUsdM: 117 },
+        { date: '2025-07', type: 'Series C', amountUsdM: 260, postUsdM: 1600, leads: ['Founders Fund', 'Lux Capital'] },
+        { date: '2026-08', type: 'Series D', amountUsdM: 1370, postUsdM: 7870, leads: ['JPMorganChase', 'WCM', 'Washington Harbour', 'Valor', '137 Ventures', 'Baillie Gifford'] }
+      ],
+      investors: ['Founders Fund', 'Lux Capital', 'Andreessen Horowitz', 'Valor Equity Partners', 'Baillie Gifford', 'T. Rowe Price', 'CapitalG'],
+      note: 'Total is an approximate sum of disclosed rounds.',
+      src: [S('Manufacturing Today, Aug 2026', 'https://manufacturing-today.com/news/hadrian-raises-1-37b-to-scale-us-defense-manufacturing/'), S('Bloomberg Law', 'https://news.bloomberglaw.com/private-equity/defense-startup-hadrian-valued-at-7-87-billion-in-new-round')]
+    },
+    programs: [{ name: 'Factory 4 with the US Navy (Alabama)', customer: 'US Navy', role: 'Partner', year: 2026, status: 'Operational', note: '2.2 million sq ft site for naval industrial base work.' }]
+  });
+
+  DTM.add({
+    id: 'divergent', name: 'Divergent Technologies', short: 'Divergent', domain: 'divergent3d.com', status: 'private', stage: 'Series E',
+    hq: 'Torrance, CA', country: 'US', founded: 2014,
+    subsegments: ['industrial.manufacturing'],
+    oneLiner: 'AI-designed, 3D-printed structures made on a flexible digital factory for missiles, drones and vehicles.',
+    description: [
+      'Divergent\'s Adaptive Production System combines generative design, metal additive manufacturing and robotic assembly to build complex structures, from car chassis to airframes for missiles and uncrewed aircraft, without dedicated tooling.',
+      'It has become a manufacturing partner to defense primes and new entrants. Its September 2025 Series E raised $290M at $2.3B.'
+    ],
+    leadership: [['Kevin Czinger', 'Founder & CEO']],
+    products: ['Divergent Adaptive Production System (DAPS)'],
+    funding: {
+      totalUsdM: 1000, asOf: '2025-09',
+      rounds: [{ date: '2025-09', type: 'Series E', amountUsdM: 290, postUsdM: 2300, leads: ['Rochefort Asset Management'] }],
+      note: 'Total is reported as "more than $1B". Trackers have listed higher 2026 valuations that are unverified.',
+      src: [S('Komo', 'https://komo.ai/directory/divergent-technologies-funding'), S('Caplight', 'https://www.caplight.com/company/divergent')]
+    },
+    programs: [{ name: 'Airframe structures for defense primes', customer: 'Defense primes and new entrants', role: 'Manufacturing partner', status: 'Production' }]
+  });
+
+  DTM.add({
+    id: 'machina-labs', name: 'Machina Labs', short: 'Machina', domain: 'machinalabs.ai', status: 'private', stage: 'Series C',
+    hq: 'Chatsworth, CA', country: 'US', founded: 2019,
+    subsegments: ['industrial.manufacturing'],
+    oneLiner: 'Robotic sheet-metal forming that replaces hard tooling for aircraft and missile parts.',
+    description: [
+      'Machina Labs uses pairs of industrial robots guided by AI to form sheet metal into large, complex parts without dies, cutting lead times for aircraft, missile and spacecraft structures. It works with the US Air Force and defense primes.',
+      'It raised a $124M Series C in February 2026.'
+    ],
+    leadership: [['Edward Mehr', 'Co-founder & CEO']],
+    products: ['RoboForming', 'RoboCraftsman'],
+    funding: {
+      totalUsdM: 174, asOf: '2026-02',
+      rounds: [{ date: '2026-02', type: 'Series C', amountUsdM: 124 }],
+      investors: ['Woven Capital', 'Lockheed Martin Ventures', 'Balerion Space Ventures', 'Strategic Development Fund'],
+      note: 'Trackers report $174M–$217M raised in total.',
+      src: [S('Latham & Watkins', 'https://www.lw.com/en/news/2026/02/latham-advises-balerion-space-ventures-on-its-investment-in-machina-labs-series-c'), S('CB Insights', 'https://www.cbinsights.com/company/machina-labs/financials')]
+    },
+    programs: [{ name: 'Air Force rapid tooling-free manufacturing', customer: 'US Air Force', role: 'Prime', status: 'Development' }]
+  });
+
+  /* ---------------- Materials & critical minerals ---------------- */
+  DTM.add({
+    id: 'mp-materials', name: 'MP Materials', domain: 'mpmaterials.com', status: 'public', ticker: 'MP', exchange: 'NYSE',
+    hq: 'Las Vegas, NV', country: 'US', founded: 2017,
+    subsegments: ['industrial.materials'],
+    oneLiner: 'The only scaled US rare-earth mine and refinery, now making magnets, with the Pentagon as top shareholder.',
+    description: [
+      'MP Materials owns the Mountain Pass rare-earth mine and processing facility in California and is building out magnet manufacturing in Fort Worth, Texas, to rebuild a domestic rare-earth magnet supply chain.',
+      'In July 2025 the DoD invested $400M in convertible preferred stock, becoming the largest shareholder at about 15%, and set a $110/kg price floor for NdPr. A separate 10X magnet plant is backed by DoD offtake.'
+    ],
+    leadership: [['James Litinsky', 'Founder, Chairman & CEO']],
+    products: ['NdPr oxide', 'NdFeB magnets'],
+    marketCap: { usdM: 8400, asOf: '2026-09-18', src: S('TS2 (close of $47.26) and Google Finance share count', 'https://ts2.tech/en/mp-materials-stock-falls-4-3-china-report-reopens-the-shenghe-stake-question/') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 253.4 }, { label: 'FY2024', revenue: 203.9, netIncome: -65.4 }],
+      notes: 'Q1 2026 revenue was $90.6M, up 49%. Operating losses for 11 consecutive quarters as the business shifts to separated products and magnets.',
+      asOf: '2026-05-07', src: S('MP Materials FY2025 10-K', 'https://www.sec.gov/Archives/edgar/data/1801368/000180136826000008/mp-20251231.htm')
+    },
+    valuation: { note: 'Market cap is our estimate: $47.26 close on Sep 18, 2026 × ~177.7M shares (before DoD conversion shares).', asOf: '2026-09-18', src: S('TS2', 'https://ts2.tech/en/mp-materials-stock-falls-4-3-china-report-reopens-the-shenghe-stake-question/') },
+    programs: [{ name: 'DoD rare-earth magnet partnership', customer: 'Department of Defense', role: 'Partner', value: '$400M equity + price floor', year: 2025, status: 'Active' }]
+  });
+
+  DTM.add({
+    id: 'usa-rare-earth', name: 'USA Rare Earth', domain: 'usare.com', status: 'public', ticker: 'USAR', exchange: 'NASDAQ',
+    hq: 'Stillwater, OK', country: 'US', founded: 2019,
+    subsegments: ['industrial.materials'],
+    oneLiner: 'Sintered neodymium magnet plant in Oklahoma plus the Round Top rare-earth deposit in Texas.',
+    description: [
+      'USA Rare Earth is commissioning a sintered NdFeB magnet manufacturing plant in Stillwater, Oklahoma, and owns the Round Top heavy rare-earth deposit in West Texas. It listed in 2025 through a SPAC merger and has little revenue so far.'
+    ],
+    leadership: [['Barbara Humpton', 'CEO']],
+    products: ['NdFeB magnets'],
+    marketCap: { usdM: 4190, asOf: '2026-08-20', src: S('Equibles', 'https://equibles.com/stocks/USAR') },
+    valuation: { note: 'Pre-revenue; valuation reflects expected magnet production.', asOf: '2026-08-20', src: S('Equibles', 'https://equibles.com/stocks/USAR') },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'vulcan-elements', name: 'Vulcan Elements', short: 'Vulcan', domain: 'vulcanelements.com', status: 'private', stage: 'Series A',
+    hq: 'Durham, NC', country: 'US', founded: 2023,
+    subsegments: ['industrial.materials'],
+    oneLiner: 'US rare-earth magnet maker scaling to 10,000 tonnes a year with Pentagon and Commerce backing.',
+    description: [
+      'Vulcan Elements produces rare-earth permanent magnets in the US for defense and commercial uses, aiming to remove reliance on Chinese magnets.',
+      'Its expansion to 10,000 tonnes of capacity is financed by a $620M Office of Strategic Capital loan, $50M of CHIPS incentives (with Commerce taking $50M of equity) and $550M of private capital.'
+    ],
+    leadership: [['John Maslin', 'Co-founder & CEO']],
+    funding: {
+      totalUsdM: 65, asOf: '2025-11',
+      rounds: [{ date: '2025', type: 'Series A', amountUsdM: 65 }],
+      note: 'Excludes the $620M OSC loan and $50M Commerce equity. A $550M round at about $2B was reported in talks in March 2026.',
+      src: [S('Axios Pro, Mar 2026', 'https://www.axios.com/pro/climate-deals/2026/03/17/vulcan-elements-washington-harbour-rare-earth-magnet'), S('Bloomberg Government', 'https://news.bgov.com/bloomberg-government-news/rare-earth-magnet-maker-key-for-pentagon-policy-wins-new-funding')]
+    },
+    programs: [{ name: 'Office of Strategic Capital loan', customer: 'Department of War OSC', role: 'Borrower', value: '$620M', status: 'Awarded' }]
+  });
+
+  /* ---------------- Nuclear & microreactors ---------------- */
+  DTM.add({
+    id: 'bwxt', name: 'BWX Technologies', short: 'BWXT', domain: 'bwxt.com', status: 'public', ticker: 'BWXT', exchange: 'NYSE',
+    hq: 'Lynchburg, VA', country: 'US', founded: 1867,
+    subsegments: ['industrial.nuclear'],
+    oneLiner: 'Sole supplier of US Navy nuclear reactors and builder of the Project Pele mobile microreactor.',
+    description: [
+      'BWXT manufactures the nuclear reactors and fuel for every US Navy submarine and aircraft carrier, and supplies special nuclear materials and commercial nuclear components. It built Project Pele, the DoD\'s prototype transportable microreactor.',
+      'Backlog rose 50% to $7.3B in 2025 on naval propulsion, special materials and commercial nuclear awards.'
+    ],
+    leadership: [['Rex Geveden', 'President & CEO']],
+    products: ['Naval nuclear reactors', 'Pele microreactor', 'TRISO fuel', 'Medical isotopes'],
+    marketCap: { usdM: 15120, asOf: '2026-08-19', src: S('Equibles', 'https://equibles.com/stocks/BWXT') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [
+        { label: 'FY2023', revenue: 2496 },
+        { label: 'FY2024', revenue: 2704 },
+        { label: 'FY2025', revenue: 3200, ebitda: 574.3, netIncome: 329.9 }
+      ],
+      backlog: { valueM: 7300, asOf: '2025-12-31', note: 'Up 50%' },
+      notes: '2026 guidance: adjusted EBITDA $645M–$660M, free cash flow $305M–$320M.',
+      asOf: '2026-02-24', src: S('BWXT FY2025 results', 'https://investors.bwxt.com/news-releases/news-release-details/bwx-technologies-reports-fourth-quarter-and-full-year-2025')
+    },
+    valuation: { evSales: 4.7, pe: 45.8, peBasis: 'FY2025 GAAP net income', basis: 'Market cap ÷ FY2025 revenue', note: 'EV not compiled; ratio shown uses market cap.', asOf: '2026-08-19', src: S('Equibles', 'https://equibles.com/stocks/BWXT') },
+    programs: [
+      { name: 'Naval nuclear propulsion', ref: 'aukus', customer: 'US Navy / Naval Reactors', role: 'Sole supplier', status: 'Production' },
+      { name: 'Project Pele mobile microreactor', ref: 'microreactors', customer: 'DoD Strategic Capabilities Office', role: 'Prime', status: 'Prototype' }
+    ]
+  });
+
+  DTM.add({
+    id: 'oklo', name: 'Oklo', domain: 'oklo.com', status: 'public', ticker: 'OKLO', exchange: 'NYSE',
+    hq: 'Santa Clara, CA', country: 'US', founded: 2013,
+    subsegments: ['industrial.nuclear'],
+    oneLiner: 'Aurora fast-reactor powerhouses for data centers and military bases, starting with Eielson AFB.',
+    description: [
+      'Oklo is developing the Aurora, a compact sodium-cooled fast reactor, and plans to sell power rather than reactors. It was selected to supply power to Eielson Air Force Base in Alaska.',
+      'It is pre-revenue, holding about $3B of cash and securities in September 2026, with shares about 62% below their peak.'
+    ],
+    leadership: [['Jacob DeWitte', 'Co-founder & CEO']],
+    products: ['Aurora powerhouse'],
+    marketCap: { usdM: 6430, asOf: '2026-09-07', src: S('Capital.com', 'https://capital.com/en-ke/markets/shares/oklo-inc-share-price/market-cap') },
+    valuation: { note: 'Pre-revenue. Roughly $3.0B of cash and marketable securities (TIKR, Sep 2026), so EV is about $3.4B–$4.4B.', asOf: '2026-09-03', src: S('TIKR', 'https://www.tikr.com/blog/oklo-is-down-62-from-its-peak-heres-what-the-bull-case-requires-you-to-believe') },
+    programs: [{ name: 'Eielson AFB microreactor', ref: 'microreactors', customer: 'US Air Force / DLA', role: 'Selected provider', status: 'Licensing' }]
+  });
+
+  DTM.add({
+    id: 'x-energy', name: 'X-energy', domain: 'x-energy.com', status: 'public', ticker: 'XE', exchange: 'NASDAQ',
+    hq: 'Rockville, MD', country: 'US', founded: 2009,
+    subsegments: ['industrial.nuclear'],
+    oneLiner: 'Xe-100 high-temperature gas reactors and TRISO-X fuel; IPO April 2026.',
+    description: [
+      'X-energy develops the Xe-100 small modular high-temperature gas-cooled reactor and manufactures TRISO particle fuel through TRISO-X. Its first project is at Dow\'s Seadrift site in Texas, supported by up to $2.15B of DOE funding.',
+      'It listed on Nasdaq in April 2026, raising about $1.1B of net proceeds.'
+    ],
+    leadership: [['Clay Sell', 'CEO']],
+    products: ['Xe-100', 'TRISO-X fuel'],
+    marketCap: { usdM: 6360, asOf: '2026-09-14', src: S('Macrotrends', 'https://www.macrotrends.net/stocks/charts/XE/x-energy/market-cap') },
+    valuation: { note: 'Pre-revenue. Sources disagree on share count; other September estimates run to $7.6B.', asOf: '2026-09-14', src: S('Macrotrends', 'https://www.macrotrends.net/stocks/charts/XE/x-energy/market-cap') },
+    programs: [{ name: 'DOE Advanced Reactor Demonstration (Dow Seadrift)', customer: 'Department of Energy', role: 'Prime', value: 'Up to $2.15B (federal)', status: 'Development', src: S('Oil & Gas 360', 'https://www.oilandgas360.com/u-s-backs-x-energy-reactor-with-up-to-2-15-billion/') }]
+  });
+
+  DTM.add({
+    id: 'radiant', name: 'Radiant', domain: 'radiantnuclear.com', status: 'private', stage: 'Series D',
+    hq: 'El Segundo, CA', country: 'US', founded: 2020,
+    subsegments: ['industrial.nuclear'],
+    oneLiner: 'Kaleidos, a factory-built portable microreactor that fits in a shipping container.',
+    description: [
+      'Radiant is building Kaleidos, a 1 MW high-temperature gas-cooled microreactor designed to be mass-produced and shipped by truck, aircraft or ship, for military bases and remote sites.',
+      'Kaleidos is scheduled for the first test at Idaho National Laboratory\'s DOME facility in 2026. Radiant is building a factory in Oak Ridge, Tennessee.'
+    ],
+    leadership: [['Doug Bernauer', 'Founder & CEO']],
+    products: ['Kaleidos'],
+    funding: {
+      totalUsdM: 625, asOf: '2025-12',
+      rounds: [
+        { date: '2024-11', type: 'Series C', amountUsdM: 100, leads: ['DCVC'] },
+        { date: '2025-06', type: 'Growth', amountUsdM: 165 },
+        { date: '2025-12', type: 'Series D', amountUsdM: 300, leads: ['Draper Associates', 'Boost VC'] }
+      ],
+      investors: ['DCVC', 'Draper Associates', 'Boost VC', 'Equinix'],
+      note: 'Total is an approximate sum of disclosed rounds.',
+      src: [S('DCD', 'https://www.datacenterdynamics.com/en/news/equinix-backed-microreactor-firm-radiant-raises-300m-in-latest-funding-round/'), S('Radiant', 'https://radiantnuclear.com/blog/series-c-announcement/')]
+    },
+    programs: [{ name: 'DOME microreactor test at INL', ref: 'microreactors', customer: 'DOE / DoD', role: 'Prime', year: 2026, status: 'Testing' }]
+  });
+
+  DTM.add({
+    id: 'antares', name: 'Antares', status: 'private', stage: 'Series C',
+    hq: '', country: 'US', founded: 2023,
+    subsegments: ['industrial.nuclear'],
+    oneLiner: 'Heat-pipe microreactors for military installations; Mark-0 reached criticality in June 2026.',
+    description: [
+      'Antares develops small heat-pipe-cooled nuclear microreactors for defense installations and other critical missions. Its Mark-0 reactor achieved criticality at Idaho National Laboratory in June 2026 under the DOE Reactor Pilot Program.',
+      'It raised a $470M Series C ($370M equity, $100M debt) in July 2026 and plans first deployments to US military installations by 2028.'
+    ],
+    leadership: [['Jordan Bramble', 'Co-founder & CEO']],
+    products: ['Mark-0', 'R1 microreactor'],
+    funding: {
+      totalUsdM: 600, asOf: '2026-07',
+      rounds: [
+        { date: '2025-12', type: 'Series B', amountUsdM: 96, leads: ['Shine Capital'] },
+        { date: '2026-07', type: 'Series C', amountUsdM: 470, leads: ['Paradigm', 'Caffeinated Capital'] }
+      ],
+      investors: ['Paradigm', 'Caffeinated Capital', 'Shine Capital'],
+      note: 'Company says it has more than $600M of funding, including debt.',
+      src: [S('Las Vegas Sun (AP), Jul 2026', 'https://lasvegassun.com/news/2026/jul/27/antares-raises-470m-series-c-to-deploy-nuclear-mic/'), S('NucNet', 'https://www.nucnet.org/news/us-startup-raises-usd470-million-to-build-reactors-for-military-bases-7-2-2026')]
+    },
+    programs: [{ name: 'Military installation microreactors', ref: 'microreactors', customer: 'DoD', role: 'Prime', status: 'Development' }]
+  });
+
+  /* ---------------- Power & batteries ---------------- */
+  DTM.add({
+    id: 'amprius', name: 'Amprius Technologies', short: 'Amprius', domain: 'amprius.com', status: 'public', ticker: 'AMPX', exchange: 'NYSE',
+    hq: 'Fremont, CA', country: 'US', founded: 2008,
+    subsegments: ['industrial.power', 'uas.components'],
+    oneLiner: 'Silicon-anode lithium-ion cells with record energy density for drones and high-altitude aircraft.',
+    description: [
+      'Amprius makes high-energy-density silicon-anode batteries used mainly in drones and high-altitude pseudo-satellites, where weight drives endurance. It holds an $18.1M DIU contract for NDAA-compliant drone batteries.',
+      'Revenue roughly tripled to about $73M in 2025, and it raised its 2026 outlook to at least $130M.'
+    ],
+    leadership: [['Kang Sun', 'CEO']],
+    products: ['SiCore cells', 'SiMaxx cells'],
+    marketCap: { usdM: 1460, asOf: '2026-08-14', src: S('Webull', 'https://www.webull.ca/news-detail/15345485242459136') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2024', revenue: 24.2 }, { label: 'FY2025', revenue: 73, netIncome: -44 }],
+      notes: 'Q1 2026 revenue was $28.5M (2.5× year on year). 2026 outlook raised to at least $130M with a net loss under $8M.',
+      asOf: '2026-05-07', src: S('Amprius Q1 2026 results', 'https://ir.amprius.com/news-events/press-releases/detail/165')
+    },
+    valuation: { evSales: 11.2, basis: 'Market cap ÷ 2026 revenue outlook', note: 'EV not compiled; ratio shown uses market cap.', asOf: '2026-08-14', src: S('Webull', 'https://www.webull.ca/news-detail/15345485242459136') },
+    programs: [{ name: 'NDAA-compliant drone batteries', customer: 'Defense Innovation Unit', role: 'Prime', value: '$18.1M', status: 'Active' }]
+  });
+})();
 
 </script>
 <script>/* data/companies/primes.js */
-/* placeholder */
+/* Primes & Mid-Tier column. Non-USD market caps are converted at approximate 2026 exchange rates
+   (EUR 1.16, GBP 1.34, SEK 0.105, KRW 1/1,380, JPY 1/150, ILS 0.27 USD). */
+(function () {
+  const S = (t, u) => (u ? { t, u } : { t });
+  const mcapRatio = 'Market cap ÷ latest fiscal-year revenue';
+
+  /* ---------------- US primes ---------------- */
+  DTM.add({
+    id: 'lockheed-martin', name: 'Lockheed Martin', domain: 'lockheedmartin.com', status: 'public', ticker: 'LMT', exchange: 'NYSE',
+    hq: 'Bethesda, MD', country: 'US', founded: 1995,
+    subsegments: ['primes.us'],
+    oneLiner: 'World\'s largest defense contractor: F-35, missiles (PAC-3, JASSM, PrSM), space and missile defense.',
+    description: [
+      'Lockheed Martin builds the F-35, the C-130J and Black Hawk helicopters, and is the leading US missile and missile defense maker with PAC-3 MSE, JASSM, LRASM, PrSM and GMLRS. Its space business builds GPS, missile warning and Trident and NGI interceptors.',
+      'Sales grew 6% to $75.0B in 2025 and backlog reached a record $193.6B.'
+    ],
+    leadership: [['Jim Taiclet', 'Chairman, President & CEO']],
+    products: ['F-35', 'PAC-3 MSE', 'JASSM / LRASM', 'PrSM', 'C-130J', 'Black Hawk', 'NGI'],
+    marketCap: { usdM: 135171, asOf: '2026-08-07', src: S('Fintel', 'https://fintel.io/s/US/LMT') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [
+        { label: 'FY2023', revenue: 67571, netIncome: 6920 },
+        { label: 'FY2024', revenue: 71043, netIncome: 5336 },
+        { label: 'FY2025', revenue: 75048, netIncome: 5017, fcf: 6900 }
+      ],
+      backlog: { valueM: 193600, asOf: '2025-12-31', note: 'Record; ~37% converts within 12 months' },
+      defenseMix: '~93%',
+      asOf: '2026-01-29', src: S('Lockheed Martin FY2025 results', 'https://news.lockheedmartin.com/2026-01-29-Lockheed-Martin-Reports-Fourth-Quarter-and-Full-Year-2025-Financial-Results')
+    },
+    valuation: { evSales: 1.8, pe: 26.9, basis: mcapRatio, note: 'Ratios use market cap; EV not compiled. P/E on FY2025 GAAP net earnings.', asOf: '2026-08-07', src: S('Fintel', 'https://fintel.io/s/US/LMT') },
+    programs: [
+      { name: 'F-35 Lightning II', ref: 'f35', customer: 'US and 19 allied nations', role: 'Prime', status: 'Production' },
+      { name: 'Next Generation Interceptor', ref: 'ngi', customer: 'Missile Defense Agency', role: 'Prime', year: 2024, status: 'Development' },
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'Selected in April 2026 alongside its broader Golden Dome sensor and interceptor work.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') },
+      { name: 'PAC-3 MSE production ramp', customer: 'US Army and allies', role: 'Prime', status: 'Production' }
+    ]
+  });
+
+  DTM.add({
+    id: 'rtx', name: 'RTX', domain: 'rtx.com', status: 'public', ticker: 'RTX', exchange: 'NYSE',
+    hq: 'Arlington, VA', country: 'US', founded: 1922,
+    subsegments: ['primes.us'],
+    oneLiner: 'Raytheon missiles and air defense (Patriot, SM-6, Tomahawk), Pratt & Whitney engines and Collins avionics.',
+    description: [
+      'RTX combines Raytheon (Patriot, LTAMDS, Standard Missile, AMRAAM, Tomahawk, StormBreaker), Pratt & Whitney (including the F135 engine for the F-35) and Collins Aerospace.',
+      'Sales rose 10% to $88.6B in 2025. Backlog reached $289B by September 2026, not counting a $23B Tomahawk undefinitized contract.'
+    ],
+    leadership: [['Chris Calio', 'Chairman & CEO']],
+    products: ['Patriot', 'LTAMDS', 'SM-3 / SM-6', 'Tomahawk', 'AMRAAM', 'F135 engine'],
+    marketCap: { usdM: 270560, asOf: '2026-09-05', src: S('Ad-hoc News', 'https://www.ad-hoc-news.de/boerse/news/corporate-news/rtx-corporation-stock-gains-on-stronger-q2-results/70058973') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 68920 }, { label: 'FY2024', revenue: 80738 }, { label: 'FY2025', revenue: 88600, fcf: 7900 }],
+      backlog: { valueM: 268000, asOf: '2025-12-31', note: '$107B defense; $289B by Sep 2026' },
+      defenseMix: '~45%',
+      notes: '2026 guidance: adjusted sales $92B–$93B, adjusted EPS $6.60–$6.80, free cash flow $8.25B–$8.75B.',
+      asOf: '2026-01-27', src: S('GovConWire', 'https://www.govconwire.com/articles/rtx-2025-financial-results-2026-outlook')
+    },
+    valuation: { evSales: 3.1, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-09-05', src: S('Ad-hoc News', 'https://www.ad-hoc-news.de/boerse/news/corporate-news/rtx-corporation-stock-gains-on-stronger-q2-results/70058973') },
+    programs: [
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'Raytheon selected for space-based interceptor prototypes.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') },
+      { name: 'Tomahawk production', customer: 'US Navy', role: 'Prime', value: '$23B (UCA)', year: 2026, status: 'Production' },
+      { name: 'Patriot and LTAMDS', customer: 'US Army and allies', role: 'Prime', status: 'Production' },
+      { name: 'Hypersonic Attack Cruise Missile', ref: 'hypersonic-test', customer: 'US Air Force', role: 'Prime', status: 'Development' }
+    ]
+  });
+
+  DTM.add({
+    id: 'northrop-grumman', name: 'Northrop Grumman', domain: 'northropgrumman.com', status: 'public', ticker: 'NOC', exchange: 'NYSE',
+    hq: 'Falls Church, VA', country: 'US', founded: 1939,
+    subsegments: ['primes.us'],
+    oneLiner: 'B-21 Raider, Sentinel ICBM, solid rocket motors and space-based missile warning.',
+    description: [
+      'Northrop Grumman builds the B-21 stealth bomber and the Sentinel ICBM, is the largest US solid rocket motor maker, and builds missile-tracking satellites, the Glide Phase Interceptor and E-2D and E-130J aircraft.',
+      'Sales were $42.0B in 2025 with a record $95.7B backlog. 2026 guidance is $43.5B–$44.0B.'
+    ],
+    leadership: [['Kathy Warden', 'Chair, CEO & President']],
+    products: ['B-21 Raider', 'Sentinel', 'GMLRS & SRMs', 'Glide Phase Interceptor', 'E-2D', 'IBCS'],
+    marketCap: { usdM: 73390, asOf: '2026-09-07', src: S('Capital.com', 'https://capital.com/en-ke/markets/shares/northrop-grumman-share-price/market-cap') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 39290 }, { label: 'FY2024', revenue: 41033 }, { label: 'FY2025', revenue: 42000 }],
+      backlog: { valueM: 95700, asOf: '2025-12-31', note: 'Record; $46B+ net awards in 2025' },
+      asOf: '2026-01-27', src: S('Northrop Grumman FY2025 results (8-K)', 'https://www.sec.gov/Archives/edgar/data/1133421/000113342126000002/noc-12312025xearningsrelea.htm')
+    },
+    valuation: { evSales: 1.7, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-09-07', src: S('Capital.com', 'https://capital.com/en-ke/markets/shares/northrop-grumman-share-price/market-cap') },
+    programs: [
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'Completed ground tests in 2026; plans an on-orbit demonstration in 2027 using Apex buses.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') },
+      { name: 'B-21 Raider', ref: 'b21', customer: 'US Air Force', role: 'Prime', status: 'Low-rate production' },
+      { name: 'Sentinel ICBM', ref: 'sentinel', customer: 'US Air Force', role: 'Prime', status: 'Development (restructured)' },
+      { name: 'SDA Tracking Layer satellites', ref: 'pwsa', customer: 'Space Development Agency', role: 'Prime', status: 'Production' },
+      { name: 'Solid rocket motors', ref: 'srm', customer: 'US Army / Navy / MDA', role: 'Supplier', status: 'Production' }
+    ]
+  });
+
+  DTM.add({
+    id: 'general-dynamics', name: 'General Dynamics', domain: 'gd.com', status: 'public', ticker: 'GD', exchange: 'NYSE',
+    hq: 'Reston, VA', country: 'US', founded: 1952,
+    subsegments: ['primes.us'],
+    oneLiner: 'Nuclear submarines (Electric Boat), Abrams and Stryker, 155 mm artillery shells, IT and Gulfstream jets.',
+    description: [
+      'General Dynamics builds Columbia- and Virginia-class submarines at Electric Boat, surface ships at Bath and NASSCO, Abrams tanks and Stryker vehicles, and leads US artillery shell production. It also owns Gulfstream and GDIT.',
+      'Revenue grew 10% to $52.6B in 2025, and backlog jumped about 30% to a record $118B.'
+    ],
+    leadership: [['Phebe Novakovic', 'Chairman & CEO']],
+    products: ['Columbia-class SSBN', 'Virginia-class SSN', 'Abrams', 'Stryker', '155 mm artillery', 'Gulfstream'],
+    marketCap: { usdM: 90990, asOf: '2026-09-24', src: S('Motley Fool', 'https://www.fool.com/quote/nyse/general-dynamics/gd/') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [
+        { label: 'FY2023', revenue: 42272, netIncome: 3315 },
+        { label: 'FY2024', revenue: 47716, netIncome: 3782 },
+        { label: 'FY2025', revenue: 52600, netIncome: 4200 }
+      ],
+      backlog: { valueM: 118000, asOf: '2025-12-31', note: 'Record; total estimated contract value $179B' },
+      asOf: '2026-01-28', src: S('General Dynamics FY2025 results', 'https://investorrelations.gd.com/news/press-release-details/2026/General-Dynamics-Reports-Fourth-Quarter-and-Full-Year-2025-Financial-Results/')
+    },
+    valuation: { evSales: 1.7, pe: 21.7, basis: mcapRatio, note: 'Ratios use market cap; EV not compiled.', asOf: '2026-09-24', src: S('Motley Fool', 'https://www.fool.com/quote/nyse/general-dynamics/gd/') },
+    programs: [
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees (GD Mission Systems)', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'General Dynamics Mission Systems selected in April 2026.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') },
+      { name: 'Columbia and Virginia-class submarines', ref: 'aukus', customer: 'US Navy', role: 'Prime', status: 'Production' },
+      { name: '155 mm artillery ramp', ref: 'ukraine', customer: 'US Army', role: 'Prime', status: 'Production' }
+    ]
+  });
+
+  DTM.add({
+    id: 'boeing', name: 'Boeing', domain: 'boeing.com', status: 'public', ticker: 'BA', exchange: 'NYSE',
+    hq: 'Arlington, VA', country: 'US', founded: 1916,
+    subsegments: ['primes.us'],
+    oneLiner: 'Defense, Space & Security builds the F-47, F-15EX, KC-46, MQ-25 and T-7, alongside commercial jets.',
+    description: [
+      'Boeing Defense, Space & Security (about 30% of revenue) won the Air Force\'s sixth-generation F-47 fighter in 2025 and builds the F-15EX, KC-46 tanker, P-8, MQ-25, T-7A, Apache and Chinook, plus satellites.',
+      'Defense revenue rose 14% to $27.2B in 2025 and the segment nearly broke even after heavy fixed-price losses in 2024. Defense backlog is a record $85B.'
+    ],
+    leadership: [['Kelly Ortberg', 'President & CEO']],
+    products: ['F-47', 'F-15EX', 'KC-46', 'MQ-25', 'T-7A', 'MQ-28 Ghost Bat', 'Apache'],
+    marketCap: { usdM: 166550, asOf: '2026-09-08', src: S('Yahoo Finance valuation', 'https://au.finance.yahoo.com/quote/BA/community/') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 77794 }, { label: 'FY2024', revenue: 66517 }, { label: 'FY2025', revenue: 89463 }],
+      defenseMix: '~30% (BDS)',
+      extra: [{ label: 'BDS revenue', value: '$27.2B', note: 'FY2025, +14%' }, { label: 'BDS operating margin', value: '−0.5%', note: 'FY2025' }],
+      backlog: { valueM: 85000, asOf: '2025-12-31', note: 'Defense, Space & Security only' },
+      asOf: '2026-01-27', src: S('Boeing Q4 2025 results', 'https://investors.boeing.com/investors/news/press-release-details/2026/Boeing-Reports-Fourth-Quarter-Results/default.aspx')
+    },
+    valuation: { evUsdM: 192440, evSales: 2.2, basis: 'EV ÷ FY2025 revenue', asOf: '2026-09-08', src: S('Yahoo Finance valuation', 'https://au.finance.yahoo.com/quote/BA/community/') },
+    programs: [
+      { name: 'F-47 (NGAD)', ref: 'f47', customer: 'US Air Force', role: 'Prime', year: 2025, status: 'Development' },
+      { name: 'MQ-28 Ghost Bat', ref: 'cca', customer: 'Royal Australian Air Force', role: 'Prime', status: 'Production' },
+      { name: 'KC-46 Pegasus', customer: 'US Air Force', role: 'Prime', status: 'Production', note: 'Q4 2025 included $0.6B of KC-46 losses.' }
+    ]
+  });
+
+  DTM.add({
+    id: 'l3harris', name: 'L3Harris', domain: 'l3harris.com', status: 'public', ticker: 'LHX', exchange: 'NYSE',
+    hq: 'Melbourne, FL', country: 'US', founded: 2019,
+    subsegments: ['primes.us'],
+    oneLiner: 'Tactical radios, EW, space sensors and missile-tracking satellites, plus Aerojet Rocketdyne motors.',
+    description: [
+      'L3Harris is the main US maker of tactical radios and a major supplier of electronic warfare, ISR sensors and space payloads, including missile-tracking satellites for SDA and MDA. Its Aerojet Rocketdyne unit makes solid rocket motors for Javelin, Stinger, GMLRS and Standard Missile.',
+      'Revenue was $21.9B in 2025 and backlog reached about $42B by mid-2026.'
+    ],
+    leadership: [['Chris Kubasik', 'Chair & CEO']],
+    products: ['AN/PRC radios', 'Aerojet SRMs', 'RL10 engine', 'Missile-tracking satellites', 'EW pods'],
+    marketCap: { usdM: 44229, asOf: '2026-09-25', src: S('Fintel', 'https://fintel.io/s/us/lhx') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 19419 }, { label: 'FY2024', revenue: 21325 }, { label: 'FY2025', revenue: 21900 }],
+      backlog: { valueM: 42000, asOf: '2026-06-30', note: '$38B+ at end-2025' },
+      asOf: '2026-07-24', src: [S('L3Harris FY2025 results', 'https://www.l3harris.com/newsroom/press-release/2026/01/l3harris-technologies-reports-strong-full-year-and-fourth-quarter'), S('TIKR', 'https://www.tikr.com/blog/l3harris-is-up-28-in-the-last-6-months-heres-where-the-stock-could-go-in-2026')]
+    },
+    valuation: { evSales: 2.0, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-09-25', src: S('Fintel', 'https://fintel.io/s/us/lhx') },
+    programs: [
+      { name: 'Solid rocket motors (Aerojet Rocketdyne)', ref: 'srm', customer: 'US Army / Navy / MDA', role: 'Supplier', status: 'Production' },
+      { name: 'SDA Tracking Layer satellites', ref: 'pwsa', customer: 'Space Development Agency', role: 'Prime', status: 'Production' }
+    ]
+  });
+
+  DTM.add({
+    id: 'hii', name: 'HII', domain: 'hii.com', status: 'public', ticker: 'HII', exchange: 'NYSE',
+    hq: 'Newport News, VA', country: 'US', founded: 2011,
+    subsegments: ['primes.us'],
+    oneLiner: 'America\'s largest military shipbuilder: aircraft carriers, submarines, destroyers and REMUS UUVs.',
+    description: [
+      'HII builds every US Navy aircraft carrier and, with General Dynamics, the Navy\'s nuclear submarines at Newport News, plus destroyers and amphibious ships at Ingalls. Its Mission Technologies unit makes REMUS uncrewed undersea vehicles.',
+      'Revenue rose 8% to $12.5B in 2025 with a $53.1B backlog, but the shares fell sharply in 2026.'
+    ],
+    leadership: [['Chris Kastner', 'President & CEO']],
+    products: ['Ford-class carriers', 'Virginia/Columbia submarines', 'DDG-51', 'REMUS UUVs'],
+    marketCap: { usdM: 11100, asOf: '2026-09-11', src: S('Yahoo Finance key statistics', 'https://finance.yahoo.com/quote/HII/key-statistics/') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 11454 }, { label: 'FY2024', revenue: 11535 }, { label: 'FY2025', revenue: 12480 }],
+      backlog: { valueM: 53100, asOf: '2025-12-31', note: '$16.9B of 2025 awards' },
+      notes: '2026 guidance: shipbuilding revenue $9.7B–$9.9B; Mission Technologies $3.0B–$3.2B.',
+      asOf: '2026-02-05', src: S('HII 2025 Annual Report', 'https://s29.q4cdn.com/772422961/files/doc_financials/2025/ar/HII-2025-Annual-Report-Final.pdf')
+    },
+    valuation: { evSales: 0.9, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-09-11', src: S('Yahoo Finance', 'https://finance.yahoo.com/quote/HII/key-statistics/') },
+    programs: [{ name: 'Submarine and carrier construction', ref: 'aukus', customer: 'US Navy', role: 'Prime', status: 'Production' }]
+  });
+
+  /* ---------------- US mid-tier & integrators ---------------- */
+  DTM.add({
+    id: 'leidos', name: 'Leidos', domain: 'leidos.com', status: 'public', ticker: 'LDOS', exchange: 'NYSE',
+    hq: 'Reston, VA', country: 'US', founded: 1969,
+    subsegments: ['primes.midtier'],
+    oneLiner: 'Largest government IT and engineering integrator, with Dynetics hypersonics and uncrewed systems.',
+    description: [
+      'Leidos provides IT, engineering and health services to US government agencies and builds hardware through Dynetics, including hypersonic glide bodies, Enduring Indirect Fires launchers and medium uncrewed surface vessels.'
+    ],
+    leadership: [['Tom Bell', 'CEO']],
+    products: ['Dynetics hypersonics', 'IFPC launcher', 'Sea Hunter / MUSV'],
+    marketCap: { usdM: 14390, asOf: '2026-07-29', src: S('Bullfincher', 'https://bullfincher.io/companies/leidos-holdings/market-cap') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 15438 }, { label: 'FY2024', revenue: 16662 }, { label: 'FY2025', revenue: 17170 }],
+      backlog: { valueM: 49000, asOf: '2025-12-31', note: '$9.7B funded; policy change adds sole-source IDIQ' },
+      asOf: '2026-02-17', src: S('Leidos FY2025 results', 'https://seekingalpha.com/pr/20400805')
+    },
+    valuation: { evSales: 0.8, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-07-29', src: S('Bullfincher', 'https://bullfincher.io/companies/leidos-holdings/market-cap') },
+    programs: [{ name: 'Navy medium USV (Sea Hunter lineage)', ref: 'usv-navy', customer: 'US Navy', role: 'Prime', status: 'Prototype' }]
+  });
+
+  DTM.add({
+    id: 'caci', name: 'CACI', domain: 'caci.com', status: 'public', ticker: 'CACI', exchange: 'NYSE',
+    hq: 'Reston, VA', country: 'US', founded: 1962,
+    subsegments: ['primes.midtier'],
+    oneLiner: 'Mission IT plus EW, SIGINT and counter-UAS technology for the intelligence community and DoD.',
+    description: [
+      'CACI combines enterprise and mission IT with a growing hardware and software technology business in electronic warfare, signals intelligence, counter-drone systems and space laser communications.',
+      'Fiscal 2026 revenue grew 10.9% to $9.6B, and fiscal 2027 guidance is $10.65B–$10.85B.'
+    ],
+    leadership: [['John Mengucci', 'President & CEO']],
+    products: ['CORIAN EW', 'Optical terminals', 'Counter-UAS kits'],
+    marketCap: { usdM: 10770, asOf: '2026-07-29', src: S('Finhacker', 'https://www.finhacker.cz/en/stocks/caci-international-market-cap/') },
+    financials: {
+      cur: 'USD', fyEnd: 'Jun',
+      periods: [{ label: 'FY2024', revenue: 7660 }, { label: 'FY2025', revenue: 8630 }, { label: 'FY2026', revenue: 9600 }],
+      backlog: { valueM: 32000, asOf: '2026-06-30', note: '$5.4B funded' },
+      asOf: '2026-08-05', src: S('CACI fiscal 2026 results', 'https://www.businesswire.com/news/home/20260805256967/en/')
+    },
+    valuation: { evSales: 1.1, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-07-29', src: S('Finhacker', 'https://www.finhacker.cz/en/stocks/caci-international-market-cap/') },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'booz-allen', name: 'Booz Allen Hamilton', short: 'Booz Allen', domain: 'boozallen.com', status: 'public', ticker: 'BAH', exchange: 'NYSE',
+    hq: 'McLean, VA', country: 'US', founded: 1914,
+    subsegments: ['primes.midtier'],
+    oneLiner: 'Defense and intelligence technology consultancy; active investor in defense startups through Booz Allen Ventures.',
+    description: [
+      'Booz Allen provides AI, cyber and engineering services to the DoD and intelligence community. Through Booz Allen Ventures it backs many defense tech startups on this map, including Hidden Level, Firestorm, Albedo and Hadean.',
+      'Fiscal 2026 revenue fell 6.4% to $11.2B as civil-agency spending cuts hit.'
+    ],
+    leadership: [['Horacio Rozanski', 'Chairman, President & CEO']],
+    products: ['AI & data services', 'Cyber', 'Booz Allen Ventures'],
+    marketCap: { usdM: 8600, asOf: '2026-07-28', src: S('Trefis', 'https://www.trefis.com/data/companies/bah') },
+    financials: {
+      cur: 'USD', fyEnd: 'Mar',
+      periods: [{ label: 'FY2024', revenue: 10662 }, { label: 'FY2025', revenue: 11980 }, { label: 'FY2026', revenue: 11217 }],
+      asOf: '2026-05-22', src: S('Booz Allen fiscal 2026 results (8-K)', 'https://www.sec.gov/Archives/edgar/data/0001443646/000162828026037519/bahexhibit991q4fy26_fina.htm')
+    },
+    valuation: { evSales: 0.8, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-07-28', src: S('Trefis', 'https://www.trefis.com/data/companies/bah') },
+    programs: [
+      { name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', note: 'Selected in April 2026.', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') }
+    ]
+  });
+
+  DTM.add({
+    id: 'textron', name: 'Textron', domain: 'textron.com', status: 'public', ticker: 'TXT', exchange: 'NYSE',
+    hq: 'Providence, RI', country: 'US', founded: 1923,
+    subsegments: ['primes.midtier'],
+    oneLiner: 'Bell MV-75 (FLRAA) tiltrotor, Textron Systems drones and vehicles, and Cessna business jets.',
+    description: [
+      'Textron\'s Bell won the Army\'s Future Long-Range Assault Aircraft with the V-280 Valor, now the MV-75. Textron Systems builds Aerosonde drones, ship-to-shore connectors and ground vehicles, alongside commercial Cessna and Beechcraft aircraft.'
+    ],
+    products: ['MV-75 (V-280)', 'Aerosonde', 'Ship-to-Shore Connector', 'Ripsaw'],
+    marketCap: { usdM: 14990, asOf: '2026-08-19', src: S('Equibles', 'https://equibles.com/stocks/TXT') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 13683 }, { label: 'FY2024', revenue: 13702 }, { label: 'FY2025', revenue: 14800 }],
+      asOf: '2026-02-12', src: S('Textron 10-K', 'https://www.sec.gov/Archives/edgar/data/217346/000021734626000006/txt-20260103.htm')
+    },
+    valuation: { evSales: 1.0, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-08-19', src: S('Equibles', 'https://equibles.com/stocks/TXT') },
+    programs: [{ name: 'Future Long-Range Assault Aircraft (MV-75)', customer: 'US Army', role: 'Prime', status: 'Development' }]
+  });
+
+  DTM.add({
+    id: 'teledyne', name: 'Teledyne', domain: 'teledyne.com', status: 'public', ticker: 'TDY', exchange: 'NYSE',
+    hq: 'Thousand Oaks, CA', country: 'US', founded: 1960,
+    subsegments: ['primes.midtier'],
+    oneLiner: 'Sensors and imaging conglomerate: FLIR thermal cameras, Black Hornet nano-drones and Rogue 1.',
+    description: [
+      'Teledyne makes digital imaging, instrumentation and defense electronics. Its FLIR unit supplies thermal sensors, the Black Hornet nano-drone and the Rogue 1 loitering munition, and it builds undersea vehicles and space imaging sensors.'
+    ],
+    products: ['FLIR thermal', 'Black Hornet 4', 'Rogue 1', 'Slocum glider'],
+    marketCap: { usdM: 30390, asOf: '2026-07-31', src: S('Public.com', 'https://public.com/stocks/tdy/market-cap') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 5635.5 }, { label: 'FY2024', revenue: 5670.0 }, { label: 'FY2025', revenue: 6115.4 }],
+      asOf: '2026-03-01', src: S('Teledyne 2025 annual report', 'https://www.sec.gov/Archives/edgar/data/1094285/000119312526104206/d113749dars.pdf')
+    },
+    valuation: { evSales: 5.0, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-07-31', src: S('Public.com', 'https://public.com/stocks/tdy/market-cap') },
+    programs: [{ name: 'Black Hornet soldier-borne sensor', customer: 'US Army and allies', role: 'Prime', status: 'Fielded' }]
+  });
+
+  DTM.add({
+    id: 'mercury', name: 'Mercury Systems', short: 'Mercury', domain: 'mrcy.com', status: 'public', ticker: 'MRCY', exchange: 'NASDAQ',
+    hq: 'Andover, MA', country: 'US', founded: 1981,
+    subsegments: ['primes.midtier'],
+    oneLiner: 'Rugged processing, RF and mission computers inside radars, EW systems and missiles.',
+    description: [
+      'Mercury builds secure processing subsystems, RF and microwave modules and mission computers that sit inside radars, electronic warfare systems, missiles and aircraft for primes.'
+    ],
+    leadership: [['Bill Ballhaus', 'Chairman & CEO']],
+    marketCap: { usdM: 5320, asOf: '2026-08-28', src: S('Motley Fool', 'https://www.fool.com/quote/nasdaq/mrcy/') },
+    financials: {
+      cur: 'USD', fyEnd: 'Jun',
+      periods: [{ label: 'FY2024', revenue: 835 }, { label: 'FY2025', revenue: 912 }, { label: 'FY2026', revenue: 984, netIncome: -30 }],
+      asOf: '2026-08-18', src: S('Mercury fiscal 2026 results (8-K)', 'https://www.sec.gov/Archives/edgar/data/0001049521/000104952126000043/a2026q4earningsreleaseex.htm')
+    },
+    valuation: { evSales: 5.4, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-08-28', src: S('Motley Fool', 'https://www.fool.com/quote/nasdaq/mrcy/') },
+    programs: []
+  });
+
+  /* ---------------- European primes ---------------- */
+  DTM.add({
+    id: 'bae-systems', name: 'BAE Systems', domain: 'baesystems.com', status: 'public', ticker: 'BA.', exchange: 'LSE',
+    hq: 'London', country: 'UK', founded: 1999,
+    subsegments: ['primes.europe'],
+    oneLiner: 'Europe\'s largest defense company: Typhoon and GCAP, submarines, combat vehicles, munitions and EW.',
+    description: [
+      'BAE Systems builds the UK\'s nuclear submarines and Type 26 frigates, Eurofighter Typhoon and the GCAP sixth-generation fighter with Italy and Japan, artillery and combat vehicles, and electronic warfare systems for US aircraft through BAE Systems Inc.',
+      'Sales rose 10% to a record £30.7B in 2025, with an £83.6B order backlog.'
+    ],
+    leadership: [['Charles Woodburn', 'CEO']],
+    products: ['Typhoon', 'GCAP / Tempest', 'Astute & Dreadnought', 'CV90', 'M109', 'AMPV'],
+    marketCap: { usdM: 76400, local: { cur: 'GBP', valueM: 57000 }, asOf: '2026-09-15', src: S('Rankia', 'https://www.rankia.com/acciones/bae-systems-ba') },
+    financials: {
+      cur: 'GBP', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 25284 }, { label: 'FY2024', revenue: 28300 }, { label: 'FY2025', revenue: 30662, opIncome: 3322, fcf: 2158 }],
+      backlog: { valueM: 83600, asOf: '2025-12-31', note: 'Order intake £36.8B' },
+      notes: 'Sales are the company\'s alternative performance measure, including joint ventures. Operating income shown is underlying EBIT.',
+      asOf: '2026-02-18', src: S('BAE Systems 2025 full year results', 'https://www.baesystems.com/en/article/2025-full-year-results')
+    },
+    valuation: { evSales: 1.9, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled. Market cap is an estimate from a 1,940p share price.', asOf: '2026-09-15', src: S('Rankia', 'https://www.rankia.com/acciones/bae-systems-ba') },
+    programs: [
+      { name: 'AUKUS SSN and Dreadnought submarines', ref: 'aukus', customer: 'Royal Navy / RAN', role: 'Prime', status: 'Production' },
+      { name: 'GCAP sixth-generation fighter', customer: 'UK, Italy, Japan', role: 'Prime', status: 'Development' }
+    ]
+  });
+
+  DTM.add({
+    id: 'rheinmetall', name: 'Rheinmetall', domain: 'rheinmetall.com', status: 'public', ticker: 'RHM', exchange: 'XETRA',
+    hq: 'Düsseldorf', country: 'DE', founded: 1889,
+    subsegments: ['primes.europe'],
+    oneLiner: 'Europe\'s ammunition and land-systems champion: 155 mm shells, Lynx, Boxer, air defense and naval.',
+    description: [
+      'Rheinmetall is Europe\'s largest ammunition producer and builds Lynx and Boxer vehicles, Skyranger air defense, weapons and digitization systems. It has expanded into naval shipbuilding and satellites (with ICEYE) and has a missile JV with Destinus.',
+      'Defense sales rose 29% to €9.9B in 2025 with a record €63.8B backlog. It guides to 40–45% growth in 2026. The shares fell sharply from their 2025 highs to about €1,000 in September 2026.'
+    ],
+    leadership: [['Armin Papperger', 'CEO']],
+    products: ['155 mm ammunition', 'Lynx KF41', 'Boxer', 'Skyranger', 'Panther KF51'],
+    marketCap: { usdM: 53100, local: { cur: 'EUR', valueM: 45800 }, asOf: '2026-09-14', src: S('Finanztrends (share price €998)', 'https://www.finanztrends.de/rheinmetall-aktie-neuer-schwung-fuer-den-anstieg/') },
+    financials: {
+      cur: 'EUR', fyEnd: 'Dec',
+      periods: [{ label: 'FY2024', revenue: 7715 }, { label: 'FY2025', revenue: 9935, opIncome: 1841, netIncome: 696 }],
+      backlog: { valueM: 63800, asOf: '2025-12-31', note: 'Record, +36%' },
+      notes: 'Figures are for continuing (defense) operations. 2026 guidance: sales of €14.0B–€14.5B.',
+      asOf: '2026-03-11', src: S('Rheinmetall annual report 2025', 'https://www.rheinmetall.com/en/media/news-watch/news/2026/03/2026-03-11-rheinmetall-presents-annual-report-for-2025')
+    },
+    valuation: { evSales: 4.6, pe: 65.8, peBasis: 'FY2025 net income', basis: mcapRatio, note: 'Market cap is our estimate: ~€998 share price × ~45.8M shares. EV not compiled.', asOf: '2026-09-14', src: S('Finanztrends', 'https://www.finanztrends.de/rheinmetall-aktie-neuer-schwung-fuer-den-anstieg/') },
+    programs: [
+      { name: '155 mm ammunition for Ukraine and NATO', ref: 'ukraine', customer: 'Germany / Ukraine / NATO', role: 'Prime', status: 'Production' },
+      { name: 'Bundeswehr SAR satellites (with ICEYE)', customer: 'German Armed Forces', role: 'Prime', value: '≈$1.9B', status: 'Production' }
+    ]
+  });
+
+  DTM.add({
+    id: 'thales', name: 'Thales', domain: 'thalesgroup.com', status: 'public', ticker: 'HO', exchange: 'Euronext Paris',
+    hq: 'Paris', country: 'FR', founded: 1893,
+    subsegments: ['primes.europe'],
+    oneLiner: 'French defense electronics leader: radars, sonars, secure comms, air defense and space.',
+    description: [
+      'Thales supplies radars, sonars, electronic warfare, secure communications, air defense missiles and avionics, and co-owns Thales Alenia Space. It also has large civil aerospace and cybersecurity businesses.',
+      'Sales grew 7.6% to €22.1B in 2025 and its order book reached a record of over €53B.'
+    ],
+    leadership: [['Patrice Caine', 'Chairman & CEO']],
+    products: ['Ground Master radars', 'Captas sonar', 'Starstreak / LMM', 'SYRACUSE satcom'],
+    marketCap: { usdM: 59500, local: { cur: 'EUR', valueM: 51320 }, asOf: '2026-08-27', src: S('MarketScreener', 'https://www.marketscreener.com/quote/stock/THALES-8357729/') },
+    financials: {
+      cur: 'EUR', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 18428 }, { label: 'FY2024', revenue: 20577 }, { label: 'FY2025', revenue: 22136 }],
+      backlog: { valueM: 53000, asOf: '2025-12-31', note: 'Record; order intake €25.3B' },
+      asOf: '2026-03-04', src: S('Thales 2025 full-year results', 'https://www.thalesgroup.com/en/news-centre/press-releases/thales-reports-its-2025-full-year-results')
+    },
+    valuation: { evSales: 2.3, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-08-27', src: S('MarketScreener', 'https://www.marketscreener.com/quote/stock/THALES-8357729/') },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'leonardo', name: 'Leonardo', domain: 'leonardo.com', status: 'public', ticker: 'LDO', exchange: 'Borsa Italiana',
+    hq: 'Rome', country: 'IT', founded: 1948,
+    subsegments: ['primes.europe'],
+    oneLiner: 'Italian helicopters, defense electronics, GCAP partner and majority owner of Leonardo DRS.',
+    description: [
+      'Leonardo builds AW helicopters, defense electronics and space systems and is Italy\'s partner in GCAP. It owns a majority of US-listed Leonardo DRS and is forming a land-systems JV with Rheinmetall.',
+      'Revenues grew about 11% to €19.5B in 2025, with a €46.6B order backlog.'
+    ],
+    leadership: [['Roberto Cingolani', 'CEO']],
+    products: ['AW149 / AW101', 'M-346', 'GCAP', 'Leonardo DRS'],
+    marketCap: { usdM: 33800, local: { cur: 'EUR', valueM: 29150 }, asOf: '2026-09-16', src: S('Economia Italia', 'https://finanza.economia-italia.com/azioni-leonardo-finantieri-17-settembre-2026') },
+    financials: {
+      cur: 'EUR', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 15291 }, { label: 'FY2024', revenue: 17763 }, { label: 'FY2025', revenue: 19500 }],
+      backlog: { valueM: 46624, asOf: '2025-12-31', note: '~2.4 years of production' },
+      asOf: '2026-03-12', src: S('Leonardo FY2025 results', 'https://www.leonardo.com/en/press-release-detail/-/detail/12-03-2026-leonardo-board-of-directors-approves-fy2025-results-and-2026-guidance')
+    },
+    valuation: { evSales: 1.5, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-09-16', src: S('Economia Italia', 'https://finanza.economia-italia.com/azioni-leonardo-finantieri-17-settembre-2026') },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'saab', name: 'Saab', domain: 'saab.com', status: 'public', ticker: 'SAAB B', exchange: 'Nasdaq Stockholm',
+    hq: 'Stockholm', country: 'SE', founded: 1937,
+    subsegments: ['primes.europe'],
+    oneLiner: 'Gripen fighters, GlobalEye, Carl-Gustaf and NLAW, A26 submarines and Giraffe radars.',
+    description: [
+      'Saab builds the Gripen fighter, GlobalEye airborne early warning aircraft, Carl-Gustaf and NLAW anti-armor weapons, A26 submarines and Giraffe radars, and is a key supplier to Ukraine and new NATO member Sweden.',
+      'Order bookings rose 74% to a record SEK 168.5B in 2025, lifting the backlog to SEK 274.5B.'
+    ],
+    leadership: [['Micael Johansson', 'President & CEO']],
+    products: ['Gripen E', 'GlobalEye', 'Carl-Gustaf', 'NLAW', 'A26 submarine', 'Giraffe radar'],
+    marketCap: { usdM: 36200, local: { cur: 'SEK', valueM: 344500 }, asOf: '2026-08-28', src: S('MarketScreener', 'https://www.marketscreener.com/quote/stock/SAAB-AB-6491624/') },
+    financials: {
+      cur: 'SEK', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 51609 }, { label: 'FY2024', revenue: 63750 }, { label: 'FY2025', revenue: 79100, opIncome: 7700 }],
+      backlog: { valueM: 274500, asOf: '2025-12-31', note: 'Order bookings SEK 168.5B (+74%)' },
+      asOf: '2026-02-05', src: S('Saab year-end report 2025', 'https://www.saab.com/globalassets/cision/documents/2026/20260205-saab-year-end-report-2025record-order-bookings-building-for-growth-en-1-5300016.pdf')
+    },
+    valuation: { evSales: 4.4, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-08-28', src: S('MarketScreener', 'https://www.marketscreener.com/quote/stock/SAAB-AB-6491624/') },
+    programs: [{ name: 'Carl-Gustaf and NLAW for Ukraine', ref: 'ukraine', customer: 'Ukraine / donors', role: 'Supplier', status: 'Fielded' }]
+  });
+
+  DTM.add({
+    id: 'kongsberg', name: 'Kongsberg', domain: 'kongsberg.com', status: 'public', ticker: 'KOG', exchange: 'Oslo Børs',
+    hq: 'Kongsberg', country: 'NO', founded: 1814,
+    subsegments: ['primes.europe'],
+    oneLiner: 'Naval Strike Missile, NASAMS air defense and Protector weapon stations; owns most of Zone 5.',
+    description: [
+      'Kongsberg Defence & Aerospace makes the Naval Strike Missile and Joint Strike Missile, co-develops NASAMS air defense with RTX, and builds Protector remote weapon stations used by the US Army. It acquired 90% of US low-cost missile maker Zone 5 Technologies in December 2025.',
+      'The group spun off Kongsberg Maritime as a separate listed company in April 2026. Order backlog exceeded NOK 157B at the end of 2025.'
+    ],
+    products: ['NASAMS', 'Naval Strike Missile', 'Joint Strike Missile', 'Protector RWS'],
+    marketCap: { usdM: 27910, local: { cur: 'NOK', valueM: 279100 }, asOf: '2026-08', src: S('CompaniesMarketCap', 'https://companiesmarketcap.com/kongsberg-gruppen/marketcap/') },
+    financials: {
+      cur: 'NOK', fyEnd: 'Dec',
+      periods: [{ label: 'FY2024', revenue: 48300 }, { label: 'Q4 2025', revenue: 16776 }],
+      backlog: { valueM: 157000, asOf: '2025-12-31', note: 'Pre-demerger group, including Maritime' },
+      notes: 'Pre-demerger figures include Kongsberg Maritime, which was spun off in April 2026.',
+      asOf: '2026-02-10', src: S('Kongsberg Q4 2025 results', 'https://www.kongsberg.com/news/news-archive/2026/q4-2025/')
+    },
+    valuation: { note: 'Post-demerger market cap; pre-demerger revenue is not comparable.', asOf: '2026-08', src: S('CompaniesMarketCap', 'https://companiesmarketcap.com/kongsberg-gruppen/marketcap/') },
+    programs: [{ name: 'NASAMS for Ukraine and allies', ref: 'ukraine', customer: 'Ukraine / NATO', role: 'Prime (with RTX)', status: 'Production' }]
+  });
+
+  DTM.add({
+    id: 'hensoldt', name: 'Hensoldt', domain: 'hensoldt.net', status: 'public', ticker: 'HAG', exchange: 'XETRA',
+    hq: 'Taufkirchen', country: 'DE', founded: 2017,
+    subsegments: ['primes.europe'],
+    oneLiner: 'German sensor house: TRML-4D air-defense radars, EW and optronics.',
+    description: [
+      'Hensoldt, carved out of Airbus in 2017, makes radars including the TRML-4D used with IRIS-T in Ukraine, electronic warfare systems and optronics.',
+      'Revenue reached about €2.46B in 2025, and its backlog grew to around €10B by mid-2026.'
+    ],
+    leadership: [['Oliver Dörre', 'CEO']],
+    products: ['TRML-4D', 'Kalaetron EW', 'PEGASUS SIGINT'],
+    marketCap: { usdM: 11500, local: { cur: 'EUR', valueM: 9900 }, asOf: '2026-08-05', src: S('Google Finance', 'https://www.google.com/finance/quote/1HENS:BIT') },
+    financials: {
+      cur: 'EUR', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 1850 }, { label: 'FY2024', revenue: 2240 }, { label: 'FY2025', revenue: 2460 }],
+      backlog: { valueM: 10000, asOf: '2026-06-30', note: 'About €10B' },
+      asOf: '2026-07-31', src: S('StockAnalysis', 'https://stockanalysis.com/quote/fra/HAG0/')
+    },
+    valuation: { evSales: 4.0, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-08-05', src: S('Google Finance', 'https://www.google.com/finance/quote/1HENS:BIT') },
+    programs: [{ name: 'TRML-4D radars for Ukraine', ref: 'ukraine', customer: 'Ukraine / Germany', role: 'Supplier', status: 'Fielded' }]
+  });
+
+  /* ---------------- Israel & Asia-Pacific ---------------- */
+  DTM.add({
+    id: 'elbit', name: 'Elbit Systems', short: 'Elbit', domain: 'elbitsystems.com', status: 'public', ticker: 'ESLT', exchange: 'NASDAQ / TASE',
+    hq: 'Haifa', country: 'IL', founded: 1966,
+    subsegments: ['primes.apac'],
+    oneLiner: 'Israel\'s largest listed defense company: drones, artillery, EW, munitions and the Iron Beam laser.',
+    description: [
+      'Elbit builds Hermes drones, artillery and rocket systems, electronic warfare, night vision and munitions, and is a partner on the Iron Beam high-energy laser. Wartime demand and European orders have driven record backlog.',
+      'Revenue rose 16% to $7.9B in 2025 and backlog reached about $32B by mid-2026.'
+    ],
+    leadership: [['Bezhalel Machlis', 'President & CEO']],
+    products: ['Hermes 900', 'PULS', 'Iron Beam (with Rafael)', 'SkyStriker'],
+    marketCap: { usdM: 32700, local: { cur: 'ILS', valueM: 121000 }, asOf: '2026-08-15', src: S('Globes', 'https://en.globes.co.il/en/article-1001551938') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 5975 }, { label: 'FY2024', revenue: 6828 }, { label: 'FY2025', revenue: 7900 }],
+      backlog: { valueM: 32000, asOf: '2026-06-30', note: '$28.1B at end-2025' },
+      asOf: '2026-08-15', src: [S('Elbit Q1 2026 investor deck', 'https://www.elbitsystems.com/sites/default/files/2026-05/investor_deck_q1_2026_0.pdf'), S('Globes', 'https://en.globes.co.il/en/article-1001551938')]
+    },
+    valuation: { evSales: 4.1, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-08-15', src: S('Globes', 'https://en.globes.co.il/en/article-1001551938') },
+    programs: [{ name: 'Iron Beam high-energy laser', customer: 'Israel MoD', role: 'Partner (with Rafael)', status: 'Initial operations' }]
+  });
+
+  DTM.add({
+    id: 'hanwha-aerospace', name: 'Hanwha Aerospace', domain: 'hanwhaaerospace.com', status: 'public', ticker: '012450', exchange: 'KRX',
+    hq: 'Changwon', country: 'KR', founded: 1977,
+    subsegments: ['primes.apac'],
+    oneLiner: 'K9 howitzers, Redback IFVs and Chunmoo rockets for Europe and Australia; controls Hanwha Ocean shipyards.',
+    description: [
+      'Hanwha Aerospace builds the K9 self-propelled howitzer, Chunmoo multiple rocket launcher and Redback infantry fighting vehicle, with major export wins in Poland, Australia and Romania, and makes aircraft engines. Consolidating Hanwha Ocean added large naval shipbuilding revenue in 2025.',
+      'It also owns Philly Shipyard in the US and has invested in US defense startups including Firehawk.'
+    ],
+    products: ['K9 Thunder', 'Chunmoo', 'Redback', 'KSS-III submarines (Hanwha Ocean)'],
+    marketCap: { usdM: 37500, local: { cur: 'KRW', valueM: 51810000 }, asOf: '2026-08-05', src: S('Investing.com', 'https://www.investing.com/equities/samsung-techwin') },
+    financials: {
+      cur: 'KRW', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 7890000 }, { label: 'FY2024', revenue: 11240000 }, { label: 'FY2025', revenue: 26600000, opIncome: 3030000 }],
+      notes: 'FY2025 includes Hanwha Ocean consolidation. FY2025 actuals are from a secondary profile; check the DART filing.',
+      asOf: '2026-03-31', src: [S('Robotics.press profile', 'https://www.robotics.press/news/hanwha-aerospace-company-profile/'), S('Daishin Securities', 'https://money2.daishin.com/m_file/file/271/53213_Daishin%20Securities_Hanwha%20Aerospace%20(012450%20KS%20Apr%209,%202025).pdf')]
+    },
+    valuation: { evSales: 1.9, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-08-05', src: S('Investing.com', 'https://www.investing.com/equities/samsung-techwin') },
+    programs: [{ name: 'K9 and Chunmoo for Poland', customer: 'Polish Armed Forces', role: 'Prime', status: 'Delivering' }]
+  });
+
+  DTM.add({
+    id: 'mitsubishi-heavy', name: 'Mitsubishi Heavy Industries', short: 'MHI', domain: 'mhi.com', status: 'public', ticker: '7011', exchange: 'TSE',
+    hq: 'Tokyo', country: 'JP', founded: 1884,
+    subsegments: ['primes.apac'],
+    oneLiner: 'Japan\'s largest defense contractor: standoff missiles, frigates, submarines, GCAP and space launch.',
+    description: [
+      'MHI is Japan\'s top defense contractor, building Type 12 standoff missiles, Mogami-class frigates (chosen for Australia\'s general-purpose frigate program), submarines and the H3 rocket, and is Japan\'s lead on GCAP.',
+      'Its Aircraft, Defense & Space segment is forecast to reach ¥1.5T of revenue in fiscal 2026 as Japan doubles defense spending.'
+    ],
+    products: ['Type 12 SSM (upgraded)', 'Mogami-class frigate', 'Taigei submarine', 'H3 rocket'],
+    marketCap: { usdM: 107500, local: { cur: 'JPY', valueM: 16118532 }, asOf: '2026-04-30', src: S('Fintel', 'https://fintel.io/s/jp/7011') },
+    financials: {
+      cur: 'JPY', fyEnd: 'Mar',
+      periods: [{ label: 'FY2023', revenue: 4657100 }, { label: 'FY2024', revenue: 5027100 }],
+      notes: 'Fiscal years end in March. Nine-month FY2025 revenue was ¥3.33T (+9.2%) and order intake ¥5.03T (+12.6%).',
+      asOf: '2026-02-04', src: S('MHI FY2025 Q3 results', 'https://www.mhi.com/news/pdf/fy20253q_press_release.pdf')
+    },
+    valuation: { evSales: 3.2, basis: mcapRatio, note: 'Ratio uses market cap; EV not compiled.', asOf: '2026-04-30', src: S('Fintel', 'https://fintel.io/s/jp/7011') },
+    programs: [{ name: 'Mogami-class frigates for Australia', customer: 'Royal Australian Navy', role: 'Prime', year: 2025, status: 'Contracting' }]
+  });
+})();
 
 </script>
 <script>/* data/logos.js */
 /* Generated by scripts/build.mjs from /logos. Do not edit by hand. */
-DTM.logos = {};
+DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZmIiByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+Qm9laW5nPC90aXRsZT48cGF0aCBkPSJNNi45MDQ0IDE3LjI4NjZhNi4wNTEyIDYuMDUxMiAwIDAxLTMuNzU5NS0xLjMwMDhjMS4yMDQ4LTIuNzE0NiAzLjY1NDUtNi4zNTgxIDYuOTk4LTkuOTE2NmE2LjA3MDIgNi4wNzAyIDAgMDEyLjI2MTcgNy43MjljLTEuMDU5OS0uNDktMi4wNDk3LTEuMTA2LTIuODg3Ni0xLjg3OThsMS44MzA3IDMuNDM3NWE2LjA1ODIgNi4wNTgyIDAgMDEtNC40NDMzIDEuOTMwN00uODI5MiAxMS4yMTE1YTYuMDc1MiA2LjA3NTIgMCAwMTYuMDc2Mi02LjA3NzJjLjg5OTggMCAxLjc1MjcuMTk2IDIuNTIyNi41NDYtMy4yOTM1IDIuOTA5NS01Ljg0MzIgNi4yOTMtNy4zNTMgOS4yMTc3YTYuMDUxMiA2LjA1MTIgMCAwMS0xLjI0NTgtMy42ODc1bTEyLjM0MDMgMi45MTI2YTYuODYyIDYuODYyIDAgMDAuNjQxOS0yLjkxMjZjMC0yLjM5OTctMS4yMjQ4LTQuNTE0NC0zLjA4NDYtNS43NTMyYTQ5LjYwNzIgNDkuNjA3MiAwIDAxMy41ODI1LTMuMzQxNkEzMS4xNzI3IDMxLjE3MjcgMCAwMDEwLjExIDUuMDkwM2E2LjkwNyA2LjkwNyAwIDAwLTguNDM2OCAxMC42MjY1Qy4zNDkzIDE4LjU3OTUuMTE5MyAyMC44NzgxIDEuMjg1IDIxLjY1NGMxLjI0ODkuODMyIDMuOTYyNS0uNjc2OSA1LjU5MDMtMy4xMzQ1IDAgMC0yLjUxNzcgMi4yNzM2LTMuOTAxNSAxLjc1MTctLjg1MTktLjMyMi0uODU0OS0xLjYyNDgtLjE1Mi0zLjQ5MjVhNi44NzEgNi44NzEgMCAwMDQuMDgzNSAxLjMzNzhjMS44OTM3IDAgMy42MDY1LS43NTk5IDQuODUzMy0xLjk5MTdsLjI0NS40NjJjMy4wMDk1LS4yNDUgMTEuOTk2My0uNDgzIDExLjk5NjMtLjQ4MyAwLS40MzEtNS45NTAyLS4wNC0xMC44MzI1LTEuOTc5NyIvPjwvc3ZnPg==","dark":true},"palantir":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZmIiByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+UGFsYW50aXI8L3RpdGxlPjxwYXRoIGQ9Ik0yMC4xNDcgMThMMTIgMjEuMTc4IDMuODUzIDE4IDIuNSAyMC4zNDMgMTIgMjRsOS41LTMuNjU3TDIwLjE0NyAxOHpNMTIgMGE5LjUgOS41IDAgMSAwIDAgMTkgOS41IDkuNSAwIDAgMCAwLTE5em0wIDE2LjA3OGE2LjU2OCA2LjU2OCAwIDEgMSAwLTEzLjEzNiA2LjU2OCA2LjU2OCAwIDAgMSAwIDEzLjEzNnoiLz48L3N2Zz4=","dark":true},"planet":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZmIiByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+UGxhbmV0PC90aXRsZT48cGF0aCBkPSJNMTIuODkxIDYuNTgyYy0xLjE1OSAwLTIuNC40NTctMy4yMTcgMS42MzNoLS4wMzNhMS41OSAxLjU5IDAgMCAwLTEuNTktMS41OWgtLjA0OHYxMC44NmExLjc5MiAxLjc5MiAwIDAgMCAxLjc4NCAxLjc4NHYtNC43MDNoLjAzNGMuMzQzLjU3MSAxLjI5IDEuNTM2IDMuMTg1IDEuNTM2IDIuODU3IDAgNC41NzItMi4zNTIgNC41NzItNC42MzguMDAyLTIuNDE2LTEuNjE2LTQuODgyLTQuNjg3LTQuODgyem0tLjA2NiA3Ljk3NWMtMS43MTQgMC0zLjA3LTEuMzg4LTMuMDctMy4yMTcgMC0xLjY2NiAxLjI0Mi0zLjIgMy4wMjMtMy4yIDEuODQ1IDAgMy4xMDMgMS42MTYgMy4xMDMgMy4yMzMtLjAwMSAxLjkwNS0xLjQ1NSAzLjE4NC0zLjA1NiAzLjE4NHpNMTIuMDAxIDI0QTEyIDEyIDAgMSAxIDI0IDEyLjAwMSAxMi4wMTMgMTIuMDEzIDAgMCAxIDEyLjAwMSAyNHptMC0yMi44NTZhMTAuODYxIDEwLjg2MSAwIDEgMCAxMC44NjEgMTAuODYyIDEwLjg3IDEwLjg3IDAgMCAwLTEwLjg2LTEwLjg2MnoiLz48L3N2Zz4=","dark":true},"spacex":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZmIiByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+U3BhY2VYPC90aXRsZT48cGF0aCBkPSJNMjQgNy40MTdDOC44ODIgOC4yODcgMS44OSAxNC43NS4zMjEgMTYuMjhMMCAxNi41ODNoMi43OTdDMTAuMzU2IDkuMDA1IDIxLjIyMiA3LjY2MyAyNCA3LjQxN3ptLTE3LjA0NiA2LjM1Yy0uNDcyLjMyMS0uOTQ1LjY4LTEuMzk4IDEuMDJsMi40NTcgMS43OTZoMi43Nzh6TTIuOTQ4IDEwLjhILjE4OWwzLjI1IDIuMzgxYy40NzMtLjMyMSAxLjAyLS42NjEgMS41MTItLjk0NVoiLz48L3N2Zz4=","dark":true}};
 
 </script>
 <script>/* charts.js */
@@ -3626,13 +4640,13 @@ DTM.logos = {};
   }
 
   function monogram(name) {
-    const words = name.replace(/[^A-Za-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w && !/^(the|of|and|inc|corp|co|ltd|plc|ag|se|sa|group|industries|technologies|systems|holdings)$/i.test(w));
+    const words = name.replace(/[^A-Za-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w && !/^(the|of|and|inc|corp|co|ltd|plc|ag|se|sa|group|industries|technologies|systems|holdings|defense|security)$/i.test(w));
     if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
     const w = words[0] || name;
+    if (w.length <= 4 && w === w.toUpperCase()) return w;
     const caps = w.match(/[A-Z0-9]/g) || [];
-    if (caps.length >= 2 && caps.length <= 3 && w.length > 3) return caps.join('');
-    if (w.length <= 3) return w.toUpperCase();
-    return w[0].toUpperCase();
+    if (caps.length >= 2 && caps.length <= 3) return caps.join('');
+    return w[0].toUpperCase() + (w[1] || '').toLowerCase();
   }
   function hue(id) { let h = 0; for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 360; return h; }
 
@@ -3640,7 +4654,7 @@ DTM.logos = {};
   let remoteLogos = false;
   const FAVICON = (d) => `https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=128`;
   function monoHTML(c) {
-    const m = monogram(c.name);
+    const m = monogram(c.short || c.name);
     return `<span class="mono${m.length >= 3 ? ' len-3' : ''}">${esc(m)}</span>`;
   }
   function logoHTML(c) {
@@ -3651,7 +4665,7 @@ DTM.logos = {};
       return `<span class="logo ${local.dark ? 'is-dark' : 'is-light'}" style="${style}"><img src="${local.src}" alt="" loading="lazy" decoding="async"></span>`;
     }
     if (remoteLogos && c.domain) {
-      return `<span class="logo is-light" style="${style}" data-mono="${esc(monogram(c.name))}"><img src="${FAVICON(c.domain)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"></span>`;
+      return `<span class="logo is-light" style="${style}" data-mono="${esc(monogram(c.short || c.name))}"><img src="${FAVICON(c.domain)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"></span>`;
     }
     return `<span class="logo" style="${style}">${monoHTML(c)}</span>`;
   }
@@ -3792,7 +4806,7 @@ DTM.logos = {};
     { key: 'value', label: 'Mkt cap / Raised', get: (c) => c.value, num: true },
     { key: 'val', label: 'EV / Last valuation', get: (c) => (c.isPublic ? c.valuation && c.valuation.evUsdM : c.lastPost && c.lastPost.postUsdM), num: true },
     { key: 'rev', label: 'Revenue (≈USD)', get: (c) => c.latestRevenue && c.latestRevenue.usdM, num: true },
-    { key: 'evs', label: 'EV / Sales', get: (c) => c.valuation && c.valuation.evSales, num: true }
+    { key: 'evs', label: 'Sales multiple', get: (c) => c.valuation && c.valuation.evSales, num: true }
   ];
   function renderTable(visible) {
     const { key, dir } = state.tableSort;
@@ -3924,15 +4938,18 @@ DTM.logos = {};
     return `<div class="kpi${headline ? ' is-headline' : ''}"><span class="kpi-label">${esc(label)}</span><span class="kpi-value">${value}</span>${note ? `<span class="kpi-note">${note}</span>` : ''}</div>`;
   }
   const NA = '<span class="na">Not disclosed</span>';
+  const NC = '<span class="na">Not compiled</span>';
+  const salesLabel = (v) => (v && /^Market cap/i.test(v.basis || '') ? 'Price / Sales' : 'EV / Sales');
+  const ratio = (x) => (x == null ? '—' : x > 0 ? mult(x) : 'n/m');
 
   function kpisHTML(c) {
     if (c.isPublic) {
       const v = c.valuation || {};
       const r = c.latestRevenue;
       return kpi('Market cap', c.value == null ? NA : money(c.value), c.marketCap && c.marketCap.asOf ? esc(date(c.marketCap.asOf, true)) : '', true)
-        + kpi('Enterprise value', v.evUsdM != null ? money(v.evUsdM) : NA, v.asOf ? esc(date(v.asOf, true)) : '')
+        + kpi('Enterprise value', v.evUsdM != null ? money(v.evUsdM) : NC, v.evUsdM != null && v.asOf ? esc(date(v.asOf, true)) : '')
         + kpi('Revenue', r ? money(r.valueM, r.cur) : NA, r ? esc(r.label) : '')
-        + kpi('EV / Sales', mult(v.evSales) || NA, v.evSales != null ? esc(v.basis || 'Trailing twelve months') : '');
+        + kpi(salesLabel(v), v.evSales != null ? mult(v.evSales) : NC, v.evSales != null ? esc(v.basis || 'Trailing twelve months') : '');
     }
     const lr = c.lastRound;
     const r = c.latestRevenue;
@@ -4028,18 +5045,18 @@ DTM.logos = {};
       const v = c.valuation;
       if (!v) return `<p class="na">Valuation data not yet added for this company.</p>`;
       const stats = [
-        ['Market cap', c.value != null ? money(c.value) : '—', c.marketCap && c.marketCap.local ? `${money(c.marketCap.local.valueM, c.marketCap.local.cur)} local` : ''],
-        ['Enterprise value', v.evUsdM != null ? money(v.evUsdM) : '—', 'Market cap + net debt'],
-        ['EV / Sales', mult(v.evSales) || 'n/m', v.basis || 'Trailing twelve months'],
-        ['EV / EBITDA', v.evEbitda != null && v.evEbitda > 0 ? mult(v.evEbitda) : 'n/m', 'Trailing twelve months'],
-        ['P / E', v.pe != null && v.pe > 0 ? mult(v.pe) : 'n/m', 'Trailing twelve months'],
-        ['Forward P / E', v.fwdPe != null && v.fwdPe > 0 ? mult(v.fwdPe) : 'n/m', 'Next twelve months, consensus']
-      ];
+        ['Market cap', c.value != null ? money(c.value) : '—', c.marketCap && c.marketCap.local ? `${money(c.marketCap.local.valueM, c.marketCap.local.cur)} in local currency` : ''],
+        ['Enterprise value', v.evUsdM != null ? money(v.evUsdM) : '—', v.evUsdM != null ? 'Market cap + net debt' : 'Not compiled'],
+        [salesLabel(v), ratio(v.evSales), v.evSales != null ? (v.basis || 'Trailing twelve months') : 'Not compiled'],
+        ['EV / EBITDA', ratio(v.evEbitda), v.evEbitda != null ? 'Trailing twelve months' : 'Not compiled'],
+        ['P / E', ratio(v.pe), v.pe != null ? (v.peBasis || 'Latest fiscal year earnings') : 'Not compiled'],
+        ['Forward P / E', ratio(v.fwdPe), v.fwdPe != null ? 'Next twelve months, consensus' : 'Not compiled']
+      ].filter((x, i) => i < 3 || x[1] !== '—');
       const seg = subIndex[c.subs[0]].seg;
       const peers = companies.filter((p) => p.isPublic && p.valuation && p.valuation.evSales != null && p.segs.includes(seg.id))
         .sort((a, b) => b.valuation.evSales - a.valuation.evSales);
       const chart = peers.length >= 3 && v.evSales != null
-        ? `<div class="section"><h3 class="section-title">EV / Sales vs public peers in ${esc(seg.name)}</h3>${C.rows(peers.map((p) => ({ label: p.short || p.name, value: p.valuation.evSales, display: mult(p.valuation.evSales), highlight: p.id === c.id })), { format: mult, label: 'EV to sales comparison' })}<p class="chart-caption">Peer multiples use each company's own as-of date. n/m = not meaningful (negative earnings).</p></div>` : '';
+        ? `<div class="section"><h3 class="section-title">Sales multiple vs public peers in ${esc(seg.name)}</h3>${C.rows(peers.map((p) => ({ label: p.short || p.name, value: p.valuation.evSales, display: mult(p.valuation.evSales), highlight: p.id === c.id, tip: `${p.name}: ${mult(p.valuation.evSales)} (${salesLabel(p.valuation)}, ${p.valuation.basis || 'TTM'})` })), { format: mult, label: 'Sales multiple comparison' })}<p class="chart-caption">EV / Sales where enterprise value was compiled, otherwise market cap / sales. Each peer uses its own as-of date; hover a bar for its basis.</p></div>` : '';
       return `<div class="section stat-grid">${stats.map(([l, val, n]) => `<div class="stat"><span class="stat-label">${esc(l)}</span><span class="stat-value">${val}</span><span class="stat-note">${esc(n)}</span></div>`).join('')}</div>
         ${chart}${v.note ? `<div class="section prose"><p>${esc(v.note)}</p></div>` : ''}${srcHTML(v.src, v.asOf)}`;
     }
@@ -4163,7 +5180,12 @@ DTM.logos = {};
     const dlg = $('#detail');
     if (dlg.open) dlg.close();
   }
-  $('#detail').addEventListener('close', () => { state.open = null; setHash(''); hideChartTip(); });
+  $('#detail').addEventListener('close', () => {
+    if ($('#detail').open) return; // reopened before the queued close event ran
+    state.open = null;
+    setHash('');
+    hideChartTip();
+  });
 
   function setHash(h) {
     try {
@@ -4207,7 +5229,7 @@ DTM.logos = {};
       ['Market cap / Raised', (c) => (c.value == null ? '—' : `${money(c.value)} <span class="src">${c.isPublic ? 'market cap' : 'raised'}</span>`)],
       ['EV / Last valuation', (c) => (c.isPublic ? (c.valuation && c.valuation.evUsdM != null ? money(c.valuation.evUsdM) + ' <span class="src">EV</span>' : '—') : (c.lastPost ? money(c.lastPost.postUsdM) + ` <span class="src">post · ${esc(date(c.lastPost.date))}</span>` : '—'))],
       ['Revenue', (c) => (c.latestRevenue ? `${money(c.latestRevenue.valueM, c.latestRevenue.cur)} <span class="src">${esc(c.latestRevenue.label)}${c.latestRevenue.kind === 'estimate' ? ' est.' : ''}</span>` : '—')],
-      ['EV / Sales', (c) => (c.valuation && mult(c.valuation.evSales)) || '—'],
+      ['Sales multiple', (c) => (c.valuation && c.valuation.evSales != null ? `${mult(c.valuation.evSales)} <span class="src">${salesLabel(c.valuation)}</span>` : '—')],
       ['P / E', (c) => (c.valuation && c.valuation.pe > 0 ? mult(c.valuation.pe) : '—')],
       ['Key programs', (c) => esc((c.programs || []).slice(0, 4).map((p) => p.name).join(' · ') || '—')]
     ];
@@ -4269,7 +5291,7 @@ DTM.logos = {};
       const a = act.dataset.action;
       if (a === 'close') closeDetail();
       else if (a === 'nav' && act.dataset.to) openCompany(act.dataset.to, { tab: state.tab });
-      else if (a === 'compare') { toggleCompare(state.open); renderDetail(); }
+      else if (a === 'compare' && state.open) { toggleCompare(state.open); renderDetail(); }
       else if (a === 'uncompare') toggleCompare(act.dataset.id);
       else if (a === 'clear-compare') { state.compare = []; renderTray(); }
       else if (a === 'open-compare') openCompare();
