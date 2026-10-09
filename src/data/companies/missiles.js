@@ -75,7 +75,7 @@
   DTM.add({
     id: 'stratolaunch', name: 'Stratolaunch', domain: 'stratolaunch.com', status: 'private', stage: 'PE-owned',
     hq: 'Mojave, CA', country: 'US', founded: 2011,
-    subsegments: ['missiles.hypersonics'],
+    subsegments: ['missiles.hypertest'],
     oneLiner: 'Reusable Talon-A hypersonic test vehicles air-launched from the Roc carrier and a modified 747.',
     description: [
       'Stratolaunch provides hypersonic flight testing with Talon-A, an autonomous, reusable vehicle that flies above Mach 5 and lands on a runway. Talon-A is launched from Roc, the largest aircraft by wingspan, and now also from a modified Boeing 747.',
@@ -93,7 +93,7 @@
   DTM.add({
     id: 'hypersonix', name: 'Hypersonix Launch Systems', short: 'Hypersonix', domain: 'hypersonix.com', status: 'private', stage: 'Series A',
     hq: 'Brisbane', country: 'AU', founded: 2019,
-    subsegments: ['missiles.hypersonics'],
+    subsegments: ['missiles.hypertest', 'missiles.hypersonics'],
     oneLiner: 'Hydrogen-fuelled SPARTAN scramjet; DART AE flew above Mach 5 for DIU in 2026.',
     description: [
       'Hypersonix develops reusable hypersonic vehicles powered by its hydrogen-fuelled SPARTAN scramjet. Its 3.5 m DART AE flew on February 27, 2026 on a Rocket Lab HASTE from Wallops Island and was reported to exceed Mach 5.',
@@ -113,7 +113,7 @@
   DTM.add({
     id: 'kratos', name: 'Kratos Defense & Security', short: 'Kratos', domain: 'kratosdefense.com', status: 'public', ticker: 'KTOS', exchange: 'NASDAQ',
     hq: 'San Diego, CA', country: 'US', founded: 1994,
-    subsegments: ['missiles.hypersonics', 'uas.cca', 'missiles.propulsion'],
+    subsegments: ['missiles.hypersonics', 'missiles.hypertest', 'uas.cca', 'missiles.propulsion'],
     oneLiner: 'Neo-prime for affordable systems: Valkyrie uncrewed jets, hypersonic test (MACH-TB), engines and rocket motors.',
     description: [
       'Kratos builds affordable, attritable systems at production rates: the XQ-58 Valkyrie uncrewed combat aircraft, target drones, small turbojet engines, solid rocket motors and hypersonic test vehicles. It leads the MACH-TB hypersonic test bed program.',

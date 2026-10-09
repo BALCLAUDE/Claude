@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
+import { requested } from './requested-companies.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const url = pathToFileURL(path.join(root, 'defense-tech-map.html')).href;
@@ -78,6 +79,36 @@ test('every company profile renders all tabs without errors', async () => {
     return bad;
   });
   assert.deepEqual(failures, []);
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('every company named in the shared tables is on the map', async () => {
+  const { page } = await open();
+  const pairs = Object.entries(requested).flatMap(([table, rows]) => rows.map(([name, id]) => ({ table, name, id })));
+  const missing = await page.evaluate((list) => {
+    const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    return list.filter(({ name, id }) => {
+      const c = window.DTMApp.byId[id];
+      if (!c || !document.querySelector(`.board .tile[data-id="${id}"]`)) return true;
+      const key = norm(name.split(' ')[0]);
+      return !norm([c.name, c.short, c.formerly].join(' ')).includes(key);
+    }).map(({ table, name, id }) => `${table}: ${name} (${id})`);
+  }, pairs);
+  assert.deepEqual(missing, []);
+  await page.close();
+});
+
+test('comps-sheet estimates render on public profiles and flags show on tiles', async () => {
+  const { page, errors } = await open({}, '#kratos.valuation');
+  await page.locator('#detail').waitFor({ state: 'visible' });
+  const section = page.locator('#d-body .consensus');
+  await section.waitFor();
+  assert.match(await section.textContent(), /CY26E/);
+  assert.equal(await section.locator('.fin-table tbody tr').count(), 5);
+  await page.keyboard.press('Escape');
+  const flag = page.locator('.board .tile[data-id="dji"] .tile-flag').first();
+  assert.equal(await flag.textContent(), 'CN');
   assert.deepEqual(errors, []);
   await page.close();
 });

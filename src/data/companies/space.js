@@ -37,7 +37,7 @@
   DTM.add({
     id: 'rocket-lab', name: 'Rocket Lab', domain: 'rocketlabcorp.com', status: 'public', ticker: 'RKLB', exchange: 'NASDAQ',
     hq: 'Long Beach, CA', country: 'US', founded: 2006,
-    subsegments: ['space.launch', 'space.buses', 'missiles.hypersonics'],
+    subsegments: ['space.launch', 'space.buses', 'missiles.hypertest'],
     oneLiner: 'End-to-end space company: Electron and Neutron launch, satellite buses and SDA constellations, and HASTE hypersonic testing.',
     description: [
       'Rocket Lab is the second most active US launch provider with Electron, and its medium-lift Neutron is targeted for a first flight in Q4 2026. Its space systems business builds complete spacecraft and components, including solar arrays, reaction wheels and separation systems.',
@@ -712,5 +712,335 @@
     },
     valuation: { note: 'Market cap is about 8× the 2026 revenue guidance midpoint.', asOf: '2026-08-21', src: S('Equibles', 'https://equibles.com/stocks/VOYG') },
     programs: []
+  });
+
+  /* ---------------- Added from the space and hypersonics funding tables you provided ---------------- */
+  const TBL = S('Funding table you provided (as of Oct 2026)');
+
+  DTM.add({
+    id: 'sierra-space', name: 'Sierra Space', domain: 'sierraspace.com', status: 'private', stage: 'Series C',
+    hq: 'Louisville, CO', country: 'US', founded: 2021,
+    subsegments: ['space.stations', 'space.buses', 'missiles.propulsion'],
+    oneLiner: 'Dream Chaser spaceplane, LIFE habitat and a fast-growing defense business building SDA missile-tracking satellites.',
+    description: [
+      'Sierra Space, spun out of Sierra Nevada Corporation in 2021, is developing the Dream Chaser reusable spaceplane and the inflatable LIFE habitat. Dream Chaser\'s first flight was changed in 2025 to a free-flying demonstration.',
+      'Its defense unit, formally established in 2025, holds a $740M Space Development Agency contract for 18 Tranche 2 missile-tracking satellites. A March 2026 Series C of $550M valued the company at about $8B.'
+    ],
+    products: ['Dream Chaser', 'LIFE habitat', 'Missile-tracking satellites', 'Propulsion & thermal protection'],
+    funding: {
+      totalUsdM: 2270.6, roundCount: 4, lastDate: '2026-03', asOf: '2026-03',
+      rounds: [{ date: '2026-03', type: 'Series C', amountUsdM: 550, postUsdM: 8000, leads: ['LuminArx Capital Management'] }],
+      src: [TBL, S('Techleap (SpaceNews)', 'https://finder.techleap.nl/news/feed/sierra-space-raises-550m-in-series-c-funding-at-8b-valuation')]
+    },
+    programs: [
+      { name: 'SDA Tranche 2 Tracking Layer', ref: 'pwsa', customer: 'Space Development Agency', role: 'Prime', value: '$740M', status: 'Production', note: '18 missile-tracking satellites; first 9 structures delivered January 2026.' },
+      { name: 'NASA Commercial Resupply (Dream Chaser)', customer: 'NASA', role: 'Prime', status: 'Development' }
+    ]
+  });
+
+  DTM.add({
+    id: 'axiom-space', name: 'Axiom Space', short: 'Axiom', domain: 'axiomspace.com', status: 'private', stage: 'Growth',
+    hq: 'Houston, TX', country: 'US', founded: 2016,
+    subsegments: ['space.stations', 'space.buses'],
+    oneLiner: 'Commercial space station modules, private astronaut missions and NASA\'s Artemis lunar spacesuits.',
+    description: [
+      'Axiom Space runs private astronaut missions to the ISS and is building the first modules of a commercial space station, with the first module due to launch in 2028. It also builds the AxEMU spacesuits for NASA\'s Artemis lunar landings, with delivery planned for 2027.',
+      'It raised $350M in February 2026 and extended the round to more than $525M in June 2026, with MUFG Bank joining as an investor.'
+    ],
+    products: ['Axiom Station', 'AxEMU spacesuit', 'Orbital data center nodes'],
+    funding: {
+      totalUsdM: 1112.7, roundCount: 18, lastDate: '2026-06', asOf: '2026-06',
+      rounds: [{ date: '2026-02', type: 'Growth', amountUsdM: 350, leads: ['Type One Ventures', 'Qatar Investment Authority'] }, { date: '2026-06', type: 'Growth ext.', amountUsdM: 175, leads: ['MUFG Bank'] }],
+      src: [TBL, S('Bloomberg Government, Jun 2026', 'https://news.bgov.com/private-equity/axiom-space-raises-525-million-with-mufg-bank-as-new-investor')]
+    },
+    programs: [{ name: 'Artemis AxEMU spacesuits', customer: 'NASA', role: 'Prime', status: 'Development' }]
+  });
+
+  DTM.add({
+    id: 'varda', name: 'Varda Space Industries', short: 'Varda', domain: 'varda.com', status: 'private', stage: 'Series D',
+    hq: 'El Segundo, CA', country: 'US', founded: 2020,
+    subsegments: ['space.stations', 'missiles.hypertest'],
+    oneLiner: 'Reentry capsules that double as Mach 25 hypersonic test beds for the Air Force.',
+    description: [
+      'Varda flies W-series capsules that manufacture pharmaceuticals in orbit and return them to Earth, re-entering at around Mach 25. That makes each return a hypersonic flight test, and AFRL\'s Prometheus program has flown thermal-protection, navigation and other payloads on W-5 through W-9.',
+      'AFRL awarded a four-year, $48M reentry testing contract, following a $60M SpaceWERX STRATFI in 2023. Varda has more than a dozen launches booked through 2028.'
+    ],
+    leadership: [['Will Bruey', 'Co-founder & CEO']],
+    products: ['W-series capsule'],
+    funding: {
+      totalUsdM: 579, roundCount: 9, lastDate: '2026-09', asOf: '2026-09',
+      note: 'Includes a $251M Series D.',
+      src: [TBL, S('Fierce Pharma', 'https://www.fiercepharma.com/pharma/varda-brings-home-251m-series-d-fuel-space-based-drug-manufacturing')]
+    },
+    programs: [
+      { name: 'AFRL Prometheus reentry testing', ref: 'hypersonic-test', customer: 'AFRL', role: 'Prime', value: '$48M', year: 2024, status: 'Flying', src: S('AFWERX', 'https://afwerx.com/news/afwerx-spacewerx-sbir-sttr-program-revolutionizes-hypersonic-testing-with-commercial-re-entry-capsules/') },
+      { name: 'SpaceWERX STRATFI', customer: 'US Space Force / AFRL', role: 'Prime', value: '$60M', year: 2023, status: 'Complete' }
+    ]
+  });
+
+  DTM.add({
+    id: 'loft-orbital', name: 'Loft Orbital', short: 'Loft', domain: 'loftorbital.com', status: 'private', stage: 'Series C',
+    hq: 'San Francisco, CA', country: 'US', founded: 2017,
+    subsegments: ['space.buses'],
+    oneLiner: 'Space infrastructure as a service: hosts customer payloads and software on shared satellites.',
+    description: [
+      'Loft Orbital operates satellites that carry multiple customers\' sensors and software applications, so government and commercial users can fly missions without buying a dedicated spacecraft. It operates from San Francisco and Toulouse.'
+    ],
+    leadership: [['Pierre-Damien Vaujour', 'Co-founder & CEO']],
+    products: ['Longbow', 'Cockpit mission software'],
+    funding: { totalUsdM: 326.2, roundCount: 10, lastDate: '2026-06', asOf: '2026-06', src: TBL },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'enduro-sat', name: 'EnduroSat', domain: 'endurosat.com', status: 'private', stage: 'Series B',
+    hq: 'Sofia', country: 'BG', founded: 2015,
+    subsegments: ['space.buses'],
+    oneLiner: 'European small-satellite buses and shared satellite missions built at volume in Bulgaria.',
+    description: [
+      'EnduroSat builds modular small-satellite platforms and flies shared missions for commercial and government payloads from its factory in Sofia, Bulgaria.'
+    ],
+    leadership: [['Raycho Raychev', 'Founder & CEO']],
+    funding: { totalUsdM: 187.3, roundCount: 10, lastDate: '2025-10', asOf: '2025-10', src: TBL },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'ramon-space', name: 'Ramon.Space', domain: 'ramon.space', status: 'private', stage: 'Series B',
+    hq: 'Tel Aviv', country: 'IL', founded: 2004,
+    subsegments: ['space.buses'],
+    oneLiner: 'Radiation-hardened space computers and processors for satellites.',
+    description: [
+      'Ramon.Space makes radiation-resilient computing systems that let satellites run AI and signal processing on board.'
+    ],
+    funding: { totalUsdM: 43.5, roundCount: 3, lastDate: '2023-06', asOf: '2023-06', src: TBL },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'sophia-space', name: 'Sophia Space', status: 'private', stage: 'Seed',
+    hq: 'Pasadena, CA', country: 'US', founded: 2024,
+    subsegments: ['space.buses', 'sensors.comms'],
+    oneLiner: 'Orbital edge computing: satellites built to process data in space.',
+    description: [
+      'Sophia Space builds compute-heavy satellites to process sensor data in orbit, with a demonstration mission on an Apex Nova bus planned for 2027. In September 2026 it announced a $300M non-binding leasing framework with SLI to finance a 10-satellite constellation.'
+    ],
+    leadership: [['Rob DeMillo', 'Co-founder & CEO'], ['Leon Alkalai', 'Founder & Chairman']],
+    funding: {
+      totalUsdM: 14.6, roundCount: 4, lastDate: '2026-08', asOf: '2026-08',
+      note: 'Company announcements describe a $10M seed (March 2026) and a $7M SAFE (June 2026).',
+      src: [TBL, S('Satellite Today, Jun 2026', 'https://www.satellitetoday.com/technology/2026/06/23/sophia-space-raises-7m-selects-apex-space-bus-for-orbital-compute-demo/')]
+    },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'digantara', name: 'Digantara', domain: 'digantara.co.in', status: 'private', stage: 'Series A',
+    hq: 'Bengaluru', country: 'IN', founded: 2018,
+    subsegments: ['space.sda'],
+    oneLiner: 'Indian space surveillance company with its own SSA satellites and a US subsidiary.',
+    description: [
+      'Digantara builds space-based surveillance satellites and a space mission assurance platform that tracks objects in orbit, and has expanded into the US market.'
+    ],
+    leadership: [['Anirudh Sharma', 'Co-founder & CEO']],
+    funding: { totalUsdM: 64.4, roundCount: 5, lastDate: '2025-12', asOf: '2025-12', src: TBL },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'neuraspace', name: 'Neuraspace', domain: 'neuraspace.com', status: 'private', stage: 'Series A',
+    hq: 'Coimbra', country: 'PT', founded: 2020,
+    subsegments: ['space.sda'],
+    oneLiner: 'AI space traffic management with its own optical sensor network.',
+    description: [
+      'Neuraspace provides AI-based collision avoidance and space traffic management, backed by a growing network of telescopes, for satellite operators in Europe and beyond.'
+    ],
+    leadership: [['Chiara Manfletti', 'CEO']],
+    funding: { totalUsdM: 20.8, roundCount: 2, lastDate: '2026-08', asOf: '2026-08', src: TBL },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'fortastra', name: 'Fortastra', status: 'private', stage: 'Seed',
+    hq: '', country: 'US', founded: 2025,
+    subsegments: ['space.counterspace'],
+    oneLiner: 'Maneuverable bodyguard satellites that inspect and defend high-value spacecraft.',
+    description: [
+      'Fortastra builds intelligent, maneuverable spacecraft that use sensing, autonomy and defensive rendezvous and proximity operations to protect government and commercial satellites from threats such as co-orbital attackers.',
+      'Its $8M seed, led by Upfront Ventures, was announced in December 2025.'
+    ],
+    leadership: [['Mike Smayda', 'Founder & CEO']],
+    funding: {
+      totalUsdM: 38, roundCount: 2, lastDate: '2026-10', asOf: '2026-10',
+      rounds: [{ date: '2025-12', type: 'Seed', amountUsdM: 8, leads: ['Upfront Ventures'] }],
+      investors: ['Upfront Ventures', 'Generational Partners', 'Forward Deployed VC', 'Bloomberg Beta'],
+      src: [TBL, S('Payload', 'https://payloadspace.com/fortastra-lands-8m-seed-to-develop-orbital-defense-sats/')]
+    },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'd-orbit', name: 'D-Orbit', domain: 'dorbit.space', status: 'private', stage: 'Series C',
+    hq: 'Fino Mornasco', country: 'IT', founded: 2011,
+    subsegments: ['space.mobility'],
+    oneLiner: 'ION orbital transfer vehicles delivering satellites to precise orbits; Europe\'s space logistics leader.',
+    description: [
+      'D-Orbit operates the ION Satellite Carrier, an orbital transfer vehicle that deploys satellites to custom orbits and hosts payloads, and is developing in-orbit servicing.'
+    ],
+    leadership: [['Luca Rossettini', 'Founder & CEO']],
+    products: ['ION Satellite Carrier'],
+    funding: { totalUsdM: 248.7, roundCount: 14, lastDate: '2026-01', asOf: '2026-01', src: TBL },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'gitai', name: 'GITAI USA', domain: 'gitai.tech', status: 'private', stage: 'Subsidiary',
+    hq: 'Torrance, CA', country: 'US', founded: 2016,
+    subsegments: ['space.mobility', 'space.counterspace'],
+    oneLiner: 'Space robotics for on-orbit servicing and assembly; a Golden Dome interceptor awardee.',
+    description: [
+      'GITAI USA is the US arm of Japan\'s GITAI, which develops robotic arms, inchworm robots and rovers for on-orbit servicing, assembly and lunar operations. The parent company is listed in Tokyo.',
+      'It was one of 12 companies picked in April 2026 for Golden Dome space-based interceptor prototypes.'
+    ],
+    leadership: [['Sho Nakanose', 'Founder & CEO']],
+    funding: { totalUsdM: 81.7, roundCount: 8, lastDate: '2024-11', asOf: '2024-11', note: 'Funding shown for GITAI USA; the Japanese parent is listed on the Tokyo Stock Exchange.', src: TBL },
+    programs: [{ name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') }]
+  });
+
+  DTM.add({
+    id: 'benchmark-space', name: 'Benchmark Space Systems', short: 'Benchmark', domain: 'benchmarkspacesystems.com', status: 'private', stage: 'Series B',
+    hq: 'South Burlington, VT', country: 'US', founded: 2017,
+    subsegments: ['space.mobility'],
+    oneLiner: 'In-space chemical and electric propulsion for maneuverable satellites.',
+    description: [
+      'Benchmark builds propulsion systems, from non-toxic chemical thrusters to electric propulsion, that let small and medium satellites maneuver, a requirement for dynamic space operations.'
+    ],
+    leadership: [['Ryan McDevitt', 'Co-founder & CEO']],
+    products: ['Halcyon thrusters', 'Ocelot', 'Xantus'],
+    funding: { totalUsdM: 45.5, roundCount: 7, lastDate: '2025-07', asOf: '2025-07', src: TBL },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'katalyst', name: 'Katalyst Space Technologies', short: 'Katalyst', domain: 'katalystspace.com', status: 'private', stage: 'Seed',
+    hq: 'Flagstaff, AZ', country: 'US', founded: 2020,
+    subsegments: ['space.mobility'],
+    oneLiner: 'Robotic servicing spacecraft; flew NASA\'s mission to reboost the Swift observatory.',
+    description: [
+      'Katalyst builds robotic servicing spacecraft that can capture satellites never designed for servicing. NASA awarded it a $30M contract to boost the Swift space telescope\'s orbit with its LINK spacecraft. Reports in 2026 described the spacecraft in a spin after reaction-wheel problems.'
+    ],
+    leadership: [['Ghonhee Lee', 'CEO']],
+    products: ['LINK servicer'],
+    funding: { totalUsdM: 12.9, roundCount: 2, lastDate: '2026-06', asOf: '2026-06', src: TBL },
+    programs: [{ name: 'Swift observatory reboost', customer: 'NASA', role: 'Prime', value: '$30M', year: 2025, status: 'On orbit', src: S('KJZZ', 'https://www.kjzz.org/fronteras-desk/2025-10-27/flagstaff-based-company-wins-30m-contract-for-nasa-space-rescue-mission') }]
+  });
+
+  DTM.add({
+    id: 'thinkorbital', name: 'ThinkOrbital', domain: 'thinkorbital.com', status: 'private', stage: 'Seed',
+    hq: 'Lafayette, CO', country: 'US', founded: 2021,
+    subsegments: ['space.mobility'],
+    oneLiner: 'In-space welding, cutting and assembly of large orbital structures.',
+    description: [
+      'ThinkOrbital develops robotic tools for in-space fabrication, including electron-beam welding and cutting, to build and repair large structures in orbit.'
+    ],
+    leadership: [['Lee Rosen', 'Co-founder & CEO']],
+    funding: { totalUsdM: null, label: 'Undisclosed', roundCount: 2, lastDate: '2026-01', asOf: '2026-01', src: TBL },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'rogue-space', name: 'Rogue Space Systems', short: 'Rogue Space', domain: 'rogue.space', status: 'private', stage: 'Early',
+    hq: 'Laconia, NH', country: 'US', founded: 2020,
+    subsegments: ['space.mobility'],
+    oneLiner: 'Small orbital robots ("orbots") for inspection, servicing and debris work.',
+    description: [
+      'Rogue Space Systems builds small, maneuverable orbital robots for satellite inspection, servicing and space situational awareness.'
+    ],
+    leadership: [['Brook Leonard', 'CEO'], ['Jeromy Grimmett', 'Founder']],
+    funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2026-10', src: TBL },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'capella-space', name: 'Capella Space', short: 'Capella', domain: 'capellaspace.com', status: 'private', stage: 'Acquired (IonQ)',
+    hq: 'San Francisco, CA', country: 'US', founded: 2016,
+    subsegments: ['space.isr'],
+    oneLiner: 'High-resolution SAR satellites; acquired by quantum computing company IonQ in 2025.',
+    description: [
+      'Capella operates a constellation of synthetic aperture radar satellites providing high-resolution, all-weather imaging to US and allied defense and intelligence customers.',
+      'IonQ acquired Capella in 2025. The funding shown is what Capella raised before the acquisition.'
+    ],
+    funding: { totalUsdM: 234.3, roundCount: 11, lastDate: '2023-01', asOf: '2023-01', note: 'Raised before its 2025 acquisition by IonQ.', src: TBL },
+    programs: [{ name: 'Commercial SAR for the intelligence community', ref: 'eocl', customer: 'NRO / NGA', role: 'Data provider', status: 'Operational' }]
+  });
+
+  DTM.add({
+    id: 'northwood-space', name: 'Northwood Space', short: 'Northwood', domain: 'northwoodspace.io', status: 'private', stage: 'Series B',
+    hq: 'El Segundo, CA', country: 'US', founded: 2024,
+    subsegments: ['space.ground'],
+    oneLiner: 'Mass-produced phased-array ground stations; modernizing the Space Force\'s Satellite Control Network.',
+    description: [
+      'Northwood builds phased-array ground stations designed to be mass-produced, providing ground-to-space data links as a service.',
+      'In January 2026 it raised a $100M Series B led by Washington Harbour Partners and Andreessen Horowitz and won a $49.8M Space Force contract to modernize the Satellite Control Network.'
+    ],
+    leadership: [['Bridgit Mendler', 'Co-founder & CEO'], ['Griffin Cleverly', 'Co-founder']],
+    products: ['Portal ground station'],
+    funding: {
+      totalUsdM: 136.3, roundCount: 4, lastDate: '2026-03', asOf: '2026-03',
+      rounds: [{ date: '2026-01', type: 'Series B', amountUsdM: 100, leads: ['Washington Harbour Partners', 'Andreessen Horowitz'] }],
+      src: [TBL, S('Forbes Colombia, Feb 2026', 'https://forbes.co/2026/02/06/negocios/bridgit-mendler-la-exactriz-de-disney-que-se-convirtio-en-ceo-de-una-empresa-espacial')]
+    },
+    programs: [{ name: 'Satellite Control Network modernization', customer: 'US Space Force', role: 'Prime', value: '$49.8M', year: 2026, status: 'Development' }]
+  });
+
+  DTM.add({
+    id: 'antaris', name: 'Antaris', domain: 'antaris.space', status: 'private', stage: 'Series A',
+    hq: 'Los Altos, CA', country: 'US', founded: 2021,
+    subsegments: ['space.ground'],
+    oneLiner: 'Cloud software to design, simulate and operate satellite missions.',
+    description: [
+      'Antaris provides an end-to-end software platform, including digital twins, for designing, testing and operating satellites, aimed at shortening mission timelines.'
+    ],
+    leadership: [['Tom Barton', 'Co-founder & CEO'], ['Karthik Govindhasamy', 'Co-founder & CTO']],
+    funding: { totalUsdM: 35.7, roundCount: 5, lastDate: '2026-03', asOf: '2026-03', note: 'Includes a $28M Series A led by WestWave Capital (March 2026).', src: TBL },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'quindar', name: 'Quindar', domain: 'quindar.space', status: 'private', stage: 'Series A',
+    hq: 'Denver, CO', country: 'US', founded: 2021,
+    subsegments: ['space.ground'],
+    oneLiner: 'Cloud mission-control software for satellite fleets; a Golden Dome interceptor awardee.',
+    description: [
+      'Quindar builds cloud-native mission operations software that automates commanding and monitoring of satellite constellations. Its customers include the Air Force and NRO.',
+      'It raised an $18M Series A led by Washington Harbour Partners in November 2025 and was one of 12 Golden Dome space-based interceptor awardees in April 2026.'
+    ],
+    leadership: [['Nate Hamet', 'Co-founder & CEO']],
+    funding: { totalUsdM: 26.5, roundCount: 5, lastDate: '2026-06', asOf: '2026-06', src: TBL },
+    programs: [{ name: 'Golden Dome space-based interceptor prototype', ref: 'golden-dome', customer: 'US Space Force', role: '1 of 12 awardees', value: 'Up to $3.2B (pool)', year: 2026, status: 'Prototype', src: S('MeriTalk, Apr 2026', 'https://www.meritalk.com/articles/space-force-taps-12-companies-for-golden-dome-space-based-interceptor/') }]
+  });
+
+  DTM.add({
+    id: 'auria', name: 'Auria', domain: 'auriaspace.com', status: 'private', stage: 'PE-owned',
+    hq: 'Colorado Springs, CO', country: 'US', founded: 2024,
+    subsegments: ['space.ground'],
+    oneLiner: 'Space Force ground systems, SATCOM and mission-planning software roll-up backed by Enlightenment Capital.',
+    description: [
+      'Auria was formed in 2024 when Enlightenment Capital combined Boecore, Ascension Engineering, Orbit Logic and La Jolla Logic. It provides ground systems, SATCOM, mission planning and DevSecOps for the Space Force, and bought BCubed Engineering in February 2026.'
+    ],
+    funding: { totalUsdM: null, label: 'PE-owned', asOf: '2026-02', note: 'Owned by Enlightenment Capital.', src: S('Business Wire, Feb 2026', 'https://www.businesswire.com/news/home/20260203910428/en/Auria-Announces-the-Acquisition-of-BCubed') },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'sphinx-defense', name: 'Sphinx Defense', status: 'private', stage: 'Early',
+    hq: 'Washington, DC', country: 'US', founded: 2020,
+    subsegments: ['space.ground'],
+    oneLiner: 'Vehicle-agnostic ground communications that let operators use many antenna networks.',
+    description: [
+      'Sphinx Defense builds national-security ground software that connects satellite operators to many antenna networks and moves data in near real time. It won a $9.5M Space Force prototype contract in 2025 and is on a $1B ground-software IDIQ.'
+    ],
+    funding: { totalUsdM: null, label: 'Undisclosed', asOf: '2026-10', src: TBL },
+    programs: [{ name: 'Space Force ground communications prototype', customer: 'US Space Force', role: 'Prime', value: '$9.5M', year: 2025, status: 'Prototype' }]
   });
 })();

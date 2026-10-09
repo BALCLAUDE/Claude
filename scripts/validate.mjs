@@ -90,6 +90,8 @@ export function validate(D) {
         if (f.totalUsdM != null && !isNum(f.totalUsdM)) errors.push(`${w} funding.totalUsdM must be a number or null`);
         if (f.totalUsdM == null && !f.label) warnings.push(`${w} undisclosed funding without label`);
         if (!isDate(f.asOf)) errors.push(`${w} funding.asOf missing`);
+        if (f.roundCount != null && !isNum(f.roundCount)) errors.push(`${w} funding.roundCount must be a number`);
+        if (f.lastDate != null && !isDate(f.lastDate)) errors.push(`${w} funding.lastDate invalid`);
         checkSrc(f.src, `${w} funding`, errors);
         for (const r of f.rounds || []) {
           if (!isDate(r.date)) errors.push(`${w} round date invalid: ${r.date}`);
@@ -108,11 +110,22 @@ export function validate(D) {
         checkSrc(c.valuation.src, `${w} valuation`, errors);
       }
     }
+    if (c.flag != null && typeof c.flag !== 'string') errors.push(`${w} flag must be text`);
     for (const p of c.programs || []) {
       if (!p.name) errors.push(`${w} program missing name`);
       if (p.ref && !programs.has(p.ref)) errors.push(`${w} unknown program ref ${p.ref}`);
     }
     if (!(c.programs || []).length) warnings.push(`${w} no programs listed`);
+  }
+  for (const [id, k] of Object.entries(D.consensus || {})) {
+    const co = D.companies.find((c) => c.id === id);
+    if (!co) errors.push(`[consensus:${id}] no company with this id`);
+    else if (co.status !== 'public') errors.push(`[consensus:${id}] consensus is only for public companies`);
+    checkSrc(k.src, `[consensus:${id}]`, errors);
+    if (!k.undated && !isDate(k.asOf)) errors.push(`[consensus:${id}] needs asOf or undated: true`);
+    for (const key of ['sales', 'growth', 'ebitdaMargin', 'evSales', 'evEbitda']) {
+      if (!Array.isArray(k[key]) || k[key].length !== 2) errors.push(`[consensus:${id}] ${key} must be [CY25E, CY26E]`);
+    }
   }
   return { errors, warnings };
 }

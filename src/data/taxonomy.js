@@ -7,7 +7,7 @@ DTM.meta = {
   title: 'Defense Tech Market Map',
   edition: 'Q4 2026',
   asOf: '2026-10-09',
-  note: 'Curated snapshot compiled in October 2026. Every figure carries its own as-of date and source, and values a company has not disclosed are marked as such. Where a figure is our own calculation or a third-party estimate, the profile says so. Non-USD market caps are converted to USD at approximate 2026 exchange rates.'
+  note: 'Curated snapshot compiled in October 2026. Every figure carries its own as-of date and source, and values a company has not disclosed are marked as such. Where a figure is our own calculation or a third-party estimate, the profile says so. Non-USD market caps are converted to USD at approximate 2026 exchange rates. Companies added from the funding tables and comps sheet provided for this edition cite them as their source; the comps sheet is undated.'
 };
 
 DTM.segments = [
@@ -16,11 +16,13 @@ DTM.segments = [
     blurb: 'Launch, spacecraft, and the sensing and maneuvering capabilities that make space a warfighting domain.',
     subsegments: [
       { id: 'space.launch', name: 'Launch', blurb: 'Small, medium and heavy lift, including responsive launch for national security payloads.' },
-      { id: 'space.buses', name: 'Satellites & Buses', blurb: 'Spacecraft platforms and satellite manufacturing at constellation scale.' },
+      { id: 'space.buses', name: 'Satellites, Buses & Payload Hosting', blurb: 'Spacecraft platforms, satellite manufacturing at constellation scale and hosted payloads.' },
       { id: 'space.sda', name: 'Space Domain Awareness', blurb: 'Tracking and characterizing objects and threats in orbit.' },
       { id: 'space.counterspace', name: 'Orbital Intercept & Counterspace', blurb: 'Maneuverable spacecraft for rendezvous, inspection and space control.' },
       { id: 'space.mobility', name: 'In-Space Mobility & Servicing', blurb: 'Orbital transfer vehicles, refueling, docking and on-orbit servicing.' },
-      { id: 'space.isr', name: 'Space ISR & Earth Observation', blurb: 'EO, SAR and RF sensing from orbit for intelligence and targeting.' }
+      { id: 'space.isr', name: 'Space ISR & Earth Observation', blurb: 'EO, SAR and RF sensing from orbit for intelligence and targeting.' },
+      { id: 'space.stations', name: 'Stations, Spaceplanes & Reentry', blurb: 'Commercial space stations, spaceplanes and reentry capsules that return cargo and experiments.' },
+      { id: 'space.ground', name: 'Ground Systems & Mission Ops', blurb: 'Ground stations, terminals and software to operate spacecraft and constellations.' }
     ]
   },
   {
@@ -28,10 +30,11 @@ DTM.segments = [
     blurb: 'Affordable mass, long-range fires and the propulsion and energetics supply chain behind them.',
     subsegments: [
       { id: 'missiles.propulsion', name: 'Propulsion & Rocket Motors', blurb: 'Solid rocket motors and liquid engines for missiles and interceptors.' },
-      { id: 'missiles.hypersonics', name: 'Hypersonics', blurb: 'Hypersonic weapons, test beds and high-speed aircraft.' },
+      { id: 'missiles.hypersonics', name: 'Hypersonic Weapons & Vehicles', blurb: 'Hypersonic weapons and high-speed aircraft.' },
+      { id: 'missiles.hypertest', name: 'Hypersonic Test & Reentry', blurb: 'Reusable hypersonic test beds, reentry vehicles and flight-test services.' },
       { id: 'missiles.strike', name: 'Low-Cost Strike & Cruise Missiles', blurb: 'Producible long-range munitions built for volume.' },
       { id: 'missiles.loitering', name: 'Loitering Munitions', blurb: 'One-way attack and loitering strike systems.' },
-      { id: 'missiles.energetics', name: 'Energetics & Ordnance', blurb: 'Explosives, propellants and munitions production capacity.' }
+      { id: 'missiles.energetics', name: 'Energetics, Ordnance & Materials', blurb: 'Explosives, propellants, thermal-protection materials and munitions production capacity.' }
     ]
   },
   {
@@ -42,7 +45,9 @@ DTM.segments = [
       { id: 'uas.tactical', name: 'Tactical & Group 3 UAS', blurb: 'Fixed-wing and VTOL drones for brigade- and division-level ISR.' },
       { id: 'uas.cca', name: 'Collaborative Combat Aircraft', blurb: 'Group 4–5 jet-powered uncrewed aircraft that fly alongside crewed fighters.' },
       { id: 'uas.autonomy', name: 'Autonomy Software', blurb: 'AI pilots, mission autonomy and drone operating systems.' },
-      { id: 'uas.components', name: 'Components & Supply Chain', blurb: 'Motors, flight controllers, cameras and NDAA-compliant parts.' }
+      { id: 'uas.components', name: 'Components & Supply Chain', blurb: 'Motors, flight controllers, cameras and NDAA-compliant parts.' },
+      { id: 'uas.commercial', name: 'Commercial, Delivery & Public Safety', blurb: 'Dual-use drones for delivery, inspection, mapping and first responders.' },
+      { id: 'uas.airspace', name: 'Airspace Management & UTM', blurb: 'Traffic management, airspace authorization and detect-and-avoid for drones.' }
     ]
   },
   {
@@ -52,7 +57,8 @@ DTM.segments = [
       { id: 'cuas.kinetic', name: 'Kinetic Interceptors', blurb: 'Hit-to-kill drones, low-cost interceptor missiles and gun-based defeat.' },
       { id: 'cuas.de', name: 'Directed Energy & HPM', blurb: 'High-energy lasers and high-power microwave systems.' },
       { id: 'cuas.sensing', name: 'Detection & Sensing', blurb: 'Radar, RF and acoustic sensing to find and track small drones.' },
-      { id: 'cuas.ew', name: 'EW & Cyber Takeover', blurb: 'RF jamming, protocol takeover and other non-kinetic defeat.' }
+      { id: 'cuas.ew', name: 'EW & Cyber Takeover', blurb: 'RF jamming, protocol takeover and other non-kinetic defeat.' },
+      { id: 'cuas.missiledefense', name: 'Missile Defense', blurb: 'Interceptors and architectures that defeat ballistic, cruise and hypersonic missiles.' }
     ]
   },
   {
@@ -112,10 +118,11 @@ DTM.segments = [
 DTM.regions = [
   { id: 'us', name: 'United States', countries: ['US'] },
   { id: 'uk', name: 'United Kingdom', countries: ['UK'] },
-  { id: 'eu', name: 'Europe', countries: ['DE', 'FR', 'IT', 'SE', 'NO', 'FI', 'EE', 'PL', 'NL', 'ES', 'PT', 'DK', 'CH', 'LT', 'UA', 'CZ', 'BE', 'AT'] },
+  { id: 'eu', name: 'Europe', countries: ['DE', 'FR', 'IT', 'SE', 'NO', 'FI', 'EE', 'PL', 'NL', 'ES', 'PT', 'DK', 'CH', 'LT', 'UA', 'CZ', 'BE', 'AT', 'BG', 'HR'] },
   { id: 'il', name: 'Israel', countries: ['IL'] },
   { id: 'apac', name: 'Asia-Pacific', countries: ['AU', 'NZ', 'JP', 'KR', 'TW', 'SG', 'IN'] },
-  { id: 'other', name: 'Canada & other', countries: ['CA'] }
+  { id: 'other', name: 'Canada & other', countries: ['CA'] },
+  { id: 'cn', name: 'China (non-allied)', countries: ['CN'] }
 ];
 
 DTM.countryNames = {
@@ -123,5 +130,5 @@ DTM.countryNames = {
   NO: 'Norway', FI: 'Finland', EE: 'Estonia', PL: 'Poland', NL: 'Netherlands', ES: 'Spain', PT: 'Portugal',
   DK: 'Denmark', CH: 'Switzerland', LT: 'Lithuania', UA: 'Ukraine', CZ: 'Czechia', BE: 'Belgium', AT: 'Austria',
   IL: 'Israel', AU: 'Australia', NZ: 'New Zealand', JP: 'Japan', KR: 'South Korea', TW: 'Taiwan',
-  SG: 'Singapore', IN: 'India', CA: 'Canada'
+  SG: 'Singapore', IN: 'India', CA: 'Canada', BG: 'Bulgaria', HR: 'Croatia', CN: 'China'
 };

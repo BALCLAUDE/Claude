@@ -27,6 +27,7 @@
   --chart-grid: #e3e8eb;
   --good: #1d7a46;
   --bad: #b3261e;
+  --flag: #b3261e;
   --scrim: rgba(9, 15, 20, 0.42);
   --shadow-1: 0 1px 2px rgba(14, 26, 34, 0.06), 0 2px 8px rgba(14, 26, 34, 0.05);
   --shadow-2: 0 2px 6px rgba(14, 26, 34, 0.08), 0 18px 48px rgba(14, 26, 34, 0.18);
@@ -77,6 +78,8 @@
     --chart-grid: #222b32;
     --good: #4cb87a;
     --bad: #f07067;
+  --flag: #c13b2f;
+    --flag: #c13b2f;
     --scrim: rgba(0, 0, 0, 0.6);
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25);
     --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.5), 0 18px 48px rgba(0, 0, 0, 0.55);
@@ -110,6 +113,7 @@
   --chart-grid: #222b32;
   --good: #4cb87a;
   --bad: #f07067;
+  --flag: #c13b2f;
   --scrim: rgba(0, 0, 0, 0.6);
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25);
   --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.5), 0 18px 48px rgba(0, 0, 0, 0.55);
@@ -505,6 +509,23 @@ main { padding-top: 20px; }
   font-variant-numeric: tabular-nums;
 }
 .tile .metric.is-undisclosed { background: transparent; color: var(--ink-3); border: 1px dashed var(--rule-strong); }
+.tile[data-flag] { outline: 1px dashed var(--flag); outline-offset: -1px; }
+.tile-flag {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: var(--flag);
+  color: var(--on-pill);
+  font-family: var(--font-data);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+.hovercard .hc-flag { color: var(--bad); font-weight: 600; font-size: var(--step--2); }
+.badge.flag { --c: var(--flag); }
 
 .logo {
   position: relative;

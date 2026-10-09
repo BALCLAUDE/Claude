@@ -16,23 +16,24 @@ An interactive market map of the US and allied defense technology sector. It shi
   - Sensors, EW & Comms
   - Manufacturing & Energy
   - Primes & Mid-Tier (a separate column)
+- **Subsegments added in the Q4 2026 update:** Stations, Spaceplanes & Reentry and Ground Systems & Mission Ops (Space); Hypersonic Test & Reentry (Missiles); Commercial, Delivery & Public Safety and Airspace Management & UTM (Drones); and Missile Defense (Counter-UAS & Air Defense).
 - **135 companies.** 53 are public and show their **market cap** (blue). 82 are private and show **total funding raised** (orange).
 - **Companies that span several subsegments** appear in each one. Hovering one copy highlights the others.
 - **Click any tile** for a profile with these tabs:
   - **Company description**
   - **Financials:** revenue history, margins, backlog for public companies, and funding rounds for private ones.
-  - **Valuation:** multiples with a peer chart for public companies; post-money history and step-ups for private ones.
+  - **Valuation:** multiples with a peer chart for public companies; post-money history and step-ups for private ones. Public companies on the shared comps sheet also show its CY25E/CY26E street estimates and an EV / CY26E sales peer chart.
   - **Key programs**
   - **Peers**
 
 ## Features
 
 - Search across names, tickers, programs, investors and products. Press `/` to focus the search box.
-- Filters for Public / Private and for region (US, UK, Europe, Israel, Asia-Pacific, Canada).
+- Filters for Public / Private and for region (US, UK, Europe, Israel, Asia-Pacific, Canada, and China for non-allied companies).
 - **Program Lens:** highlight every company on a program such as Golden Dome, CCA, SDA PWSA, NSSL, Replicator or Affordable Mass Missiles.
 - Group by subsegment, founding era or funding stage. Sort by size, name or founding year.
 - **Scale by size** enlarges the largest public companies and the best-funded private companies.
-- **Table view** with sortable columns. Non-USD revenue is converted to USD in this view.
+- **Table view** with sortable columns, including EV / CY26E sales from the comps sheet. Non-USD revenue is converted to USD in this view.
 - **Compare tray:** pin up to four companies for a side-by-side comparison.
 - **Deep links**, e.g. `defense-tech-map.html#anduril.programs`.
 - Light and dark themes, keyboard navigation, and a phone layout.
@@ -45,6 +46,9 @@ An interactive market map of the US and allied defense technology sector. It shi
 - Where we calculated a figure ourselves (for example an EV less cash, a market cap from price × shares, or a price/sales ratio), the profile note says so.
 - Non-USD market caps are converted at approximate 2026 exchange rates, listed at the top of `src/data/companies/primes.js`.
 - Private-company funding totals often differ between trackers. The profile notes say which figure is shown and why.
+- **Shared funding tables.** Companies added from the hypersonics, space, drone and missile funding tables shared for this update use those tables' total raised, round count and last funding date, cited as such. The drone (mid-2025) and missile (late 2025) tables are older, so later rounds found in research are added on top and explained in the note. Companies already on the map keep their researched figures.
+- **Comps sheet.** The shared public comps sheet is stored in `src/data/consensus.js` and shown as street estimates in the Valuation tab. The sheet is undated, so its prices and market caps may differ from the dated market cap on the tile.
+- **Non-allied companies.** DJI is included for completeness because it appears in the drone funding table. Its tile carries a red "CN" flag, and its profile explains the US restrictions on it.
 
 ## Editing the data
 
@@ -63,7 +67,11 @@ Each company has:
 
 Public companies also add `ticker`, `exchange`, `marketCap {usdM, asOf, src}`, `financials {cur, fyEnd, periods[], backlog, src}` and `valuation {evUsdM, evSales, basis, pe, asOf, src}`.
 
-Private companies also add `funding {totalUsdM, asOf, src, rounds[], investors[], note}`, and optionally `revenue {valueUsdM, period, kind, src}` and `valuation {postUsdM, date, src}`.
+Private companies also add `funding {totalUsdM, asOf, src, rounds[], investors[], note}`, and optionally `revenue {valueUsdM, period, kind, src}` and `valuation {postUsdM, date, src}`. When only a total is known (for example from a funding table), add `funding.roundCount` and `funding.lastDate`. Use `totalUsdM: null, label: 'Undisclosed'` when there's no disclosed total.
+
+Optional for any company: `short` (tile name), `formerly` (former name, searchable), `employees`, and `flag` / `flagShort` (a warning shown on the tile and in the profile).
+
+Street estimates live in `src/data/consensus.js`, keyed by public company id.
 
 All amounts are in **millions**. A source is `{ t: 'label', u: 'https://…' }`.
 

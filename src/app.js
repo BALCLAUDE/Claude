@@ -75,11 +75,14 @@
       : withPost.length ? { postUsdM: withPost[withPost.length - 1].postUsdM, date: withPost[withPost.length - 1].date, type: withPost[withPost.length - 1].type, src: withPost[withPost.length - 1].src } : null;
     c.fx = c.marketCap && c.marketCap.local && c.marketCap.local.valueM ? c.marketCap.usdM / c.marketCap.local.valueM : 1;
     c.latestRevenue = latestRevenue(c);
+    c.consensus = (D.consensus && D.consensus[c.id]) || null;
+    c.roundCount = c.funding && c.funding.roundCount != null ? c.funding.roundCount : c.rounds.length || null;
+    c.lastFunding = (c.funding && c.funding.lastDate) || (c.lastRound && c.lastRound.date) || null;
     c.isBig = c.value != null && (c.isPublic ? c.value >= 25000 : c.value >= 1500);
     c.region = regionOf[c.country] || 'other';
     c.programRefs = new Set((c.programs || []).map((p) => p.ref).filter(Boolean));
     c.hay = [
-      c.name, c.ticker, c.exchange, c.oneLiner, c.hq, D.countryNames[c.country], c.stage,
+      c.name, c.ticker, c.exchange, c.oneLiner, c.hq, D.countryNames[c.country], c.stage, c.flag, c.formerly,
       (c.products || []).join(' '), (c.tags || []).join(' '),
       (c.programs || []).map((p) => `${p.name} ${p.customer || ''} ${p.ref ? (programIndex[p.ref] || {}).name : ''}`).join(' '),
       ((c.funding && c.funding.investors) || []).join(' '),
@@ -206,8 +209,8 @@
     if (c.isBig) cls.push('is-big');
     if (state.lens && inLens(c)) cls.push('in-lens');
     const undisclosed = c.value == null;
-    return `<button class="${cls.join(' ')}" type="button" data-id="${c.id}" data-status="${c.isPublic ? 'public' : 'private'}" aria-label="${esc(`${c.name}, ${c.isPublic ? 'public' : 'private'}, ${metricLong(c)}`)}">
-      ${logoHTML(c)}<span class="name">${esc(c.short || c.name)}</span><span class="metric${undisclosed ? ' is-undisclosed' : ''}">${esc(metricText(c))}</span></button>`;
+    return `<button class="${cls.join(' ')}" type="button" data-id="${c.id}" data-status="${c.isPublic ? 'public' : 'private'}"${c.flag ? ' data-flag' : ''} aria-label="${esc(`${c.name}, ${c.isPublic ? 'public' : 'private'}, ${metricLong(c)}${c.flag ? ', ' + c.flag : ''}`)}">
+      ${c.flag ? `<span class="tile-flag" title="${esc(c.flag)}">${esc(c.flagShort || '!')}</span>` : ''}${logoHTML(c)}<span class="name">${esc(c.short || c.name)}</span><span class="metric${undisclosed ? ' is-undisclosed' : ''}">${esc(metricText(c))}</span></button>`;
   }
 
   /* ---------------------------------------------------------------- board */
@@ -268,7 +271,8 @@
     { key: 'value', label: 'Mkt cap / Raised', get: (c) => c.value, num: true },
     { key: 'val', label: 'EV / Last valuation', get: (c) => (c.isPublic ? c.valuation && c.valuation.evUsdM : c.lastPost && c.lastPost.postUsdM), num: true },
     { key: 'rev', label: 'Revenue (≈USD)', get: (c) => c.latestRevenue && c.latestRevenue.usdM, num: true },
-    { key: 'evs', label: 'Sales multiple', get: (c) => c.valuation && c.valuation.evSales, num: true }
+    { key: 'evs', label: 'Sales multiple', get: (c) => c.valuation && c.valuation.evSales, num: true },
+    { key: 'fwd', label: 'EV / Sales CY26E (sheet)', get: (c) => c.consensus && c.consensus.evSales[1], num: true }
   ];
   function renderTable(visible) {
     const { key, dir } = state.tableSort;
@@ -295,6 +299,7 @@
           <td class="num">${v == null ? '—' : money(v)}</td>
           <td class="num">${c.latestRevenue ? money(c.latestRevenue.usdM) + (c.latestRevenue.kind === 'estimate' ? '*' : '') : '—'}</td>
           <td class="num">${(c.valuation && mult(c.valuation.evSales)) || '—'}</td>
+          <td class="num">${(c.consensus && c.consensus.evSales[1] != null && mult(c.consensus.evSales[1])) || '—'}</td>
         </tr>`;
       }).join('')}</tbody></table>
       <p class="src" style="padding:8px 12px">* Third-party estimate. Non-USD figures converted at the market-cap snapshot exchange rate.</p>`;
@@ -362,7 +367,7 @@
     const card = $('#hovercard');
     const also = c.subs.map((s) => subIndex[s].sub.name);
     const meta = [c.hq, c.founded ? `Founded ${c.founded}` : '', c.isPublic ? `${c.exchange}: ${c.ticker}` : c.stage].filter(Boolean).join(' · ');
-    card.innerHTML = `<h3>${esc(c.name)}</h3><p class="hc-meta">${esc(meta)}</p><p>${esc(c.oneLiner || '')}</p>
+    card.innerHTML = `<h3>${esc(c.name)}</h3><p class="hc-meta">${esc(meta)}</p>${c.flag ? `<p class="hc-flag">${esc(c.flag)}</p>` : ''}<p>${esc(c.oneLiner || '')}</p>
       <div class="hc-metric">${esc(metricLong(c))}${c.isPublic && c.marketCap && c.marketCap.asOf ? ` <span class="src">(${esc(date(c.marketCap.asOf, true))})</span>` : ''}</div>
       ${!c.isPublic && c.lastPost ? `<div class="hc-metric">${money(c.lastPost.postUsdM)} last valuation <span class="src">(${esc(date(c.lastPost.date))})</span></div>` : ''}
       ${also.length > 1 ? `<div class="hc-also">Appears in: ${esc(also.join(', '))}</div>` : ''}
@@ -417,7 +422,8 @@
     const r = c.latestRevenue;
     return kpi('Total raised', c.value == null ? NA : money(c.value), c.funding && c.funding.asOf ? `Through ${esc(date(c.funding.asOf))}` : '', true)
       + kpi('Last valuation', c.lastPost ? money(c.lastPost.postUsdM) : NA, c.lastPost ? esc(`Post-money · ${date(c.lastPost.date)}`) : '')
-      + kpi('Last round', lr ? esc(lr.type) : NA, lr ? esc(`${lr.amountUsdM ? money(lr.amountUsdM) + ' · ' : ''}${date(lr.date)}`) : '')
+      + (lr ? kpi('Last round', esc(lr.type), esc(`${lr.amountUsdM ? money(lr.amountUsdM) + ' · ' : ''}${date(lr.date)}`))
+        : kpi('Last funding', c.lastFunding ? esc(date(c.lastFunding)) : NA, c.roundCount ? `${c.roundCount} rounds in total` : ''))
       + kpi('Revenue', r ? money(r.valueM) + (r.kind === 'estimate' ? '<span class="est-tag">est.</span>' : '') : NA, r ? esc(r.label) : '');
   }
 
@@ -488,14 +494,15 @@
     const r = c.latestRevenue;
     return `<div class="stat-grid section">
         <div class="stat"><span class="stat-label">Total raised</span><span class="stat-value">${c.value == null ? NA : money(c.value)}</span><span class="stat-note">${fnd.asOf ? `Through ${esc(date(fnd.asOf))}` : ''}</span></div>
-        <div class="stat"><span class="stat-label">Priced rounds tracked</span><span class="stat-value">${rounds.length || '—'}</span><span class="stat-note">${rounds.length ? `First tracked ${esc(date(rounds[0].date))}` : ''}</span></div>
+        <div class="stat"><span class="stat-label">Funding rounds</span><span class="stat-value">${c.roundCount || '—'}</span><span class="stat-note">${fnd.roundCount != null ? 'All rounds, incl. grants and debt' : rounds.length ? `Rounds tracked here; first ${esc(date(rounds[0].date))}` : ''}</span></div>
+        <div class="stat"><span class="stat-label">Last funding</span><span class="stat-value">${c.lastFunding ? esc(date(c.lastFunding)) : '—'}</span><span class="stat-note">${c.lastRound ? esc(c.lastRound.type) : ''}</span></div>
         <div class="stat"><span class="stat-label">Revenue</span><span class="stat-value">${r ? money(r.valueM) + (r.kind === 'estimate' ? '<span class="est-tag">est.</span>' : '') : NA}</span><span class="stat-note">${r ? esc(r.label) + (c.revenue.note ? ' · ' + esc(c.revenue.note) : '') : 'Private companies rarely report revenue'}</span></div>
         ${c.employees ? `<div class="stat"><span class="stat-label">Employees</span><span class="stat-value">${esc(c.employees)}</span></div>` : ''}
       </div>
       ${withAmt.length >= 2 ? `<div class="section"><h3 class="section-title">Capital raised by round (USD)</h3>${window.DTMCharts.columns(withAmt.map((x) => ({ label: shortRound(x.type), value: x.amountUsdM, display: money(x.amountUsdM), tip: `${x.type} · ${date(x.date)}: ${money(x.amountUsdM)}`, cls: 'mark-private' })), { format: (v) => money(v), label: `${c.name} funding by round` })}</div>` : ''}
       ${rounds.length ? `<div class="section scroll-x"><h3 class="section-title">Funding history</h3><table class="fin-table"><thead><tr><th>Round</th><th>Date</th><th>Amount</th><th>Post-money</th><th style="text-align:left">Lead investors</th></tr></thead><tbody>
         ${rounds.slice().reverse().map((x) => `<tr><td>${esc(x.type)}</td><td>${esc(date(x.date))}</td><td>${x.amountUsdM ? money(x.amountUsdM) : '—'}</td><td>${x.postUsdM ? money(x.postUsdM) : '—'}</td><td style="text-align:left;font-family:var(--font-body)">${esc((x.leads || []).join(', ') || '—')}</td></tr>`).join('')}
-      </tbody></table></div>` : `<p class="na section">No priced rounds disclosed.</p>`}
+      </tbody></table></div>` : `<p class="na section">${fnd.roundCount ? 'Round-by-round detail not compiled; totals come from the funding table shown in the source.' : 'No priced rounds disclosed.'}</p>`}
       ${fnd.note ? `<div class="section prose"><p>${esc(fnd.note)}</p></div>` : ''}
       ${srcHTML(fnd.src, fnd.asOf)}${c.revenue ? srcHTML(c.revenue.src, null, 'Revenue source') : ''}`;
   }
@@ -505,7 +512,7 @@
     const C = window.DTMCharts;
     if (c.isPublic) {
       const v = c.valuation;
-      if (!v) return `<p class="na">Valuation data not yet added for this company.</p>`;
+      if (!v) return c.consensus ? consensusHTML(c) : `<p class="na">Valuation data not yet added for this company.</p>`;
       const stats = [
         ['Market cap', c.value != null ? money(c.value) : '—', c.marketCap && c.marketCap.local ? `${money(c.marketCap.local.valueM, c.marketCap.local.cur)} in local currency` : ''],
         ['Enterprise value', v.evUsdM != null ? money(v.evUsdM) : '—', v.evUsdM != null ? 'Market cap + net debt' : 'Not compiled'],
@@ -520,7 +527,8 @@
       const chart = peers.length >= 3 && v.evSales != null
         ? `<div class="section"><h3 class="section-title">Sales multiple vs public peers in ${esc(seg.name)}</h3>${C.rows(peers.map((p) => ({ label: p.short || p.name, value: p.valuation.evSales, display: mult(p.valuation.evSales), highlight: p.id === c.id, tip: `${p.name}: ${mult(p.valuation.evSales)} (${salesLabel(p.valuation)}, ${p.valuation.basis || 'TTM'})` })), { format: mult, label: 'Sales multiple comparison' })}<p class="chart-caption">EV / Sales where enterprise value was compiled, otherwise market cap / sales. Each peer uses its own as-of date; hover a bar for its basis.</p></div>` : '';
       return `<div class="section stat-grid">${stats.map(([l, val, n]) => `<div class="stat"><span class="stat-label">${esc(l)}</span><span class="stat-value">${val}</span><span class="stat-note">${esc(n)}</span></div>`).join('')}</div>
-        ${chart}${v.note ? `<div class="section prose"><p>${esc(v.note)}</p></div>` : ''}${srcHTML(v.src, v.asOf)}`;
+        ${chart}${v.note ? `<div class="section prose"><p>${esc(v.note)}</p></div>` : ''}${srcHTML(v.src, v.asOf)}
+        ${consensusHTML(c)}`;
     }
     const posts = c.rounds.filter((r) => r.postUsdM);
     const lp = c.lastPost;
@@ -538,6 +546,30 @@
       ${!lp ? `<p class="na section">This company has not disclosed a valuation.</p>` : ''}
       ${c.valuation && c.valuation.note ? `<div class="section prose"><p>${esc(c.valuation.note)}</p></div>` : ''}
       ${srcHTML(lp && lp.src ? lp.src : (c.valuation && c.valuation.src) || (c.funding && c.funding.src), null)}`;
+  }
+
+  function consensusHTML(c) {
+    const k = c.consensus;
+    if (!k) return '';
+    const grp = (D.consensusGroups || {})[k.group] || { name: k.group };
+    const cell = (x, f) => (x == null ? '<span class="na">NA</span>' : f(x));
+    const pctCell = (x) => cell(x, (v) => `<span class="${v >= 0 ? 'pos' : 'neg'}">${pct(v)}</span>`);
+    const rows = [
+      ['Sales', (i) => cell(k.sales[i], (v) => money(v))],
+      ['Revenue growth', (i) => pctCell(k.growth[i])],
+      ['EBITDA margin', (i) => cell(k.ebitdaMargin[i], (v) => v + '%')],
+      ['EV / Sales', (i) => cell(k.evSales[i], mult)],
+      ['EV / EBITDA', (i) => cell(k.evEbitda[i], mult)]
+    ];
+    const peers = companies.filter((p) => p.consensus && p.consensus.group === k.group && p.consensus.evSales[1] != null)
+      .sort((a, b) => b.consensus.evSales[1] - a.consensus.evSales[1]);
+    const chart = peers.length >= 3 ? `<div class="section"><h3 class="section-title">EV / CY26E sales vs ${esc(grp.name)} peers (same sheet)</h3>${window.DTMCharts.rows(peers.map((p) => ({ label: p.short || p.name, value: p.consensus.evSales[1], display: mult(p.consensus.evSales[1]), highlight: p.id === c.id, tip: `${p.name}: ${mult(p.consensus.evSales[1])} EV / CY26E sales` })), { format: mult, label: 'EV to CY26E sales on the comps sheet' })}${grp.avg ? `<p class="chart-caption">Group average on the sheet: ${mult(grp.avg.evSales[1])} CY26E EV / Sales, ${grp.avg.growth[1]}% CY26E growth.</p>` : ''}</div>` : '';
+    return `<div class="section consensus">
+      <h3 class="section-title">Street estimates · comps sheet provided for this map</h3>
+      <p class="src" style="margin:0 0 10px">On the sheet: ${esc(k.ticker)} at $${k.price.toFixed(2)} · market cap ${money(k.mktCap)} · net cash ${k.netCash < 0 ? '(' + money(-k.netCash) + ')' : money(k.netCash)} · EV ${money(k.ev)}. The sheet is undated, so these figures may predate the market cap shown above.</p>
+      <div class="scroll-x"><table class="fin-table"><thead><tr><th>$M</th><th>CY25E</th><th>CY26E</th></tr></thead>
+        <tbody>${rows.map(([n, f]) => `<tr><td>${esc(n)}</td><td>${f(0)}</td><td>${f(1)}</td></tr>`).join('')}</tbody></table></div>
+    </div>${chart}${srcHTML(k.src, null)}`;
   }
 
   function programsHTML(c) {
@@ -587,7 +619,7 @@
         <div class="d-titles">
           <h2 class="d-name" id="detail-name">${esc(c.name)}</h2>
           <p class="d-one">${esc(c.oneLiner || '')}</p>
-          <div class="d-badges"><span class="badge ${c.status}">${esc(badge)}</span><span>${esc([c.hq, D.countryNames[c.country] || c.country].filter(Boolean).join(' · '))}</span>${c.founded ? `<span>Founded ${c.founded}</span>` : ''}${c.domain ? `<a href="https://${esc(c.domain)}" target="_blank" rel="noopener">${esc(c.domain)} ↗</a>` : ''}</div>
+          <div class="d-badges"><span class="badge ${c.status}">${esc(badge)}</span>${c.flag ? `<span class="badge flag">${esc(c.flag)}</span>` : ''}<span>${esc([c.hq, D.countryNames[c.country] || c.country].filter(Boolean).join(' · '))}</span>${c.founded ? `<span>Founded ${c.founded}</span>` : ''}${c.domain ? `<a href="https://${esc(c.domain)}" target="_blank" rel="noopener">${esc(c.domain)} ↗</a>` : ''}</div>
         </div>
         <div class="d-actions">
           <button class="icon-btn" type="button" data-action="compare" aria-pressed="${inCompare}" title="${inCompare ? 'Remove from compare' : 'Add to compare'}" aria-label="${inCompare ? 'Remove from compare' : 'Add to compare'}">
