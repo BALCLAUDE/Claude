@@ -1207,10 +1207,11 @@ DTM.programs = [
   { id: 'cca', name: 'Collaborative Combat Aircraft', customer: 'US Air Force', blurb: 'Uncrewed jet aircraft teamed with crewed fighters. Increment 1 went to Anduril (YFQ-44A) and General Atomics (YFQ-42A).' },
   { id: 'replicator', name: 'Replicator', customer: 'DIU / DoD', blurb: 'DoD initiative to field thousands of attritable autonomous systems, followed by a counter-drone second phase.' },
   { id: 'srr', name: 'Short Range Reconnaissance', customer: 'US Army', blurb: 'Army program of record for soldier-carried quadcopters.' },
+  { id: 'pbas', name: 'Purpose-Built Attritable Systems', customer: 'US Army', blurb: 'Army effort to buy first-person-view and other attritable drones in large volumes.' },
   { id: 'launched-effects', name: 'Launched Effects', customer: 'US Army', blurb: 'Air-launched and ground-launched uncrewed systems for reconnaissance, EW and strike.' },
   { id: 'ngc2', name: 'Next Generation C2', customer: 'US Army', blurb: 'Army data-centric command-and-control prototype led by Anduril with Palantir and others.' },
   { id: 'maven', name: 'Maven Smart System', customer: 'DoD / NGA', blurb: 'AI-enabled targeting and situational awareness platform used across the combatant commands.' },
-  { id: 'etv', name: 'Enterprise Test Vehicle', customer: 'US Air Force / DIU', blurb: 'Low-cost air-launched cruise missile prototypes, leading to the Family of Affordable Mass Missiles.' },
+  { id: 'etv', name: 'Affordable Mass Missiles', customer: 'USAF / USN / DIU', blurb: 'Low-cost cruise missile efforts: the Enterprise Test Vehicle, the Air Force Family of Affordable Mass Missiles (FAMM) and the Navy CHAOS program.' },
   { id: 'hypersonic-test', name: 'Hypersonic Test & Prototypes', customer: 'DoD (TRMC, MDA, DIU)', blurb: 'Reusable hypersonic test beds and rapid hypersonic prototypes such as HyCAT and MACH-TB.' },
   { id: 'srm', name: 'Solid Rocket Motor Base', customer: 'US Army / Navy / DoD', blurb: 'New-entrant solid rocket motor production for GMLRS, Standard Missile and other munitions.' },
   { id: 'cuas-army', name: 'Army C-UAS', customer: 'US Army / JIATF-401', blurb: 'Counter-drone interceptors, high-power microwave and sensing fielded for Army and joint units.' },
@@ -1938,23 +1939,1477 @@ DTM.programs = [
 
 </script>
 <script>/* data/companies/missiles.js */
-/* placeholder */
+/* Missiles & Munitions segment. Anduril is defined in software.js and also appears here. */
+(function () {
+  const S = (t, u) => (u ? { t, u } : { t });
+
+  /* ---------------- Hypersonics ---------------- */
+  DTM.add({
+    id: 'castelion', name: 'Castelion', domain: 'castelion.com', status: 'private', stage: 'Series C',
+    hq: 'Torrance, CA', country: 'US', founded: 2022,
+    subsegments: ['missiles.hypersonics', 'missiles.strike'],
+    oneLiner: 'Low-cost hypersonic strike weapons built like consumer hardware; Blackbeard targets fielding in 2027.',
+    description: [
+      'Castelion applies rapid, iterative test-and-build methods to long-range hypersonic weapons. Its Blackbeard is a low-cost hypersonic missile designed to launch from existing platforms such as HIMARS and aircraft.',
+      'In August 2026 it closed a $1B Series C (about $800M equity plus a $250M credit line) at a $13B valuation, to expand production at a 1,000-acre campus in Sandoval County, New Mexico. It reports more than $500M of US military contracts booked in 18 months.'
+    ],
+    leadership: [['Bryon Hargis', 'Co-founder & CEO']],
+    products: ['Blackbeard', 'Blackbeard GL'],
+    funding: {
+      totalUsdM: 1250, asOf: '2026-08',
+      rounds: [
+        { date: '2025-12', type: 'Series B', amountUsdM: 350, postUsdM: 2800 },
+        { date: '2026-08', type: 'Series C', amountUsdM: 800, postUsdM: 13000, leads: ['JPMorganChase', 'Andreessen Horowitz', 'Carlyle'] }
+      ],
+      investors: ['Andreessen Horowitz', 'Lightspeed', 'Altimeter', 'General Catalyst', 'Lavrock', 'Interlagos', 'T. Rowe Price'],
+      note: 'Total is an approximate sum of disclosed equity; excludes the $250M revolving credit facility.',
+      src: [S('The Next Web, Aug 2026', 'https://thenextweb.com/news/castelion-1bn-series-c-13bn-hypersonic-blackbeard'), S('Orrick', 'https://www.orrick.com/en/News/2026/08/Castelion-Raises-1B-Series-C-to-Scale-Production-of-Low-Cost-Hypersonic-Weapons')]
+    },
+    programs: [
+      { name: 'Blackbeard pre-production prototypes', customer: 'US Navy', role: 'Prime', value: '$23.4M', year: 2026, status: 'Prototype', note: '50 pre-production missiles.' },
+      { name: 'Blackbeard for Army long-range fires', customer: 'US Army', role: 'Prime', status: 'Development', note: 'Ground-launched variant integrated with HIMARS.' }
+    ]
+  });
+
+  DTM.add({
+    id: 'hermeus', name: 'Hermeus', domain: 'hermeus.com', status: 'private', stage: 'Series C',
+    hq: 'Atlanta, GA', country: 'US', founded: 2018,
+    subsegments: ['missiles.hypersonics', 'uas.cca'],
+    oneLiner: 'Reusable high-Mach uncrewed aircraft (Quarterhorse) on a path to hypersonic flight.',
+    description: [
+      'Hermeus develops reusable high-speed aircraft, flying a series of Quarterhorse uncrewed test aircraft that step up in speed toward a turbine-based combined-cycle hypersonic vehicle.',
+      'It closed a $350M Series C in April 2026 ($200M equity and $150M debt) at a $1B valuation to move from prototypes to mission-ready high-Mach platforms. A related DIU program ceiling was raised to $219M.'
+    ],
+    leadership: [['AJ Piplica', 'Co-founder & CEO']],
+    products: ['Quarterhorse Mk 1', 'Quarterhorse Mk 2', 'Darkhorse'],
+    funding: {
+      totalUsdM: 500, asOf: '2026-04',
+      rounds: [{ date: '2026-04', type: 'Series C', amountUsdM: 350, postUsdM: 1000, leads: ['Khosla Ventures'] }],
+      investors: ['Khosla Ventures', 'Founders Fund', 'Canaan Partners', 'RTX Ventures', 'In-Q-Tel', 'Bling Capital'],
+      note: 'Series C was $200M equity plus $150M debt. Total reported as "over $500M".',
+      src: S('GlobalAir, Apr 2026', 'https://www.globalair.com/articles/hermeus-valued-at-1b-after-closing-350m-in-financing-round/12146')
+    },
+    programs: [{ name: 'Quarterhorse high-speed flight test', ref: 'hypersonic-test', customer: 'DIU / US Air Force', role: 'Prime', value: '$219M ceiling', year: 2026, status: 'Flight test', src: S('Sacra', 'https://sacra.com/c/hermeus/') }]
+  });
+
+  DTM.add({
+    id: 'venus-aerospace', name: 'Venus Aerospace', short: 'Venus', domain: 'venusaero.com', status: 'private', stage: 'Series B',
+    hq: 'Houston, TX', country: 'US', founded: 2020,
+    subsegments: ['missiles.hypersonics', 'missiles.propulsion'],
+    oneLiner: 'Rotating detonation rocket engines (RDRE) for hypersonic missiles and aircraft.',
+    description: [
+      'Venus Aerospace develops rotating detonation rocket engines, which burn propellant in a continuous detonation wave for higher efficiency than conventional rockets, plus air-breathing ramjet integration for hypersonic flight.',
+      'It flew an RDRE-powered drone in 2025 and closed a $91M Series B in July 2026 to move the engine from demonstration to production.'
+    ],
+    leadership: [['Sassie Duggleby', 'Co-founder & CEO'], ['Andrew Duggleby', 'Co-founder & CTO']],
+    products: ['RDRE', 'VDR2 ramjet'],
+    funding: {
+      totalUsdM: 115, asOf: '2026-07',
+      rounds: [{ date: '2026-07', type: 'Series B', amountUsdM: 91, leads: ['Mercury Fund'] }],
+      investors: ['Mercury Fund', 'Lockheed Martin Ventures', 'MESH', 'PEAK6', 'Draper Associates'],
+      note: 'Total of about $115M is a third-party estimate.',
+      src: S('TAMradar', 'https://www.tamradar.com/funding-rounds/venus-aerospace-series-b-91m')
+    },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'stratolaunch', name: 'Stratolaunch', domain: 'stratolaunch.com', status: 'private', stage: 'PE-owned',
+    hq: 'Mojave, CA', country: 'US', founded: 2011,
+    subsegments: ['missiles.hypersonics'],
+    oneLiner: 'Reusable Talon-A hypersonic test vehicles air-launched from the Roc carrier and a modified 747.',
+    description: [
+      'Stratolaunch provides hypersonic flight testing with Talon-A, an autonomous, reusable vehicle that flies above Mach 5 and lands on a runway. Talon-A is launched from Roc, the largest aircraft by wingspan, and now also from a modified Boeing 747.',
+      'Cerberus Capital Management acquired the company in 2019 and refocused it on test services. Talon-A flew hypersonic missions in December 2024, March 2025 and March 2026, the last with the Missile Defense Agency.'
+    ],
+    leadership: [['Zachary Krevor', 'President & CEO']],
+    products: ['Talon-A', 'Roc', 'Spirit of Mojave (747)'],
+    funding: { totalUsdM: null, label: 'PE-owned', asOf: '2026-03', note: 'Owned by Cerberus Capital Management since 2019.', src: S('Interesting Engineering', 'https://interestingengineering.com/military/stratolaunch-hypersonic-test-flight-us-mda') },
+    programs: [
+      { name: 'MDA hypersonic test services', ref: 'hypersonic-test', customer: 'Missile Defense Agency', role: 'Prime', value: '$24.7M', year: 2025, status: 'Flying', note: 'Flew mission FEX-04 for MDA in March 2026.', src: S('Airforce Technology', 'https://www.airforce-technology.com/news/us-mda-awards-research-contract-to-stratolaunch/') },
+      { name: 'MACH-TB test campaign', ref: 'hypersonic-test', customer: 'DoD Test Resource Management Center', role: 'Test provider', status: 'Flying' }
+    ]
+  });
+
+  DTM.add({
+    id: 'hypersonix', name: 'Hypersonix Launch Systems', short: 'Hypersonix', domain: 'hypersonix.com', status: 'private', stage: 'Series A',
+    hq: 'Brisbane', country: 'AU', founded: 2019,
+    subsegments: ['missiles.hypersonics'],
+    oneLiner: 'Hydrogen-fuelled SPARTAN scramjet; DART AE flew above Mach 5 for DIU in 2026.',
+    description: [
+      'Hypersonix develops reusable hypersonic vehicles powered by its hydrogen-fuelled SPARTAN scramjet. Its 3.5 m DART AE flew on February 27, 2026 on a Rocket Lab HASTE from Wallops Island and was reported to exceed Mach 5.',
+      'It was the first prototype award under the Defense Innovation Unit\'s HyCAT program and is developing a larger second platform, VISR.'
+    ],
+    products: ['DART AE', 'VISR', 'SPARTAN scramjet'],
+    funding: {
+      totalUsdM: 30, asOf: '2025-03',
+      rounds: [{ date: '2025-03', type: 'Series A', amountUsdM: 30, leads: ['High Tor Capital'] }],
+      investors: ['High Tor Capital', 'National Reconstruction Fund Corporation', 'Queensland Investment Corporation', 'Saab', 'RKKVC'],
+      note: 'Series A of A$46M, converted at about 0.65 USD per AUD.',
+      src: S('SmartCompany', 'https://www.smartcompany.com.au/startupsmart/superfast-plane-startup-hypersonix-raises-46-million-federal-government-tipping-in/')
+    },
+    programs: [{ name: 'DIU HyCAT (DART AE flight)', ref: 'hypersonic-test', customer: 'Defense Innovation Unit', role: 'Prime', year: 2026, status: 'Flown', src: S('Hypersonix', 'https://hypersonix.com/resources/news/mission-success-australian-hypersonic-pioneer-achieves-first-flight') }]
+  });
+
+  DTM.add({
+    id: 'kratos', name: 'Kratos Defense & Security', short: 'Kratos', domain: 'kratosdefense.com', status: 'public', ticker: 'KTOS', exchange: 'NASDAQ',
+    hq: 'San Diego, CA', country: 'US', founded: 1994,
+    subsegments: ['missiles.hypersonics', 'uas.cca', 'missiles.propulsion'],
+    oneLiner: 'Neo-prime for affordable systems: Valkyrie uncrewed jets, hypersonic test (MACH-TB), engines and rocket motors.',
+    description: [
+      'Kratos builds affordable, attritable systems at production rates: the XQ-58 Valkyrie uncrewed combat aircraft, target drones, small turbojet engines, solid rocket motors and hypersonic test vehicles. It leads the MACH-TB hypersonic test bed program.',
+      'It also supplies satellite ground systems, C5ISR electronics and microwave products. Revenue reached a record $1.35B in 2025 with a record $1.57B backlog.'
+    ],
+    leadership: [['Eric DeMarco', 'President & CEO']],
+    products: ['XQ-58 Valkyrie', 'Erinyes', 'Dark Fury', 'GEK800 engine', 'Zeus SRM'],
+    marketCap: { usdM: 8630, asOf: '2026-07-17', src: S('Equibles', 'https://equibles.com/stocks/KTOS') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [
+        { label: 'FY2023', revenue: 1037.1 },
+        { label: 'FY2024', revenue: 1136.9 },
+        { label: 'FY2025', revenue: 1347, opIncome: 25.6, ebitda: 119.9, netIncome: 22.0 }
+      ],
+      backlog: { valueM: 1573, asOf: '2025-12-31', note: 'Record; $1.23B funded, pipeline $13.7B' },
+      notes: '2026 guidance: revenue $1.595B–$1.675B, adjusted EBITDA $157M–$167M.',
+      asOf: '2026-02-26', src: S('Kratos FY2025 results', 'https://seekingalpha.com/pr/20409658')
+    },
+    valuation: { evSales: 6.4, basis: 'Market cap ÷ FY2025 revenue', note: 'EV not compiled; ratio shown uses market cap. Shares fell about two-thirds from their 52-week high by July 2026.', asOf: '2026-07-17', src: S('Equibles', 'https://equibles.com/stocks/KTOS') },
+    programs: [
+      { name: 'MACH-TB hypersonic test bed', ref: 'hypersonic-test', customer: 'DoD Test Resource Management Center', role: 'Prime', value: '$1.45B ceiling', year: 2024, status: 'Flying' },
+      { name: 'XQ-58 Valkyrie', ref: 'cca', customer: 'USMC / USAF', role: 'Prime', status: 'Program of record transition', note: 'Marine Corps program for an uncrewed tactical aircraft.' }
+    ]
+  });
+
+  /* ---------------- Propulsion & energetics ---------------- */
+  DTM.add({
+    id: 'ursa-major', name: 'Ursa Major', domain: 'ursamajor.com', status: 'private', stage: 'SPAC pending',
+    hq: 'Berthoud, CO', country: 'US', founded: 2015,
+    subsegments: ['missiles.propulsion'],
+    oneLiner: 'Solid rocket motors and liquid engines built with additive manufacturing; going public via SPAC.',
+    description: [
+      'Ursa Major makes rocket propulsion at scale: 3D-printed solid rocket motors for tactical missiles and liquid engines (Hadley, Draper) for hypersonic and space applications.',
+      'In 2026 it agreed to go public by merging with Bleichroeder Acquisition Corp. III at a $2.3B equity value, with at least $350M of PIPE commitments. Closing is expected in Q1 2027.'
+    ],
+    leadership: [['Dan Jablonsky', 'CEO']],
+    products: ['Lynx SRMs', 'Hadley', 'Draper'],
+    funding: {
+      totalUsdM: 380, asOf: '2026-06',
+      rounds: [{ date: '2025-11', type: 'Series E', amountUsdM: 100, leads: ['Eclipse'] }],
+      investors: ['Eclipse', 'Explorer 1 Fund', 'XN', 'Harpoon Ventures'],
+      note: 'Series E came with $50M of debt commitments. SPAC deal values the company at $2.3B post-transaction.',
+      src: S('GovConWire', 'https://www.govconwire.com/articles/ursa-major-spac-merger-inflection-point-public-listing')
+    },
+    valuation: { postUsdM: 2300, date: '2026-06', type: 'SPAC (pending)', src: S('GovConWire', 'https://www.govconwire.com/articles/ursa-major-spac-merger-inflection-point-public-listing') },
+    programs: [{ name: 'Navy and Army solid rocket motor development', ref: 'srm', customer: 'US Navy / US Army', role: 'Supplier', status: 'Development' }]
+  });
+
+  DTM.add({
+    id: 'x-bow', name: 'X-Bow Systems', short: 'X-Bow', domain: 'xbowsystems.com', status: 'private', stage: 'Series B',
+    hq: 'Houston, TX', country: 'US', founded: 2016,
+    subsegments: ['missiles.propulsion', 'missiles.energetics'],
+    oneLiner: 'New-entrant solid rocket motor and energetics maker, backed by Lockheed Martin.',
+    description: [
+      'X-Bow designs and produces solid rocket motors and the energetic materials inside them, aiming to add a third source to a US motor base long dominated by Northrop Grumman and L3Harris (Aerojet Rocketdyne).',
+      'Lockheed Martin led the strategic portion of its $105M Series B and works with X-Bow as a second source for GMLRS motors. In 2026 it bought Evolution Space and Spencer Composites and won an $11M Missile Defense Agency motor contract.'
+    ],
+    leadership: [['Jason Hundley', 'CEO']],
+    products: ['Solid rocket motors', 'Bolt sounding rocket', 'Energetics'],
+    funding: {
+      totalUsdM: 161, asOf: '2025-11',
+      rounds: [{ date: '2025-05', type: 'Series B', amountUsdM: 105, leads: ['Lockheed Martin Ventures'] }],
+      investors: ['Lockheed Martin Ventures', 'Crosslink Capital', 'Razor\'s Edge Ventures'],
+      note: 'Trackers disagree on totals ($161M–$262M); CB Insights figure shown.',
+      src: [S('VCA Online, May 2025', 'https://www.vcaonline.com/news/2025051201/x-bow-systems-announces-final-closing-of-over-105-million-series-b-funding-to-deliver-state-of-the-art-defense-technologies-at-speed-and-scale/'), S('CB Insights', 'https://www.cbinsights.com/company/x-bow-launch-systems/financials')]
+    },
+    programs: [
+      { name: 'GMLRS rocket motor second source', ref: 'srm', customer: 'US Army (via Lockheed Martin)', role: 'Supplier', status: 'Qualification' },
+      { name: 'MDA solid rocket motor development', ref: 'srm', customer: 'Missile Defense Agency', role: 'Prime', value: '$11M', year: 2026, status: 'Development', src: S('Defence Blog', 'https://defence-blog.com/x-bow-lands-11m-to-build-pentagons-next-rocket-motor/') }
+    ]
+  });
+
+  DTM.add({
+    id: 'firehawk', name: 'Firehawk Aerospace', short: 'Firehawk', domain: 'firehawkaerospace.com', status: 'private', stage: 'Series C-1',
+    hq: 'Dallas, TX', country: 'US', founded: 2019,
+    subsegments: ['missiles.energetics', 'missiles.propulsion'],
+    oneLiner: '3D-printed solid propellant and hybrid rocket motors for missiles and munitions.',
+    description: [
+      'Firehawk 3D-prints propellant grains, which shortens solid rocket motor production from months to days, and builds hybrid rocket engines for tactical missiles.',
+      'Hanwha Defense USA invested in 2025, and a September 2026 report said Firehawk was raising at about a $1.25B valuation, up from roughly $282M in early 2025.'
+    ],
+    leadership: [['Will Edwards', 'CEO']],
+    products: ['3D-printed propellant', 'Hybrid rocket motors'],
+    funding: {
+      totalUsdM: 60, asOf: '2025-01',
+      rounds: [{ date: '2025-01', type: 'Series C-1', amountUsdM: 60, postUsdM: 282 }],
+      investors: ['Hanwha Defense USA', '1789 Capital', 'Rochefort Asset Management'],
+      note: 'Total shows the 2025 round only. A new round at about $1.25B was reported in talks in September 2026 but is not confirmed.',
+      src: [S('Metal AM', 'https://www.metal-am.com/firehawk-oversubscribes-60m-investment-round-and-gains-european-investor/'), S('Sacra', 'https://sacra.com/c/firehawk-aerospace')]
+    },
+    programs: [{ name: 'Air Force additive propulsion contract', customer: 'US Air Force', role: 'Prime', value: '$4M', status: 'Development', src: S('Dallas Innovates', 'https://dallasinnovates.com/firehawk-aerospace-lands-4m-air-force-contract-for-3d-printed-rocket-propulsion-tech/') }]
+  });
+
+  DTM.add({
+    id: 'karman', name: 'Karman Space & Defense', short: 'Karman', domain: 'karman-sd.com', status: 'public', ticker: 'KRMN', exchange: 'NYSE',
+    hq: 'Huntington Beach, CA', country: 'US', founded: 1977,
+    subsegments: ['missiles.propulsion', 'missiles.energetics'],
+    oneLiner: 'Mission-critical subsystems for missiles, hypersonics and launch: payload protection, interstages, energetics.',
+    description: [
+      'Karman designs and builds subsystems that sit on almost every major US missile, interceptor and hypersonic program: payload fairings and protection, aerodynamic interstages, propulsion and launch components and energetics.',
+      'It listed on the NYSE in February 2025 and has grown quickly with munitions demand. Q2 2026 revenue was a record $182M, up 58%.'
+    ],
+    leadership: [['Tony Koblinski', 'CEO']],
+    products: ['Payload protection systems', 'Interstage systems', 'Propulsion & launch systems'],
+    marketCap: { usdM: 6600, asOf: '2026-06-15', src: S('American Companies (SEC data)', 'https://americancompanies.com/company/karman-holdings-inc/') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2024', revenue: 345.3 }, { label: 'FY2025', revenue: 471.5, netIncome: 17.4 }],
+      notes: 'Q1 2026 revenue $151.2M (+51%); Q2 2026 $182.1M (+58%). Management guides to about 54% growth in 2026.',
+      asOf: '2026-08-06', src: [S('Karman Q2 2026 8-K', 'https://www.sec.gov/Archives/edgar/data/0002040127/000204012726000018/krmn-ex99_1.htm'), S('American Companies (SEC data)', 'https://americancompanies.com/company/karman-holdings-inc/')]
+    },
+    valuation: { evSales: 14, basis: 'Market cap ÷ FY2025 revenue', note: 'EV not compiled; ratio shown uses market cap.', asOf: '2026-06-15', src: S('American Companies (SEC data)', 'https://americancompanies.com/company/karman-holdings-inc/') },
+    programs: [{ name: 'Missile, interceptor and hypersonic subsystems', customer: 'Primes / MDA / US Army / US Navy', role: 'Tier 2 supplier', status: 'Production', note: 'Content on programs such as GMLRS, PAC-3, SM-6 and hypersonic weapons.' }]
+  });
+
+  /* ---------------- Low-cost strike ---------------- */
+  DTM.add({
+    id: 'mach-industries', name: 'Mach Industries', short: 'Mach', domain: 'machindustries.com', status: 'private', stage: 'Series C',
+    hq: 'Huntington Beach, CA', country: 'US', founded: 2023,
+    subsegments: ['missiles.strike'],
+    oneLiner: 'Viper, a jet-powered VTOL one-way strike vehicle, and a distributed manufacturing network (Forge).',
+    description: [
+      'Mach Industries builds low-cost strike systems, led by Viper, a jet-powered vertical-takeoff one-way strike vehicle targeted at under $100,000 per unit at scale. Its Forge network spreads production across many small factories.',
+      'Founder Ethan Thornton started the company at 19. Its valuation rose about 4× in a year to $1.8B in June 2026.'
+    ],
+    leadership: [['Ethan Thornton', 'Founder & CEO']],
+    products: ['Viper', 'Glide', 'Forge'],
+    funding: {
+      totalUsdM: 485, asOf: '2026-06',
+      rounds: [
+        { date: '2023-10', type: 'Series A', amountUsdM: 79, postUsdM: 335, leads: ['Bedrock'] },
+        { date: '2025-06', type: 'Series B', amountUsdM: 100, postUsdM: 470, leads: ['Khosla Ventures', 'Bedrock'] },
+        { date: '2026-06', type: 'Series C', amountUsdM: 300, postUsdM: 1800, leads: ['Infinite Capital', 'Ribbit Capital'] }
+      ],
+      investors: ['Sequoia', 'Bedrock', 'Khosla Ventures', 'Ribbit Capital', 'Infinite Capital'],
+      src: [S('Pulse 2.0, Jun 2026', 'https://pulse2.com/mach-industries-raises-300-million-series-c-at-1-8-billion-valuation'), S('Sacra', 'https://sacra.com/c/mach-industries/')]
+    },
+    programs: [{ name: 'Low-cost one-way strike prototypes', ref: 'etv', customer: 'DoD', role: 'Prime', status: 'Prototype' }]
+  });
+
+  DTM.add({
+    id: 'destinus', name: 'Destinus', domain: 'destinus.com', status: 'private', stage: 'Pre-IPO',
+    hq: 'Hoofddorp', country: 'NL', founded: 2021,
+    subsegments: ['missiles.strike', 'uas.tactical'],
+    oneLiner: 'European long-range strike: Ruta cruise missiles and Hornet drones, with a Rheinmetall joint venture.',
+    description: [
+      'Destinus started in hydrogen-powered hypersonic aircraft and pivoted to defense, building the Ruta family of low-cost cruise missiles and long-range attack drones that have been used in Ukraine.',
+      'Rheinmetall Destinus Strike Systems, a 51/49 joint venture, targets about €1B of missile programs with production from late 2026. Destinus was reported in May 2026 to be seeking €200M ahead of an Amsterdam IPO at a valuation above €5B.'
+    ],
+    leadership: [['Mikhail Kokorich', 'Founder & CEO']],
+    products: ['Ruta Block 2', 'Ruta Block 3', 'Hornet'],
+    funding: {
+      totalUsdM: 460, asOf: '2026-05',
+      rounds: [{ date: '2026-02', type: 'Convertible notes', postUsdM: 1150 }],
+      note: 'Company has raised nearly €400M (≈$460M). Early-2026 convertible notes were priced above a €1B valuation. A €200M pre-IPO round targeting more than €5B was reported in talks in May 2026.',
+      src: [S('Bloomberg, May 2026', 'https://www.bloomberg.com/news/articles/2026-05-15/weapons-firm-destinus-seeks-200-million-in-pre-ipo-funding'), S('The Next Web', 'https://thenextweb.com/news/destinus-200-million-pre-ipo-cruise-missiles-drones')]
+    },
+    revenue: { valueUsdM: 575, period: '2026 forecast', kind: 'estimate', note: 'Company forecast of about €500M, as reported', src: S('Bloomberg, May 2026', 'https://www.bloomberg.com/news/articles/2026-05-15/weapons-firm-destinus-seeks-200-million-in-pre-ipo-funding') },
+    programs: [
+      { name: 'Rheinmetall Destinus Strike Systems (Ruta)', customer: 'European armed forces', role: 'JV partner (49%)', value: '≈€1B (target)', status: 'Pre-production' },
+      { name: 'Long-range strike for Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Supplier', status: 'Fielded' }
+    ]
+  });
+
+  /* ---------------- Loitering munitions ---------------- */
+  DTM.add({
+    id: 'aerovironment', name: 'AeroVironment', short: 'AV', domain: 'avinc.com', status: 'public', ticker: 'AVAV', exchange: 'NASDAQ',
+    hq: 'Arlington, VA', country: 'US', founded: 1971,
+    subsegments: ['missiles.loitering', 'uas.small', 'cuas.de'],
+    oneLiner: 'Switchblade loitering munitions and small UAS, plus BlueHalo\'s lasers, counter-drone and space systems.',
+    description: [
+      'AV makes the Switchblade loitering munitions and the Puma and Raven small drones used across the US Army and allied forces, including at scale in Ukraine.',
+      'The May 2025 acquisition of BlueHalo added the LOCUST laser weapon, Titan counter-UAS, satellite communications and space systems, more than doubling revenue to nearly $2B in fiscal 2026.'
+    ],
+    leadership: [['Wahid Nawabi', 'Chairman, President & CEO']],
+    products: ['Switchblade 300/600', 'Puma', 'JUMP 20', 'P550', 'LOCUST laser', 'Titan C-UAS'],
+    marketCap: { usdM: 7412, asOf: '2026-08-28', src: S('Fintel', 'https://fintel.io/s/gb/0hal') },
+    financials: {
+      cur: 'USD', fyEnd: 'Apr',
+      periods: [
+        { label: 'FY2024', revenue: 716.7 },
+        { label: 'FY2025', revenue: 820.6 },
+        { label: 'FY2026', revenue: 1976.8, netIncome: -265.1 }
+      ],
+      backlog: { valueM: 1200, asOf: '2026-04-30', note: 'Funded backlog; $1.5B unfunded' },
+      notes: 'Fiscal 2026 bookings were $2.7B (book-to-bill 1.4). Q1 fiscal 2027 revenue was a record $480.5M.',
+      asOf: '2026-06-29', src: S('AV fiscal 2026 results (8-K)', 'https://www.sec.gov/Archives/edgar/data/0001368622/000110465926078824/avav-20260629xex99d1.htm')
+    },
+    valuation: { evSales: 3.7, basis: 'Market cap ÷ FY2026 revenue', note: 'EV not compiled; ratio shown uses market cap.', asOf: '2026-08-28', src: S('Fintel', 'https://fintel.io/s/gb/0hal') },
+    programs: [
+      { name: 'Switchblade loitering munitions', ref: 'replicator', customer: 'US Army / USMC / allies', role: 'Prime', status: 'Production', note: 'Switchblade 600 was among the first Replicator selections.' },
+      { name: 'Switchblade and Puma in Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Supplier', status: 'Fielded' },
+      { name: 'LOCUST high-energy laser', customer: 'US Army', role: 'Prime', status: 'Prototype fielding' }
+    ]
+  });
+
+  DTM.add({
+    id: 'helsing', name: 'Helsing', domain: 'helsing.ai', status: 'private', stage: 'Series E',
+    hq: 'Munich', country: 'DE', founded: 2021,
+    subsegments: ['missiles.loitering', 'software.c2', 'uas.cca', 'maritime.uuv'],
+    oneLiner: 'Europe\'s largest defense AI company: HX-2 strike drones, CA-1 Europa combat aircraft and AI for EW and C2.',
+    description: [
+      'Helsing began as an AI software company, building AI for electronic warfare, sensor fusion and targeting, and has become a hardware maker. It produces the HX-2 AI-enabled strike drone, the SG-1 Fathom underwater glider and the CA-1 Europa autonomous combat aircraft.',
+      'Germany approved an initial €269M HX-2 contract in February 2026, with options up to €1.46B. Helsing raised a $1.8B Series E at $18B in July 2026 and is opening a US factory in West Virginia.'
+    ],
+    leadership: [['Torsten Reil', 'Co-founder & Co-CEO'], ['Gundbert Scherf', 'Co-founder & Co-CEO']],
+    products: ['HX-2', 'CA-1 Europa', 'SG-1 Fathom', 'Altra', 'Cirra'],
+    funding: {
+      totalUsdM: 3300, asOf: '2026-07',
+      rounds: [
+        { date: '2024-07', type: 'Series C', amountUsdM: 487, postUsdM: 5000, leads: ['General Catalyst'] },
+        { date: '2025-06', type: 'Series D', amountUsdM: 690, postUsdM: 13800, leads: ['Prima Materia'] },
+        { date: '2026-07', type: 'Series E', amountUsdM: 1800, postUsdM: 18000, leads: ['Dragoneer', 'Lightspeed'] }
+      ],
+      investors: ['Prima Materia', 'General Catalyst', 'Lightspeed', 'Dragoneer', 'Accel', 'Saab', 'ICONIQ', 'Goldman Sachs Alternatives'],
+      note: 'Total is an approximate sum of disclosed rounds. The 2025 round was €600M at roughly €12B.',
+      src: [S('Grosswald, Jul 2026', 'https://www.grosswald.org/helsing-1-8-billion-series-e-18-billion-valuation-europe-largest-defence-tech-round/'), S('SiliconANGLE', 'https://siliconangle.com/2026/05/11/german-defense-tech-startup-helsing-talks-1-2b-funding-round')]
+    },
+    programs: [
+      { name: 'HX-2 loitering munitions for the Bundeswehr', customer: 'German Armed Forces', role: 'Prime', value: '€269M (up to €1.46B)', year: 2026, status: 'Production' },
+      { name: 'HX-2 for Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Supplier', status: 'Fielded' }
+    ]
+  });
+})();
 
 </script>
 <script>/* data/companies/uas.js */
-/* placeholder */
+/* Drones & Air Autonomy segment. Anduril (software.js), Kratos and AeroVironment (missiles.js),
+   Redwire (space.js) and Helsing (missiles.js) also appear here. */
+(function () {
+  const S = (t, u) => (u ? { t, u } : { t });
+
+  /* ---------------- Small UAS & FPV ---------------- */
+  DTM.add({
+    id: 'skydio', name: 'Skydio', domain: 'skydio.com', status: 'private', stage: 'Series F',
+    hq: 'San Mateo, CA', country: 'US', founded: 2014,
+    subsegments: ['uas.small', 'uas.autonomy'],
+    oneLiner: 'Largest US drone maker; autonomous X10D quadcopters for the Army and docks for public safety.',
+    description: [
+      'Skydio builds autonomous quadcopters that use onboard computer vision to fly in GPS-denied and cluttered environments. The X10D is a program-of-record drone for the US Army, and the company has shipped more than 60,000 drones to over 3,800 customers.',
+      'In March 2026 the Army ordered about 3,000 X10Ds ($52M), described as the largest single-vendor small UAS buy in US military history. Skydio raised a deliberately small $110M Series F at $4.4B in April 2026.'
+    ],
+    leadership: [['Adam Bry', 'Co-founder & CEO']],
+    products: ['X10D', 'X10', 'R10', 'Skydio Dock'],
+    funding: {
+      totalUsdM: 951, asOf: '2026-04',
+      rounds: [
+        { date: '2023-02', type: 'Series E', amountUsdM: 230, postUsdM: 2200, leads: ['Linse Capital'] },
+        { date: '2026-04', type: 'Series F', amountUsdM: 110, postUsdM: 4400 }
+      ],
+      investors: ['Andreessen Horowitz', 'Linse Capital', 'Next47', 'NVIDIA'],
+      note: 'Total is a third-party estimate. A June 2026 secondary-market listing implied about $5.3B.',
+      src: [S('DroneXL, Apr 2026', 'https://dronexl.co/2026/04/23/skydio-110m-series-f-44-billion-valuation/'), S('StockAnalysis', 'https://stockanalysis.com/private/skydio/')]
+    },
+    revenue: { valueUsdM: 180, period: 'FY2024', kind: 'estimate', note: 'Third-party estimate at the Series E extension', src: S('Multiples.vc', 'https://multiples.vc/private-comps/skydio') },
+    programs: [
+      { name: 'X10D Short Range Reconnaissance', ref: 'srr', customer: 'US Army', role: 'Prime', value: '$52M', year: 2026, status: 'Production', note: 'Order for about 2,500–3,000 X10D drones.', src: S('Tectonic Defense', 'https://www.tectonicdefense.com/skydio-raises-110m-at-4-4b-valuation/') },
+      { name: 'Skydio drones in Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Supplier', status: 'Fielded' }
+    ]
+  });
+
+  DTM.add({
+    id: 'neros', name: 'Neros', domain: 'neros.tech', status: 'private', stage: 'Series C',
+    hq: 'El Segundo, CA', country: 'US', founded: 2023,
+    subsegments: ['uas.small', 'cuas.kinetic'],
+    oneLiner: 'Mass-produced FPV strike drones (Archer) and interceptor drones (Bandit) at Ukraine-war volumes.',
+    description: [
+      'Neros builds low-cost first-person-view drones with a domestic, non-Chinese supply chain. Its Archer FPV has been supplied to Ukraine and US forces, and it was producing about 1,200 drones a week by mid-2026, with a target of one million a year by 2028.',
+      'The Army awarded an IDIQ worth up to $500M for Archer under the Purpose-Built Attritable Systems effort. Its $250M Series C in August 2026 funds Archer AI terminal guidance and the Bandit counter-drone interceptor.'
+    ],
+    leadership: [['Soren Monroe-Anderson', 'Co-founder & CEO']],
+    products: ['Archer', 'Archer AI', 'Bandit'],
+    funding: {
+      totalUsdM: 371, asOf: '2026-08',
+      rounds: [
+        { date: '2025-11', type: 'Series B', amountUsdM: 75 },
+        { date: '2026-08', type: 'Series C', amountUsdM: 250, postUsdM: 2500, leads: ['Sequoia', 'American Strategic Technology Fund'] }
+      ],
+      investors: ['Sequoia', 'Interlagos', 'Valor Equity Partners', 'Thiel Capital', 'Spark Capital', 'Allen & Company'],
+      src: [S('The Robot Report, Aug 2026', 'https://www.therobotreport.com/neros-technologies-raises-250m-to-deploy-its-defense-drones-by-the-end-of-2026/'), S('StockAnalysis', 'https://stockanalysis.com/private/neros/')]
+    },
+    programs: [
+      { name: 'Archer FPV (Purpose-Built Attritable Systems)', ref: 'pbas', customer: 'US Army', role: 'Prime', value: 'Up to $500M (IDIQ)', status: 'Production' },
+      { name: 'FPV drones for the Marine Corps', customer: 'USMC', role: 'Prime', status: 'Delivering', note: 'Reported order for roughly 8,000 FPV drones in 2025.' },
+      { name: 'Archer for Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Supplier', status: 'Fielded' }
+    ]
+  });
+
+  DTM.add({
+    id: 'red-cat', name: 'Red Cat', domain: 'redcat.red', status: 'public', ticker: 'RCAT', exchange: 'NASDAQ',
+    hq: 'San Juan, PR', country: 'US', founded: 2016,
+    subsegments: ['uas.small'],
+    oneLiner: 'Teal Black Widow quadcopter, the Army\'s Short Range Reconnaissance program-of-record winner.',
+    description: [
+      'Red Cat owns Teal Drones, maker of the Black Widow small UAS, which won the Army\'s Short Range Reconnaissance Tranche 2 program in 2024, plus FlightWave fixed-wing drones and an uncrewed surface vessel line.',
+      'Revenue more than doubled in 2025 as SRR deliveries ramped, and Q2 2026 revenue rose about 520% year on year.'
+    ],
+    leadership: [['Jeff Thompson', 'CEO']],
+    products: ['Black Widow', 'Edge 130', 'FANG FPV', 'Blue Ops USVs'],
+    marketCap: { usdM: 969, asOf: '2026-10-05', src: S('Google Finance', 'https://www.google.com/finance/labs/quote/RCAT:NASDAQ') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2024', revenue: 15.6 }, { label: 'FY2025', revenue: 37.2 }],
+      notes: 'Q1 2026 revenue $15.5M; Q2 2026 $20.2M. Company preliminary 2025 revenue was $38M–$41M.',
+      asOf: '2026-08-14', src: [S('Red Cat preliminary FY2025 revenue', 'https://ir.redcatholdings.com/news-events/press-releases/detail/208'), S('Ladenburg Thalmann', 'https://www.ladenburg.com/redcat')]
+    },
+    valuation: { evSales: 26, basis: 'Market cap ÷ FY2025 revenue', note: 'EV not compiled; ratio shown uses market cap.', asOf: '2026-10-05', src: S('Google Finance', 'https://www.google.com/finance/labs/quote/RCAT:NASDAQ') },
+    programs: [{ name: 'Short Range Reconnaissance Tranche 2', ref: 'srr', customer: 'US Army', role: 'Prime', year: 2024, status: 'Production', note: 'Black Widow selected as the Army program of record.' }]
+  });
+
+  DTM.add({
+    id: 'pdw', name: 'Performance Drone Works', short: 'PDW', domain: 'pdw.ai', status: 'private', stage: 'Series B',
+    hq: 'Huntsville, AL', country: 'US', founded: 2017,
+    subsegments: ['uas.small'],
+    oneLiner: 'C100 modular, NDAA-compliant tactical quadcopter for Army and special operations units.',
+    description: [
+      'Performance Drone Works makes the C100, a rugged, modular small UAS with swappable payloads for reconnaissance and delivery. It builds in Huntsville with an NDAA-compliant supply chain, and its drones are in service with US Army and special operations units.'
+    ],
+    products: ['C100'],
+    funding: {
+      totalUsdM: null, label: 'Undisclosed', asOf: '2026-03',
+      note: 'One aggregator lists a $110M Series B in March 2026 with Lux Capital and Ondas among investors; not confirmed by the company.',
+      src: S('VCBacked', 'https://vcbacked.co/company/performance-drone-works')
+    },
+    programs: [{ name: 'Army company-level small UAS', customer: 'US Army', role: 'Supplier', status: 'Fielding' }]
+  });
+
+  DTM.add({
+    id: 'ondas', name: 'Ondas Holdings', short: 'Ondas', domain: 'ondas.com', status: 'public', ticker: 'ONDS', exchange: 'NASDAQ',
+    hq: 'Boston, MA', country: 'US', founded: 2006,
+    subsegments: ['uas.small', 'cuas.kinetic'],
+    oneLiner: 'Optimus drone-in-a-box and Iron Drone Raider interceptors; a fast-growing autonomous systems roll-up.',
+    description: [
+      'Ondas Autonomous Systems sells the Optimus autonomous drone-in-a-box system and the Iron Drone Raider counter-drone interceptor, mainly to Israeli and allied defense and security customers. It has also invested in or acquired a string of drone and defense companies.',
+      'Revenue grew about 7× to $50.7M in 2025, and in March 2026 the company raised its 2026 target to at least $375M.'
+    ],
+    leadership: [['Eric Brock', 'Chairman & CEO']],
+    products: ['Optimus', 'Iron Drone Raider'],
+    marketCap: { usdM: 4640, asOf: '2026-03-25', src: S('MEXC News, Mar 2026', 'https://www.mexc.com/news/977389') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2024', revenue: 7.2 }, { label: 'FY2025', revenue: 50.7 }],
+      notes: '2026 revenue target raised to at least $375M (March 2026). Q2 2026 gross margin fell to 43.1%.',
+      asOf: '2026-08-14', src: [S('MEXC News, Mar 2026', 'https://www.mexc.com/news/977389'), S('Eastern Progress (Zacks)', 'https://www.easternprogress.com/ondas-posts-wider-than-expected-q2-loss-delivers-solid-revenue-growth/article_ed5987a1-c8cf-57c0-8705-6017b738cbb1.html')]
+    },
+    valuation: { evSales: 12.4, basis: 'Market cap ÷ 2026 revenue target', note: 'EV not compiled. Trades near 92× FY2025 revenue.', asOf: '2026-03-25', src: S('MEXC News', 'https://www.mexc.com/news/977389') },
+    programs: [{ name: 'Optimus order from a major defense customer', customer: 'Undisclosed defense customer', role: 'Prime', value: '$14.3M', year: 2025, status: 'Delivering', src: S('Ondas IR', 'https://ir.ondas.com/press-releases/detail/224/') }]
+  });
+
+  /* ---------------- Tactical & Group 3 ---------------- */
+  DTM.add({
+    id: 'shield-ai', name: 'Shield AI', domain: 'shield.ai', status: 'private', stage: 'Series G',
+    hq: 'San Diego, CA', country: 'US', founded: 2015,
+    subsegments: ['uas.tactical', 'uas.autonomy', 'uas.cca'],
+    oneLiner: 'Hivemind AI pilot, V-BAT VTOL drones and the X-BAT autonomous VTOL fighter.',
+    description: [
+      'Shield AI builds Hivemind, an AI pilot that flies aircraft without GPS or communications, and the V-BAT, a tail-sitting VTOL drone used by the US Coast Guard, Navy, Army and allies, including in Ukraine. In October 2025 it unveiled X-BAT, an autonomous VTOL fighter with a first flight targeted for late 2026.',
+      'A $2B raise in March 2026 ($1.5B Series G equity plus $500M preferred from Blackstone) valued it at $12.7B and funds the acquisition of simulation company Aechelon. Reuters reported a run of V-BAT crashes in 2026, which the company disputes stemmed from product defects.'
+    ],
+    leadership: [['Gary Steele', 'CEO'], ['Brandon Tseng', 'Co-founder & President']],
+    products: ['Hivemind', 'V-BAT', 'X-BAT', 'Hivemind Enterprise'],
+    funding: {
+      totalUsdM: 3000, asOf: '2026-03',
+      rounds: [
+        { date: '2025-03', type: 'Series F-1', amountUsdM: 240, postUsdM: 5300 },
+        { date: '2026-03', type: 'Series G', amountUsdM: 2000, postUsdM: 12700, leads: ['Advent International', 'JPMorganChase'] }
+      ],
+      investors: ['Advent International', 'JPMorganChase', 'Blackstone', 'Andreessen Horowitz', 'L3Harris', 'Hanwha Aerospace'],
+      note: 'Series G was $1.5B of equity plus $500M of Blackstone preferred. Total is approximate.',
+      src: [S('Fortune, Mar 2026', 'https://fortune.com/2026/03/26/shield-ai-revenue-series-g-funding-12-billion-valuation'), S('Bloomberg Law', 'https://news.bloomberglaw.com/private-equity/defense-startup-shield-ai-nabs-2-billion-at-12-7-billion-value')]
+    },
+    revenue: { valueUsdM: 300, period: 'FY2025', kind: 'estimate', note: 'Implied by company guidance of 80%+ growth to $540M+ in 2026', src: S('Fortune, Mar 2026', 'https://fortune.com/2026/03/26/shield-ai-revenue-series-g-funding-12-billion-valuation') },
+    programs: [
+      { name: 'V-BAT for the US Coast Guard', customer: 'US Coast Guard', role: 'Prime', value: '$198M', year: 2024, status: 'Fielding' },
+      { name: 'Hivemind for CCA autonomy prototyping', ref: 'cca', customer: 'US Air Force', role: 'Autonomy provider', year: 2026, status: 'Prototype' },
+      { name: 'V-BAT in Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Supplier', status: 'Fielded' }
+    ]
+  });
+
+  DTM.add({
+    id: 'quantum-systems', name: 'Quantum Systems', domain: 'quantum-systems.com', status: 'private', stage: 'Series D',
+    hq: 'Gilching', country: 'DE', founded: 2015,
+    subsegments: ['uas.tactical', 'uas.small'],
+    oneLiner: 'Vector and Twister eVTOL reconnaissance drones, combat-proven at scale in Ukraine; profitable.',
+    description: [
+      'Quantum Systems builds electric VTOL fixed-wing reconnaissance drones, notably the Vector, used in large numbers by Ukraine, as well as the Twister and Trinity families, with production in Germany, Ukraine, Australia and the US.',
+      'It raised $1.2B at about $8B in July 2026, more than doubling its valuation in eight months. The round reshaped the shareholder base so it can develop armed systems, and the board is preparing for an IPO no earlier than the first half of 2027.'
+    ],
+    leadership: [['Florian Seibel', 'Co-founder & Co-CEO']],
+    products: ['Vector', 'Twister', 'Trinity'],
+    funding: {
+      totalUsdM: 1700, asOf: '2026-07',
+      rounds: [
+        { date: '2025-05', type: 'Series C', amountUsdM: 180 },
+        { date: '2025-11', type: 'Series C ext.', amountUsdM: 210, postUsdM: 3500 },
+        { date: '2026-07', type: 'Series D', amountUsdM: 1200, postUsdM: 8000, leads: ['Blackstone', 'Noteus', 'Airbus', 'Advent'] }
+      ],
+      investors: ['Blackstone', 'Airbus', 'Advent', 'Balderton', 'Bullhound Capital', 'Peter Thiel'],
+      note: 'Total is an approximate sum of disclosed rounds. The company says it is profitable.',
+      src: [S('Pulse 2.0, Jul 2026', 'https://pulse2.com/quantum-systems-raises-1-2-billion-series-d-at-8-billion-valuation/amp/'), S('Grosswald', 'https://www.grosswald.org/quantum-systems-1-2-billion-series-d-8-billion-valuation-armed-drones/')]
+    },
+    programs: [
+      { name: 'Vector reconnaissance drones for Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Supplier', status: 'Fielded' },
+      { name: 'Bundeswehr reconnaissance UAS', customer: 'German Armed Forces', role: 'Supplier', status: 'Fielded' }
+    ]
+  });
+
+  DTM.add({
+    id: 'tekever', name: 'Tekever', domain: 'tekever.com', status: 'private', stage: 'Growth',
+    hq: 'Lisbon', country: 'PT', founded: 2001,
+    subsegments: ['uas.tactical'],
+    oneLiner: 'AR3 and AR5 long-endurance surveillance drones with onboard AI; Portugal\'s defense unicorn.',
+    description: [
+      'Tekever builds long-endurance fixed-wing drones with onboard AI and maritime surveillance payloads, including the AR3 used extensively by Ukraine and the larger AR5 used for European border and maritime patrol.',
+      'A May 2025 raise valued it above £1B, making it Europe\'s newest defense unicorn at the time.'
+    ],
+    leadership: [['Ricardo Mendes', 'Co-founder & CEO']],
+    products: ['AR3', 'AR5', 'Atlas'],
+    funding: {
+      totalUsdM: null, label: 'Undisclosed', asOf: '2025-05',
+      rounds: [{ date: '2025-05', type: 'Growth', postUsdM: 1300 }],
+      note: 'Valuation above £1B (about $1.3B) at the May 2025 raise; amounts not disclosed.',
+      src: S('Portugal Global, May 2025', 'https://portugalglobal.pt/en/news/2025/may/tekever-becomes-europe-s-newest-defence-technology-unicorn')
+    },
+    programs: [{ name: 'AR3 for Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Supplier', status: 'Fielded' }]
+  });
+
+  DTM.add({
+    id: 'stark', name: 'Stark', domain: 'stark-defence.com', status: 'private', stage: 'Series C',
+    hq: 'Berlin', country: 'DE', founded: 2024,
+    subsegments: ['missiles.loitering', 'uas.small'],
+    oneLiner: 'Virtus VTOL loitering munition; Bundeswehr contract and a Sequoia and Founders Fund backed €500M round.',
+    description: [
+      'Stark builds the Virtus, an electric VTOL loitering munition designed for mass production, tested in Ukraine and bought by the German Bundeswehr.',
+      'Germany awarded Stark a contract of about €269M in February 2026. In June 2026 it raised €500M at a valuation above €3.5B, putting over 80% into manufacturing and R&D.'
+    ],
+    products: ['Virtus'],
+    funding: {
+      totalUsdM: 580, asOf: '2026-06',
+      rounds: [{ date: '2026-06', type: 'Series C', amountUsdM: 580, postUsdM: 4060, leads: ['Sequoia', 'Founders Fund'] }],
+      investors: ['Sequoia', 'Founders Fund', 'Thiel Capital'],
+      note: '€500M round at €3.5B+ converted at about 1.16. Earlier rounds not included in the total.',
+      src: [S('Grosswald, Jun 2026', 'https://www.grosswald.org/stark-defence-500-million-series-c-sequoia-founders-fund-loitering-munition/'), S('DroneXL', 'https://dronexl.co/2026/06/24/thiel-sequoia-570m-german-drones/')]
+    },
+    programs: [
+      { name: 'Bundeswehr loitering munitions', customer: 'German Armed Forces', role: 'Prime', value: '≈€269M', year: 2026, status: 'Production' },
+      { name: 'Virtus in Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Supplier', status: 'Testing' }
+    ]
+  });
+
+  /* ---------------- CCA ---------------- */
+  DTM.add({
+    id: 'general-atomics', name: 'General Atomics', domain: 'ga.com', status: 'private', stage: 'Family-owned',
+    hq: 'San Diego, CA', country: 'US', founded: 1955,
+    subsegments: ['uas.cca', 'uas.tactical'],
+    oneLiner: 'MQ-9 Reaper maker and CCA Increment 1 competitor (YFQ-42A); largest privately held US defense prime.',
+    description: [
+      'General Atomics Aeronautical Systems builds the MQ-9 Reaper and MQ-1C Gray Eagle and is competing for the Air Force\'s Collaborative Combat Aircraft with the YFQ-42A, which entered a runoff against Anduril\'s YFQ-44A, with a decision expected by the end of 2026.',
+      'The broader group, owned by Neal and Linden Blue, also works on electromagnetic launch, nuclear fuel and fusion. In September 2025 the Air Force awarded a $14.1B sole-source contract to support the MQ-9 fleet through the late 2030s.'
+    ],
+    leadership: [['Neal Blue', 'Chairman & CEO'], ['David Alexander', 'President, GA-ASI']],
+    products: ['MQ-9B', 'MQ-1C Gray Eagle', 'YFQ-42A', 'Gambit'],
+    funding: { totalUsdM: null, label: 'Family-owned', asOf: '2026-10', note: 'Owned by Neal and Linden Blue since 1986; no outside equity.', src: S('Robotics.press profile', 'https://www.robotics.press/news/general-atomics-company-profile/') },
+    revenue: { valueUsdM: 3000, period: 'Recent year', kind: 'estimate', note: 'Commonly cited estimate; federal obligations were ~$820M in 2024', src: S('AviationOutlook', 'https://www.aviationoutlook.com/p/general-atomics-company-analysis-outlook-report') },
+    programs: [
+      { name: 'CCA Increment 1 (YFQ-42A)', ref: 'cca', customer: 'US Air Force', role: 'Prime', status: 'Flight test', note: 'Competing against Anduril for production.' },
+      { name: 'MQ-9 fleet sustainment', customer: 'US Air Force', role: 'Prime', value: '$14.1B', year: 2025, status: 'Awarded' }
+    ]
+  });
+
+  /* ---------------- Autonomy software ---------------- */
+  DTM.add({
+    id: 'applied-intuition', name: 'Applied Intuition', short: 'Applied', domain: 'appliedintuition.com', status: 'private', stage: 'Series F',
+    hq: 'Mountain View, CA', country: 'US', founded: 2017,
+    subsegments: ['uas.autonomy', 'software.engineering', 'maritime.ground'],
+    oneLiner: 'Vehicle autonomy and simulation software for automakers and, increasingly, military vehicles across domains.',
+    description: [
+      'Applied Intuition sells simulation, autonomy and vehicle operating system software to 18 of the top 20 automakers and has expanded into defense, building autonomy for ground, air and maritime platforms. It acquired EpiSci, an aircraft-autonomy specialist, in 2025.',
+      'Its June 2025 Series F valued it at $15B. It says it is profitable and had 1,638 employees in September 2026.'
+    ],
+    leadership: [['Qasar Younis', 'Co-founder & CEO'], ['Peter Ludwig', 'Co-founder & CTO']],
+    employees: '1,638',
+    products: ['Simian', 'Vehicle OS', 'EpiSci tactical autonomy'],
+    funding: {
+      totalUsdM: 1450, asOf: '2025-06',
+      rounds: [
+        { date: '2024-03', type: 'Series E', amountUsdM: 250, postUsdM: 6000 },
+        { date: '2025-06', type: 'Series F', amountUsdM: 600, postUsdM: 15000, leads: ['BlackRock', 'Kleiner Perkins'] }
+      ],
+      investors: ['Andreessen Horowitz', 'Kleiner Perkins', 'BlackRock', 'General Catalyst', 'Lux Capital'],
+      note: 'The Series F included a tender offer. Total is approximate.',
+      src: [S('Munich Startup', 'https://insights.munich-startup.de/news/note/applied-intuition-ceo-cto-on-building-the-15b-physical-ai-infrastructure-company'), S('DefiLlama', 'https://defillama.com/pre-ipo/applied-intuition')]
+    },
+    programs: [{ name: 'Autonomy for Army and Navy programs', customer: 'US Army / US Navy', role: 'Software provider', status: 'Deploying' }]
+  });
+
+  DTM.add({
+    id: 'auterion', name: 'Auterion', domain: 'auterion.com', status: 'private', stage: 'Series B',
+    hq: 'Arlington, VA', country: 'US', founded: 2017,
+    subsegments: ['uas.autonomy', 'uas.components'],
+    oneLiner: 'AuterionOS and Skynode: an open operating system and strike autonomy kit for drones from many makers.',
+    description: [
+      'Auterion makes AuterionOS, a drone operating system built on open-source PX4, and the Skynode computers that give drones from many manufacturers terminal guidance and swarming. Tens of thousands of its strike kits have gone to Ukraine.',
+      'It raised $130M in September 2025 at a valuation "north of" $600M and says it is close to $100M of revenue and cash-flow positive. A 2026 round at about $1.2B has been reported but not confirmed.'
+    ],
+    leadership: [['Lorenz Meier', 'Co-founder & CEO']],
+    products: ['AuterionOS', 'Skynode S', 'Nemyx swarm engine'],
+    funding: {
+      totalUsdM: 160, asOf: '2025-09',
+      rounds: [{ date: '2025-09', type: 'Series B', amountUsdM: 130, postUsdM: 600 }],
+      note: 'Valuation shown is the CEO\'s "north of $600M". Total is approximate. A $200M round at $1.2B (March 2026) is listed by one tracker but unconfirmed.',
+      src: [S('Bloomberg Law', 'https://news.bloomberglaw.com/ip-law/auterion-raises-130-million-aims-to-be-microsoft-for-drones'), S('Resilience Media', 'https://resiliencemedia.co/auterion-the-drone-software-startup-plans-to-raise-200m-at-a-1-2b-valuation/')]
+    },
+    revenue: { valueUsdM: 100, period: '2026 run-rate', kind: 'reported', note: 'CEO: "close to $100M"', src: S('Resilience Media', 'https://resiliencemedia.co/auterion-the-drone-software-startup-plans-to-raise-200m-at-a-1-2b-valuation/') },
+    programs: [
+      { name: 'Low-cost long-range strike prototyping', ref: 'etv', customer: 'DoD', role: 'Prime (with Ukrainian partner)', value: '$50M', status: 'Prototype' },
+      { name: 'Skynode strike kits for Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Supplier', status: 'Fielded' }
+    ]
+  });
+
+  DTM.add({
+    id: 'merlin', name: 'Merlin', domain: 'merlinlabs.com', status: 'public', ticker: 'MRLN', exchange: 'NASDAQ',
+    hq: 'Boston, MA', country: 'US', founded: 2018,
+    subsegments: ['uas.autonomy'],
+    oneLiner: 'Merlin Pilot autonomy for existing military aircraft, starting with the KC-135 and C-130J.',
+    description: [
+      'Merlin builds an AI-enabled autonomous flight system that can be retrofitted to existing aircraft, with Air Force programs to bring reduced-crew and autonomous operations to tankers and transports.',
+      'It listed on Nasdaq in March 2026 through a SPAC merger. The shares have fallen sharply since, leaving a micro-cap valuation.'
+    ],
+    leadership: [['Matt George', 'Founder & CEO']],
+    products: ['Merlin Pilot'],
+    marketCap: { usdM: 188, asOf: '2026-09-21', src: S('MarketChameleon', 'https://marketchameleon.com/Overview/MRLN/Summary/') },
+    valuation: { note: 'Listed via SPAC in March 2026; closed its first day at $9.03.', asOf: '2026-09-21', src: S('Hoodline, Mar 2026', 'https://hoodline.com/2026/03/merlin-s-nasdaq-liftoff-ends-boston-tech-ipo-dry-spell/') },
+    programs: [{ name: 'KC-135 autonomy', customer: 'US Air Force', role: 'Prime', status: 'Development' }]
+  });
+
+  DTM.add({
+    id: 'scout-ai', name: 'Scout AI', domain: 'scoutco.ai', status: 'private', stage: 'Series A',
+    hq: 'Sunnyvale, CA', country: 'US', founded: 2024,
+    subsegments: ['uas.autonomy', 'maritime.ground'],
+    oneLiner: 'Fury, a foundation model for controlling uncrewed vehicles across domains.',
+    description: [
+      'Scout AI is training Fury, a vision-language-action foundation model meant to act as the "AI brain" for uncrewed ground and air vehicles, taking mission orders in natural language.',
+      'It booked $11M of Department of War contracts in its first year and raised a $100M Series A in April 2026.'
+    ],
+    leadership: [['Colby Adcock', 'Co-founder & CEO'], ['Collin Otis', 'Co-founder & CTO']],
+    products: ['Fury'],
+    funding: {
+      totalUsdM: 115, asOf: '2026-04',
+      rounds: [
+        { date: '2025-04', type: 'Seed', amountUsdM: 15 },
+        { date: '2026-04', type: 'Series A', amountUsdM: 100, leads: ['Align Ventures', 'Draper Associates'] }
+      ],
+      investors: ['Align Ventures', 'Draper Associates', 'Decisive Point', 'Booz Allen Ventures'],
+      src: S('AI Business, Apr 2026', 'https://aibusiness.com/robotics/scout-ai-raises-100m-build-ai-brain-autonomous-warfare')
+    },
+    programs: []
+  });
+
+  /* ---------------- Components & supply chain ---------------- */
+  DTM.add({
+    id: 'unusual-machines', name: 'Unusual Machines', domain: 'unusualmachines.com', status: 'public', ticker: 'UMAC', exchange: 'NYSE American',
+    hq: 'Orlando, FL', country: 'US', founded: 2019,
+    subsegments: ['uas.components'],
+    oneLiner: 'NDAA-compliant drone components: motors, flight controllers and FPV goggles made in the US.',
+    description: [
+      'Unusual Machines makes components for small drones, including motors, flight controllers, cameras and Fat Shark goggles, to replace Chinese parts in NDAA-compliant drones. It also owns the Rotor Riot retail brand.',
+      'Revenue jumped about 7× year on year in Q2 2026 as drone makers scaled. It raised about $150M in a March 2026 offering.'
+    ],
+    leadership: [['Allan Evans', 'CEO']],
+    products: ['Motors', 'Flight controllers', 'Fat Shark', 'Rotor Riot'],
+    marketCap: { usdM: 1380, asOf: '2026-08-21', src: S('Benzinga', 'https://www.benzinga.com/stock/UMAC') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2024', revenue: 5.6 }, { label: 'FY2025', revenue: 11.2 }],
+      notes: 'Q2 2026 revenue was about $16.7M, up 687%. Management targets $12M–$14M for Q3 2026.',
+      asOf: '2026-08-14', src: S('American Companies (SEC data)', 'https://americancompanies.com/company/unusual-machines-inc/')
+    },
+    valuation: { note: 'Trades above 100× FY2025 revenue; the market is pricing in rapid component demand growth.', asOf: '2026-08-21', src: S('Benzinga', 'https://www.benzinga.com/stock/UMAC') },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'firestorm', name: 'Firestorm Labs', short: 'Firestorm', domain: 'firestormlabs.com', status: 'private', stage: 'Series B',
+    hq: 'San Diego, CA', country: 'US', founded: 2022,
+    subsegments: ['uas.components', 'industrial.manufacturing'],
+    oneLiner: 'xCell expeditionary microfactories that 3D-print drones near the front line.',
+    description: [
+      'Firestorm builds modular drones that can be 3D-printed on demand in containerized xCell factories, so units can produce and adapt aircraft in the field.',
+      'It received a $30M DoD APFIT award and raised an $82M Series B in April 2026, bringing equity raised to $153M.'
+    ],
+    leadership: [['Dan Magy', 'Co-founder & CEO']],
+    products: ['xCell', 'Tempest', 'El Niño'],
+    funding: {
+      totalUsdM: 153, asOf: '2026-04',
+      rounds: [
+        { date: '2024-09', type: 'Seed', amountUsdM: 12.5 },
+        { date: '2026-04', type: 'Series B', amountUsdM: 82, leads: ['Washington Harbour Partners'] }
+      ],
+      investors: ['Washington Harbour Partners', 'NEA', 'In-Q-Tel', 'Lockheed Martin Ventures', 'Booz Allen Ventures', 'Ondas'],
+      src: S('Pulse 2.0, Apr 2026', 'https://pulse2.com/firestorm-labs-raises-82-million-series-b-to-scale-expeditionary-defense-manufacturing-platform/amp/')
+    },
+    programs: [{ name: 'APFIT expeditionary manufacturing', customer: 'DoD', role: 'Prime', value: '$30M', status: 'Production' }]
+  });
+})();
 
 </script>
 <script>/* data/companies/cuas.js */
-/* placeholder */
+/* Counter-UAS & Air Defense segment. Anduril, Neros, Ondas and AeroVironment also appear here. */
+(function () {
+  const S = (t, u) => (u ? { t, u } : { t });
+
+  /* ---------------- Kinetic interceptors ---------------- */
+  DTM.add({
+    id: 'cambridge-aerospace', name: 'Cambridge Aerospace', domain: 'cambridgeaerospace.com', status: 'private', stage: 'Series C',
+    hq: 'Cambridge', country: 'UK', founded: 2024,
+    subsegments: ['cuas.kinetic'],
+    oneLiner: 'Skyhammer low-cost interceptors for drones and cruise missiles, scaling to thousands a month.',
+    description: [
+      'Cambridge Aerospace builds Skyhammer, a jet-powered interceptor designed to bring down attack drones and cruise missiles at a fraction of the cost of a traditional air defense missile. Skyhammer is in production, with a target of 2,500 a month by early 2027.',
+      'Founded in September 2024, it has raised more than $630M. In August 2026 it closed a $300M Series C at $3.4B, after winning several UK Ministry of Defence contracts.'
+    ],
+    leadership: [['Steven Barrett', 'Co-founder & CEO']],
+    products: ['Skyhammer'],
+    funding: {
+      totalUsdM: 636, asOf: '2026-08',
+      rounds: [
+        { date: '2026-04', type: 'Series B', amountUsdM: 200, postUsdM: 1300 },
+        { date: '2026-08', type: 'Series C', amountUsdM: 300, postUsdM: 3400, leads: ['DFJ Growth'] }
+      ],
+      investors: ['DFJ Growth', 'Lux Capital', 'Accel', 'Lakestar', 'Elad Gil'],
+      src: [S('Aerospace Testing International', 'https://www.aerospacetestinginternational.com/news/cambridge-aerospace-raises-300m-in-series-c-funding-round.html'), S('Grosswald', 'https://www.grosswald.org/cambridge-aerospace-300-million-series-c-3-4-billion-valuation-dfj-growth-skyhammer-nightstar-norfolk/')]
+    },
+    programs: [{ name: 'Skyhammer interceptors', customer: 'UK Ministry of Defence', role: 'Prime', year: 2026, status: 'Production' }]
+  });
+
+  DTM.add({
+    id: 'allen-control', name: 'Allen Control Systems', short: 'Allen Control', domain: 'allencontrolsystems.com', status: 'private', stage: 'Series B',
+    hq: 'Austin, TX', country: 'US', founded: 2022,
+    subsegments: ['cuas.kinetic'],
+    oneLiner: 'Bullfrog, an AI-enabled robotic gun turret that shoots down small drones.',
+    description: [
+      'Allen Control Systems builds Bullfrog, an autonomous weapon station that uses computer vision to aim a standard machine gun at small drones, offering a cheap shot compared with interceptor missiles.',
+      'Bullfrog is deployed with the US Army and Navy and works with Joint Interagency Task Force 401. The company raised a $200M Series B at $2.2B in June 2026.'
+    ],
+    leadership: [['Steve Simoni', 'Co-founder & CEO']],
+    products: ['Bullfrog'],
+    funding: {
+      totalUsdM: 200, asOf: '2026-06',
+      rounds: [{ date: '2026-06', type: 'Series B', amountUsdM: 200, postUsdM: 2200, leads: ['Smash Capital'] }],
+      investors: ['Smash Capital', 'Craft Ventures', 'Rally Ventures', 'Inspired Capital'],
+      note: 'Total shows the Series B only; earlier rounds not included.',
+      src: S('Business Wire, Jun 2026', 'https://www.businesswire.com/news/home/20260526638233/en/Allen-Control-Systems-Raises-%24200-Million-Series-B-at-%242.2-Billion-Post-Money-Valuation-to-Scale-Manufacturing-and-Accelerate-Deployment-of-Bullfrog')
+    },
+    programs: [{ name: 'Bullfrog counter-drone deployments', ref: 'cuas-army', customer: 'US Army / US Navy / JIATF-401', role: 'Prime', status: 'Deployed' }]
+  });
+
+  DTM.add({
+    id: 'frankenburg', name: 'Frankenburg Technologies', short: 'Frankenburg', domain: 'frankenburg.tech', status: 'private', stage: 'Series A',
+    hq: 'Tallinn', country: 'EE', founded: 2024,
+    subsegments: ['cuas.kinetic'],
+    oneLiner: 'Mass-producible mini-missiles to shoot down drones at drone-like prices.',
+    description: [
+      'Frankenburg, founded by former Estonian defense official Kusti Salm, is building small, low-cost guided missiles to counter drones, designed for production in the tens of thousands per year.'
+    ],
+    leadership: [['Kusti Salm', 'Co-founder & CEO']],
+    products: ['Mark I'],
+    funding: {
+      totalUsdM: 46, asOf: '2026-02',
+      rounds: [{ date: '2026-01', type: 'Series A', amountUsdM: 50, postUsdM: 400 }],
+      note: 'A $50M round at $400M was reported in January 2026 by foreign media but not confirmed by the company. Trackers list $40M–$46M raised.',
+      src: [S('Techleap', 'https://finder.techleap.nl/news/feed/frankenburg-raises-50m-at-400m-valuation-kusti-salm-yet-to-comment-1'), S('Tech.eu', 'https://funding.tech.eu/companies/27E46464-927B-4615-BF20-549E56AFD0A4')]
+    },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'tytan', name: 'Tytan Technologies', short: 'Tytan', domain: 'tytan-technologies.com', status: 'private', stage: 'Series A',
+    hq: 'Munich', country: 'DE', founded: 2023,
+    subsegments: ['cuas.kinetic'],
+    oneLiner: 'AI-guided interceptor drones for European air defense, backed by the NATO Innovation Fund.',
+    description: [
+      'Tytan builds autonomous interceptor drones that use onboard AI to find and ram hostile drones. It is scaling manufacturing in Germany and Ukraine, with a target of about 3,000 interceptors a month by the end of 2026.'
+    ],
+    products: ['Tytan interceptor'],
+    funding: {
+      totalUsdM: 53, asOf: '2026-02',
+      rounds: [{ date: '2026-02', type: 'Series A', amountUsdM: 35, postUsdM: 175, leads: ['NATO Innovation Fund', 'Armira'] }],
+      investors: ['NATO Innovation Fund', 'Armira'],
+      note: '€30M Series A; about €46M raised in total. Valuation of just above €150M per Seedtable.',
+      src: [S('NATO Innovation Fund', 'https://www.nif.fund/news/the-nato-innovation-fund-co-leads-e30m-series-a-for-tytan-to-build-europes-next-generation-air-defence/'), S('Munich Startup', 'https://www.munich-startup.de/en/news/30-million-euros-for-tytan')]
+    },
+    programs: [{ name: 'Interceptors for Ukraine', ref: 'ukraine', customer: 'Ukraine', role: 'Supplier', status: 'Fielded' }]
+  });
+
+  /* ---------------- Directed energy & HPM ---------------- */
+  DTM.add({
+    id: 'epirus', name: 'Epirus', domain: 'epirusinc.com', status: 'private', stage: 'Series D',
+    hq: 'Torrance, CA', country: 'US', founded: 2018,
+    subsegments: ['cuas.de'],
+    oneLiner: 'Leonidas solid-state high-power microwave that disables drone swarms in one shot.',
+    description: [
+      'Epirus builds Leonidas, a software-defined high-power microwave system using gallium nitride amplifiers. It can disable many drones at once and costs very little per shot.',
+      'The Army\'s IFPC-HPM program bought four prototypes, and a Generation II contract followed in 2025. Epirus raised a $250M Series D in March 2025 to scale production.'
+    ],
+    leadership: [['Andy Lowery', 'CEO']],
+    products: ['Leonidas', 'Leonidas Expeditionary', 'Leonidas Pod'],
+    funding: {
+      totalUsdM: 550, asOf: '2025-03',
+      rounds: [
+        { date: '2022-02', type: 'Series C', amountUsdM: 200, postUsdM: 1350 },
+        { date: '2025-03', type: 'Series D', amountUsdM: 250, leads: ['8VC', 'Washington Harbour Partners'] }
+      ],
+      investors: ['8VC', 'Washington Harbour Partners', 'General Dynamics Land Systems', 'Bedrock'],
+      note: 'The Series D valuation was not disclosed.',
+      src: S('Washington Technology, Mar 2025', 'https://washingtontechnology.com/companies/2025/03/epirus-collects-250m-series-d-capital-scale-production/403490/')
+    },
+    programs: [
+      { name: 'IFPC-HPM prototypes', ref: 'cuas-army', customer: 'US Army RCCTO', role: 'Prime', value: '$66.1M', year: 2023, status: 'Delivered', note: 'Four Leonidas prototypes delivered by March 2024.' },
+      { name: 'IFPC-HPM Generation II', ref: 'cuas-army', customer: 'US Army RCCTO', role: 'Prime', value: '$43.6M', year: 2025, status: 'Development', src: S('Epirus', 'https://www.epirusinc.com/press-releases/epirus-receives-43-million-contract-from-u-s-army-for-ifpc-hpm-generation-ii-systems') }
+    ]
+  });
+
+  DTM.add({
+    id: 'nlight', name: 'nLight', domain: 'nlight.net', status: 'public', ticker: 'LASR', exchange: 'NASDAQ',
+    hq: 'Camas, WA', country: 'US', founded: 2000,
+    subsegments: ['cuas.de'],
+    oneLiner: 'Semiconductor and fiber lasers; now mostly a high-energy laser weapons supplier.',
+    description: [
+      'nLight makes semiconductor and fiber lasers and has become a key supplier of high-energy laser sources and beam control for US Army and Navy directed-energy weapons.',
+      'Aerospace and defense was 67% of 2025 revenue. Defense product revenue nearly doubled year on year in Q1 2026, with a defense backlog near $110M.'
+    ],
+    leadership: [['Scott Keeney', 'Founder, Chairman & CEO']],
+    products: ['High-energy laser sources', 'Beam directors', 'Fiber lasers'],
+    marketCap: { usdM: 2720, asOf: '2026-08-20', src: S('Motley Fool', 'https://www.fool.com/quote/nasdaq/nlight-inc/lasr/') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [
+        { label: 'FY2023', revenue: 209.9 },
+        { label: 'FY2024', revenue: 198.5, netIncome: -74.2 },
+        { label: 'FY2025', revenue: 261.3, netIncome: -23.5 }
+      ],
+      defenseMix: '67%',
+      notes: 'Q1 2026 revenue was about $80M, up ~55%, with record aerospace and defense product revenue of about $33M.',
+      asOf: '2026-05-07', src: [S('Simply Wall St', 'https://simplywall.st/stocks/us/tech/nasdaq-lasr/nlight/past'), S('Walnut Invest', 'https://walnutinvest.com/stocks/lasr/is-it-a-buy-or-sell')]
+    },
+    valuation: { evSales: 10.4, basis: 'Market cap ÷ FY2025 revenue', note: 'EV not compiled; ratio shown uses market cap.', asOf: '2026-08-20', src: S('Motley Fool', 'https://www.fool.com/quote/nasdaq/nlight-inc/lasr/') },
+    programs: [{ name: 'Army and Navy high-energy laser programs', customer: 'US Army / US Navy', role: 'Laser supplier', status: 'Production' }]
+  });
+
+  DTM.add({
+    id: 'eos', name: 'Electro Optic Systems', short: 'EOS', domain: 'eos-aus.com', status: 'public', ticker: 'EOS', exchange: 'ASX',
+    hq: 'Canberra', country: 'AU', founded: 1983,
+    subsegments: ['cuas.de', 'cuas.kinetic'],
+    oneLiner: 'Remote weapon stations and the Apollo high-energy laser for counter-drone defense.',
+    description: [
+      'EOS builds remote weapon systems, including the R400 and Slinger counter-drone stations, and the Apollo high-energy laser weapon, alongside space tracking technology.',
+      'Defense orders have surged: first-half 2026 revenue rose 283% to A$168.8M. It acquired UK counter-drone firm MARSS in May 2026 and guides to A$360M–$400M for the full year.'
+    ],
+    leadership: [['Andreas Schwer', 'CEO']],
+    products: ['R400 RWS', 'Slinger', 'Apollo laser'],
+    marketCap: { usdM: 1610, local: { cur: 'AUD', valueM: 2478 }, asOf: '2026-09-29', src: S('InvestSMART', 'https://www.investsmart.com.au/security/asx/eos/about:blank') },
+    financials: {
+      cur: 'AUD', fyEnd: 'Dec',
+      periods: [{ label: 'H1 2026', revenue: 168.8 }],
+      notes: 'Full-year 2026 revenue guidance is A$360M–$400M including MARSS. H1 2026 pre-tax loss of A$28.9M included a A$34M non-cash MARSS fair value loss.',
+      asOf: '2026-08-25', src: S('EOS half-year report', 'https://stocklight.com/stocks/au/asx-eos/electro-optic-systems-holdings/announcements/2026-08-25-appendix-4d-half-year-financial-report-and-revenue-update')
+    },
+    valuation: { evSales: 6.5, basis: 'Market cap ÷ 2026 guidance midpoint', note: 'EV not compiled; ratio shown uses market cap. AUD converted at about 0.65.', asOf: '2026-09-29', src: S('InvestSMART', 'https://www.investsmart.com.au/security/asx/eos/about:blank') },
+    programs: [
+      { name: 'Remote weapon station order', customer: 'Undisclosed', role: 'Prime', value: 'US$124M', year: 2026, status: 'Production' },
+      { name: 'Apollo high-energy laser', customer: 'European NATO member / UAE JV', role: 'Prime', status: 'Contracted' }
+    ]
+  });
+
+  /* ---------------- Detection & sensing ---------------- */
+  DTM.add({
+    id: 'droneshield', name: 'DroneShield', domain: 'droneshield.com', status: 'public', ticker: 'DRO', exchange: 'ASX',
+    hq: 'Sydney', country: 'AU', founded: 2014,
+    subsegments: ['cuas.sensing', 'cuas.ew'],
+    oneLiner: 'Counter-drone detection and RF defeat: handheld jammers, vehicle and fixed systems and C2 software.',
+    description: [
+      'DroneShield sells RF detection and electronic defeat systems, from handheld DroneGun jammers to vehicle-mounted and fixed-site systems, tied together by its DroneSentry-C2 software, which also integrates partner radars.',
+      'Revenue nearly quadrupled in 2025 to about A$217M. Its pipeline was A$2.09B in January 2026, led by Europe.'
+    ],
+    leadership: [['Oleg Vornik', 'CEO']],
+    products: ['DroneGun', 'RfPatrol', 'DroneSentry', 'DroneSentry-C2'],
+    marketCap: { usdM: 2330, local: { cur: 'AUD', valueM: 3580 }, asOf: '2026-03-30', src: S('Simply Wall St', 'https://www.simplywall.st/stocks/au/capital-goods/asx-dro/droneshield-shares') },
+    financials: {
+      cur: 'AUD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 55.1 }, { label: 'FY2024', revenue: 57.5 }, { label: 'FY2025', revenue: 216.8 }],
+      notes: 'SaaS revenue was A$11.6M in 2025, up from A$2.8M. Unweighted sales pipeline A$2.09B (Jan 2026).',
+      asOf: '2026-03-30', src: [S('Simply Wall St', 'https://www.simplywall.st/stocks/au/capital-goods/asx-dro/droneshield-shares'), S('Kalkine', 'https://kalkine.com.au/news/technology/is-droneshield-asxdro-entering-a-new-growth-phase-after-its-fy2025-revenue-surge')]
+    },
+    valuation: { evSales: 16.5, basis: 'Market cap ÷ FY2025 revenue', note: 'EV not compiled; ratio shown uses market cap.', asOf: '2026-03-30', src: S('Simply Wall St', 'https://www.simplywall.st/stocks/au/capital-goods/asx-dro/droneshield-shares') },
+    programs: [{ name: 'US and European counter-drone orders', ref: 'cuas-army', customer: 'US DoD / European MoDs', role: 'Prime', status: 'Delivering' }]
+  });
+
+  DTM.add({
+    id: 'hidden-level', name: 'Hidden Level', domain: 'hiddenlevel.com', status: 'private', stage: 'Series C',
+    hq: 'Syracuse, NY', country: 'US', founded: 2016,
+    subsegments: ['cuas.sensing'],
+    oneLiner: 'Passive radar network that detects drones, including "dark" drones that emit no signal.',
+    description: [
+      'Hidden Level uses passive radar, listening to existing radio signals in the environment, to detect and track drones and other low-altitude aircraft without transmitting, including drones that emit no RF signal.'
+    ],
+    products: ['Passive RF sensing network'],
+    funding: {
+      totalUsdM: 120, asOf: '2025-02',
+      rounds: [{ date: '2025-02', type: 'Series C', amountUsdM: 65, leads: ['DFJ Growth'] }],
+      investors: ['DFJ Growth', 'Booz Allen Ventures', 'Revolution Growth', 'Costanoa Ventures', 'Founders Circle'],
+      note: 'Totals vary ($93M–$120M) by tracker.',
+      src: S('The Robot Report', 'https://www.therobotreport.com/hidden-level-raises-65m-for-drone-detection-system/')
+    },
+    programs: [{ name: 'APFIT tactical passive C-UAS radar', ref: 'cuas-army', customer: 'DoD', role: 'Prime', value: '$10M', year: 2023, status: 'Fielding' }]
+  });
+
+  DTM.add({
+    id: 'robin-radar', name: 'Robin Radar Systems', short: 'Robin Radar', domain: 'robinradar.com', status: 'private', stage: 'PE-backed',
+    hq: 'Delft', country: 'NL', founded: 2010,
+    subsegments: ['cuas.sensing', 'sensors.radar'],
+    oneLiner: '3D radars purpose-built to tell drones from birds; reportedly up for sale at about €2B.',
+    description: [
+      'Robin Radar builds radars specialized for drones and birds, including the IRIS counter-drone radar and ELVIRA, used by militaries, airports and critical infrastructure.',
+      'Reuters reported in 2026 that owner Parcom is preparing a sale that could value the company at about €2B, with BAE Systems, CVC, Blackstone, Advent and EQT named as possible bidders.'
+    ],
+    products: ['IRIS', 'ELVIRA', 'MAX'],
+    funding: { totalUsdM: null, label: 'PE-backed', asOf: '2026-08', note: 'Backed by Dutch investor Parcom; about $26M of venture funding raised earlier.', src: S('Realtid (Reuters)', 'https://www.realtid.se/bors-finans/eqt-kan-slass-om-dronarradarn-som-skyddade-os-vard-22-miljarder/') },
+    valuation: { postUsdM: 2300, date: '2026-08', type: 'Reported sale target', note: 'Possible sale at about €2B, per Reuters. Not a priced round.', src: S('Realtid (Reuters)', 'https://www.realtid.se/bors-finans/eqt-kan-slass-om-dronarradarn-som-skyddade-os-vard-22-miljarder/') },
+    programs: []
+  });
+
+  /* ---------------- EW & cyber takeover ---------------- */
+  DTM.add({
+    id: 'd-fend', name: 'D-Fend Solutions', short: 'D-Fend', domain: 'd-fendsolutions.com', status: 'private', stage: 'Growth',
+    hq: 'Ra\'anana', country: 'IL', founded: 2017,
+    subsegments: ['cuas.ew'],
+    oneLiner: 'EnforceAir cyber takeover that seizes control of rogue drones and lands them safely.',
+    description: [
+      'D-Fend takes over hostile drones by exploiting their communication protocols, then lands them in a safe zone. This avoids jamming and kinetic fire, which matters in cities and near airports.'
+    ],
+    leadership: [['Zohar Halachmi', 'CEO']],
+    products: ['EnforceAir2'],
+    funding: {
+      totalUsdM: 67, asOf: '2024-12',
+      rounds: [{ date: '2024-12', type: 'Growth', amountUsdM: 31, leads: ['Israel Growth Partners'] }],
+      investors: ['Israel Growth Partners', 'Vertex Ventures', 'Vertex Growth'],
+      src: S('Security Systems News', 'https://securitysystemsnews.com/article/d-fend-solutions-raises-31m')
+    },
+    programs: []
+  });
+})();
 
 </script>
 <script>/* data/companies/maritime.js */
-/* placeholder */
+/* Maritime & Ground Robotics segment. Anduril, Helsing, Applied Intuition and Scout AI also appear here. */
+(function () {
+  const S = (t, u) => (u ? { t, u } : { t });
+
+  /* ---------------- Uncrewed surface vessels ---------------- */
+  DTM.add({
+    id: 'saronic', name: 'Saronic', domain: 'saronic.com', status: 'private', stage: 'Series D',
+    hq: 'Austin, TX', country: 'US', founded: 2022,
+    subsegments: ['maritime.usv', 'maritime.shipbuilding'],
+    oneLiner: 'Autonomous surface vessels from 6 to 150+ feet, and Port Alpha, a $3B+ shipyard for building them.',
+    description: [
+      'Saronic builds autonomous surface vessels, from the small Spyglass and Corsair to the much larger Marauder, along with the autonomy software that lets them operate in fleets.',
+      'It raised $1.75B at $9.25B in March 2026 and is building Port Alpha, a planned $3B+ shipyard in Brownsville, Texas, with first operations expected in 2028. One report put 2025 revenue at just over $200M with 1,300+ employees.'
+    ],
+    leadership: [['Dino Mavrookas', 'Co-founder & CEO']],
+    employees: '1,300+',
+    products: ['Corsair', 'Cutlass', 'Marauder', 'Spyglass', 'Port Alpha'],
+    funding: {
+      totalUsdM: 2600, asOf: '2026-03',
+      rounds: [
+        { date: '2024-07', type: 'Series B', amountUsdM: 175, postUsdM: 1000 },
+        { date: '2025-02', type: 'Series C', amountUsdM: 600, postUsdM: 4000, leads: ['Elad Gil'] },
+        { date: '2026-03', type: 'Series D', amountUsdM: 1750, postUsdM: 9250, leads: ['Kleiner Perkins'] }
+      ],
+      investors: ['Kleiner Perkins', 'Andreessen Horowitz', 'General Catalyst', '8VC', 'Elad Gil', 'Caffeinated Capital'],
+      note: 'Total is an approximate sum of disclosed rounds. A secondary-market tracker implied about $15B in July 2026.',
+      src: [S('Saronic press release, Mar 2026', 'https://www.aap.com.au/aapreleases/cision20260331ae21888/'), S('StockAnalysis', 'https://stockanalysis.com/private/saronic/')]
+    },
+    revenue: { valueUsdM: 200, period: 'FY2025', kind: 'estimate', note: 'Single press report', src: S('StockAnalysis / press reports', 'https://stockanalysis.com/private/saronic/') },
+    programs: [
+      { name: 'Navy autonomous surface vessel prototypes', ref: 'usv-navy', customer: 'US Navy', role: 'Prime', status: 'Production' },
+      { name: 'Port Alpha shipyard', customer: 'Company investment (Texas incentive $80M)', role: 'Owner', value: '$3B+', year: 2026, status: 'Construction' }
+    ]
+  });
+
+  DTM.add({
+    id: 'blue-water-autonomy', name: 'Blue Water Autonomy', short: 'Blue Water', domain: 'bluewaterautonomy.com', status: 'private', stage: 'Series A',
+    hq: 'Boston, MA', country: 'US', founded: 2024,
+    subsegments: ['maritime.usv', 'maritime.shipbuilding'],
+    oneLiner: 'Large, ocean-going uncrewed ships designed from the keel up to sail for months without crew.',
+    description: [
+      'Blue Water Autonomy is designing ship-sized autonomous vessels for long-endurance naval missions, built for reliability without crews aboard rather than converted from crewed designs.',
+      'Its first vessel is expected to launch and deliver to the US Navy in the second half of 2026. It raised a $50M Series A led by GV.'
+    ],
+    leadership: [['Rylan Hamilton', 'Co-founder & CEO']],
+    funding: {
+      totalUsdM: 64, asOf: '2025-09',
+      rounds: [
+        { date: '2025-04', type: 'Seed', amountUsdM: 14 },
+        { date: '2025-09', type: 'Series A', amountUsdM: 50, leads: ['GV'] }
+      ],
+      investors: ['GV'],
+      src: S('The Robot Report', 'https://www.therobotreport.com/blue-water-autonomy-nets-50m-to-build-autonomous-ships/')
+    },
+    programs: [{ name: 'First autonomous ship delivery', ref: 'usv-navy', customer: 'US Navy', role: 'Prime', status: 'Building' }]
+  });
+
+  DTM.add({
+    id: 'saildrone', name: 'Saildrone', domain: 'saildrone.com', status: 'private', stage: 'Series D',
+    hq: 'Alameda, CA', country: 'US', founded: 2012,
+    subsegments: ['maritime.usv'],
+    oneLiner: 'Wind- and solar-powered ocean drones for persistent maritime domain awareness.',
+    description: [
+      'Saildrone operates long-endurance wind- and solar-powered uncrewed surface vessels that patrol for months, carrying radar, cameras and acoustic sensors for maritime domain awareness and ocean mapping.',
+      'Lockheed Martin made a $50M strategic investment to integrate defense payloads.'
+    ],
+    leadership: [['Richard Jenkins', 'Founder & CEO']],
+    products: ['Explorer', 'Voyager', 'Surveyor'],
+    funding: {
+      totalUsdM: 325, asOf: '2025-10',
+      rounds: [{ date: '2025-10', type: 'Strategic', amountUsdM: 50, leads: ['Lockheed Martin'] }],
+      investors: ['Lockheed Martin', 'Social Capital', 'Tiger Global', 'Capricorn Investment Group'],
+      note: 'Totals vary ($290M–$325M) by tracker. Trackers estimated a valuation near $650M in late 2025.',
+      src: [S('Komo', 'https://komo.ai/directory/saildrone-funding'), S('StockAnalysis', 'https://stockanalysis.com/private/saildrone/')]
+    },
+    programs: [{ name: 'US Navy 5th Fleet unmanned operations', ref: 'usv-navy', customer: 'US Navy', role: 'Service provider', status: 'Operational' }]
+  });
+
+  DTM.add({
+    id: 'havoc', name: 'Havoc', domain: 'havocai.com', status: 'private', stage: 'Series A',
+    hq: 'Providence, RI', country: 'US', founded: 2023,
+    subsegments: ['maritime.usv', 'uas.autonomy'],
+    oneLiner: 'Collaborative autonomy for swarms of uncrewed boats, expanding to all domains.',
+    description: [
+      'Havoc (formerly HavocAI) builds autonomy software and low-cost uncrewed boats that operate as coordinated swarms, and is extending its software to air and ground vehicles.',
+      'It raised $85M in October 2025 at a $500M valuation, then $100M in May 2026, bringing total capital to about $200M.'
+    ],
+    leadership: [['Paul Lwin', 'Co-founder & CEO']],
+    funding: {
+      totalUsdM: 200, asOf: '2026-05',
+      rounds: [
+        { date: '2025-10', type: 'Series B', amountUsdM: 85, postUsdM: 500, leads: ['B Capital'] },
+        { date: '2026-05', type: 'Growth', amountUsdM: 100 }
+      ],
+      investors: ['B Capital', 'In-Q-Tel', 'Lockheed Martin Ventures', 'Outlander VC', 'Scout VC'],
+      note: 'The company labeled its May 2026 round a Series A.',
+      src: S('VCA Online, May 2026', 'https://www.vcaonline.com/news/2026051210/havoc-raises-100m-series-a-to-power-the-future-of-all-domain-collaborative-autonomy/')
+    },
+    programs: []
+  });
+
+  /* ---------------- Undersea ---------------- */
+  DTM.add({
+    id: 'kraken-robotics', name: 'Kraken Robotics', short: 'Kraken', domain: 'krakenrobotics.com', status: 'public', ticker: 'PNG', exchange: 'TSX-V',
+    hq: 'St. John\'s, NL', country: 'CA', founded: 2012,
+    subsegments: ['maritime.uuv'],
+    oneLiner: 'Synthetic aperture sonar, subsea batteries and seabed services for navies and offshore energy.',
+    description: [
+      'Kraken makes synthetic aperture sonar (SAS) and towed sonar systems for mine countermeasures and seabed warfare, SeaPower subsea batteries for UUVs, and provides subsea survey services.',
+      'It agreed to buy Covelya Group for C$615M, with closing expected in Q2 2026, adding scale in underwater sensing.'
+    ],
+    leadership: [['Greg Reid', 'President & CEO']],
+    products: ['KATFISH', 'AquaPix SAS', 'SeaPower batteries'],
+    marketCap: { usdM: 1310, local: { cur: 'CAD', valueM: 1800 }, asOf: '2026-09-15', src: S('MarketScreener valuation table', 'https://www.marketscreener.com/quote/stock/KRAKEN-ROBOTICS-INC-111965906/valuation/') },
+    financials: {
+      cur: 'CAD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 68.5 }, { label: 'FY2024', revenue: 91.0 }, { label: 'FY2025', revenue: 102.2, ebitda: 25.0 }],
+      notes: 'A third-party summary of the earnings call cites 2026 revenue guidance of C$165M–$175M.',
+      asOf: '2026-03-31', src: S('Kraken 2025 results', 'https://investingnews.com/kraken-robotics-reports-2025-financial-results/')
+    },
+    valuation: { evSales: 17.6, basis: 'Market cap ÷ FY2025 revenue', note: 'EV not compiled. Market cap is a September 2026 analyst-table estimate; CAD converted at about 0.73.', asOf: '2026-09-15', src: S('MarketScreener', 'https://www.marketscreener.com/quote/stock/KRAKEN-ROBOTICS-INC-111965906/valuation/') },
+    programs: [{ name: 'Mine countermeasure sonar for NATO navies', customer: 'NATO navies', role: 'Supplier', status: 'Production' }]
+  });
+
+  /* ---------------- Ground robotics ---------------- */
+  DTM.add({
+    id: 'overland-ai', name: 'Overland AI', domain: 'overland.ai', status: 'private', stage: 'Series B',
+    hq: 'Seattle, WA', country: 'US', founded: 2022,
+    subsegments: ['maritime.ground'],
+    oneLiner: 'Off-road ground autonomy for military vehicles, born from DARPA\'s RACER program.',
+    description: [
+      'Overland AI builds autonomy for uncrewed ground vehicles in complex off-road terrain, offering the ULTRA autonomous vehicle and the OverDrive kit that adds autonomy to existing vehicles.',
+      'Its technology came out of DARPA\'s RACER program. It raised $100M in February 2026, led by 8VC, to double manufacturing capacity.'
+    ],
+    leadership: [['Byron Boots', 'Co-founder & CEO']],
+    products: ['ULTRA', 'OverDrive'],
+    funding: {
+      totalUsdM: 142, asOf: '2026-02',
+      rounds: [
+        { date: '2024-09', type: 'Series A', amountUsdM: 32 },
+        { date: '2026-02', type: 'Series B', amountUsdM: 100, leads: ['8VC'] }
+      ],
+      investors: ['8VC', 'Point72 Ventures', 'Ascend VC', 'Shasta Ventures', 'Overmatch Ventures'],
+      note: 'The February 2026 round includes a $20M venture debt facility from TriplePoint Capital.',
+      src: S('Bloomberg Government', 'https://news.bgov.com/private-equity/overland-ai-raises-100-million-to-help-boost-military-robot-use')
+    },
+    programs: [{ name: 'DARPA RACER and Army/USMC ground autonomy', customer: 'DARPA / US Army / USMC', role: 'Prime', status: 'Fielding' }]
+  });
+
+  DTM.add({
+    id: 'forterra', name: 'Forterra', domain: 'forterra.com', status: 'private', stage: 'Series C',
+    hq: 'Clarksburg, MD', country: 'US', founded: 2002,
+    subsegments: ['maritime.ground', 'uas.autonomy'],
+    oneLiner: 'AutoDrive autonomy for military trucks and ROGUE-Fires launchers, plus mesh networking.',
+    description: [
+      'Forterra, formerly Robotic Research, supplies the AutoDrive autonomy kit used on Army and Marine Corps logistics vehicles and the uncrewed ROGUE-Fires missile launcher, and builds resilient mesh networking for autonomous systems.',
+      'It raised a $238M Series C in equity and debt in November 2025, led by Moore Strategic Ventures, and won a Marine Corps award in June 2026.'
+    ],
+    leadership: [['Josh Araujo', 'CEO']],
+    products: ['AutoDrive', 'RemoteDrive'],
+    funding: {
+      totalUsdM: 238, asOf: '2025-11',
+      rounds: [{ date: '2025-11', type: 'Series C', amountUsdM: 238, leads: ['Moore Strategic Ventures'] }],
+      investors: ['Moore Strategic Ventures', 'Glynn Capital'],
+      note: 'Total shows the Series C (equity and debt) only.',
+      src: S('GovConWire', 'https://www.govconwire.com/articles/forterra-raises-238m-series-c-fund-autonomy')
+    },
+    programs: [
+      { name: 'ROGUE-Fires autonomy (with Oshkosh)', customer: 'USMC', role: 'Autonomy provider', status: 'Production' },
+      { name: 'Army autonomous transport vehicles', customer: 'US Army', role: 'Autonomy provider', status: 'Development' }
+    ]
+  });
+
+  DTM.add({
+    id: 'arx-robotics', name: 'ARX Robotics', domain: 'arx-robotics.com', status: 'private', stage: 'Series A',
+    hq: 'Munich', country: 'DE', founded: 2022,
+    subsegments: ['maritime.ground'],
+    oneLiner: 'Modular ground robots and the Mithra OS that retrofits autonomy to legacy military vehicles.',
+    description: [
+      'ARX Robotics builds the modular Gereon ground robots and Mithra OS software, which networks and partially automates existing military vehicle fleets.',
+      'In June 2026 it formed a joint venture, ARX Industries, with Ukraine\'s Roboneers to mass-produce the Rys Pro ground robot.'
+    ],
+    leadership: [['Marc Wietfeld', 'Co-founder & CEO']],
+    products: ['Gereon RCS', 'Mithra OS'],
+    funding: {
+      totalUsdM: 49, asOf: '2025-07',
+      rounds: [
+        { date: '2025-04', type: 'Series A', amountUsdM: 36, leads: ['HV Capital', 'NATO Innovation Fund'] },
+        { date: '2025-07', type: 'Series A ext.', amountUsdM: 13, leads: ['Speedinvest'] }
+      ],
+      investors: ['HV Capital', 'NATO Innovation Fund', 'Speedinvest'],
+      note: '€42M raised in total, converted at about 1.16.',
+      src: S('Vestbee', 'https://vestbee.com/blog/articles/arx-robotics-raises-11-m')
+    },
+    programs: [{ name: 'ARX Industries JV (Rys Pro UGV)', ref: 'ukraine', customer: 'Ukraine', role: 'JV partner', year: 2026, status: 'Production' }]
+  });
+
+  /* ---------------- Shipbuilding ---------------- */
+  DTM.add({
+    id: 'austal', name: 'Austal', domain: 'austal.com', status: 'public', ticker: 'ASB', exchange: 'ASX',
+    hq: 'Henderson, WA', country: 'AU', founded: 1988,
+    subsegments: ['maritime.shipbuilding'],
+    oneLiner: 'Australian shipbuilder with a major US Navy yard in Alabama building cutters, auxiliaries and submarine modules.',
+    description: [
+      'Austal builds aluminium and steel naval vessels in Australia and, through Austal USA in Mobile, Alabama, for the US Navy and Coast Guard, including Offshore Patrol Cutters, T-AGOS surveillance ships and submarine modules.',
+      'Fiscal 2026 revenue topped A$2B, but an onerous-contract provision on US programs pushed the group to an EBIT loss. A bidder made a non-binding US$1.05B–$1.2B offer for the US operations in August 2026.'
+    ],
+    leadership: [['Paddy Gregg', 'CEO']],
+    products: ['Offshore Patrol Cutter', 'T-AGOS', 'Expeditionary Medical Ship', 'Submarine modules'],
+    marketCap: { usdM: 1170, local: { cur: 'AUD', valueM: 1806 }, asOf: '2026-08-26', src: S('InvestSMART', 'https://www.investsmart.com.au/security/asx/asb/austal-limited') },
+    financials: {
+      cur: 'AUD', fyEnd: 'Jun',
+      periods: [
+        { label: 'FY2024', revenue: 1469.4 },
+        { label: 'FY2025', revenue: 1823.3, opIncome: 113.4 },
+        { label: 'FY2026', revenue: 2028.9, opIncome: -125.2 }
+      ],
+      notes: 'Operating income shown is EBIT. Australasian revenue rose 49% to A$650.7M with record EBIT of A$85.3M.',
+      asOf: '2026-08-25', src: S('Australian Manufacturing, Aug 2026', 'https://www.australianmanufacturing.com.au/austal-revenue-tops-2b-as-australasian-earnings-reach-record-high/')
+    },
+    valuation: { evSales: 0.9, basis: 'Market cap ÷ FY2026 revenue', note: 'EV not compiled; ratio shown uses market cap.', asOf: '2026-08-26', src: S('InvestSMART', 'https://www.investsmart.com.au/security/asx/asb/austal-limited') },
+    programs: [
+      { name: 'Submarine module production', ref: 'aukus', customer: 'US Navy', role: 'Supplier', status: 'Production' },
+      { name: 'Offshore Patrol Cutter', customer: 'US Coast Guard', role: 'Prime', status: 'Production' }
+    ]
+  });
+})();
 
 </script>
 <script>/* data/companies/software.js */
-/* placeholder */
+/* Defense Software & AI segment. Anduril is defined here and appears across many segments. */
+(function () {
+  const S = (t, u) => (u ? { t, u } : { t });
+
+  /* ---------------- C2 & battle management ---------------- */
+  DTM.add({
+    id: 'anduril', name: 'Anduril Industries', short: 'Anduril', domain: 'anduril.com', status: 'private', stage: 'Series H',
+    hq: 'Costa Mesa, CA', country: 'US', founded: 2017,
+    subsegments: ['software.c2', 'uas.cca', 'uas.small', 'missiles.strike', 'missiles.propulsion', 'cuas.kinetic', 'maritime.uuv', 'space.sda'],
+    oneLiner: 'The defining new prime: Lattice C2 software plus autonomous aircraft, interceptors, missiles, subs and rocket motors.',
+    description: [
+      'Anduril builds hardware products on top of a common software layer, Lattice, which fuses sensors and controls autonomous systems. Its portfolio spans the Fury (FQ-44) collaborative combat aircraft, Roadrunner and Anvil interceptors, Barracuda cruise missiles, Ghost and Altius drones, Dive-LD and Ghost Shark undersea vehicles, solid rocket motors and space surveillance.',
+      'Revenue doubled to $2.2B in 2025. In May 2026 it raised a $5B Series H at $61B, led by Thrive Capital and Andreessen Horowitz, to fund manufacturing including the Arsenal-1 factory in Columbus, Ohio. Reports in July 2026 described talks at about $100B. In June 2026 the Air Force awarded Fury a CCA Increment 1 production contract.'
+    ],
+    leadership: [['Brian Schimpf', 'Co-founder & CEO'], ['Palmer Luckey', 'Founder'], ['Trae Stephens', 'Co-founder & Executive Chairman']],
+    products: ['Lattice', 'Fury (FQ-44)', 'Roadrunner', 'Anvil', 'Barracuda', 'Altius', 'Ghost', 'Dive-LD', 'Ghost Shark', 'Sentry'],
+    funding: {
+      totalUsdM: 11300, asOf: '2026-05',
+      rounds: [
+        { date: '2022-12', type: 'Series E', amountUsdM: 1480, postUsdM: 8480, leads: ['Valor Equity Partners'] },
+        { date: '2024-08', type: 'Series F', amountUsdM: 1500, postUsdM: 14000, leads: ['Founders Fund', 'Sands Capital'] },
+        { date: '2025-06', type: 'Series G', amountUsdM: 2500, postUsdM: 30500, leads: ['Founders Fund'] },
+        { date: '2026-05', type: 'Series H', amountUsdM: 5000, postUsdM: 61000, leads: ['Thrive Capital', 'Andreessen Horowitz'] }
+      ],
+      investors: ['Founders Fund', 'Thrive Capital', 'Andreessen Horowitz', 'General Catalyst', 'Valor Equity Partners', '8VC', 'Lux Capital'],
+      note: 'Totals vary by tracker ($6.8B–$12.7B); about $11.3B across rounds is shown.',
+      src: [S('TechCrunch, May 2026', 'https://techcrunch.com/2026/05/13/anduril-raises-5b-doubles-valuation-to-61b/'), S('Gunderson Dettmer', 'https://www.gunder.com/en/news-insights/client-news/anduril-raises-5-billion-usd-series-h-at-61-billion-usd-valuation')]
+    },
+    revenue: { valueUsdM: 2200, period: 'FY2025', kind: 'reported', note: 'Disclosed by CEO; about $1B in 2024. Sacra estimates a $4.3B 2026 plan.', src: S('TechCrunch, May 2026', 'https://techcrunch.com/2026/05/13/anduril-raises-5b-doubles-valuation-to-61b/') },
+    programs: [
+      { name: 'CCA Increment 1 production (FQ-44 Fury)', ref: 'cca', customer: 'US Air Force', role: 'Prime', year: 2026, status: 'Production', note: 'Value and quantity not disclosed.', src: S('The Aviationist', 'https://theaviationist.com/2026/09/16/andurils-yfq-44a-fury-air-to-ground-munitions/') },
+      { name: 'Next Generation Command and Control', ref: 'ngc2', customer: 'US Army', role: 'Prime', year: 2025, status: 'Prototype' },
+      { name: 'Soldier Borne Mission Command (formerly IVAS)', customer: 'US Army', role: 'Prime', year: 2025, status: 'Development' },
+      { name: 'Counter-drone systems (Roadrunner, Anvil, Lattice)', ref: 'cuas-army', customer: 'USMC / SOCOM / US Army', role: 'Prime', status: 'Fielding' },
+      { name: 'Barracuda for the Enterprise Test Vehicle', ref: 'etv', customer: 'US Air Force', role: 'Prime', status: 'Prototype' },
+      { name: 'Golden Dome team', ref: 'golden-dome', customer: 'DoD', role: 'Prime / team lead', status: 'Development' },
+      { name: 'Altius and Ghost-X under Replicator', ref: 'replicator', customer: 'DIU', role: 'Supplier', status: 'Fielded' },
+      { name: 'Ghost Shark XL-AUV', customer: 'Royal Australian Navy', role: 'Prime', status: 'Production' }
+    ]
+  });
+
+  DTM.add({
+    id: 'palantir', name: 'Palantir', domain: 'palantir.com', status: 'public', ticker: 'PLTR', exchange: 'NASDAQ',
+    hq: 'Denver, CO', country: 'US', founded: 2003,
+    subsegments: ['software.c2', 'software.intel'],
+    oneLiner: 'Data and AI platforms (Gotham, Foundry, AIP, Maven) running targeting, logistics and decisions across DoD.',
+    description: [
+      'Palantir builds software platforms that integrate data and AI for decision making. Gotham and the Maven Smart System are used for targeting and situational awareness across the US military and allies, and AIP brings large language models into operational workflows.',
+      'It is the most valuable US defense technology company. US government revenue grew 55% to $1.86B in 2025, and an Army enterprise agreement consolidated dozens of contracts into a single vehicle worth up to $10B over ten years.'
+    ],
+    leadership: [['Alex Karp', 'Co-founder & CEO'], ['Shyam Sankar', 'CTO']],
+    products: ['Gotham', 'Foundry', 'AIP', 'Maven Smart System', 'TITAN', 'Apollo'],
+    marketCap: { usdM: 432410, asOf: '2026-08-21', src: S('Equibles', 'https://equibles.com/stocks/pltr/summary') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [
+        { label: 'FY2023', revenue: 2225, netIncome: 210 },
+        { label: 'FY2024', revenue: 2866, netIncome: 462 },
+        { label: 'FY2025', revenue: 4475, netIncome: 1625 }
+      ],
+      defenseMix: '≈41% (US gov.)',
+      extra: [{ label: 'Adj. operating margin', value: '50%', note: 'FY2025' }, { label: '2026 revenue guidance', value: '$7.18B–$7.20B', note: '≈61% growth' }],
+      notes: 'FY2025 US government revenue was $1.855B (+55%); adjusted operating income $2.254B.',
+      asOf: '2026-02-02', src: S('Palantir Q4 2025 results (8-K)', 'https://www.sec.gov/Archives/edgar/data/1321655/000132165526000004/a2025q4ex991earningsrelease.htm')
+    },
+    valuation: { evUsdM: 430000, evSales: 96, basis: 'EV ÷ FY2025 revenue', note: 'EV estimated as market cap less ~$2.3B of cash (no debt). On 2026 guidance the multiple is about 60×.', asOf: '2026-08-21', src: [S('Equibles', 'https://equibles.com/stocks/pltr/summary'), S('TIKR', 'https://www.tikr.com/blog/palantir-stock-has-dropped-31-from-its-peak-heres-where-pltr-could-go-in-2026')] },
+    programs: [
+      { name: 'Maven Smart System', ref: 'maven', customer: 'DoD / NGA / combatant commands', role: 'Prime', status: 'Operational', note: 'Contract ceiling raised in 2025 to meet demand.' },
+      { name: 'Army Enterprise Agreement', customer: 'US Army', role: 'Prime', value: 'Up to $10B', year: 2025, status: 'Active', note: 'Ten-year agreement consolidating software contracts.' },
+      { name: 'TITAN ground station', customer: 'US Army', role: 'Prime', value: '$178M', year: 2024, status: 'Prototype' },
+      { name: 'Next Generation C2 (Anduril team)', ref: 'ngc2', customer: 'US Army', role: 'Teammate', status: 'Prototype' }
+    ]
+  });
+
+  /* ---------------- Intelligence & data fusion ---------------- */
+  DTM.add({
+    id: 'scale-ai', name: 'Scale AI', short: 'Scale AI', domain: 'scale.com', status: 'private', stage: 'Strategic',
+    hq: 'San Francisco, CA', country: 'US', founded: 2016,
+    subsegments: ['software.intel', 'software.c2'],
+    oneLiner: 'AI data and evaluation company whose public sector arm builds agentic AI for military planning (Thunderforge).',
+    description: [
+      'Scale AI provides training data, evaluation and AI deployment services, and its public sector business works with the DoD on AI test and evaluation and on Thunderforge, a DIU program bringing AI agents into military planning.',
+      'In June 2025 Meta invested about $14.3B for a 49% non-voting stake, valuing Scale at about $29B, and founder Alexandr Wang moved to Meta.'
+    ],
+    leadership: [['Jason Droege', 'CEO']],
+    products: ['Scale Data Engine', 'Donovan', 'Scale Evaluation'],
+    funding: {
+      totalUsdM: 15900, asOf: '2025-06',
+      rounds: [
+        { date: '2024-05', type: 'Series F', amountUsdM: 1000, postUsdM: 13800, leads: ['Accel'] },
+        { date: '2025-06', type: 'Strategic', amountUsdM: 14300, postUsdM: 29000, leads: ['Meta'] }
+      ],
+      investors: ['Meta', 'Accel', 'Founders Fund', 'Index Ventures', 'Thrive Capital', 'Amazon', 'NVIDIA'],
+      note: 'Meta\'s investment bought a 49% non-voting stake. Total is approximate.',
+      src: S('Mexico Business News', 'https://mexicobusiness.news/cloudanddata/news/meta-backs-scale-ai-boosting-its-us29-billion-valuation')
+    },
+    programs: [{ name: 'Thunderforge AI planning', customer: 'DIU / INDOPACOM / EUCOM', role: 'Prime', year: 2025, status: 'Prototype' }]
+  });
+
+  DTM.add({
+    id: 'vannevar-labs', name: 'Vannevar Labs', short: 'Vannevar', domain: 'vannevarlabs.com', status: 'private', stage: 'Series B',
+    hq: 'Arlington, VA', country: 'US', founded: 2019,
+    subsegments: ['software.intel'],
+    oneLiner: 'AI for foreign-language open-source intelligence and strategic competition analysis.',
+    description: [
+      'Vannevar Labs builds software that collects and analyzes foreign-language open-source and commercial data with AI, helping US national security analysts track adversary activity, influence operations and economic coercion.'
+    ],
+    leadership: [['Brett Granberg', 'Co-founder & CEO'], ['Nini Hamrick', 'Co-founder & President']],
+    funding: {
+      totalUsdM: 92, asOf: '2023-01',
+      rounds: [{ date: '2023-01', type: 'Series B', amountUsdM: 75, leads: ['Felicis'] }],
+      investors: ['Felicis'],
+      note: 'Some trackers report about $255M raised and a $1.2B–$1.5B valuation, but no later priced round has been confirmed.',
+      src: S('Komo', 'https://komo.ai/directory/vannevar-labs')
+    },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'bigbear-ai', name: 'BigBear.ai', domain: 'bigbear.ai', status: 'public', ticker: 'BBAI', exchange: 'NYSE',
+    hq: 'Columbia, MD', country: 'US', founded: 2020,
+    subsegments: ['software.intel', 'software.logistics'],
+    oneLiner: 'AI decision-intelligence for defense, border security and supply chains; acquired Ask Sage.',
+    description: [
+      'BigBear.ai sells AI analytics for national security, including computer vision and biometrics for border and travel security, and supply chain and logistics forecasting for defense customers.',
+      'It agreed to acquire Ask Sage, a generative AI platform widely used across government, in November 2025.'
+    ],
+    leadership: [['Kevin McAleenan', 'CEO']],
+    products: ['ConductorOS', 'Ask Sage', 'veriScan', 'ProModel'],
+    marketCap: { usdM: 1540, asOf: '2026-09-11', src: S('Syfe', 'https://www.syfe.com/stocks/us/BBAI') },
+    financials: {
+      cur: 'USD', fyEnd: 'Dec',
+      periods: [{ label: 'FY2023', revenue: 155.2 }, { label: 'FY2024', revenue: 158.2 }],
+      notes: '2025 guidance was revenue of $125M–$140M (Q3 2025 release).',
+      asOf: '2025-11-10', src: S('BigBear.ai Q3 2025 results', 'https://ir.bigbear.ai/sec-filings/all-sec-filings/content/0001836981-25-000025/earningsrelease-3q25.htm')
+    },
+    valuation: { evSales: 11.6, basis: 'Market cap ÷ 2025 guidance midpoint', note: 'EV not compiled; ratio shown uses market cap.', asOf: '2026-09-11', src: S('Syfe', 'https://www.syfe.com/stocks/us/BBAI') },
+    programs: []
+  });
+
+  /* ---------------- Digital engineering & simulation ---------------- */
+  DTM.add({
+    id: 'istari', name: 'Istari Digital', short: 'Istari', domain: 'istaridigital.com', status: 'private', stage: 'Series A',
+    hq: '', country: 'US', founded: 2020,
+    subsegments: ['software.engineering'],
+    oneLiner: 'Digital engineering platform linking models and simulations so weapons can be certified faster.',
+    description: [
+      'Istari connects engineering models, simulations and test data across tools and contractors so that defense systems can be designed, verified and certified digitally. It has a $19M Air Force contract.'
+    ],
+    leadership: [['Will Roper', 'Co-founder & CEO']],
+    funding: {
+      totalUsdM: 40, asOf: '2025-01',
+      rounds: [
+        { date: '2023-02', type: 'Seed', amountUsdM: 13 },
+        { date: '2025-01', type: 'Series A', amountUsdM: 27 }
+      ],
+      note: 'The 2025 Series A is listed by CB Insights but not confirmed by the company.',
+      src: S('CB Insights', 'https://www.cbinsights.com/company/istari-1/financials')
+    },
+    programs: [{ name: 'Air Force digital engineering', customer: 'US Air Force', role: 'Prime', value: '$19M', status: 'Active' }]
+  });
+
+  DTM.add({
+    id: 'hadean', name: 'Hadean', domain: 'hadean.com', status: 'private', stage: 'Series A',
+    hq: 'London', country: 'UK', founded: 2015,
+    subsegments: ['software.engineering'],
+    oneLiner: 'Spatial computing for AI wargaming, training and mission rehearsal; UK MoD enterprise agreement.',
+    description: [
+      'Hadean builds distributed spatial computing software used to create large synthetic environments for military training, wargaming and decision support.',
+      'It holds a £20M enterprise agreement with the UK Ministry of Defence, partners with Palantir, and raised bridge funding in March 2026 from investors including Booz Allen Ventures and the British Business Bank ahead of a Series B.'
+    ],
+    funding: {
+      totalUsdM: null, label: 'Undisclosed', asOf: '2026-03',
+      rounds: [{ date: '2026-03', type: 'Bridge' }],
+      investors: ['Booz Allen Ventures', 'British Business Bank', 'Twin Track Ventures', 'Entrepreneurs First'],
+      note: 'The March 2026 round size was not disclosed; the British Business Bank invested £2.1M.',
+      src: S('Hadean', 'https://hadean.com/news/hadean-secures-acceleration-funding-to-fuel-ambitions-as-the-uks-next-defence-dual-use-tech-unicorn/')
+    },
+    programs: [{ name: 'UK MoD enterprise agreement', customer: 'UK Ministry of Defence', role: 'Prime', value: '£20M', status: 'Active' }]
+  });
+
+  /* ---------------- Logistics & readiness ---------------- */
+  DTM.add({
+    id: 'govini', name: 'Govini', domain: 'govini.com', status: 'private', stage: 'Growth',
+    hq: 'Arlington, VA', country: 'US', founded: 2011,
+    subsegments: ['software.logistics'],
+    oneLiner: 'Ark decision-science platform for defense acquisition, supply chains and the industrial base.',
+    description: [
+      'Govini\'s Ark platform maps the defense supply chain, spending and technology base so acquisition teams can find bottlenecks, foreign dependencies and suppliers.',
+      'It passed $100M of annual recurring revenue and raised $150M in October 2025, led by Bain Capital, at a valuation above $1B.'
+    ],
+    leadership: [['Tara Murphy Dougherty', 'CEO']],
+    products: ['Ark'],
+    funding: {
+      totalUsdM: 150, asOf: '2025-10',
+      rounds: [{ date: '2025-10', type: 'Growth', amountUsdM: 150, postUsdM: 1250, leads: ['Bain Capital'] }],
+      investors: ['Bain Capital'],
+      note: 'Total shows the 2025 round only. Valuation reported as $1B–$1.25B.',
+      src: S('Tectonic Defense', 'https://www.tectonicdefense.com/icymi-govini-raises-150m-at-over-1b-valuation/')
+    },
+    revenue: { valueUsdM: 100, period: '2025 ARR', kind: 'reported', src: S('Tectonic Defense', 'https://www.tectonicdefense.com/icymi-govini-raises-150m-at-over-1b-valuation/') },
+    programs: [{ name: 'DoD acquisition and supply chain analytics', customer: 'DoD', role: 'Prime', status: 'Active' }]
+  });
+
+  DTM.add({
+    id: 'rune', name: 'Rune Technologies', short: 'Rune', domain: 'runetech.co', status: 'private', stage: 'Series A',
+    hq: '', country: 'US', founded: 2023,
+    subsegments: ['software.logistics'],
+    oneLiner: 'TyrOS predictive logistics that runs at the tactical edge without a network connection.',
+    description: [
+      'Rune, founded by Anduril alumni, builds TyrOS, an AI logistics operating system that forecasts supply needs and plans sustainment for units at the tactical edge, even when disconnected from servers.'
+    ],
+    products: ['TyrOS'],
+    funding: {
+      totalUsdM: 30, asOf: '2025-07',
+      rounds: [
+        { date: '2024', type: 'Seed', amountUsdM: 6.2, leads: ['Andreessen Horowitz'] },
+        { date: '2025-07', type: 'Series A', amountUsdM: 24, leads: ['Human Capital'] }
+      ],
+      investors: ['Human Capital', 'Andreessen Horowitz', 'Point72 Ventures', 'XYZ Venture Capital'],
+      src: S('Washington Technology, Jul 2025', 'https://www.washingtontechnology.com/companies/2025/07/rune-technologies-fetches-24m-series-capital/406930')
+    },
+    programs: []
+  });
+
+  DTM.add({
+    id: 'edgerunner', name: 'EdgeRunner AI', short: 'EdgeRunner', domain: 'edgerunnerai.com', status: 'private', stage: 'Series A',
+    hq: 'Seattle, WA', country: 'US', founded: 2023,
+    subsegments: ['software.intel'],
+    oneLiner: 'Air-gapped, on-device AI agents for warfighters who operate without connectivity.',
+    description: [
+      'EdgeRunner builds small language models and AI agents that run fully on local devices with no cloud connection, so units can use generative AI in denied or classified environments.'
+    ],
+    funding: {
+      totalUsdM: 17.5, asOf: '2025-05',
+      rounds: [
+        { date: '2024-07', type: 'Seed', amountUsdM: 5.5, leads: ['Four Rivers'] },
+        { date: '2025-05', type: 'Series A', amountUsdM: 12, leads: ['Madrona'] }
+      ],
+      investors: ['Madrona', 'Four Rivers', 'HP Tech Ventures', 'Alumni Ventures'],
+      src: S('Pulse 2.0', 'https://pulse2.com/edgerunner-12-million-series-a-funding-raised-for-on-device-ai-agents-for-military-and-enterprise/amp/')
+    },
+    programs: []
+  });
+
+  /* ---------------- Cyber ---------------- */
+  DTM.add({
+    id: 'shift5', name: 'Shift5', domain: 'shift5.io', status: 'private', stage: 'Series C',
+    hq: 'Rosslyn, VA', country: 'US', founded: 2019,
+    subsegments: ['software.cyber'],
+    oneLiner: 'Onboard cybersecurity and data for weapon systems, aircraft, rail and vehicles.',
+    description: [
+      'Shift5 monitors the serial data buses inside weapon systems, aircraft, locomotives and vehicles to detect cyber intrusions and turn onboard data into maintenance and readiness insights.',
+      'It raised a $75M Series C in September 2025 to expand across defense and transportation.'
+    ],
+    leadership: [['Josh Lospinoso', 'Co-founder & CEO']],
+    funding: {
+      totalUsdM: 158, asOf: '2025-09',
+      rounds: [
+        { date: '2022-05', type: 'Series B', amountUsdM: 83, leads: ['Insight Partners'] },
+        { date: '2025-09', type: 'Series C', amountUsdM: 75 }
+      ],
+      investors: ['Insight Partners', 'Squadra Ventures', '645 Ventures', 'General Catalyst', 'Moore Strategic Ventures'],
+      note: 'Series B was $50M plus a $33M extension. Total is approximate.',
+      src: S('Pulse 2.0, Sep 2025', 'https://pulse2.com/shift5-75-million-raised-for-expanding-operational-intelligence-across-defense-sectors/amp/')
+    },
+    programs: [{ name: 'Weapon system cyber monitoring', customer: 'US Army / USAF / US Navy', role: 'Prime', status: 'Deployed' }]
+  });
+})();
 
 </script>
 <script>/* data/companies/sensors.js */
@@ -2491,7 +3946,7 @@ DTM.logos = {};
     const paras = Array.isArray(c.description) ? c.description : [c.description || c.oneLiner || ''];
     const facts = [];
     facts.push(['Founded', c.founded || '—']);
-    facts.push(['Headquarters', `${esc(c.hq || '')}${c.country ? `, ${esc(D.countryNames[c.country] || c.country)}` : ''}`]);
+    facts.push(['Headquarters', esc([c.hq, D.countryNames[c.country] || c.country].filter(Boolean).join(', '))]);
     if (c.employees) facts.push(['Employees', esc(c.employees)]);
     if (c.leadership && c.leadership.length) facts.push(['Leadership', c.leadership.map((l) => `${esc(l[0])} <span class="src">${esc(l[1])}</span>`).join('<br>')]);
     if (c.isPublic) facts.push(['Listing', esc(`${c.exchange}: ${c.ticker}`)]);
@@ -2653,7 +4108,7 @@ DTM.logos = {};
         <div class="d-titles">
           <h2 class="d-name" id="detail-name">${esc(c.name)}</h2>
           <p class="d-one">${esc(c.oneLiner || '')}</p>
-          <div class="d-badges"><span class="badge ${c.status}">${esc(badge)}</span><span>${esc(c.hq || '')}${c.country ? ' · ' + esc(D.countryNames[c.country] || c.country) : ''}</span>${c.founded ? `<span>Founded ${c.founded}</span>` : ''}${c.domain ? `<a href="https://${esc(c.domain)}" target="_blank" rel="noopener">${esc(c.domain)} ↗</a>` : ''}</div>
+          <div class="d-badges"><span class="badge ${c.status}">${esc(badge)}</span><span>${esc([c.hq, D.countryNames[c.country] || c.country].filter(Boolean).join(' · '))}</span>${c.founded ? `<span>Founded ${c.founded}</span>` : ''}${c.domain ? `<a href="https://${esc(c.domain)}" target="_blank" rel="noopener">${esc(c.domain)} ↗</a>` : ''}</div>
         </div>
         <div class="d-actions">
           <button class="icon-btn" type="button" data-action="compare" aria-pressed="${inCompare}" title="${inCompare ? 'Remove from compare' : 'Add to compare'}" aria-label="${inCompare ? 'Remove from compare' : 'Add to compare'}">

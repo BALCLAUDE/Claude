@@ -422,7 +422,7 @@
     const paras = Array.isArray(c.description) ? c.description : [c.description || c.oneLiner || ''];
     const facts = [];
     facts.push(['Founded', c.founded || '—']);
-    facts.push(['Headquarters', `${esc(c.hq || '')}${c.country ? `, ${esc(D.countryNames[c.country] || c.country)}` : ''}`]);
+    facts.push(['Headquarters', esc([c.hq, D.countryNames[c.country] || c.country].filter(Boolean).join(', '))]);
     if (c.employees) facts.push(['Employees', esc(c.employees)]);
     if (c.leadership && c.leadership.length) facts.push(['Leadership', c.leadership.map((l) => `${esc(l[0])} <span class="src">${esc(l[1])}</span>`).join('<br>')]);
     if (c.isPublic) facts.push(['Listing', esc(`${c.exchange}: ${c.ticker}`)]);
@@ -584,7 +584,7 @@
         <div class="d-titles">
           <h2 class="d-name" id="detail-name">${esc(c.name)}</h2>
           <p class="d-one">${esc(c.oneLiner || '')}</p>
-          <div class="d-badges"><span class="badge ${c.status}">${esc(badge)}</span><span>${esc(c.hq || '')}${c.country ? ' · ' + esc(D.countryNames[c.country] || c.country) : ''}</span>${c.founded ? `<span>Founded ${c.founded}</span>` : ''}${c.domain ? `<a href="https://${esc(c.domain)}" target="_blank" rel="noopener">${esc(c.domain)} ↗</a>` : ''}</div>
+          <div class="d-badges"><span class="badge ${c.status}">${esc(badge)}</span><span>${esc([c.hq, D.countryNames[c.country] || c.country].filter(Boolean).join(' · '))}</span>${c.founded ? `<span>Founded ${c.founded}</span>` : ''}${c.domain ? `<a href="https://${esc(c.domain)}" target="_blank" rel="noopener">${esc(c.domain)} ↗</a>` : ''}</div>
         </div>
         <div class="d-actions">
           <button class="icon-btn" type="button" data-action="compare" aria-pressed="${inCompare}" title="${inCompare ? 'Remove from compare' : 'Add to compare'}" aria-label="${inCompare ? 'Remove from compare' : 'Add to compare'}">
