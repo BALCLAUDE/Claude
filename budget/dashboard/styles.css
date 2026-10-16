@@ -226,3 +226,5 @@ a { color: var(--accent); }
 .chart-card .filters { margin-bottom: 8px; }
 .data td.sectors { white-space: normal; min-width: 140px; max-width: 260px; }
 .data td.sectors .chip { margin: 1px 0; }
+.two-col .data td { white-space: normal; }
+.two-col .data td.num { white-space: nowrap; }

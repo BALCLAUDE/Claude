@@ -115,8 +115,12 @@ def fetch_company_by_entity(ent: dict, today: dt.date | None = None, detail_shar
             break
         detailed.append(r)
         acc += t
+    # spending_by_award ignores recipient_id, so award lists use a text search on each entity's UEI and
+    # keep only awards made to the company's own entities.
     out = fetch_filters(ent, [{"recipient_id": own_id(r["recipient_id"])} for r in detailed],
-                        [r["uei"] for r in ent["recipients"] if r.get("uei")], today, months_rows=per)
+                        [r["uei"] for r in ent["recipients"] if r.get("uei")], today, months_rows=per,
+                        award_filters=[{"recipient_search_text": [r["uei"]]} for r in detailed if r.get("uei")],
+                        own_awards_only=True)
     # Obligations of entities without product-code detail, by FY.
     detailed_ids = {r["recipient_id"] for r in detailed}
     rest: dict = {}
@@ -132,7 +136,8 @@ def fetch_company_by_entity(ent: dict, today: dt.date | None = None, detail_shar
     return out
 
 
-def fetch_filters(ent: dict, filter_sets: list, ueis: list, today: dt.date | None = None, months_rows=None) -> dict:
+def fetch_filters(ent: dict, filter_sets: list, ueis: list, today: dt.date | None = None, months_rows=None,
+                  award_filters: list | None = None, own_awards_only: bool = False) -> dict:
     """Sums months, PSCs and awards over disjoint filter sets (one text query, or one per entity)."""
     out = {"company_id": ent["company_id"], "ueis": ueis, "fetched": dt.date.today().isoformat()}
     months: dict = {}
@@ -164,11 +169,14 @@ def fetch_filters(ent: dict, filter_sets: list, ueis: list, today: dt.date | Non
                 if r.get("amount"):
                     p = psc.setdefault((fy, r["code"]), {"fy": fy, "psc": r["code"], "name": r["name"], "obligated": 0.0})
                     p["obligated"] += r["amount"]
+    for flt in (award_filters if award_filters is not None else filter_sets):
         d = http.call("search/spending_by_award/",
-                      {"filters": {**base, "time_period": all_period(today), "award_type_codes": CONTRACTS},
+                      {"filters": {"agencies": DOD, **flt, "time_period": all_period(today), "award_type_codes": CONTRACTS},
                        "fields": AWARD_FIELDS, "sort": "Award Amount", "order": "desc", "limit": TOP_AWARDS, "page": 1})
         for r in d.get("results", []):
             a = award_row(r)
+            if own_awards_only and a["recipient_uei"] not in set(ueis):
+                continue
             awards[a["award_id"]] = a
     out["months"] = sorted(months.values(), key=lambda m: (m["fy"], m["month"]))
     out["psc"] = sorted(psc.values(), key=lambda p: (p["fy"], -p["obligated"]))

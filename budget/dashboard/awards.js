@@ -53,7 +53,7 @@
     return { cur, prior, growth: prior > 0 ? cur / prior - 1 : null };
   }
   const fyTotal = (cid, fy) => { const m = A.months[cid] || {}; let t = 0; for (let k = 1; k <= 12; k++) t += m[fy * 12 + k] || 0; return t; };
-  const subName = (id) => A.subs[id]?.name || id;
+  const subName = (id) => (id === '_other' ? 'Other sectors' : A.subs[id]?.name || id);
   // An award whose product code names no sector is split evenly across the company's map
   // subsegments; show that as one chip rather than a row of guesses.
   function sectorChips(sectors, method) {
@@ -155,9 +155,21 @@
     const recips = rows(D.db, 'SELECT uei, name, level, method, evidence, amount_all_agencies FROM entity_aliases WHERE company_id = ? ORDER BY amount_all_agencies DESC', [cid]);
     const pscs = rows(D.db, 'SELECT psc, psc_name, SUM(obligated) AS o FROM company_psc_fy WHERE company_id = ? GROUP BY psc ORDER BY o DESC LIMIT 8', [cid]);
     const lastFull = fys.filter((y) => y * 12 + 12 <= A.through).pop();
-    const sector = A.sectorFy[cid] || {};
-    const subIds = [...new Set(Object.values(sector).flatMap((o) => Object.keys(o)))].sort((a, b) => (A.subs[a]?.sort ?? 0) - (A.subs[b]?.sort ?? 0));
-    const colors = Object.fromEntries(subIds.map((s, i) => [s, i < 8 ? `var(--s${i + 1})` : 'var(--ink-3)']));
+    const sector = JSON.parse(JSON.stringify(A.sectorFy[cid] || {}));  // folded below; keep the cache intact
+    // At most 8 colored series: the 7 largest sectors keep their color, the rest fold into "Other sectors".
+    const totals = {};
+    for (const o of Object.values(sector)) for (const [k, v] of Object.entries(o)) totals[k] = (totals[k] || 0) + v;
+    const ranked = Object.keys(totals).sort((a, b) => totals[b] - totals[a]);
+    const keep = new Set(ranked.length > 8 ? ranked.slice(0, 7) : ranked);
+    if (ranked.length > 8) {
+      for (const o of Object.values(sector)) {
+        let other = 0;
+        for (const k of Object.keys(o)) if (!keep.has(k)) { other += o[k]; delete o[k]; }
+        if (other) o._other = other;
+      }
+    }
+    const subIds = [...keep].sort((a, b) => (A.subs[a]?.sort ?? 0) - (A.subs[b]?.sort ?? 0)).concat(ranked.length > 8 ? ['_other'] : []);
+    const colors = Object.fromEntries(subIds.map((s, i) => [s, s === '_other' ? 'var(--band-unclassified)' : `var(--s${i + 1})`]));
     const capacity = vehicles.reduce((t, v) => t + Math.max(0, (v.orders_potential || 0) - (v.orders_obligated || 0)), 0);
     const mapHref = `../../defense-tech-map.html#${encodeURIComponent(cid)}`;
     el.innerHTML = `
