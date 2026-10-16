@@ -63,42 +63,59 @@ def parent_idv(generated_id: str) -> str | None:
     return f"CONT_IDV_{m.group(1)}_{m.group(2)}"
 
 
+UEI_CHUNK = 8  # large OR-lists of UEIs time out (HTTP 503), so big primes are queried in batches
+
+
+def chunks(xs: list, n: int = UEI_CHUNK):
+    return [xs[i:i + n] for i in range(0, len(xs), n)]
+
+
+def award_row(r: dict) -> dict:
+    return {
+        "award_id": r.get("generated_internal_id"), "piid": r.get("Award ID"),
+        "recipient_name": r.get("Recipient Name"), "recipient_uei": r.get("Recipient UEI"),
+        "obligated": r.get("Award Amount"), "description": r.get("Description"),
+        "start_date": r.get("Start Date"), "end_date": r.get("End Date"),
+        "sub_agency": r.get("Awarding Sub Agency"), "award_type": r.get("Contract Award Type"),
+        "naics": (r.get("NAICS") or {}).get("code"), "psc": (r.get("PSC") or {}).get("code"),
+        "psc_name": (r.get("PSC") or {}).get("description"), "parent_idv": parent_idv(r.get("generated_internal_id"))}
+
+
 def fetch_company(ent: dict, today: dt.date | None = None) -> dict | None:
     ueis = [r["uei"] for r in ent["recipients"] if r.get("uei")]
     if not ueis:
         return None
-    base = {"agencies": DOD, "recipient_search_text": ueis}
     out = {"company_id": ent["company_id"], "ueis": ueis, "fetched": dt.date.today().isoformat()}
-
-    months = http.call("search/spending_over_time/",
-                       {"group": "month", "filters": {**base, "time_period": all_period(today)}})
-    out["months"] = [
-        {"fy": int(r["time_period"]["fiscal_year"]), "month": int(r["time_period"]["month"]),
-         "obligated": r["aggregated_amount"],
-         "contracts": (r.get("Contract_Obligations") or 0) + (r.get("Idv_Obligations") or 0),
-         "other": (r.get("Grant_Obligations") or 0) + (r.get("Other_Obligations") or 0) + (r.get("Direct_Obligations") or 0)}
-        for r in months.get("results", []) if r.get("aggregated_amount")]
-
-    out["psc"] = []
-    for fy in fiscal_years(today):
-        d = http.call("search/spending_by_category/psc/",
-                      {"filters": {**base, "time_period": [fy_range(fy, today)]}, "limit": 100, "page": 1})
-        out["psc"] += [{"fy": fy, "psc": r["code"], "name": r["name"], "obligated": r["amount"]}
-                       for r in d.get("results", []) if r.get("amount")]
-
-    d = http.call("search/spending_by_award/",
-                  {"filters": {**base, "time_period": all_period(today), "award_type_codes": CONTRACTS},
-                   "fields": AWARD_FIELDS, "sort": "Award Amount", "order": "desc", "limit": TOP_AWARDS, "page": 1})
-    awards = []
-    for r in d.get("results", []):
-        awards.append({
-            "award_id": r.get("generated_internal_id"), "piid": r.get("Award ID"),
-            "recipient_name": r.get("Recipient Name"), "recipient_uei": r.get("Recipient UEI"),
-            "obligated": r.get("Award Amount"), "description": r.get("Description"),
-            "start_date": r.get("Start Date"), "end_date": r.get("End Date"),
-            "sub_agency": r.get("Awarding Sub Agency"), "award_type": r.get("Contract Award Type"),
-            "naics": (r.get("NAICS") or {}).get("code"), "psc": (r.get("PSC") or {}).get("code"),
-            "psc_name": (r.get("PSC") or {}).get("description"), "parent_idv": parent_idv(r.get("generated_internal_id"))})
+    months: dict = {}
+    psc: dict = {}
+    awards: dict = {}
+    for batch in chunks(ueis):
+        base = {"agencies": DOD, "recipient_search_text": batch}
+        d = http.call("search/spending_over_time/", {"group": "month", "filters": {**base, "time_period": all_period(today)}})
+        for r in d.get("results", []):
+            if not r.get("aggregated_amount"):
+                continue
+            key = (int(r["time_period"]["fiscal_year"]), int(r["time_period"]["month"]))
+            m = months.setdefault(key, {"fy": key[0], "month": key[1], "obligated": 0.0, "contracts": 0.0, "other": 0.0})
+            m["obligated"] += r["aggregated_amount"]
+            m["contracts"] += (r.get("Contract_Obligations") or 0) + (r.get("Idv_Obligations") or 0)
+            m["other"] += (r.get("Grant_Obligations") or 0) + (r.get("Other_Obligations") or 0) + (r.get("Direct_Obligations") or 0)
+        for fy in fiscal_years(today):
+            d = http.call("search/spending_by_category/psc/",
+                          {"filters": {**base, "time_period": [fy_range(fy, today)]}, "limit": 100, "page": 1})
+            for r in d.get("results", []):
+                if r.get("amount"):
+                    p = psc.setdefault((fy, r["code"]), {"fy": fy, "psc": r["code"], "name": r["name"], "obligated": 0.0})
+                    p["obligated"] += r["amount"]
+        d = http.call("search/spending_by_award/",
+                      {"filters": {**base, "time_period": all_period(today), "award_type_codes": CONTRACTS},
+                       "fields": AWARD_FIELDS, "sort": "Award Amount", "order": "desc", "limit": TOP_AWARDS, "page": 1})
+        for r in d.get("results", []):
+            a = award_row(r)
+            awards[a["award_id"]] = a
+    out["months"] = sorted(months.values(), key=lambda m: (m["fy"], m["month"]))
+    out["psc"] = sorted(psc.values(), key=lambda p: (p["fy"], -p["obligated"]))
+    awards = sorted(awards.values(), key=lambda a: -(a["obligated"] or 0))[:TOP_AWARDS]
     out["awards"] = awards
 
     by_idv: dict = {}
