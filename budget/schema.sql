@@ -150,7 +150,7 @@ CREATE TABLE line_sector_map (
   rationale     TEXT,
   reviewer      TEXT,
   PRIMARY KEY (line_id, subsegment_id)
-);
+) WITHOUT ROWID;
 
 -- Classification outcome per line: mapped (rows in line_sector_map), not_tech, or unclassified.
 CREATE TABLE line_status (
@@ -204,7 +204,7 @@ CREATE TABLE company_obligations_month (
   contracts  REAL,
   other      REAL,
   PRIMARY KEY (company_id, fy, month)
-);
+) WITHOUT ROWID;
 
 CREATE TABLE company_psc_fy (
   company_id TEXT NOT NULL REFERENCES companies(id),
@@ -213,7 +213,7 @@ CREATE TABLE company_psc_fy (
   psc_name   TEXT,
   obligated  REAL NOT NULL,
   PRIMARY KEY (company_id, fy, psc)
-);
+) WITHOUT ROWID;
 
 -- company_psc_fy spread over subsegments (award_sectors.py).
 CREATE TABLE company_sector_fy (
@@ -223,7 +223,7 @@ CREATE TABLE company_sector_fy (
   obligated     REAL NOT NULL,
   method        TEXT NOT NULL,             -- psc, psc+company, company
   PRIMARY KEY (company_id, fy, subsegment_id, method)
-);
+) WITHOUT ROWID;
 
 -- IDVs carrying a company's largest awards: order totals and the ceiling where reported.
 CREATE TABLE idv_vehicles (
@@ -252,7 +252,7 @@ CREATE TABLE sector_recipients_fy (
   company_id    TEXT REFERENCES companies(id),
   obligated     REAL,
   PRIMARY KEY (rule_id, fy, rank)
-);
+) WITHOUT ROWID;
 
 CREATE TABLE awards (
   award_id        TEXT PRIMARY KEY,       -- USAspending generated id, or source-specific key
@@ -316,7 +316,7 @@ CREATE TABLE award_sector_map (
   confidence    REAL,
   rationale     TEXT,
   PRIMARY KEY (award_id, subsegment_id)
-);
+) WITHOUT ROWID;
 
 -- ---------------------------------------------------------------- Views
 -- Newest book wins for each (line, FY, value type).
