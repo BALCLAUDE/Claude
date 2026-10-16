@@ -163,6 +163,11 @@ def classify(con: sqlite3.Connection, rules: RuleSet | None = None, overrides: d
         if lid in curated:
             stats["curated"] += 1
             continue
+        if not ln.get("counted", 1):
+            con.execute("INSERT INTO line_status VALUES (?,?,?,?,?,?)",
+                        (lid, "not_tech", "rule", "memo", 1.0, "Non-Add or not-in-TOA memo entry; not counted"))
+            stats["memo"] = stats.get("memo", 0) + 1
+            continue
         rule = rules.match(ln)
         if rule is None:
             con.execute("INSERT INTO line_status VALUES (?,?,?,?,?,?)", (lid, "unclassified", None, None, None, None))

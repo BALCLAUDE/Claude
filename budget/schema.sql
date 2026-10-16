@@ -74,26 +74,32 @@ CREATE TABLE budget_lines (
   title           TEXT NOT NULL,
   classification  TEXT,
   first_book      INTEGER,
-  last_book       INTEGER
+  last_book       INTEGER,
+  counted         INTEGER NOT NULL DEFAULT 1  -- 0 = Non-Add or not-in-TOA memo entry
 );
 
 -- Every value keeps the book it came from: the FY24 actual comes from the FY26 book, the FY25
 -- enacted from the FY26 book, and so on. v_values_latest picks the newest book per value.
+CREATE TABLE source_docs (
+  source_doc  TEXT PRIMARY KEY,           -- e.g. 'FY2026 R-1'
+  book_fy     INTEGER,
+  exhibit     TEXT,
+  source_file TEXT,                       -- workbook path under budget/raw/, or the curated CSV
+  sheet       TEXT,
+  loaded      TEXT
+);
+
 CREATE TABLE budget_values (
   line_id     TEXT NOT NULL REFERENCES budget_lines(line_id),
   fy          INTEGER NOT NULL,
   value_type  TEXT NOT NULL CHECK (value_type IN
                 ('actual', 'enacted', 'request', 'cr', 'reconciliation', 'supplemental', 'fydp')),
   amount_k    REAL NOT NULL,
-  source_doc  TEXT NOT NULL,              -- e.g. 'FY2026 R-1'
+  source_doc  TEXT NOT NULL REFERENCES source_docs(source_doc),
   book_fy     INTEGER,                    -- budget year of the source book
-  source_file TEXT,
-  sheet       TEXT,
-  page        TEXT,                       -- sheet!row for Excel, page for PDF
-  as_of       TEXT,
+  page        TEXT,                       -- worksheet row for Excel, page or section for other sources
   PRIMARY KEY (line_id, fy, value_type, source_doc)
-);
-CREATE INDEX budget_values_fy ON budget_values (fy, value_type);
+) WITHOUT ROWID;
 
 -- Printed appropriation totals (from the exhibit itself or budget/data/toplines.csv) and the
 -- parsed sums they were checked against. The build fails on a mismatch over $1K.

@@ -64,3 +64,24 @@
 - {title: Classified Programs, expect: null}
 - {title: Nuclear Command, Control and Communications, expect: null}
 - {title: Army Test Ranges and Facilities, expect: null}
+- {title: "Counter - Small Unmanned Aircraft Systems (JIATF-401)", expect: {cuas.kinetic: 0.6, cuas.sensing: 0.2, cuas.ew: 0.2}}
+- {title: SMALL UNMANNED AERIAL SYSTEMS, expect: {uas.small: 1.0}}
+- {title: High Mobility Artillery Rocket System (HIMARS, expect: {missiles.strike: 1.0}}
+- {title: Artillery Munitions, expect: {missiles.energetics: 1.0}}
+- {title: Artillery Systems - EMD, expect: null}
+- {title: Nuclear-Armed Sea-Launched Cruise Missile (SLCM-N) Support, expect: null}
+- {title: Long Range Standoff Weapon, expect: null}
+- {title: Space Based Air Moving Target Indicator, component: Space Force, expect: {space.isr: 1.0}}
+- {title: Ground Moving Target Indicator (GMTI), component: Space Force, expect: {space.isr: 1.0}}
+- {title: Long Range Kill Chains, component: Space Force, expect: {space.isr: 1.0}}
+- {title: Space Data Network, component: Space Force, expect: {sensors.comms: 0.5, space.buses: 0.5}}
+- {title: Space Operations, exhibit: o1, component: Space Force, expect: {space.ground: 1.0}}
+- {title: DCO-Space, component: Space Force, expect: {software.cyber: 1.0}}
+- {title: "Acq Workforce- Cyber, Network, & Bus Sys", expect: not_tech}
+- {title: Defense Autonomous Warfare Group, expect: {uas.small: 0.4, maritime.usv: 0.3, uas.autonomy: 0.3}}
+- {title: Ground Based Air Defense, expect: {cuas.kinetic: 0.6, cuas.sensing: 0.2, cuas.ew: 0.2}}
+- {title: Compass Call, expect: {sensors.ew: 1.0}}
+- {title: Golden Dome for America - Space Programs, expect: {cuas.missiledefense: 1.0}}
+- {title: Resilient Missile Warning Missile Tracking - Low Earth Orbit (LEO), expect: {space.buses: 0.5, cuas.missiledefense: 0.5}}
+- {title: F-47, expect: null}
+- {title: COLUMBIA Class Submarine, expect: null}

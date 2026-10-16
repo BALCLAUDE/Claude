@@ -31,6 +31,10 @@ rules:
     title: 'base operations|facilities sustainment|restoration and modernization|recruiting|advertising|examining|specialized skill training|recruit training|officer acquisition|professional development|flight training|training support|off-duty|voluntary education|junior rotc|civilian education|administration|servicewide transportation|personnel programs|other personnel support|family|childcare|morale|welfare|commissar|medical|health|environmental|housing|demolition|claims|legal|audit|accounting|public affairs|chaplain|band|ceremonial|security programs|pentagon reservation'
     not_tech: true
     confidence: 0.9
+  - id: acquisition-workforce
+    title: 'acq(uisition)? workforce'
+    not_tech: true
+    confidence: 0.9
 
   # ------------------------------------------------------------------ space
   - id: golden-dome
@@ -38,7 +42,7 @@ rules:
     subsegments: {cuas.missiledefense: 1.0}
     program: golden-dome
   - id: sda-transport
-    title: 'transport layer|data transport|\bpwsa\b.*transport'
+    title: 'transport layer|data transport|\bpwsa\b.*transport|space data network'
     subsegments: {sensors.comms: 0.5, space.buses: 0.5}
     program: pwsa
   - id: sda-tracking
@@ -71,17 +75,28 @@ rules:
     title: 'ground (system|segment|station)|satellite control|command and control|\bocx\b|mission operations|\bc2\b'
     subsegments: {space.ground: 1.0}
     confidence: 0.85
+  - id: space-gmti
+    component: [Space Force]
+    title: 'moving target indicator|\bgmti\b|\bamti\b|kill chain'
+    subsegments: {space.isr: 1.0}
+    confidence: 0.85
   - id: space-isr
-    title: 'commercial (imagery|remote sensing)|earth observation|space[- ]based (isr|radar|sensing)|\bgmti\b.*space|space.*\bgmti\b|weather (satellite|system)|electro-optical/infrared weather|\bewss\b'
+    title: 'space[- ]based (air )?moving target|commercial (imagery|remote sensing)|earth observation|space[- ]based (isr|radar|sensing)|\bgmti\b.*space|space.*\bgmti\b|weather (satellite|system)|electro-optical/infrared weather|\bewss\b'
     subsegments: {space.isr: 1.0}
     confidence: 0.85
   - id: space-mobility
     title: 'in-space (mobility|servicing|refuel)|on-orbit servicing|orbital transfer|space mobility'
     subsegments: {space.mobility: 1.0}
+  - id: space-operations
+    component: [Space Force]
+    exhibit: [o1]
+    title: 'space operations|satellite operations'
+    subsegments: {space.ground: 1.0}
+    confidence: 0.7
   - id: space-general
     component: [Space Force]
     title: 'space|satellite|spacecraft'
-    exclude: 'personnel|facilities|base support'
+    exclude: 'personnel|facilities|base support|\bdco\b|cyber'
     subsegments: {space.buses: 1.0}
     confidence: 0.7
 
@@ -103,14 +118,18 @@ rules:
     subsegments: {missiles.strike: 1.0}
     program: etv
   - id: strike-missiles
-    title: '\bjassm\b|\blrasm\b|tomahawk|precision strike missile|\bprsm\b|\bgmlrs\b|guided mlrs|\beram\b|\bmald\b|\baargm\b|\bjsow\b|small diameter bomb|\bsdb\b|naval strike missile|\bnsm\b|strike missile|cruise missile|long range anti-ship|\batacms\b|standoff (weapon|missile)|air-to-surface|stand-in attack|\bsiaw\b|\blrso\b'
-    exclude: 'defense|defeat|interceptor'
+    title: '\bjassm\b|\blrasm\b|tomahawk|precision strike missile|\bprsm\b|\bgmlrs\b|guided mlrs|\beram\b|\bmald\b|\baargm\b|\bjsow\b|small diameter bomb|\bsdb\b|naval strike missile|\bnsm\b|strike missile|cruise missile|long range anti-ship|\batacms\b|standoff (weapon|missile)|air-to-surface|stand-in attack|\bsiaw\b'
+    exclude: 'defense|defeat|interceptor|nuclear|slcm-n|long range stand-?off'
     subsegments: {missiles.strike: 1.0}
+  - id: rocket-launchers
+    title: '\bhimars\b|high mobility artillery rocket|\bmlrs\b.*launcher|multiple launch rocket system'
+    subsegments: {missiles.strike: 1.0}
+    confidence: 0.8
   - id: rocket-motors
     title: 'solid rocket motor|rocket motor|rocket propulsion|missile propulsion|\bsrm\b'
     subsegments: {missiles.propulsion: 1.0}
   - id: energetics
-    title: 'energetic|explosive|propellant|ammunition|\bammo\b|ordnance|\bctg\b|cartridge|projectile|\b155mm\b|artillery|munitions industrial base|army ammunition plant|production base support|mortar|grenade|rocket, hydra|\bhydra\b'
+    title: 'energetic|explosive|propellant|ammunition|\bammo\b|ordnance|\bctg\b|cartridge|projectile|\b155mm\b|artillery (munition|ammunition|projectile|propellant|shell)|munitions industrial base|army ammunition plant|production base support|mortar|grenade|rocket, hydra|\bhydra\b'
     exclude: 'lethal unmanned|loitering'
     subsegments: {missiles.energetics: 1.0}
     confidence: 0.85
@@ -120,7 +139,7 @@ rules:
     title: 'directed energy|high energy laser|high[- ]power microwave|\bhel\b|\bhpm\b|laser weapon|\bde m-shorad\b|\bifpc[- ]hel\b|\bhelios\b'
     subsegments: {cuas.de: 1.0}
   - id: cuas
-    title: 'counter[- ]?(small )?(unmanned|uas|suas|drone)|\bc-?s?uas\b|counter-unmanned|m-shorad|maneuver[- ]short range air defense|short range air defense|\bshorad\b|coyote'
+    title: 'counter\s*-?\s*(small\s+)?(unmanned|uas|suas|drone)|ground based air defense|\bmadis\b|\bc-?s?uas\b|counter-unmanned|m-shorad|maneuver[- ]short range air defense|short range air defense|\bshorad\b|coyote'
     subsegments: {cuas.kinetic: 0.6, cuas.sensing: 0.2, cuas.ew: 0.2}
     confidence: 0.85
   - id: missile-defense
@@ -134,7 +153,7 @@ rules:
     subsegments: {uas.cca: 1.0}
     program: cca
   - id: replicator
-    title: 'replicator|attritable autonomous|all-domain attritable'
+    title: 'replicator|attritable autonomous|all-domain attritable|autonomous warfare'
     subsegments: {uas.small: 0.4, maritime.usv: 0.3, uas.autonomy: 0.3}
     program: replicator
     confidence: 0.75
@@ -143,7 +162,8 @@ rules:
     subsegments: {uas.tactical: 1.0}
     program: launched-effects
   - id: small-uas
-    title: 'small unmanned aircraft|\bsuas\b|short range reconnaissance|\bsrr\b|company[- ]level|purpose[- ]built attritable|\bpbas\b|first[- ]person view|\bfpv\b|soldier borne|quadcopter|\bgroup [12]\b'
+    exclude: 'counter'
+    title: 'small unmanned (aircraft|aerial)|\bsuas\b|short range reconnaissance|\bsrr\b|company[- ]level|purpose[- ]built attritable|\bpbas\b|first[- ]person view|\bfpv\b|soldier borne|quadcopter|\bgroup [12]\b'
     subsegments: {uas.small: 1.0}
   - id: large-uas
     title: '\bmq-(1c|4c|9|25)\b|\brq-4\b|global hawk|triton|reaper|stingray|gray eagle|grey eagle|\bmale uas\b'
@@ -176,7 +196,7 @@ rules:
 
   # ------------------------------------------------------------------ software & AI
   - id: cyber
-    title: 'cyber|information systems security|\bissp\b|information assurance|zero trust|cryptograph|\bnsa\b.*security'
+    title: 'cyber|\bdco\b|information systems security|\bissp\b|information assurance|zero trust|cryptograph|\bnsa\b.*security'
     subsegments: {software.cyber: 1.0}
   - id: c2
     title: 'jadc2|joint all[- ]domain|advanced battle management|\babms\b|next generation command and control|\bngc2\b|battle management|command and control|\bc2\b|\bdaf battle network\b|\bcjadc2\b|maven|common operating picture'
@@ -198,7 +218,7 @@ rules:
 
   # ------------------------------------------------------------------ sensors, EW & comms
   - id: electronic-warfare
-    title: 'electronic warfare|\bew\b|electronic attack|jammer|next generation jammer|\bngj\b|\bepawss\b|\bsewip\b|signals intelligence|\bsigint\b|spectrum (warfare|dominance)|electromagnetic (spectrum|warfare)|terrestrial layer system|\btls\b'
+    title: 'electronic warfare|\bew\b|compass call|electronic attack|jammer|next generation jammer|\bngj\b|\bepawss\b|\bsewip\b|signals intelligence|\bsigint\b|spectrum (warfare|dominance)|electromagnetic (spectrum|warfare)|terrestrial layer system|\btls\b'
     subsegments: {sensors.ew: 1.0}
   - id: radar
     title: 'radar|\bspy-6\b|\bamdr\b|\btpy-\b|over[- ]the[- ]horizon|\both\b|sentinel a4|\bltamds\b|\bewr\b|\bamti\b|\bgmti\b'

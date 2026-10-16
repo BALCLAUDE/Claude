@@ -118,7 +118,7 @@
     for (const l of D.lines) {
       for (const y of D.years) {
         const a = amount(l, y);
-        if (a == null) continue;
+        if (a == null || !l.counted) continue;
         all[y] += a;
         if (l.status !== 'mapped') continue;
         const [, used] = core(l, y);
@@ -309,9 +309,10 @@
     const hist = `<div class="table-wrap"><table class="data"><thead><tr><th>FY</th>${usedVt.map((t) => `<th class="num">${VT_LABEL[t]}</th>`).join('')}</tr></thead><tbody>` +
       fys.map((y) => `<tr><td>${fyLabel(y)}</td>${usedVt.map((t) => { const c = l.vals[y][t]; return `<td class="num" title="${c ? esc(c.src) : ''}">${c ? money(c.amt) : '–'}</td>`; }).join('')}</tr>`).join('') +
       '</tbody></table></div>';
-    const allRows = rows(D.db, 'SELECT fy, value_type, amount_k, source_doc, page FROM budget_values WHERE line_id = ? ORDER BY fy, value_type, book_fy', [id]);
-    const books = `<details><summary class="subtle">Every value by source book (${allRows.length})</summary><div class="table-wrap"><table class="data"><thead><tr><th>FY</th><th>Type</th><th class="num">Amount</th><th>Source</th><th>Cell</th></tr></thead><tbody>` +
-      allRows.map((r) => `<tr><td>${fyLabel(r.fy)}</td><td>${VT_LABEL[r.value_type]}</td><td class="num">${money(r.amount_k)}</td><td>${esc(r.source_doc)}</td><td>${esc(r.page || '')}</td></tr>`).join('') + '</tbody></table></div></details>';
+    const allRows = rows(D.db, `SELECT v.fy, v.value_type, v.amount_k, v.source_doc, v.page, d.source_file, d.sheet
+      FROM budget_values v LEFT JOIN source_docs d USING (source_doc) WHERE v.line_id = ? ORDER BY v.fy, v.value_type, v.book_fy`, [id]);
+    const books = `<details><summary class="subtle">Every value by source book (${allRows.length})</summary><div class="table-wrap"><table class="data"><thead><tr><th>FY</th><th>Type</th><th class="num">Amount</th><th>Source</th><th>Where</th></tr></thead><tbody>` +
+      allRows.map((r) => `<tr><td>${fyLabel(r.fy)}</td><td>${VT_LABEL[r.value_type]}</td><td class="num">${money(r.amount_k)}</td><td>${esc(r.source_doc)}</td><td>${esc([r.source_file, r.sheet, r.page ? 'row ' + r.page : ''].filter(Boolean).join(' · '))}</td></tr>`).join('') + '</tbody></table></div></details>';
     const cls = l.status === 'mapped'
       ? l.subs.map((m) => `${esc(D.subs[m.subsegment_id]?.name)} (${Math.round(m.weight * 100)}%)`).join(', ')
       : (l.status === 'not_tech' ? 'Not defense tech' : 'Unclassified');
@@ -346,11 +347,17 @@
     const cut = changes.filter((c) => c.delta < 0).sort((a, b) => a.delta - b.delta).slice(0, 10);
     const priorFunded = (l) => Object.entries(l.vals).some(([y, o]) => +y < by && Object.values(o).some((c) => c.amt > 0));
     const starts = pool.filter((l) => (v(l, by, 'request') || 0) > 0 && !priorFunded(l))
-      .map((l) => ({ l, from: 0, to: reqNow(l), delta: reqNow(l) })).sort((a, b) => b.to - a.to).slice(0, 10);
+      .map((l) => {
+        const from = counterpart(l, priorFunded);
+        return { l, from: 0, to: reqNow(l), delta: reqNow(l), note: from ? `moved from ${from.component} ${from.account}` : '' };
+      }).sort((a, b) => (!!a.note - !!b.note) || b.to - a.to).slice(0, 10);
     const ends = pool.filter((l) => (v(l, by - 1, 'enacted') || 0) > 0 && !(v(l, by, 'request') > 0) && (l.exhibit || '').match(/^[rpom]1$/))
-      .map((l) => ({ l, from: v(l, by - 1, 'enacted'), to: 0, delta: -v(l, by - 1, 'enacted'),
-        note: l.last_book < by ? 'dropped from book' : 'zero request' }))
-      .sort((a, b) => a.delta - b.delta).slice(0, 10);
+      .map((l) => {
+        const to = counterpart(l, (o) => (v(o, by, 'request') || 0) > 0);
+        return { l, from: v(l, by - 1, 'enacted'), to: 0, delta: -v(l, by - 1, 'enacted'),
+          note: to ? `moved to ${to.component} ${to.account}` : (l.last_book < by ? 'dropped from book' : 'zero request') };
+      })
+      .sort((a, b) => (/^moved/.test(a.note) - /^moved/.test(b.note)) || a.delta - b.delta).slice(0, 10);
     const gy = by - 1;
     const gaps = pool.map((l) => {
       const r = v(l, gy, 'request'), e = v(l, gy, 'enacted');
@@ -360,10 +367,25 @@
     $('#movers').innerHTML = [
       moverCard('Biggest increases', `${fyLabel(by)} request vs ${fyLabel(by - 1)} enacted`, inc, `${fyLabel(by - 1)} enacted`, `${fyLabel(by)} request`),
       moverCard('Biggest cuts', `${fyLabel(by)} request vs ${fyLabel(by - 1)} enacted`, cut, `${fyLabel(by - 1)} enacted`, `${fyLabel(by)} request`),
-      moverCard('New starts', `Funded in the ${fyLabel(by)} request with no funding in any earlier year`, starts, 'Before', `${fyLabel(by)} request`),
-      moverCard('Terminations', `Enacted in ${fyLabel(by - 1)}, no ${fyLabel(by)} request`, ends, `${fyLabel(by - 1)} enacted`, `${fyLabel(by)} request`),
+      moverCard('New starts', `Funded in the ${fyLabel(by)} request with no funding in any earlier year. Lines moved from another account are listed last.`, starts, 'Before', `${fyLabel(by)} request`),
+      moverCard('Terminations', `Enacted in ${fyLabel(by - 1)}, no ${fyLabel(by)} request. Lines moved to another account are listed last.`, ends, `${fyLabel(by - 1)} enacted`, `${fyLabel(by)} request`),
       moverCard('Congress vs the request', `${fyLabel(gy)} enacted minus ${fyLabel(gy)} request, a proxy for congressional adds and cuts`, gaps, `${fyLabel(gy)} request`, `${fyLabel(gy)} enacted`)
     ].join('');
+  }
+
+  // Lines that move between accounts (e.g. THAAD from Defense-Wide to Army in the FY2027 book) look
+  // like a new start plus a termination. Match them by title or by the acronym in parentheses.
+  const normTitle = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  function lineKeys(l) {
+    const keys = new Set([normTitle(l.title)]);
+    for (const m of String(l.title || '').matchAll(/\(([A-Za-z0-9-]{2,})\)/g)) keys.add(normTitle(m[1]));
+    keys.delete('');
+    return keys;
+  }
+  function counterpart(l, test) {
+    const keys = lineKeys(l);
+    return D.lines.find((o) => o !== l && o.exhibit === l.exhibit && o.account !== l.account && o.counted &&
+      [...lineKeys(o)].some((k) => keys.has(k)) && test(o));
   }
 
   function moverCard(title, sub, list, fromLabel, toLabel) {

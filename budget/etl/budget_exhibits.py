@@ -50,37 +50,59 @@ ID_FIELDS = [  # order matters: titles before codes, since "PE Title" also conta
     ("organization", r"^org(anization)?( title| name)?$|^component$|^service$"),
     ("ba_title", r"^(budget activity|ba) (title|name)$"),
     ("budget_activity", r"^(budget activity|ba)( number| no\.?| code)?$"),
-    ("title", r"(program element|pe/bli|budget line item|\bbli\b|line item|\bsag\b|ag/bsa|"
+    ("title", r"(program element|pe/bli|budget line item|\bbli\b|line item|\bsag\b|ag/bsa|\bbsa\b|"
               r"sub ?activity group|budget sub ?activity).*\b(title|name|description)$|"
               r"^(title|item title|description|nomenclature)$"),
     ("line_number", r"^(line|line number|line no\.?|line #|ln)$"),
-    ("pe_bli", r"program element|^pe( number| no\.?| #)?$|pe/bli|^bli( number| no\.?| #)?$|"
-               r"^budget line item( number| no\.?)?$|^line item( number| no\.?)?$|^li$|"
+    ("pe_bli", r"program element|^pe( number| no\.?| #)?$|^pe/bli$|^bli( number| no\.?| #)?$|"
+               r"^budget line item( number| no\.?)?$|^line item( number| no\.?)?$|^li$|^sag/bli$|^bsa$|"
                r"^(sag|ag/bsa|sub ?activity group|budget sub ?activity)( number| no\.?| code)?$"),
+    ("add_flag", r"^add/ ?non-?add$"),
+    ("toa_flag", r"^include in toa$"),
     ("classification", r"^classification$|^class$|^security class"),
 ]
 ID_RX = [(f, re.compile(rx)) for f, rx in ID_FIELDS]
 
 FY_RX = re.compile(r"\bfy\s*-?\s*(\d{4}|\d{2})\b|(?<!\d)(20\d{2})(?!\d)")
+# (value type, part) by keyword, first match wins. Parts say how columns for the same FY and value
+# type combine: see resolve_amount_columns.
 VT_KEYWORDS = [
-    ("skip", r"\bquantit|\bqty\b|\bunits?\b|\bchange\b|\bdelta\b|\bpercent\b|%"),
-    ("reconciliation", r"reconcil|\brecon\b|mandatory"),
-    ("supplemental", r"supplemental|\bsupp\b|emergency"),
-    ("cr", r"continuing resolution|\bcr\b|annualized"),
-    ("actual", r"\bactuals?\b"),
-    ("enacted", r"enacted|\bapprop|\bappn\b|congressional"),
-    ("request", r"request|\bpb\b|president'?s budget|\bbudget\b|estimate"),
+    ("skip", None, r"\bquantit|\bqty\b|\bunits?\b|\bchange\b|\bdelta\b|\bpercent\b|%"),
+    ("reconciliation", None, r"reconcil|\brecon\b|mandatory|p\.? ?l\.? ?119-21|spend plan"),
+    ("enacted", "excl", r"less supplementals?"),                       # FY2023-24 books
+    ("supplemental", "total", r"total supplemental"),
+    ("supplemental", None, r"supplemental|\bsupp\b|emergency"),
+    ("supplemental", "piece", r"\bdivision\b|p\.? ?l\.? ?\d{3}-\d"),   # FY2022 supplemental acts
+    ("cr", None, r"continuing resolution|\bcr\b|annualized"),
+    ("actual", None, r"\bactuals?\b"),
+    ("enacted", None, r"enact|\bapprop|\bappn\b|congressional"),
+    ("request", None, r"request|\bpb\b|president'?s budget|\bbudget\b|estimate"),
 ]
-VT_RX = [(v, re.compile(rx)) for v, rx in VT_KEYWORDS]
-PART_KEYWORDS = [("oco", r"\boco\b|overseas contingency|\bdirect war\b|enduring"),
-                 ("disc", r"discretionary|\bdisc\b"),
-                 ("base", r"\bbase\b"),
-                 ("total", r"\btotal\b")]
-PART_RX = [(p, re.compile(rx)) for p, rx in PART_KEYWORDS]
+VT_RX = [(v, part, re.compile(rx)) for v, part, rx in VT_KEYWORDS]
+# Order of preference when several columns describe the same FY and value type.
+PART_PREFERENCE = ["excl", "disc", "total", "base+oco", None, "total_incl", "piece", "oco_total"]
 
 
 def norm_header(h) -> str:
-    return norm_space(str(h or "").replace("\n", " ")).lower().replace("&", "and")
+    t = norm_space(str(h or "").replace("\n", " ")).lower().replace("&", "and").replace("*", "")
+    return re.sub(r"\s*/\s*", "/", t).strip()
+
+
+def header_part(t: str, part):
+    if part:
+        return part
+    base, oco, total = re.search(r"\bbase\b", t), re.search(r"\boco\b|direct war|enduring", t), "total" in t
+    if re.search(r"base ?\+", t):   # "Total (Base + OCO)"; with emergency folded in it double counts the supplemental
+        return "total_incl" if re.search(r"emerg|supp", t) else "total"
+    if oco:
+        return "oco_total" if total else "oco"
+    if re.search(r"discretionary|\bdisc\b", t):
+        return "disc"
+    if base:
+        return "base"
+    if total:
+        return "total_incl" if re.search(r"enact", t) else "total"
+    return None
 
 
 def classify_header(h, book_fy: int):
@@ -94,15 +116,15 @@ def classify_header(h, book_fy: int):
         fy = int(y) + 2000 if len(y) == 2 else int(y)
         if not 2000 <= fy <= 2050:
             return None
-        vt = next((v for v, rx in VT_RX if rx.search(t)), None)
-        if vt == "skip":
+        hit = next(((v, part) for v, part, rx in VT_RX if rx.search(t)), None)
+        if hit and hit[0] == "skip":
             return None
-        part = next((p for p, rx in PART_RX if rx.search(t)), None)
-        explicit = vt is not None
+        explicit = hit is not None
+        vt, part = hit if hit else (None, None)
         if vt is None:  # bare "FY 2026": infer from its position relative to the book year
             vt = ("actual" if fy <= book_fy - 2 else "enacted" if fy == book_fy - 1
                   else "request" if fy == book_fy else "fydp")
-        return ("amount", fy, vt, part, explicit)
+        return ("amount", fy, vt, header_part(t, part), explicit)
     for f, rx in ID_RX:
         if rx.search(t):
             return ("id", f)
@@ -113,7 +135,8 @@ def classify_header(h, book_fy: int):
 class Layout:
     header_row: int
     ids: dict                      # field -> column index
-    amounts: dict                  # (fy, value_type) -> list of (col, combine) where combine is +1
+    amounts: dict                  # (fy, value_type) -> list of columns summed into that value
+    above: list = field(default_factory=list)  # rows above the header ("Total of Displayed Rows")
 
 
 def resolve_amount_columns(cols):
@@ -123,22 +146,21 @@ def resolve_amount_columns(cols):
     for c in cols:
         col, fy, vt, part, explicit = c
         # "FY 2025 Total" next to "FY 2025 Enacted" + "FY 2025 Supplemental" would double count.
-        if part == "total" and not explicit and fy in fys_with_explicit:
+        if part in ("total", "total_incl") and not explicit and fy in fys_with_explicit:
             continue
         by_key.setdefault((fy, vt), []).append(c)
     out = {}
     for key, group in by_key.items():
-        parts = {}
+        parts: dict = {}
         for col, _, _, part, _ in group:
-            parts.setdefault(part, col)
-        if "disc" in parts:              # FY2026+: request = discretionary, reconciliation separate
-            out[key] = [parts["disc"]]
-        elif "total" in parts:
-            out[key] = [parts["total"]]
-        elif "base" in parts or "oco" in parts:
-            out[key] = [parts[p] for p in ("base", "oco") if p in parts]
-        else:
-            out[key] = [parts[None]] if None in parts else [group[0][0]]
+            if part in ("base", "oco"):
+                parts.setdefault("base+oco", []).append(col)
+            elif part == "piece":
+                parts.setdefault("piece", []).append(col)
+            else:
+                parts.setdefault(part, [col])
+        pick = next(p for p in PART_PREFERENCE if p in parts)
+        out[key] = parts[pick]
     return out
 
 
@@ -159,7 +181,7 @@ def find_layout(ws, book_fy: int, scan_rows: int = 25) -> Layout | None:
             else:
                 amt.append((j, r[1], r[2], r[3], r[4]))
         if "title" in ids and ("pe_bli" in ids or "line_number" in ids) and len(ids) >= 3 and amt:
-            return Layout(header_row=i + 1, ids=ids, amounts=resolve_amount_columns(amt))
+            return Layout(header_row=i + 1, ids=ids, amounts=resolve_amount_columns(amt), above=rows[:i])
     return None
 
 
@@ -182,6 +204,7 @@ class ParsedLine:
     classification: str
     values: dict = field(default_factory=dict)     # (fy, vt) -> amount_k
     ref: str = ""                                    # sheet!row
+    counted: bool = True                             # False for Non-Add / not-in-TOA memo rows
 
 
 @dataclass
@@ -192,6 +215,7 @@ class ParsedBook:
     source_file: str
     lines: dict = field(default_factory=dict)       # line_id -> ParsedLine
     printed_totals: list = field(default_factory=list)  # (account, fy, vt, amount_k)
+    sheet: str = ""
     duplicates: int = 0
 
 
@@ -206,14 +230,20 @@ def clean_code(v) -> str:
     return re.sub(r"\s+", "", str(v)).upper()
 
 
+# The four exhibits this pipeline reads. Other files in the comptroller download set are skipped:
+# p1r (reserve-component display of P-1 lines), *_ooc (overseas operations cost display of O-1/M-1
+# lines), rf1 (revolving funds) and c1 (military construction).
+EXHIBIT_FILE_RX = re.compile(r"^(?:fy\s*-?\d{4}[\s_-]*)?([rpom])-?1(_display)?$", re.I)
+
+
 def detect_exhibit(name: str) -> str | None:
-    m = re.search(r"(?<![a-z])([rpom])-?1(?![0-9])", name.lower())
-    return f"{m.group(1)}1" if m else None
+    m = EXHIBIT_FILE_RX.match(name.strip())
+    return f"{m.group(1).lower()}1" if m else None
 
 
 def detect_book_fy(path: Path) -> int | None:
     for part in (path.name, path.parent.name):
-        m = re.search(r"fy\s*_?(\d{4})", part, re.I)
+        m = re.search(r"fy\s*_?(\d{4})", part, re.I) or re.fullmatch(r"(20\d{2})", part.strip())
         if m:
             return int(m.group(1))
     return None
@@ -224,13 +254,16 @@ def parse_workbook(path: Path, exhibit: str, book_fy: int) -> ParsedBook:
     book = ParsedBook(exhibit=exhibit, book_fy=book_fy, source_doc=f"FY{book_fy} {ex_label}",
                       source_file=path.name)
     wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+    # Only the first sheet with a header: later sheets in the comptroller workbooks repeat the same
+    # rows one column at a time and would double count.
     found = False
     for ws in wb.worksheets:
         layout = find_layout(ws, book_fy)
-        if not layout:
-            continue
-        found = True
-        _parse_sheet(ws, layout, book, appropriation)
+        if layout:
+            found = True
+            book.sheet = ws.title
+            _parse_sheet(ws, layout, book, appropriation)
+            break
     wb.close()
     if not found:
         raise BuildError(f"{path}: no sheet with a recognizable {ex_label} header row")
@@ -245,6 +278,13 @@ def _cell(row, ids, f):
 def _parse_sheet(ws, layout: Layout, book: ParsedBook, appropriation: str):
     ids = layout.ids
     account_titles: dict = {}
+    for row in layout.above:  # "Total of Displayed Rows" sits above the header in the real books
+        text = " ".join(norm_space(c) for c in row if isinstance(c, str))
+        if TOTAL_RX.search(text):
+            for key, cols in layout.amounts.items():
+                parts = [parse_amount(row[c]) if c < len(row) else None for c in cols]
+                if any(p is not None for p in parts):
+                    book.printed_totals.append(("*", key[0], key[1], sum(p for p in parts if p is not None)))
     for r_i, row in enumerate(ws.iter_rows(min_row=layout.header_row + 1, values_only=True),
                               start=layout.header_row + 1):
         if row is None or all(c is None or str(c).strip() == "" for c in row):
@@ -275,14 +315,25 @@ def _parse_sheet(ws, layout: Layout, book: ParsedBook, appropriation: str):
                 for (fy, vt), amt in vals.items():
                     book.printed_totals.append((acct, fy, vt, amt))
             continue
-        if not title and not pe:
-            continue
         if not vals:
             continue
+        if not title and not pe:
+            # A few accounts carry amounts with no line code or title (e.g. 5286A National Science
+            # Center, labelled only by its budget activity): fall back so the totals still reconcile.
+            title = norm_space(_cell(row, ids, "ba_title")) or account_title
+            if not title or not account:
+                continue
         if account and account_title:
             account_titles[account] = account_title
         code = pe or line_no or re.sub(r"[^A-Z0-9]+", "-", title.upper()).strip("-")
-        line_id = f"{book.exhibit}:{account or '?'}:{code}"
+        if book.exhibit == "m1":  # M-1 reuses sub-activity codes across budget activities
+            code = f"{clean_code(_cell(row, ids, 'budget_activity'))}-{code}"
+        # Non-Add rows and rows outside total obligational authority are memo entries: kept so the
+        # printed totals reconcile, but under their own id and never counted in sector totals.
+        add_flag = norm_space(_cell(row, ids, "add_flag")).lower()
+        toa_flag = norm_space(_cell(row, ids, "toa_flag")).upper()
+        counted = not (add_flag.startswith("non") or toa_flag == "N")
+        line_id = f"{book.exhibit}:{account or '?'}:{code}" + ("" if counted else ":memo")
         org = norm_space(_cell(row, ids, "organization"))
         pl = book.lines.get(line_id)
         if pl:
@@ -296,7 +347,7 @@ def _parse_sheet(ws, layout: Layout, book: ParsedBook, appropriation: str):
             organization=org, budget_activity=norm_space(_cell(row, ids, "budget_activity")),
             ba_title=norm_space(_cell(row, ids, "ba_title")), line_number=line_no, pe_bli=pe,
             title=title or pe, classification=norm_space(_cell(row, ids, "classification")),
-            values=vals, ref=f"{ws.title}!{r_i}")
+            values=vals, ref=f"{ws.title}!{r_i}", counted=counted)
 
 
 # ---------------------------------------------------------------- checks
@@ -334,14 +385,18 @@ def check_book(book: ParsedBook, toplines: list[dict]) -> list[tuple]:
 # ---------------------------------------------------------------- load
 
 def discover(raw_dir: Path = RAW_DIR) -> list[tuple[Path, str, int]]:
-    out = []
+    """One workbook per (book, exhibit); the plain file wins over its *_display twin."""
+    found: dict = {}
     for p in sorted(raw_dir.rglob("*.xls*")):
         if p.name.startswith("~$"):
             continue
         ex, fy = detect_exhibit(p.stem), detect_book_fy(p)
-        if ex in EXHIBITS and fy:
-            out.append((p, ex, fy))
-    return out
+        if ex not in EXHIBITS or not fy:
+            continue
+        rank = 1 if p.stem.lower().endswith("_display") else 0
+        if (fy, ex) not in found or rank < found[(fy, ex)][0]:
+            found[(fy, ex)] = (rank, p)
+    return [(p, ex, fy) for (fy, ex), (_, p) in sorted(found.items())]
 
 
 def load(con: sqlite3.Connection, raw_dir: Path = RAW_DIR, allow_mismatch: bool = False,
@@ -351,12 +406,14 @@ def load(con: sqlite3.Connection, raw_dir: Path = RAW_DIR, allow_mismatch: bool 
     stats = {"files": len(files), "lines": 0, "values": 0, "checks": 0, "mismatches": []}
     for path, ex, book_fy in files:
         book = parse_workbook(path, ex, book_fy)
+        con.execute("INSERT OR REPLACE INTO source_docs VALUES (?,?,?,?,?,?)",
+                    (book.source_doc, book_fy, ex, str(path.relative_to(raw_dir)), book.sheet, as_of))
         for pl in book.lines.values():
             con.execute(
                 """INSERT INTO budget_lines (line_id, exhibit, appropriation, account, account_title, component,
                      organization, budget_activity, ba_title, line_number, pe_bli, title, classification,
-                     first_book, last_book)
-                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                     first_book, last_book, counted)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                    ON CONFLICT(line_id) DO UPDATE SET
                      first_book = MIN(first_book, excluded.first_book),
                      last_book = MAX(last_book, excluded.last_book),
@@ -369,18 +426,16 @@ def load(con: sqlite3.Connection, raw_dir: Path = RAW_DIR, allow_mismatch: bool 
                      title = CASE WHEN excluded.first_book >= last_book THEN excluded.title ELSE title END""",
                 (pl.line_id, pl.exhibit, pl.appropriation, pl.account, pl.account_title, pl.component,
                  pl.organization, pl.budget_activity, pl.ba_title, pl.line_number, pl.pe_bli, pl.title,
-                 pl.classification, book_fy, book_fy))
+                 pl.classification, book_fy, book_fy, int(pl.counted)))
             for (fy, vt), amt in pl.values.items():
                 if fy < FIRST_FY - 1 or fy > LAST_FY + 5:
                     continue
                 if amt == 0 and vt in SPARSE_TYPES:
                     continue
                 con.execute(
-                    """INSERT OR REPLACE INTO budget_values
-                       (line_id, fy, value_type, amount_k, source_doc, book_fy, source_file, sheet, page, as_of)
-                       VALUES (?,?,?,?,?,?,?,?,?,?)""",
-                    (pl.line_id, fy, vt, amt, book.source_doc, book_fy, book.source_file,
-                     pl.ref.split("!")[0], pl.ref, as_of))
+                    """INSERT OR REPLACE INTO budget_values (line_id, fy, value_type, amount_k, source_doc, book_fy, page)
+                       VALUES (?,?,?,?,?,?,?)""",
+                    (pl.line_id, fy, vt, amt, book.source_doc, book_fy, pl.ref.split("!")[-1]))
                 stats["values"] += 1
         stats["lines"] += len(book.lines)
         checks = check_book(book, toplines)

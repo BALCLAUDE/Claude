@@ -53,6 +53,7 @@ def test_pe_glob_rule(tmp_path):
 def add_line(db, line_id, title, amount_k, exhibit="r1"):
     db.execute("INSERT INTO budget_lines (line_id, exhibit, appropriation, title) VALUES (?,?,?,?)",
                (line_id, exhibit, "RDT&E", title))
+    db.execute("INSERT OR IGNORE INTO source_docs (source_doc, book_fy) VALUES ('FY2027 R-1', 2027)")
     db.execute("INSERT INTO budget_values (line_id, fy, value_type, amount_k, source_doc, book_fy) VALUES (?,?,?,?,?,?)",
                (line_id, 2027, "request", amount_k, "FY2027 R-1", 2027))
 

@@ -86,6 +86,8 @@ def test_toplines_csv_rows_are_checked(tmp_path, db):
 @pytest.mark.parametrize("name, ex, fy", [
     ("FY2026_r1.xlsx", "r1", 2026), ("fy2025_p1.xlsx", "p1", 2025), ("FY2024 O-1.xlsx", "o1", 2024),
     ("m1.xlsx", "m1", None), ("FY2026_c1.xlsx", None, 2026), ("rdte_r10.xlsx", None, None),
+    ("r1_display.xlsx", "r1", None), ("p1r.xlsx", None, None), ("p1r_display.xlsx", None, None),
+    ("o1_ooc.xlsx", None, None), ("rf1.xlsx", None, None),
 ])
 def test_file_detection(tmp_path, name, ex, fy):
     from pathlib import Path
@@ -102,3 +104,35 @@ def test_missing_header_is_an_error(tmp_path):
     wb.save(p)
     with pytest.raises(BuildError, match="header"):
         bx.parse_workbook(p, "r1", 2026)
+
+
+def test_file_detection_year_folder():
+    from pathlib import Path
+    assert bx.detect_book_fy(Path("raw/Budget Materials/2026/r1_display.xlsx")) == 2026
+
+
+def test_discover_prefers_plain_file_and_skips_other_exhibits(tmp_path):
+    for name in ("r1.xlsx", "r1_display.xlsx", "p1r.xlsx", "o1_ooc.xlsx", "c1.xlsx", "m1_display.xlsx"):
+        (tmp_path / "2025").mkdir(exist_ok=True)
+        (tmp_path / "2025" / name).write_bytes(b"")
+    found = {(ex, fy): p.name for p, ex, fy in bx.discover(tmp_path)}
+    assert found == {("r1", 2025): "r1.xlsx", ("m1", 2025): "m1_display.xlsx"}
+
+
+def test_memo_rows_and_total_above_header(tmp_path):
+    import openpyxl
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.append([None, None, None, None, None, None, None, None, "Total of Displayed Rows", 600, 60])
+    ws.append(["Account", "Account Title", "Organization", "Budget Activity", "Budget Activity Title", "Line Number",
+               "Budget Line Item", "Budget Line Item (BLI) Title", "Add/Non-Add", "FY 2027 Request Amount", "FY 2027 Request Quantity"])
+    ws.append(["2035A", "Other Procurement, Army", "A", "01", "Tactical", 1, "B00001", "Radio Systems", "Add", 300, 10])
+    ws.append(["2035A", "Other Procurement, Army", "A", "01", "Tactical", 1, "B00001", "Radio Systems", "Add", 200, 20])
+    ws.append(["2035A", "Other Procurement, Army", "A", "01", "Tactical", 2, "B00002", "Advance Procurement memo", "Non-Add", 100, 30])
+    p = tmp_path / "p1.xlsx"
+    wb.save(p)
+    book = bx.parse_workbook(p, "p1", 2027)
+    assert book.lines["p1:2035A:B00001"].values == {(2027, "request"): 500}
+    memo = book.lines["p1:2035A:B00002:memo"]
+    assert memo.counted is False
+    assert all(c[6] for c in bx.check_book(book, []))   # 600 printed = 500 + 100 parsed

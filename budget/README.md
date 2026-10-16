@@ -16,6 +16,17 @@ npm run budget:sample   # same pipeline on synthetic exhibits, for a demo withou
 npm run budget:test     # pytest + Playwright smoke tests (uses the sample build)
 ```
 
+**Real data is checked in** under `budget/raw/Budget Materials/<year>/`: the comptroller download set for the FY2021–FY2027 books. All 113 printed totals in those workbooks reconcile to the dollar.
+
+**Which files are read.**
+- For each book, the pipeline reads `r1`, `p1`, `o1` and `m1`, taking the plain file over its `_display` twin.
+- It skips:
+  - `p1r`, a reserve-component view of P-1 lines;
+  - `*_ooc`, the overseas-operations views;
+  - `rf1` (revolving funds) and `c1` (military construction).
+- Only the first sheet is parsed. The later sheets repeat it one column at a time.
+- Rows marked Non-Add or excluded from total obligational authority (TOA) are kept as `…:memo` lines, so the printed totals still reconcile, but they are never counted.
+
 **If the download is blocked**, download the workbooks in a browser from the comptroller's Budget Materials page (comptroller.war.gov). Save each one as `budget/raw/FY<year>/FY<year>_r1.xlsx` (or `_p1`, `_o1`, `_m1`). The site's CDN returns 403 to some cloud IPs. Any file name containing `r1` / `p1` / `o1` / `m1` works, as long as the folder or file name carries the `FY<year>`.
 
 ## Pipeline (`python -m budget.etl <step>`)
@@ -35,7 +46,19 @@ npm run budget:test     # pytest + Playwright smoke tests (uses the sample build
 | FY2023–25 | Actuals / enacted / supplemental / request |
 | FY2026+ | Discretionary + reconciliation |
 
-- **Value types.** The discretionary request is stored as `request` and the reconciliation column as `reconciliation`. A bare "Total" next to enacted + supplemental is ignored, so nothing is counted twice.
+- **Value types.** Overlapping columns are resolved so nothing is counted twice:
+
+  | Columns in the book | Stored as |
+  |---|---|
+  | Discretionary request | `request` |
+  | Reconciliation, "Mandatory Request", "PL 119-21 Spend Plan" | `reconciliation` |
+  | FY2021 base + OCO | `enacted` / `request`, from the base and OCO columns rather than totals that fold in emergency funding |
+  | FY2023–24 "Less Supplementals" | `enacted` |
+  | FY2023–24 "Total Supplemental" | `supplemental` |
+  | FY2025 book's "PB Request with CR Adjustments" | `cr` |
+  | Bare "Total" columns next to explicit ones | ignored |
+
+  The FY2027 book puts large mandatory requests on a few lines: about $40.6B in Industrial Base Analysis and Sustainment Support and $30.0B in Defense Production Act Purchases. Use the dashboard's mandatory toggle to see trends with and without them.
 - **Line IDs.** Each line is `<exhibit>:<account>:<PE/BLI/SAG>`.
 - **Sources.** Every value keeps its source book and cell. The view `v_values_latest` picks the newest book for each (line, FY, type).
 

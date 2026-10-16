@@ -71,10 +71,12 @@ def load(con: sqlite3.Connection, rows: list[dict], source_name: str = CSV_PATH.
                  organization, title, first_book, last_book) VALUES (?,?,?,?,?,?,?,?,?,?)""",
             (line_id, line_id.split(":")[0], kind.capitalize(), r.get("appropriation") or None, r["law"],
              r.get("component") or component_of(r.get("component", "")), r.get("component"), title, fy, fy))
+        con.execute("INSERT OR IGNORE INTO source_docs (source_doc, book_fy, exhibit, source_file) VALUES (?,?,?,?)",
+                    (r["law"], fy, kind, source_name))
         con.execute(
-            """INSERT INTO budget_values (line_id, fy, value_type, amount_k, source_doc, book_fy, source_file, page)
-               VALUES (?,?,?,?,?,?,?,?)""",
-            (line_id, fy, kind, amount, r["law"], fy, source_name, r.get("source_page") or r.get("source_url")))
+            """INSERT INTO budget_values (line_id, fy, value_type, amount_k, source_doc, book_fy, page)
+               VALUES (?,?,?,?,?,?,?)""",
+            (line_id, fy, kind, amount, r["law"], fy, r.get("source_page") or r.get("source_url")))
         weights = parse_weights(r.get("subsegments", ""))
         if weights:
             bad = [s for s, _ in weights if s not in subs]

@@ -83,11 +83,18 @@ ACCOUNT_SUFFIX = {"A": "Army", "N": "Navy", "F": "Air Force", "D": "Defense-Wide
 
 
 def component_of(*texts: str, account: str = "") -> str:
+    """Account titles name USMC and Space Force; otherwise the account-code suffix decides
+    (4557N National Defense Sealift Fund is Navy even though its title says 'Defense')."""
     joined = " ".join(t for t in texts if t)
-    for rx, name in COMPONENTS:
+    for rx, name in COMPONENTS[:2]:
+        if rx.search(joined):
+            return name
+    m = re.search(r"([ANFD])$", account or "")
+    if m:
+        return ACCOUNT_SUFFIX[m.group(1)]
+    for rx, name in COMPONENTS[2:]:
         if rx.search(joined):
             return name
     if re.search(r"defense[- ]wide|defense agencies|\bosd\b|\bdod\b|defense", joined, re.I):
         return "Defense-Wide"
-    m = re.search(r"([ANFD])$", account or "")
-    return ACCOUNT_SUFFIX.get(m.group(1), "Other") if m else "Other"
+    return "Other"
