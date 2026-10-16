@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Defense Budget Tracker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Saira+Condensed:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <span class="eyebrow">DoD budget lines → defense tech sectors</span>
+      <h1>Defense Budget Tracker</h1>
+    </div>
+    <div class="top-controls">
+      <label class="field">
+        <span>Values</span>
+        <select id="basis">
+          <option value="best">Best available</option>
+          <option value="request">Request</option>
+          <option value="enacted">Enacted</option>
+          <option value="actual">Actual</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" id="mandatory" checked> Include reconciliation &amp; supplementals</label>
+      <button type="button" class="ghost" id="theme-btn" aria-label="Toggle dark mode">Theme</button>
+    </div>
+  </div>
+  <div class="banner" id="sample-banner" hidden>
+    <strong>Sample data.</strong> These figures come from synthetic test exhibits, not the real budget books.
+    Run <code>python -m budget.etl all</code> with the R-1/P-1/O-1/M-1 workbooks in <code>budget/raw/</code> to load real data.
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Views">
+    <button type="button" role="tab" id="tab-trends" data-view="trends" aria-selected="true">Sector trends</button>
+    <button type="button" role="tab" id="tab-lines" data-view="lines" aria-selected="false">Line explorer</button>
+    <button type="button" role="tab" id="tab-movers" data-view="movers" aria-selected="false">Movers</button>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="empty" id="loader" hidden>
+    <h2>Load a budget database</h2>
+    <p>No database is bundled with this page. Build one with <code>npm run budget:build</code>, or open
+      <code>budget/build/budget.sqlite</code> here.</p>
+    <label class="file-btn"><input type="file" id="db-file" accept=".sqlite,.db"> Choose budget.sqlite</label>
+    <p class="error" id="load-error" hidden></p>
+  </section>
+
+  <section class="view" id="view-trends" role="tabpanel" aria-labelledby="tab-trends" hidden>
+    <div class="filters">
+      <label class="field"><span>Breakdown</span>
+        <select id="trend-segment"><option value="">All segments</option></select>
+      </label>
+      <span class="hint" id="trend-hint"></span>
+    </div>
+    <div class="kpis" id="trend-kpis"></div>
+    <figure class="chart-card">
+      <figcaption id="trend-caption"></figcaption>
+      <div class="legend" id="trend-legend"></div>
+      <div class="chart" id="trend-chart"></div>
+    </figure>
+    <div class="table-wrap"><table class="data" id="trend-table"></table></div>
+    <p class="note" id="trend-note"></p>
+  </section>
+
+  <section class="view" id="view-lines" role="tabpanel" aria-labelledby="tab-lines" hidden>
+    <div class="filters">
+      <label class="field grow"><span>Search</span><input type="search" id="f-q" placeholder="Title, PE / BLI, account"></label>
+      <label class="field"><span>Budget year</span><select id="f-by"></select></label>
+      <label class="field"><span>Component</span><select id="f-component"><option value="">All</option></select></label>
+      <label class="field"><span>Appropriation</span><select id="f-approp"><option value="">All</option></select></label>
+      <label class="field"><span>Segment</span><select id="f-segment"><option value="">All</option></select></label>
+      <label class="field"><span>Subsegment</span><select id="f-sub"><option value="">All</option></select></label>
+      <label class="field"><span>Program</span><select id="f-program"><option value="">All</option></select></label>
+      <label class="field"><span>Status</span>
+        <select id="f-status">
+          <option value="">All</option><option value="mapped" selected>Mapped to a sector</option>
+          <option value="unclassified">Unclassified</option><option value="not_tech">Not defense tech</option>
+        </select>
+      </label>
+    </div>
+    <div class="table-bar">
+      <span id="lines-count" class="count"></span>
+      <button type="button" class="ghost" id="lines-copy">Copy as CSV</button>
+    </div>
+    <div class="table-wrap"><table class="data sortable" id="lines-table"></table></div>
+  </section>
+
+  <section class="view" id="view-movers" role="tabpanel" aria-labelledby="tab-movers" hidden>
+    <div class="filters">
+      <label class="field"><span>Budget year</span><select id="m-by"></select></label>
+      <label class="check"><input type="checkbox" id="m-tech" checked> Sector-mapped lines only</label>
+    </div>
+    <div class="movers-grid" id="movers"></div>
+  </section>
+</main>
+
+<dialog id="detail" aria-labelledby="detail-title">
+  <div class="detail-head">
+    <div>
+      <span class="eyebrow" id="detail-eyebrow"></span>
+      <h2 id="detail-title"></h2>
+    </div>
+    <button type="button" class="ghost" id="detail-close" aria-label="Close">Close</button>
+  </div>
+  <div id="detail-body"></div>
+</dialog>
+
+<div class="tooltip" id="tooltip" role="status" hidden></div>
+<footer class="foot" id="foot"></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.13.0/sql-asm.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

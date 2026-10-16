@@ -1,0 +1,66 @@
+# Golden cases for budget/rules/sector_rules.yaml: line (title plus optional fields) → expected outcome.
+# `expect` is a {subsegment: weight} map, 'not_tech', or null for unclassified. Titles are the kind of
+# wording used in the R-1/P-1/O-1 books; PE codes are illustrative.
+- {title: Long Range Hypersonic Weapon, expect: {missiles.hypersonics: 1.0}}
+- {title: Conventional Prompt Strike, expect: {missiles.hypersonics: 1.0}}
+- {title: Hypersonic Test Bed (MACH-TB), expect: {missiles.hypertest: 1.0}}
+- {title: Hypersonic Defense, expect: {cuas.missiledefense: 1.0}}
+- {title: Glide Phase Interceptor, expect: {cuas.missiledefense: 1.0}}
+- {title: Collaborative Combat Aircraft, expect: {uas.cca: 1.0}}
+- {title: Space Development Agency Tranche 2 Transport Layer, expect: {sensors.comms: 0.5, space.buses: 0.5}}
+- {title: SDA Tranche Procurement, expect: {space.buses: 0.6, sensors.comms: 0.4}}
+- {title: Next Generation OPIR - Space, expect: {space.buses: 0.5, cuas.missiledefense: 0.5}}
+- {title: National Security Space Launch, expect: {space.launch: 1.0}}
+- {title: Space Domain Awareness Technology, expect: {space.sda: 1.0}}
+- {title: Counterspace Systems, expect: {space.counterspace: 1.0}}
+- {title: GPS III Follow-On (GPS IIIF), expect: {sensors.pnt: 1.0}}
+- {title: Military GPS User Equipment (MGUE), expect: {sensors.pnt: 1.0}}
+- {title: Protected Tactical SATCOM, expect: {sensors.comms: 0.6, space.buses: 0.4}}
+- {title: Satellite Control Network, component: Space Force, expect: {space.ground: 1.0}}
+- {title: Space Based Interceptor, expect: {cuas.missiledefense: 1.0}}
+- {title: Golden Dome for America, expect: {cuas.missiledefense: 1.0}}
+- {title: Joint Air-to-Surface Standoff Missile, expect: {missiles.strike: 1.0}}
+- {title: Precision Strike Missile (PrSM), expect: {missiles.strike: 1.0}}
+- {title: Tomahawk, expect: {missiles.strike: 1.0}}
+- {title: Family of Affordable Mass Missiles, expect: {missiles.strike: 1.0}}
+- {title: Lethal Unmanned Systems, expect: {missiles.loitering: 1.0}}
+- {title: Solid Rocket Motor Industrial Base, expect: {missiles.propulsion: 1.0}}
+- {title: "CTG, 155MM, ALL TYPES", expect: {missiles.energetics: 1.0}}
+- {title: Counter-Small Unmanned Aircraft Systems Interceptors, expect: {cuas.kinetic: 0.6, cuas.sensing: 0.2, cuas.ew: 0.2}}
+- {title: Maneuver - Short Range Air Defense (M-SHORAD), expect: {cuas.kinetic: 0.6, cuas.sensing: 0.2, cuas.ew: 0.2}}
+- {title: High Energy Laser Development, expect: {cuas.de: 1.0}}
+- {title: Lower Tier Air and Missile Defense Sensor, expect: {cuas.missiledefense: 1.0}}
+- {title: Patriot Advanced Capability-3 Missile Segment Enhancement, expect: {cuas.missiledefense: 1.0}}
+- {title: Standard Missile, expect: {cuas.missiledefense: 1.0}}
+- {title: Small Unmanned Aircraft Systems, expect: {uas.small: 1.0}}
+- {title: Future Tactical Unmanned Aircraft System, expect: {uas.tactical: 1.0}}
+- {title: Launched Effects, expect: {uas.tactical: 1.0}}
+- {title: Large Unmanned Surface Vessel, expect: {maritime.usv: 1.0}}
+- {title: Extra Large Unmanned Undersea Vehicle, expect: {maritime.uuv: 1.0}}
+- {title: Robotic Combat Vehicle, expect: {maritime.ground: 1.0}}
+- {title: Submarine Industrial Base, expect: {maritime.shipbuilding: 1.0}}
+- {title: Cyber Security Initiative, expect: {software.cyber: 1.0}}
+- {title: Cyberspace Activities, exhibit: o1, expect: {software.cyber: 1.0}}
+- {title: Advanced Battle Management System, expect: {software.c2: 1.0}}
+- {title: Next Generation Command and Control, expect: {software.c2: 1.0}}
+- {title: Chief Digital and Artificial Intelligence Office, expect: {software.intel: 1.0}}
+- {title: Digital Engineering, expect: {software.engineering: 1.0}}
+- {title: Global Combat Support System - Army, expect: {software.logistics: 1.0}}
+- {title: Next Generation Jammer Mid-Band, expect: {sensors.ew: 1.0}}
+- {title: Terrestrial Layer System, expect: {sensors.ew: 1.0}}
+- {title: SPY-6 Radar, expect: {sensors.radar: 1.0}}
+- {title: Quantum Science, expect: {sensors.pnt: 1.0}}
+- {title: Integrated Tactical Network, expect: {sensors.comms: 1.0}}
+- {title: Additive Manufacturing, expect: {industrial.additive: 1.0}}
+- {title: Critical Minerals Stockpile, expect: {industrial.materials: 1.0}}
+- {title: Manufacturing Technology Program, expect: {industrial.manufacturing: 1.0}}
+- {title: Defense Production Act Purchases, expect: {industrial.manufacturing: 1.0}}
+- {title: Advanced Nuclear Power for Installations, expect: {industrial.nuclear: 1.0}}
+- {title: Operational Energy Capability Improvement, expect: {industrial.power: 1.0}}
+- {title: Basic Pay - Officers, exhibit: m1, expect: not_tech}
+- {title: Base Operations Support, exhibit: o1, expect: not_tech}
+- {title: "Facilities Sustainment, Restoration & Modernization", exhibit: o1, expect: not_tech}
+- {title: Virginia Class Submarine, expect: null}
+- {title: Classified Programs, expect: null}
+- {title: Nuclear Command, Control and Communications, expect: null}
+- {title: Army Test Ranges and Facilities, expect: null}

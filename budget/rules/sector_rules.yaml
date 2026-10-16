@@ -1,0 +1,234 @@
+# Budget line → map subsegment rules. Read by budget/etl/classify.py.
+#
+# Rules are tried in file order and the first match wins, so put specific rules above general ones.
+# Every field a rule gives must match (AND):
+#   title:         regex on the line title (case-insensitive)
+#   exclude:       regex on the title that vetoes the rule
+#   pe:            list of PE / P-1 BLI / SAG codes; shell globs allowed (0604*A)
+#   exhibit:       list of r1, p1, o1, m1, recon, supp
+#   appropriation: list of RDT&E, Procurement, O&M, MilPers, Reconciliation, Supplemental
+#   component:     list of Army, Navy, USMC, Air Force, Space Force, Defense-Wide
+#   account:       list of account codes (2040A, 3600F ...)
+# A rule outputs either `subsegments: {id: weight}` (weights sum to 1) or `not_tech: true`.
+# Optional: program (an id from src/data/programs.js), confidence (default 1.0 for pe rules,
+# 0.9 for title-only rules), note.
+#
+# Analyst decisions in budget/overrides/line_sector.csv always win over these rules.
+
+review:
+  min_confidence: 0.8          # rule or Claude matches below this go to the review queue
+  unreviewed_max_k: 1000000    # non-human mappings of lines this size ($1B) or larger are queued for a look
+  unclassified_min_k: 100000   # unclassified RDT&E / Procurement lines from $100M are queued
+
+rules:
+  # ------------------------------------------------------------------ out of scope
+  - id: milpers
+    exhibit: [m1]
+    not_tech: true
+    note: Military personnel appropriations (pay, allowances, PCS moves).
+  - id: om-institutional
+    exhibit: [o1]
+    title: 'base operations|facilities sustainment|restoration and modernization|recruiting|advertising|examining|specialized skill training|recruit training|officer acquisition|professional development|flight training|training support|off-duty|voluntary education|junior rotc|civilian education|administration|servicewide transportation|personnel programs|other personnel support|family|childcare|morale|welfare|commissar|medical|health|environmental|housing|demolition|claims|legal|audit|accounting|public affairs|chaplain|band|ceremonial|security programs|pentagon reservation'
+    not_tech: true
+    confidence: 0.9
+
+  # ------------------------------------------------------------------ space
+  - id: golden-dome
+    title: 'golden dome|space[- ]based interceptor|homeland (air and )?missile defense'
+    subsegments: {cuas.missiledefense: 1.0}
+    program: golden-dome
+  - id: sda-transport
+    title: 'transport layer|data transport|\bpwsa\b.*transport'
+    subsegments: {sensors.comms: 0.5, space.buses: 0.5}
+    program: pwsa
+  - id: sda-tracking
+    title: 'tracking layer|missile tracking|\bhbtss\b|hypersonic and ballistic tracking|missile warning|\bopir\b|overhead persistent infrared|\bsbirs\b|space[- ]based infrared|resilient missile warning'
+    subsegments: {space.buses: 0.5, cuas.missiledefense: 0.5}
+    program: pwsa
+    confidence: 0.85
+  - id: sda-general
+    title: 'space development agency|proliferated warfighter|\bpwsa\b|tranche \d|\bsda (tranche|transport|tracking|layer)'
+    subsegments: {space.buses: 0.6, sensors.comms: 0.4}
+    program: pwsa
+    confidence: 0.85
+  - id: space-launch
+    title: 'space launch|launch (range|enterprise|services)|spacelift|rocket systems launch|\bnssl\b|\beelv\b|evolved expendable launch|tactically responsive|responsive launch'
+    subsegments: {space.launch: 1.0}
+  - id: space-domain-awareness
+    title: 'space (domain|situation(al)?) awareness|space surveillance|deep space advanced radar|\bdarc\b|space fence|\bgssap\b'
+    subsegments: {space.sda: 1.0}
+  - id: counterspace
+    title: 'counterspace|counter[- ]space|space control|space superiority|space electronic warfare|orbital warfare'
+    subsegments: {space.counterspace: 1.0}
+  - id: gps
+    title: '\bgps\b|global positioning|navstar|\bmgue\b|m-code|military gps user|\bpnt\b|positioning,? navigation,? and timing|alternative navigation|alt[- ]?nav'
+    subsegments: {sensors.pnt: 1.0}
+  - id: satcom
+    title: 'satcom|satellite communications?|\bmuos\b|wideband global|protected tactical|evolved strategic|\baehf\b|advanced extremely high frequency|enhanced polar|\bwgs\b|commercial satellite'
+    subsegments: {sensors.comms: 0.6, space.buses: 0.4}
+  - id: space-ground
+    component: [Space Force]
+    title: 'ground (system|segment|station)|satellite control|command and control|\bocx\b|mission operations|\bc2\b'
+    subsegments: {space.ground: 1.0}
+    confidence: 0.85
+  - id: space-isr
+    title: 'commercial (imagery|remote sensing)|earth observation|space[- ]based (isr|radar|sensing)|\bgmti\b.*space|space.*\bgmti\b|weather (satellite|system)|electro-optical/infrared weather|\bewss\b'
+    subsegments: {space.isr: 1.0}
+    confidence: 0.85
+  - id: space-mobility
+    title: 'in-space (mobility|servicing|refuel)|on-orbit servicing|orbital transfer|space mobility'
+    subsegments: {space.mobility: 1.0}
+  - id: space-general
+    component: [Space Force]
+    title: 'space|satellite|spacecraft'
+    exclude: 'personnel|facilities|base support'
+    subsegments: {space.buses: 1.0}
+    confidence: 0.7
+
+  # ------------------------------------------------------------------ missiles & munitions
+  - id: hypersonic-test
+    title: 'hypersonic.*\b(test|t&e|testbed|test bed|test range|flight test)\b|\b(test|t&e|testbed|test range)\b.*hypersonic|mach-tb|multi-service advanced capability hypersonic'
+    subsegments: {missiles.hypertest: 1.0}
+  - id: hypersonic-defense
+    title: 'hypersonic defense|glide phase interceptor|\bgpi\b'
+    subsegments: {cuas.missiledefense: 1.0}
+  - id: hypersonics
+    title: 'hypersonic|long range hypersonic|\blrhw\b|conventional prompt strike|\bcps\b|\barrw\b|\bhacm\b|air-launched rapid response|opfires'
+    subsegments: {missiles.hypersonics: 1.0}
+  - id: loitering
+    title: 'loitering munition|switchblade|\blasso\b|low altitude stalking|one[- ]way attack|lethal unmanned'
+    subsegments: {missiles.loitering: 1.0}
+  - id: affordable-mass
+    title: 'affordable mass|enterprise test vehicle|\betv\b|\bfamm\b|low[- ]cost cruise'
+    subsegments: {missiles.strike: 1.0}
+    program: etv
+  - id: strike-missiles
+    title: '\bjassm\b|\blrasm\b|tomahawk|precision strike missile|\bprsm\b|\bgmlrs\b|guided mlrs|\beram\b|\bmald\b|\baargm\b|\bjsow\b|small diameter bomb|\bsdb\b|naval strike missile|\bnsm\b|strike missile|cruise missile|long range anti-ship|\batacms\b|standoff (weapon|missile)|air-to-surface|stand-in attack|\bsiaw\b|\blrso\b'
+    exclude: 'defense|defeat|interceptor'
+    subsegments: {missiles.strike: 1.0}
+  - id: rocket-motors
+    title: 'solid rocket motor|rocket motor|rocket propulsion|missile propulsion|\bsrm\b'
+    subsegments: {missiles.propulsion: 1.0}
+  - id: energetics
+    title: 'energetic|explosive|propellant|ammunition|\bammo\b|ordnance|\bctg\b|cartridge|projectile|\b155mm\b|artillery|munitions industrial base|army ammunition plant|production base support|mortar|grenade|rocket, hydra|\bhydra\b'
+    exclude: 'lethal unmanned|loitering'
+    subsegments: {missiles.energetics: 1.0}
+    confidence: 0.85
+
+  # ------------------------------------------------------------------ counter-UAS & air defense
+  - id: directed-energy
+    title: 'directed energy|high energy laser|high[- ]power microwave|\bhel\b|\bhpm\b|laser weapon|\bde m-shorad\b|\bifpc[- ]hel\b|\bhelios\b'
+    subsegments: {cuas.de: 1.0}
+  - id: cuas
+    title: 'counter[- ]?(small )?(unmanned|uas|suas|drone)|\bc-?s?uas\b|counter-unmanned|m-shorad|maneuver[- ]short range air defense|short range air defense|\bshorad\b|coyote'
+    subsegments: {cuas.kinetic: 0.6, cuas.sensing: 0.2, cuas.ew: 0.2}
+    confidence: 0.85
+  - id: missile-defense
+    title: 'missile defense|\bbmd\b|ballistic missile|\bthaad\b|ground[- ]based midcourse|\bgmd\b|next generation interceptor|\bngi\b|aegis|\bsm-3\b|\bsm-6\b|standard missile|patriot|\bpac-3\b|\bmse\b|\bltamds\b|lower tier|\bifpc\b|indirect fire protection|integrated air and missile defense|\biamd\b|\bibcs\b|air and missile defense|guam defense|\bc2bmc\b|interceptor'
+    subsegments: {cuas.missiledefense: 1.0}
+    confidence: 0.95
+
+  # ------------------------------------------------------------------ drones & air autonomy
+  - id: cca
+    title: 'collaborative combat aircraft|\bcca\b|autonomous collaborative platform|loyal wingman'
+    subsegments: {uas.cca: 1.0}
+    program: cca
+  - id: replicator
+    title: 'replicator|attritable autonomous|all-domain attritable'
+    subsegments: {uas.small: 0.4, maritime.usv: 0.3, uas.autonomy: 0.3}
+    program: replicator
+    confidence: 0.75
+  - id: launched-effects
+    title: 'launched effects'
+    subsegments: {uas.tactical: 1.0}
+    program: launched-effects
+  - id: small-uas
+    title: 'small unmanned aircraft|\bsuas\b|short range reconnaissance|\bsrr\b|company[- ]level|purpose[- ]built attritable|\bpbas\b|first[- ]person view|\bfpv\b|soldier borne|quadcopter|\bgroup [12]\b'
+    subsegments: {uas.small: 1.0}
+  - id: large-uas
+    title: '\bmq-(1c|4c|9|25)\b|\brq-4\b|global hawk|triton|reaper|stingray|gray eagle|grey eagle|\bmale uas\b'
+    subsegments: {uas.tactical: 1.0}
+    confidence: 0.6
+    note: The map has no large-UAS subsegment; parked in Tactical & Group 3 for review.
+  - id: tactical-uas
+    title: 'tactical (uas|unmanned)|future tactical|\bftuas\b|shadow|\bgroup 3\b|unmanned aircraft|unmanned aerial|\buas\b|\buav\b|drone'
+    exclude: 'counter|defeat'
+    subsegments: {uas.tactical: 1.0}
+    confidence: 0.85
+
+  # ------------------------------------------------------------------ maritime & ground robotics
+  - id: usv
+    title: 'unmanned surface|uncrewed surface|\busv\b|\bmusv\b|\blusv\b|surface drone'
+    subsegments: {maritime.usv: 1.0}
+  - id: uuv
+    title: 'unmanned undersea|uncrewed undersea|\buuv\b|\bxluuv\b|orca|snakehead|razorback|knifefish|undersea (vehicle|drone)|seabed'
+    subsegments: {maritime.uuv: 1.0}
+  - id: ground-robotics
+    title: 'robotic combat vehicle|\brcv\b|unmanned ground|uncrewed ground|\bugv\b|squad multipurpose equipment transport|\bs-met\b|robotic|autonomous ground|leader[- ]follower'
+    subsegments: {maritime.ground: 1.0}
+  - id: shipbuilding-industrial
+    title: 'shipbuilding industrial base|submarine industrial base|maritime industrial base|shipyard|\bsib\b|\bmib\b'
+    subsegments: {maritime.shipbuilding: 1.0}
+  - id: anti-submarine
+    title: 'anti-submarine|\basw\b|undersea warfare|sonobuoy|undersea surveillance'
+    subsegments: {maritime.uuv: 1.0}
+    confidence: 0.8
+
+  # ------------------------------------------------------------------ software & AI
+  - id: cyber
+    title: 'cyber|information systems security|\bissp\b|information assurance|zero trust|cryptograph|\bnsa\b.*security'
+    subsegments: {software.cyber: 1.0}
+  - id: c2
+    title: 'jadc2|joint all[- ]domain|advanced battle management|\babms\b|next generation command and control|\bngc2\b|battle management|command and control|\bc2\b|\bdaf battle network\b|\bcjadc2\b|maven|common operating picture'
+    exclude: 'nuclear command|\bnc3\b'
+    subsegments: {software.c2: 1.0}
+    confidence: 0.85
+  - id: ai-data
+    title: 'artificial intelligence|\bai\b|machine learning|algorithmic warfare|chief digital|\bcdao\b|advana|data (analytics|fusion|integration|platform)|decision advantage|open source intelligence|all[- ]source|intelligence analysis'
+    subsegments: {software.intel: 1.0}
+    confidence: 0.85
+  - id: digital-engineering
+    title: 'digital engineering|model[- ]based|modeling and simulation|\bm&s\b|wargam|digital twin|software factory|software acquisition pathway|test and evaluation software|synthetic training environment|\bste\b'
+    subsegments: {software.engineering: 1.0}
+    confidence: 0.85
+  - id: logistics-it
+    title: 'logistics (information|it|modernization|data)|\bgcss\b|global combat support system|enterprise resource planning|\berp\b|supply chain (management|visibility)|predictive (logistics|maintenance)|condition[- ]based maintenance|readiness (analytics|information)'
+    subsegments: {software.logistics: 1.0}
+    confidence: 0.85
+
+  # ------------------------------------------------------------------ sensors, EW & comms
+  - id: electronic-warfare
+    title: 'electronic warfare|\bew\b|electronic attack|jammer|next generation jammer|\bngj\b|\bepawss\b|\bsewip\b|signals intelligence|\bsigint\b|spectrum (warfare|dominance)|electromagnetic (spectrum|warfare)|terrestrial layer system|\btls\b'
+    subsegments: {sensors.ew: 1.0}
+  - id: radar
+    title: 'radar|\bspy-6\b|\bamdr\b|\btpy-\b|over[- ]the[- ]horizon|\both\b|sentinel a4|\bltamds\b|\bewr\b|\bamti\b|\bgmti\b'
+    subsegments: {sensors.radar: 1.0}
+    confidence: 0.9
+  - id: quantum
+    title: 'quantum'
+    subsegments: {sensors.pnt: 1.0}
+    confidence: 0.85
+  - id: tactical-comms
+    title: 'tactical (network|radio|communications?|data link)|link[- ]16|\bmids\b|integrated tactical network|\bitn\b|tactical network|waveform|\b5g\b|mesh network|data link|handheld|manpack|\bhms\b|communications? (system|equipment|network)|radio'
+    subsegments: {sensors.comms: 1.0}
+    confidence: 0.85
+
+  # ------------------------------------------------------------------ manufacturing & energy
+  - id: additive
+    title: 'additive manufacturing|3[- ]?d print|advanced manufacturing.*additive'
+    subsegments: {industrial.additive: 1.0}
+  - id: critical-materials
+    title: 'critical (minerals|materials)|rare earth|strategic (and critical )?materials|national defense stockpile|magnet'
+    subsegments: {industrial.materials: 1.0}
+  - id: industrial-base
+    title: 'manufacturing technology|\bmantech\b|industrial base (analysis|fund|policy)|\bibas\b|defense production act|\bdpa\b|manufacturing science|advanced manufacturing|industrial preparedness'
+    subsegments: {industrial.manufacturing: 1.0}
+    confidence: 0.9
+  - id: nuclear-power
+    title: 'microreactor|advanced nuclear power|project pele|mobile nuclear|nuclear (power|reactor|energy)'
+    exclude: 'command|weapon|deterrent|nc3'
+    subsegments: {industrial.nuclear: 1.0}
+  - id: power-energy
+    title: 'operational energy|energy resilience|batter(y|ies)|power and energy|microgrid|fuel cell|power generation|tactical power|expeditionary power|energy storage'
+    subsegments: {industrial.power: 1.0}
+    confidence: 0.85
