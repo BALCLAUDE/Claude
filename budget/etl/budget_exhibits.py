@@ -28,6 +28,8 @@ EXHIBITS = {
     "p1": ("Procurement", "P-1"),
     "o1": ("O&M", "O-1"),
     "m1": ("MilPers", "M-1"),
+    "rf1": ("Revolving Funds", "RF-1"),
+    "c1": ("MilCon", "C-1"),
 }
 
 # The comptroller site moved from comptroller.defense.gov to comptroller.war.gov in 2025;
@@ -40,7 +42,7 @@ URL_PATTERNS = [
 
 TOLERANCE_K = 1.0
 # Zeros in these columns mean "none" rather than a funded-to-zero line, so they are not stored.
-SPARSE_TYPES = {"supplemental", "reconciliation", "cr", "fydp"}
+SPARSE_TYPES = {"supplemental", "reconciliation", "reconciliation_request", "cr", "fydp"}
 
 # ---------------------------------------------------------------- header recognition
 
@@ -124,6 +126,8 @@ def classify_header(h, book_fy: int):
         if vt is None:  # bare "FY 2026": infer from its position relative to the book year
             vt = ("actual" if fy <= book_fy - 2 else "enacted" if fy == book_fy - 1
                   else "request" if fy == book_fy else "fydp")
+        if vt == "reconciliation" and fy >= book_fy:  # mandatory money still being requested
+            vt = "reconciliation_request"
         return ("amount", fy, vt, header_part(t, part), explicit)
     for f, rx in ID_RX:
         if rx.search(t):
@@ -230,10 +234,10 @@ def clean_code(v) -> str:
     return re.sub(r"\s+", "", str(v)).upper()
 
 
-# The four exhibits this pipeline reads. Other files in the comptroller download set are skipped:
-# p1r (reserve-component display of P-1 lines), *_ooc (overseas operations cost display of O-1/M-1
-# lines), rf1 (revolving funds) and c1 (military construction).
-EXHIBIT_FILE_RX = re.compile(r"^(?:fy\s*-?\d{4}[\s_-]*)?([rpom])-?1(_display)?$", re.I)
+# The six exhibits that make up the DoD request. Other files in the comptroller download set are
+# displays of lines already in these and are skipped: p1r (reserve-component view of P-1 lines) and
+# *_ooc (overseas operations costs funded inside the O-1/M-1/C-1 base).
+EXHIBIT_FILE_RX = re.compile(r"^(?:fy\s*-?\d{4}[\s_-]*)?(rf|c|[rpom])-?1(_display)?$", re.I)
 
 
 def detect_exhibit(name: str) -> str | None:
@@ -253,6 +257,8 @@ def parse_workbook(path: Path, exhibit: str, book_fy: int) -> ParsedBook:
     appropriation, ex_label = EXHIBITS[exhibit]
     book = ParsedBook(exhibit=exhibit, book_fy=book_fy, source_doc=f"FY{book_fy} {ex_label}",
                       source_file=path.name)
+    if exhibit == "c1":
+        return parse_c1(path, book)
     wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
     # Only the first sheet with a header: later sheets in the comptroller workbooks repeat the same
     # rows one column at a time and would double count.
@@ -267,6 +273,90 @@ def parse_workbook(path: Path, exhibit: str, book_fy: int) -> ParsedBook:
     wb.close()
     if not found:
         raise BuildError(f"{path}: no sheet with a recognizable {ex_label} header row")
+    return book
+
+
+C1_SHEET_SKIP = re.compile(r"\booc\b|overseas operations", re.I)
+
+
+def c1_sheet_type(title: str, book_fy: int):
+    """C-1 workbooks have one sheet per fiscal year and funding type ('FY 2027', 'FY2027 Mandatory
+    Reconciliation', 'FY 2020 Emergency', 'FY 2021 OCO'). Returns (fy, value_type) or None."""
+    m = FY_RX.search(norm_header(title))
+    if not m or C1_SHEET_SKIP.search(title):
+        return None
+    y = m.group(1) or m.group(2)
+    fy = int(y) + 2000 if len(y) == 2 else int(y)
+    t = title.lower()
+    if re.search(r"reconcil|mandatory|\brecon\b", t):
+        return fy, ("reconciliation_request" if fy >= book_fy else "reconciliation")
+    if re.search(r"emergency|supplemental", t):
+        return fy, "supplemental"
+    # Base sheets, and OCO / enactment sheets that add to them, by position in the book.
+    return fy, ("actual" if fy <= book_fy - 2 else "enacted" if fy == book_fy - 1 else "request")
+
+
+def parse_c1(path: Path, book: ParsedBook) -> ParsedBook:
+    """C-1 lists construction projects. Projects roll up to account x budget activity lines
+    ('Military Construction, Army / Major Construction'), using total obligational authority."""
+    wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+    book.sheet = "per-FY sheets"
+    printed: dict = {}  # base and OCO sheets for the same year add up, so their printed totals do too
+    for ws in wb.worksheets:
+        kind = c1_sheet_type(ws.title, book.book_fy)
+        if not kind:
+            continue
+        rows = ws.iter_rows(values_only=True)
+        above, hdr = [], None
+        for r in rows:
+            cells = [norm_header(c) for c in r]
+            if "account" in cells:
+                hdr = cells
+                break
+            above.append(r)
+        if hdr is None:
+            continue
+        col = {name: i for i, name in enumerate(hdr) if name}
+        toa = max((i for i, h in enumerate(hdr) if re.search(r"\btoa\b|total obligation", h)), default=None)
+        if toa is None:
+            continue
+        acct_i = col.get("account")
+        agency_i = col.get("treasury agency")
+        title_i = col.get("account title", col.get("account short title"))
+        ba_i = col.get("budget activity")
+        bat_i = next((i for h, i in col.items() if h.startswith("budget activity") and ("title" in h)), None)
+        for r in above:
+            if any(isinstance(c, str) and TOTAL_RX.search(c) for c in r) and toa < len(r):
+                amt = parse_amount(r[toa])
+                if amt is not None:
+                    printed[kind] = printed.get(kind, 0.0) + amt
+                    break
+        for r_i, r in enumerate(rows, start=len(above) + 2):
+            if r is None or toa >= len(r):
+                continue
+            amt = parse_amount(r[toa])
+            acct = clean_code(r[acct_i]) if acct_i is not None else ""
+            if amt is None or not acct:
+                continue
+            if agency_i is not None and r[agency_i] and not acct[-1:].isalpha():
+                acct += clean_code(r[agency_i])
+            ba = clean_code(r[ba_i]) if ba_i is not None else ""
+            acct_title = norm_space(r[title_i]) if title_i is not None else ""
+            ba_title = norm_space(r[bat_i]) if bat_i is not None else ""
+            line_id = f"c1:{acct}:{ba or '-'}"
+            pl = book.lines.get(line_id)
+            if pl is None:
+                pl = book.lines[line_id] = ParsedLine(
+                    line_id=line_id, exhibit="c1", appropriation="MilCon", account=acct,
+                    account_title=acct_title, component=component_of(acct_title, account=acct),
+                    organization="", budget_activity=ba, ba_title=ba_title, line_number="", pe_bli=ba,
+                    title=f"{acct_title} / {ba_title.title() if ba_title.isupper() else ba_title}".strip(" /"),
+                    classification="", ref=f"{ws.title}!{r_i}")
+            elif acct_title and not pl.account_title:
+                pl.account_title = acct_title
+            pl.values[kind] = pl.values.get(kind, 0.0) + amt
+    wb.close()
+    book.printed_totals += [("*", fy, vt, amt) for (fy, vt), amt in printed.items()]
     return book
 
 

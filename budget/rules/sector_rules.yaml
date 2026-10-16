@@ -26,6 +26,14 @@ rules:
     exhibit: [m1]
     not_tech: true
     note: Military personnel appropriations (pay, allowances, PCS moves).
+  - id: milcon
+    exhibit: [c1]
+    not_tech: true
+    note: Military construction and family housing.
+  - id: revolving-funds
+    exhibit: [rf1]
+    not_tech: true
+    note: Working capital and other revolving funds.
   - id: om-institutional
     exhibit: [o1]
     title: 'base operations|facilities sustainment|restoration and modernization|recruiting|advertising|examining|specialized skill training|recruit training|officer acquisition|professional development|flight training|training support|off-duty|voluntary education|junior rotc|civilian education|administration|servicewide transportation|personnel programs|other personnel support|family|childcare|morale|welfare|commissar|medical|health|environmental|housing|demolition|claims|legal|audit|accounting|public affairs|chaplain|band|ceremonial|security programs|pentagon reservation'

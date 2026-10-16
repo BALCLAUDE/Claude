@@ -44,7 +44,7 @@ def test_reconciliation_column_is_separate_from_request(tmp_path):
     pl = by_code(bx.parse_workbook(path, "r1", 2026))["9960705SF"]
     line = next(ln for ln in sample.LINES if ln[3] == "9960705SF")
     assert pl.values[(2026, "request")] == sample.true_value(line, 2026, "request")
-    assert pl.values[(2026, "reconciliation")] == sample.true_value(line, 2026, "recon") > 0
+    assert pl.values[(2026, "reconciliation_request")] == sample.true_value(line, 2026, "recon") > 0
 
 
 def test_supplemental_not_double_counted_in_enacted(tmp_path):
@@ -85,9 +85,9 @@ def test_toplines_csv_rows_are_checked(tmp_path, db):
 
 @pytest.mark.parametrize("name, ex, fy", [
     ("FY2026_r1.xlsx", "r1", 2026), ("fy2025_p1.xlsx", "p1", 2025), ("FY2024 O-1.xlsx", "o1", 2024),
-    ("m1.xlsx", "m1", None), ("FY2026_c1.xlsx", None, 2026), ("rdte_r10.xlsx", None, None),
+    ("m1.xlsx", "m1", None), ("FY2026_c1.xlsx", "c1", 2026), ("rdte_r10.xlsx", None, None),
     ("r1_display.xlsx", "r1", None), ("p1r.xlsx", None, None), ("p1r_display.xlsx", None, None),
-    ("o1_ooc.xlsx", None, None), ("rf1.xlsx", None, None),
+    ("o1_ooc.xlsx", None, None), ("rf1.xlsx", "rf1", None), ("c1_display.xlsx", "c1", None),
 ])
 def test_file_detection(tmp_path, name, ex, fy):
     from pathlib import Path
@@ -116,7 +116,7 @@ def test_discover_prefers_plain_file_and_skips_other_exhibits(tmp_path):
         (tmp_path / "2025").mkdir(exist_ok=True)
         (tmp_path / "2025" / name).write_bytes(b"")
     found = {(ex, fy): p.name for p, ex, fy in bx.discover(tmp_path)}
-    assert found == {("r1", 2025): "r1.xlsx", ("m1", 2025): "m1_display.xlsx"}
+    assert found == {("r1", 2025): "r1.xlsx", ("m1", 2025): "m1_display.xlsx", ("c1", 2025): "c1.xlsx"}
 
 
 def test_memo_rows_and_total_above_header(tmp_path):
@@ -136,3 +136,30 @@ def test_memo_rows_and_total_above_header(tmp_path):
     memo = book.lines["p1:2035A:B00002:memo"]
     assert memo.counted is False
     assert all(c[6] for c in bx.check_book(book, []))   # 600 printed = 500 + 100 parsed
+
+
+def test_c1_rolls_projects_up_by_sheet(tmp_path):
+    import openpyxl
+    wb = openpyxl.Workbook()
+    hdr = ["Account", "Account Title", "Budget Activity", "Budget Activity Title", "Organization", "Fiscal Year",
+           "Construction Project", "Construction Project Title", "Appropriation Amount", "Total Obligation Authority"]
+    sheets = {"FY 2021": [("2050A", "Military Construction, Army", "01", "MAJOR CONSTRUCTION", 100), ("2050A", "Military Construction, Army", "01", "MAJOR CONSTRUCTION", 50)],
+              "FY 2021 OCO": [("2050A", "Military Construction, Army", "01", "MAJOR CONSTRUCTION", 7)],
+              "FY 2020 Emergency": [("1205N", "Military Construction, Navy", "01", "MAJOR CONSTRUCTION", 9)],
+              "FY 2021 (OOC)": [("2050A", "Military Construction, Army", "01", "MAJOR CONSTRUCTION", 999)],
+              "FY2021 Mandatory Reconciliation": [("2050A", "Military Construction, Army", "01", "MAJOR CONSTRUCTION", 3)]}
+    wb.remove(wb.active)
+    for name, rows in sheets.items():
+        ws = wb.create_sheet(name)
+        ws.append([None, None, None, None, None, None, None, "Total of Displayed Rows", None, sum(r[4] for r in rows)])
+        ws.append(hdr)
+        for a, t, ba, bat, amt in rows:
+            ws.append([a, t, ba, bat, "A", 2021, "P1", "Barracks", amt, amt])
+    p = tmp_path / "c1.xlsx"
+    wb.save(p)
+    book = bx.parse_workbook(p, "c1", 2021)
+    army = book.lines["c1:2050A:01"]
+    assert army.values == {(2021, "request"): 157, (2021, "reconciliation_request"): 3}
+    assert army.component == "Army" and army.appropriation == "MilCon"
+    assert book.lines["c1:1205N:01"].values == {(2020, "supplemental"): 9}
+    assert all(c[6] for c in bx.check_book(book, []))

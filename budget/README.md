@@ -16,14 +16,36 @@ npm run budget:sample   # same pipeline on synthetic exhibits, for a demo withou
 npm run budget:test     # pytest + Playwright smoke tests (uses the sample build)
 ```
 
-**Real data is checked in** under `budget/raw/Budget Materials/<year>/`: the comptroller download set for the FY2021–FY2027 books. All 113 printed totals in those workbooks reconcile to the dollar.
+**Real data is checked in** under `budget/raw/Budget Materials/<year>/`: the comptroller download set for the FY2021–FY2027 books. All 166 printed totals in those workbooks reconcile to the dollar, and each book's request matches the published DoD request:
+
+| Book | DoD request ($B) |
+|---|---|
+| FY2021 | 706.7 |
+| FY2022 | 716.7 |
+| FY2023 | 774.5 |
+| FY2024 | 843.5 |
+| FY2025 | 851.5 |
+| FY2026 | 850.7 discretionary + 113.3 mandatory |
+| FY2027 | 1,104.2 discretionary + 350.0 mandatory = 1,454.2 |
+
+National defense (budget function 050) is higher. It adds about $40–50B a year of Energy Department and other non-DoD funding, which is not in these books.
 
 **Which files are read.**
-- For each book, the pipeline reads `r1`, `p1`, `o1` and `m1`, taking the plain file over its `_display` twin.
-- It skips:
+- For each book, the pipeline reads the six exhibits that make up the DoD request, taking the plain file over its `_display` twin:
+
+  | Exhibit | Contents |
+  |---|---|
+  | `r1` | RDT&E |
+  | `p1` | Procurement |
+  | `o1` | Operation & maintenance |
+  | `m1` | Military personnel |
+  | `rf1` | Revolving funds |
+  | `c1` | Military construction & family housing |
+
+  C-1 lists projects on one sheet per fiscal year; they roll up to account × budget-activity lines, using total obligational authority.
+- It skips the displays of lines already counted elsewhere:
   - `p1r`, a reserve-component view of P-1 lines;
-  - `*_ooc`, the overseas-operations views;
-  - `rf1` (revolving funds) and `c1` (military construction).
+  - `*_ooc` files and C-1 "(OOC)" sheets, the overseas-operations costs funded inside the base budget.
 - Only the first sheet is parsed. The later sheets repeat it one column at a time.
 - Rows marked Non-Add or excluded from total obligational authority (TOA) are kept as `…:memo` lines, so the printed totals still reconcile, but they are never counted.
 
@@ -51,7 +73,8 @@ npm run budget:test     # pytest + Playwright smoke tests (uses the sample build
   | Columns in the book | Stored as |
   |---|---|
   | Discretionary request | `request` |
-  | Reconciliation, "Mandatory Request", "PL 119-21 Spend Plan" | `reconciliation` |
+  | Reconciliation or mandatory amounts for the book year or later, e.g. "FY 2027 Mandatory Request" | `reconciliation_request` |
+  | Reconciliation or mandatory amounts enacted or spent, e.g. "PL 119-21 Spend Plan", "Mandatory Enacted" | `reconciliation` |
   | FY2021 base + OCO | `enacted` / `request`, from the base and OCO columns rather than totals that fold in emergency funding |
   | FY2023–24 "Less Supplementals" | `enacted` |
   | FY2023–24 "Total Supplemental" | `supplemental` |

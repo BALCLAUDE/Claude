@@ -20,7 +20,7 @@ from budget.etl.budget_exhibits import classify_header, resolve_amount_columns
     ("FY 2024 Actuals", 2026, ("amount", 2024, "actual", None, True)),
     ("FY 2025\nEnacted", 2026, ("amount", 2025, "enacted", None, True)),
     ("FY 2026 Disc Request", 2026, ("amount", 2026, "request", "disc", True)),
-    ("FY 2026 Reconciliation Request", 2026, ("amount", 2026, "reconciliation", None, True)),
+    ("FY 2026 Reconciliation Request", 2026, ("amount", 2026, "reconciliation_request", None, True)),
     ("FY 2026 Total Request", 2026, ("amount", 2026, "request", "total", True)),
     ("FY 2021 OCO Request", 2021, ("amount", 2021, "request", "oco", True)),
     ("FY 2021 Base Request", 2021, ("amount", 2021, "request", "base", True)),
@@ -57,7 +57,7 @@ from budget.etl.budget_exhibits import classify_header, resolve_amount_columns
     ("FY 2024 PB Request with CR Adjustments*", 2025, ("amount", 2024, "cr", None, True)),
     ("FY 2026 PL 119-21 Spend Plan", 2027, ("amount", 2026, "reconciliation", None, True)),
     ("FY 2026 Discretionary Enacted", 2027, ("amount", 2026, "enacted", "disc", True)),
-    ("FY 2027 Mandatory Request", 2027, ("amount", 2027, "reconciliation", None, True)),
+    ("FY 2027 Mandatory Request", 2027, ("amount", 2027, "reconciliation_request", None, True)),
     ("FY 2027 Mandatory Quantity", 2027, None),
 ])
 
@@ -111,4 +111,4 @@ def test_fy2027_layout_separates_mandatory():
     cols = [(i,) + classify_header(h, 2027)[1:] for i, h in enumerate(hdrs)]
     assert resolve_amount_columns(cols) == {(2025, "actual"): [0], (2025, "reconciliation"): [1],
                                             (2026, "enacted"): [3], (2026, "reconciliation"): [4],
-                                            (2027, "request"): [6], (2027, "reconciliation"): [7]}
+                                            (2027, "request"): [6], (2027, "reconciliation_request"): [7]}

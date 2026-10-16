@@ -22,7 +22,7 @@
   }
   const pct = (x, plus = true) => (x == null || !Number.isFinite(x)) ? '–' : `${plus && x > 0 ? '+' : x < 0 ? '−' : ''}${Math.abs(x * 100).toFixed(1)}%`;
   const fyLabel = (fy) => `FY${String(fy).slice(2)}`;
-  const VT_LABEL = { actual: 'Actual', enacted: 'Enacted', request: 'Request', cr: 'CR', reconciliation: 'Reconciliation', supplemental: 'Supplemental', fydp: 'FYDP' };
+  const VT_LABEL = { actual: 'Actual', enacted: 'Enacted', request: 'Request', cr: 'CR', reconciliation: 'Mandatory (enacted)', reconciliation_request: 'Mandatory request', supplemental: 'Supplemental', fydp: 'FYDP' };
 
   // ---------------------------------------------------------------- data
   const D = { meta: {}, segments: [], subs: {}, segOf: {}, lines: [], byId: {}, programs: [], years: [] };
@@ -83,11 +83,18 @@
   function amount(l, fy) {
     const [c] = core(l, fy);
     let t = c;
-    if (S.mandatory) for (const vt of ['reconciliation', 'supplemental']) {
-      const x = v(l, fy, vt);
+    if (S.mandatory) {
+      const x = mandatory(l, fy);
       if (x != null) t = (t || 0) + x;
     }
     return t;
+  }
+  // Mandatory (reconciliation) money follows the value basis: requested amounts for "Request",
+  // enacted or spent amounts otherwise, falling back to the request for "Best available".
+  function mandatory(l, fy) {
+    const enacted = v(l, fy, 'reconciliation'), req = v(l, fy, 'reconciliation_request'), supp = v(l, fy, 'supplemental');
+    const m = S.basis === 'request' ? req : (S.basis === 'best' ? (enacted ?? req) : enacted);
+    return m == null && supp == null ? undefined : (m || 0) + (S.basis === 'request' ? 0 : (supp || 0));
   }
   const primarySeg = (l) => (l.subs[0] ? D.segOf[l.subs[0].subsegment_id] : null);
 
@@ -153,7 +160,7 @@
     $('#trend-kpis').innerHTML = [
       kpi(`${fyLabel(last)} ${used[last] ? VT_LABEL[used[last]].toLowerCase() : ''}`, money(tot[last]), prev ? `${pct(tot[prev] ? tot[last] / tot[prev] - 1 : null)} vs ${fyLabel(prev)}` : ''),
       kpi(`CAGR ${fyLabel(first)}–${fyLabel(last)}`, pct(cagr(tot[first], tot[last], last - first)), `${money(tot[first])} → ${money(tot[last])}`),
-      kpi(`Share of loaded budget, ${fyLabel(last)}`, pct(all[last] ? tot[last] / all[last] : null, false), `of ${money(all[last])} across all loaded lines`),
+      kpi(`Share of DoD budget, ${fyLabel(last)}`, pct(all[last] ? tot[last] / all[last] : null, false), `of ${money(all[last])} across all six exhibits`),
       kpi('Lines mapped to sectors', D.lines.filter((l) => l.status === 'mapped').length.toLocaleString(),
         `${D.lines.filter((l) => l.status === 'unclassified').length.toLocaleString()} unclassified of ${D.lines.length.toLocaleString()}`)
     ].join('');
@@ -251,7 +258,7 @@
       if (prog && !l.programs.includes(prog)) continue;
       if (q && !`${l.title} ${l.pe_bli} ${l.account} ${l.account_title} ${l.line_id}`.toLowerCase().includes(q)) continue;
       const py = v(l, by - 2, 'actual'), cy = v(l, by - 1, 'enacted'), req = v(l, by, 'request');
-      const recon = (v(l, by, 'reconciliation') || 0) + (v(l, by, 'supplemental') || 0);
+      const recon = (v(l, by, 'reconciliation_request') ?? v(l, by, 'reconciliation') ?? 0) + (v(l, by, 'supplemental') || 0);
       if (py == null && cy == null && req == null && !recon) continue;
       const base = cy ?? 0, now = (req ?? 0) + (S.mandatory ? recon : 0);
       const delta = now - base;
@@ -303,7 +310,7 @@
     if (!l) return;
     $('#detail-eyebrow').textContent = `${l.appropriation} · ${l.component || ''} · ${l.account || ''} ${l.pe_bli || ''}`;
     $('#detail-title').textContent = l.title;
-    const vt = ['actual', 'enacted', 'request', 'cr', 'reconciliation', 'supplemental'];
+    const vt = ['actual', 'enacted', 'request', 'cr', 'reconciliation', 'reconciliation_request', 'supplemental'];
     const fys = Object.keys(l.vals).map(Number).sort();
     const usedVt = vt.filter((t) => fys.some((y) => l.vals[y][t]));
     const hist = `<div class="table-wrap"><table class="data"><thead><tr><th>FY</th>${usedVt.map((t) => `<th class="num">${VT_LABEL[t]}</th>`).join('')}</tr></thead><tbody>` +
@@ -337,7 +344,7 @@
     const by = +$('#m-by').value;
     const techOnly = $('#m-tech').checked;
     const pool = D.lines.filter((l) => !techOnly || l.status === 'mapped');
-    const reqNow = (l) => (v(l, by, 'request') ?? 0) + (S.mandatory ? (v(l, by, 'reconciliation') || 0) : 0);
+    const reqNow = (l) => (v(l, by, 'request') ?? 0) + (S.mandatory ? (v(l, by, 'reconciliation_request') ?? v(l, by, 'reconciliation') ?? 0) : 0);
     const changes = pool.map((l) => {
       const before = v(l, by - 1, 'enacted'), now = v(l, by, 'request');
       if (before == null && now == null) return null;

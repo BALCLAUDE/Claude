@@ -61,8 +61,8 @@ CREATE TABLE company_programs (
 -- One row per budget line, stable across budget books. line_id = '<exhibit>:<account>:<pe/bli>'.
 CREATE TABLE budget_lines (
   line_id         TEXT PRIMARY KEY,
-  exhibit         TEXT NOT NULL,          -- r1, p1, o1, m1, recon, supp
-  appropriation   TEXT NOT NULL,          -- RDT&E, Procurement, O&M, MilPers, Reconciliation, Supplemental
+  exhibit         TEXT NOT NULL,          -- r1, p1, o1, m1, rf1, c1, recon, supp
+  appropriation   TEXT NOT NULL,          -- RDT&E, Procurement, O&M, MilPers, Revolving Funds, MilCon, ...
   account         TEXT,                   -- e.g. 2040A, 3600F, 0400D
   account_title   TEXT,
   component       TEXT,                   -- Army, Navy, USMC, Air Force, Space Force, Defense-Wide
@@ -93,7 +93,10 @@ CREATE TABLE budget_values (
   line_id     TEXT NOT NULL REFERENCES budget_lines(line_id),
   fy          INTEGER NOT NULL,
   value_type  TEXT NOT NULL CHECK (value_type IN
-                ('actual', 'enacted', 'request', 'cr', 'reconciliation', 'supplemental', 'fydp')),
+                ('actual', 'enacted', 'request', 'cr', 'reconciliation', 'reconciliation_request',
+                 'supplemental', 'fydp')),
+                -- reconciliation = mandatory money enacted or spent (spend plans, actuals);
+                -- reconciliation_request = mandatory money still being requested
   amount_k    REAL NOT NULL,
   source_doc  TEXT NOT NULL REFERENCES source_docs(source_doc),
   book_fy     INTEGER,                    -- budget year of the source book
