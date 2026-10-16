@@ -63,11 +63,7 @@ def parent_idv(generated_id: str) -> str | None:
     return f"CONT_IDV_{m.group(1)}_{m.group(2)}"
 
 
-UEI_CHUNK = 8  # large OR-lists of UEIs time out (HTTP 503), so big primes are queried in batches
-
-
-def chunks(xs: list, n: int = UEI_CHUNK):
-    return [xs[i:i + n] for i in range(0, len(xs), n)]
+UEI_CHUNK = 8  # more UEIs than this in one text search times out (HTTP 503)
 
 
 def award_row(r: dict) -> dict:
@@ -81,18 +77,70 @@ def award_row(r: dict) -> dict:
         "psc_name": (r.get("PSC") or {}).get("description"), "parent_idv": parent_idv(r.get("generated_internal_id"))}
 
 
+def own_id(recipient_id: str | None) -> str | None:
+    """USAspending recipient hashes end in -P (parent family), -C (the entity's own records) or -R."""
+    return recipient_id.rsplit("-", 1)[0] + "-C" if recipient_id else None
+
+
 def fetch_company(ent: dict, today: dt.date | None = None) -> dict | None:
+    """A text search on a UEI matches the entity's own records and every record that names it as the
+    parent, so a single query over all of a company's UEIs counts each record once (and picks up
+    subsidiaries reporting under it). Splitting that list into batches would double count, so
+    companies with more UEIs than one query can carry are summed entity by entity instead, each
+    entity's own records only (recipient_id ...-C)."""
     ueis = [r["uei"] for r in ent["recipients"] if r.get("uei")]
     if not ueis:
         return None
+    if len(ueis) > UEI_CHUNK:
+        return fetch_company_by_entity(ent, today)
+    return fetch_filters(ent, [{"recipient_search_text": ueis}], ueis, today)
+
+
+def fetch_company_by_entity(ent: dict, today: dt.date | None = None, detail_share: float = 0.95) -> dict:
+    """Monthly obligations for every entity; product codes and largest awards for the entities making
+    up `detail_share` of the company's obligations. The rest is booked to a PSC of 'UNSPEC'."""
+    recs = [r for r in ent["recipients"] if r.get("recipient_id")]
+    per: list = []
+    for r in recs:
+        d = http.call("search/spending_over_time/",
+                      {"group": "month", "filters": {"agencies": DOD, "recipient_id": own_id(r["recipient_id"]),
+                                                     "time_period": all_period(today)}})
+        rows = [x for x in d.get("results", []) if x.get("aggregated_amount")]
+        per.append((r, rows, sum(x["aggregated_amount"] for x in rows)))
+    total = sum(t for _, _, t in per) or 1
+    per.sort(key=lambda x: -x[2])
+    detailed, acc = [], 0.0
+    for r, rows, t in per:
+        if t <= 0 or acc >= detail_share * total:
+            break
+        detailed.append(r)
+        acc += t
+    out = fetch_filters(ent, [{"recipient_id": own_id(r["recipient_id"])} for r in detailed],
+                        [r["uei"] for r in ent["recipients"] if r.get("uei")], today, months_rows=per)
+    # Obligations of entities without product-code detail, by FY.
+    detailed_ids = {r["recipient_id"] for r in detailed}
+    rest: dict = {}
+    for r, rows, _ in per:
+        if r["recipient_id"] in detailed_ids:
+            continue
+        for x in rows:
+            fy = int(x["time_period"]["fiscal_year"])
+            rest[fy] = rest.get(fy, 0.0) + x["aggregated_amount"]
+    out["psc"] += [{"fy": fy, "psc": "UNSPEC", "name": "Smaller entities (product codes not fetched)", "obligated": v}
+                   for fy, v in sorted(rest.items()) if v]
+    out["method"] = f"per entity: {len(per)} entities, product detail for {len(detailed)} ({acc / total:.0%} of obligations)"
+    return out
+
+
+def fetch_filters(ent: dict, filter_sets: list, ueis: list, today: dt.date | None = None, months_rows=None) -> dict:
+    """Sums months, PSCs and awards over disjoint filter sets (one text query, or one per entity)."""
     out = {"company_id": ent["company_id"], "ueis": ueis, "fetched": dt.date.today().isoformat()}
     months: dict = {}
     psc: dict = {}
     awards: dict = {}
-    for batch in chunks(ueis):
-        base = {"agencies": DOD, "recipient_search_text": batch}
-        d = http.call("search/spending_over_time/", {"group": "month", "filters": {**base, "time_period": all_period(today)}})
-        for r in d.get("results", []):
+
+    def add_months(results):
+        for r in results:
             if not r.get("aggregated_amount"):
                 continue
             key = (int(r["time_period"]["fiscal_year"]), int(r["time_period"]["month"]))
@@ -100,6 +148,15 @@ def fetch_company(ent: dict, today: dt.date | None = None) -> dict | None:
             m["obligated"] += r["aggregated_amount"]
             m["contracts"] += (r.get("Contract_Obligations") or 0) + (r.get("Idv_Obligations") or 0)
             m["other"] += (r.get("Grant_Obligations") or 0) + (r.get("Other_Obligations") or 0) + (r.get("Direct_Obligations") or 0)
+
+    if months_rows is not None:
+        for _, rows, _ in months_rows:
+            add_months(rows)
+    for flt in filter_sets:
+        base = {"agencies": DOD, **flt}
+        if months_rows is None:
+            d = http.call("search/spending_over_time/", {"group": "month", "filters": {**base, "time_period": all_period(today)}})
+            add_months(d.get("results", []))
         for fy in fiscal_years(today):
             d = http.call("search/spending_by_category/psc/",
                           {"filters": {**base, "time_period": [fy_range(fy, today)]}, "limit": 100, "page": 1})

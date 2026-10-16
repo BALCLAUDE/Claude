@@ -77,3 +77,35 @@ def test_awards_load_sample(db):
     split = db.execute("SELECT SUM(obligated) FROM company_sector_fy WHERE company_id='anduril'").fetchone()[0]
     assert abs(total - split) < 1e-3  # sector split keeps every dollar
     assert db.execute("SELECT company_id FROM sector_recipients_fy WHERE uei='SAMPLEUEI0001' LIMIT 1").fetchone() == ("anduril",)
+
+
+def test_own_id():
+    assert usaspending.own_id("779b3e3e-364f-7cbc-28a4-a2b4484b86f4-P") == "779b3e3e-364f-7cbc-28a4-a2b4484b86f4-C"
+    assert usaspending.own_id(None) is None
+
+
+def test_large_companies_are_summed_entity_by_entity(monkeypatch):
+    """A text search over a parent UEI also returns its subsidiaries' records, so batching UEIs double
+    counts. Companies with many UEIs must be summed from each entity's own (-C) records instead."""
+    calls = []
+    own = {f"h{i}-C": 100.0 * (10 - i) for i in range(10)}   # entity h0 is the largest
+
+    def fake_call(path, body=None, **kw):
+        calls.append((path, body))
+        f = (body or {}).get("filters", {})
+        assert "recipient_search_text" not in f, "large companies must not use text search"
+        amt = own.get(f.get("recipient_id"), 0.0)
+        if path == "search/spending_over_time/":
+            return {"results": [{"time_period": {"fiscal_year": "2024", "month": "1"}, "aggregated_amount": amt}]}
+        if path == "search/spending_by_category/psc/":
+            return {"results": [{"code": "1410", "name": "GUIDED MISSILES", "amount": amt}] if f["time_period"][0]["start_date"].startswith("2023") else []}
+        if path == "search/spending_by_award/":
+            return {"results": []}
+        return {}
+    monkeypatch.setattr(usaspending.http, "call", fake_call)
+    ent = {"company_id": "big", "recipients": [{"uei": f"U{i}", "recipient_id": f"h{i}-P"} for i in range(10)]}
+    out = usaspending.fetch_company(ent)
+    assert sum(m["obligated"] for m in out["months"]) == sum(own.values())         # no double counting
+    psc = {p["psc"]: p["obligated"] for p in out["psc"] if p["fy"] == 2024}
+    assert abs(sum(psc.values()) - sum(own.values())) < 1e-6                        # detail + remainder = total
+    assert "UNSPEC" in psc
