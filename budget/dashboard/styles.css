@@ -228,3 +228,6 @@ a { color: var(--accent); }
 .data td.sectors .chip { margin: 1px 0; }
 .two-col .data td { white-space: normal; }
 .two-col .data td.num { white-space: nowrap; }
+#aw-table td, #co-body .data td { white-space: normal; }
+#aw-table td.num, #co-body .data td.num { white-space: nowrap; }
+#aw-table td.title { min-width: 260px; }
