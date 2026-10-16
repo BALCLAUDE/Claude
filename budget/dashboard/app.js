@@ -67,34 +67,51 @@
     const present = new Set(rows(db, 'SELECT DISTINCT fy FROM budget_values').map((r) => r.fy));
     D.years = [];
     for (let y = first; y <= last; y++) if (present.has(y)) D.years.push(y);
+    D.fyTotals = {};
+    for (const r of rows(db, `SELECT v.fy, v.value_type, SUM(v.amount_k) AS t FROM v_values_latest v
+        JOIN budget_lines l USING (line_id) WHERE l.counted = 1 GROUP BY v.fy, v.value_type`)) {
+      (D.fyTotals[r.fy] ||= {})[r.value_type] = r.t;
+    }
     D.requestYears = [...new Set(rows(db, "SELECT DISTINCT fy FROM budget_values WHERE value_type='request' ORDER BY fy").map((r) => r.fy))]
       .filter((y) => y >= first && y <= last);
     D.db = db;
   }
 
   const v = (l, fy, vt) => l.vals[fy]?.[vt]?.amt;
+  // One value type per fiscal year for the whole budget. Choosing per line would mix books: a line
+  // renamed between books would contribute its enacted amount under the old id and its actual amount
+  // under the new one. FY2024 never had a full-year enacted column (the books show CR levels), so
+  // "enacted" falls back to the CR level when enacted figures cover less than half of it.
+  function fyType(fy) {
+    const t = D.fyTotals[fy] || {};
+    const has = (vt) => (t[vt] || 0) > 0;
+    const enactedOrCr = () => (has('enacted') && (t.enacted || 0) >= 0.5 * (t.cr || 0)) ? 'enacted' : has('cr') ? 'cr' : null;
+    if (S.basis === 'best') return has('actual') ? 'actual' : enactedOrCr() || (has('request') ? 'request' : null);
+    if (S.basis === 'enacted') return enactedOrCr();
+    return has(S.basis) ? S.basis : null;
+  }
   function core(l, fy) {
-    if (S.basis === 'best') {
-      for (const vt of ['actual', 'enacted', 'request']) { const x = v(l, fy, vt); if (x != null) return [x, vt]; }
-      return [undefined, null];
-    }
-    return [v(l, fy, S.basis), S.basis];
+    const vt = fyType(fy);
+    return [vt ? v(l, fy, vt) : undefined, vt];
   }
   function amount(l, fy) {
-    const [c] = core(l, fy);
+    const [c, vt] = core(l, fy);
+    if (!vt) return undefined;
     let t = c;
     if (S.mandatory) {
-      const x = mandatory(l, fy);
+      const x = mandatory(l, fy, vt);
       if (x != null) t = (t || 0) + x;
     }
     return t;
   }
-  // Mandatory (reconciliation) money follows the value basis: requested amounts for "Request",
-  // enacted or spent amounts otherwise, falling back to the request for "Best available".
-  function mandatory(l, fy) {
-    const enacted = v(l, fy, 'reconciliation'), req = v(l, fy, 'reconciliation_request'), supp = v(l, fy, 'supplemental');
-    const m = S.basis === 'request' ? req : (S.basis === 'best' ? (enacted ?? req) : enacted);
-    return m == null && supp == null ? undefined : (m || 0) + (S.basis === 'request' ? 0 : (supp || 0));
+  // Mandatory (reconciliation) money follows the year's value type: the requested amount in a
+  // request year, the enacted or spent amount otherwise. Supplementals are added only to enacted (or
+  // CR) figures, which the books print without them; requests never include them and actuals
+  // already do.
+  function mandatory(l, fy, vt) {
+    const m = vt === 'request' ? v(l, fy, 'reconciliation_request') : v(l, fy, 'reconciliation');
+    const supp = vt === 'enacted' || vt === 'cr' ? v(l, fy, 'supplemental') : undefined;
+    return m == null && supp == null ? undefined : (m || 0) + (supp || 0);
   }
   const primarySeg = (l) => (l.subs[0] ? D.segOf[l.subs[0].subsegment_id] : null);
 
@@ -113,70 +130,94 @@
   const hideTip = () => { tip.hidden = true; };
 
   // ---------------------------------------------------------------- sector trends
+  // The rest of the DoD budget, drawn above the sector bars when the chart shows the whole budget.
+  const CONTEXT = [
+    { id: 'unclassified', name: 'Unclassified (no sector yet)', color: 'var(--band-unclassified)', context: true },
+    { id: 'not_tech', name: 'Not defense tech', color: 'var(--band-other)', context: true }
+  ];
+
   function trendSeries() {
     const segFilter = $('#trend-segment').value;
     const series = segFilter
       ? Object.values(D.subs).filter((s) => s.segment_id === segFilter).map((s) => ({ id: s.id, name: s.name, color: s.color }))
       : D.segments.map((s) => ({ id: s.id, name: s.name, color: s.color }));
     const idx = Object.fromEntries(series.map((s, i) => [s.id, i]));
-    const totals = series.map(() => Object.fromEntries(D.years.map((y) => [y, 0])));
+    const zero = () => Object.fromEntries(D.years.map((y) => [y, 0]));
+    const totals = series.map(zero);
+    const ctx = Object.fromEntries(CONTEXT.map((c) => [c.id, zero()]));
     const basisUsed = Object.fromEntries(D.years.map((y) => [y, {}]));
-    let all = Object.fromEntries(D.years.map((y) => [y, 0]));
+    const all = zero();
     for (const l of D.lines) {
       for (const y of D.years) {
         const a = amount(l, y);
         if (a == null || !l.counted) continue;
         all[y] += a;
-        if (l.status !== 'mapped') continue;
         const [, used] = core(l, y);
+        if (used) basisUsed[y][used] = (basisUsed[y][used] || 0) + Math.abs(a);
+        if (l.status !== 'mapped') { ctx[l.status === 'not_tech' ? 'not_tech' : 'unclassified'][y] += a; continue; }
         for (const m of l.subs) {
           const key = segFilter ? m.subsegment_id : D.segOf[m.subsegment_id];
           if (segFilter && D.segOf[m.subsegment_id] !== segFilter) continue;
           const i = idx[key];
-          if (i == null) continue;
-          totals[i][y] += a * m.weight;
-          if (used) basisUsed[y][used] = (basisUsed[y][used] || 0) + Math.abs(a * m.weight);
+          if (i != null) totals[i][y] += a * m.weight;
         }
       }
     }
     series.forEach((s, i) => { s.vals = totals[i]; s.sum = D.years.reduce((t, y) => t + totals[i][y], 0); });
-    const kept = series.filter((s) => s.sum !== 0);
+    const context = CONTEXT.map((c) => ({ ...c, vals: ctx[c.id] }));
     const used = Object.fromEntries(D.years.map((y) => {
       const e = Object.entries(basisUsed[y]).sort((a, b) => b[1] - a[1])[0];
       return [y, e ? e[0] : null];
     }));
-    return { series: kept, all, used };
+    return { series: series.filter((s) => s.sum !== 0), context, all, used };
   }
 
   function renderTrends() {
-    const { series, all, used } = trendSeries();
+    const { series, context, all, used } = trendSeries();
     const ys = D.years;
+    const segFilter = $('#trend-segment').value;
+    const whole = $('#trend-scope').value === 'whole' && !segFilter;
+    $('#trend-scope').disabled = !!segFilter;
     const tot = Object.fromEntries(ys.map((y) => [y, series.reduce((t, s) => t + s.vals[y], 0)]));
     const segName = $('#trend-segment').selectedOptions[0].textContent;
     const last = ys[ys.length - 1], prev = ys[ys.length - 2], first = ys[0];
     const cagr = (a, b, n) => (a > 0 && b > 0 && n > 0 ? (b / a) ** (1 / n) - 1 : null);
-    $('#trend-caption').textContent = `${segName === 'All segments' ? 'Defense tech budget by segment' : segName + ' by subsegment'}, ${fyLabel(first)}–${fyLabel(last)}`;
+    const lastType = used[last] ? VT_LABEL[used[last]].toLowerCase() : '';
+    const techLabel = segFilter ? segName : 'Defense tech';
+    $('#trend-caption').textContent = segFilter ? `${segName} by subsegment, ${fyLabel(first)}–${fyLabel(last)}`
+      : whole ? `DoD budget and its defense tech segments, ${fyLabel(first)}–${fyLabel(last)}`
+        : `Defense tech budget by segment, ${fyLabel(first)}–${fyLabel(last)}`;
     $('#trend-hint').textContent = basisHint();
     $('#trend-kpis').innerHTML = [
-      kpi(`${fyLabel(last)} ${used[last] ? VT_LABEL[used[last]].toLowerCase() : ''}`, money(tot[last]), prev ? `${pct(tot[prev] ? tot[last] / tot[prev] - 1 : null)} vs ${fyLabel(prev)}` : ''),
-      kpi(`CAGR ${fyLabel(first)}–${fyLabel(last)}`, pct(cagr(tot[first], tot[last], last - first)), `${money(tot[first])} → ${money(tot[last])}`),
-      kpi(`Share of DoD budget, ${fyLabel(last)}`, pct(all[last] ? tot[last] / all[last] : null, false), `of ${money(all[last])} across all six exhibits`),
+      kpi(`${techLabel}, ${fyLabel(last)} ${lastType}`, money(tot[last]), prev ? `${pct(tot[prev] ? tot[last] / tot[prev] - 1 : null)} vs ${fyLabel(prev)}` : ''),
+      kpi(`DoD total, ${fyLabel(last)} ${lastType}`, money(all[last]), 'R-1, P-1, O-1, M-1, RF-1 and C-1'),
+      kpi(`${techLabel} share of DoD, ${fyLabel(last)}`, pct(all[last] ? tot[last] / all[last] : null, false),
+        `${pct(all[first] ? tot[first] / all[first] : null, false)} in ${fyLabel(first)}`),
+      kpi(`${techLabel} CAGR ${fyLabel(first)}–${fyLabel(last)}`, pct(cagr(tot[first], tot[last], last - first)), `${money(tot[first])} → ${money(tot[last])}`),
       kpi('Lines mapped to sectors', D.lines.filter((l) => l.status === 'mapped').length.toLocaleString(),
         `${D.lines.filter((l) => l.status === 'unclassified').length.toLocaleString()} unclassified of ${D.lines.length.toLocaleString()}`)
     ].join('');
-    $('#trend-legend').innerHTML = series.map((s) => `<span><i class="swatch" style="background:${s.color}"></i>${esc(s.name)}</span>`).join('');
-    drawStack(series, ys, tot, used);
-    // Table view of the same numbers.
-    const head = `<thead><tr><th>${segName === 'All segments' ? 'Segment' : 'Subsegment'}</th>${ys.map((y) => `<th class="num">${fyLabel(y)}</th>`).join('')}<th class="num">CAGR</th><th class="num">Share ${fyLabel(last)}</th></tr></thead>`;
-    const body = series.map((s) => `<tr><td><span class="legend"><span><i class="swatch" style="background:${s.color}"></i>${esc(s.name)}</span></span></td>${ys.map((y) => `<td class="num">${money(s.vals[y])}</td>`).join('')}<td class="num">${pct(cagr(s.vals[first], s.vals[last], last - first))}</td><td class="num">${pct(tot[last] ? s.vals[last] / tot[last] : null, false)}</td></tr>`).join('');
-    const foot = `<tfoot><tr><td>Total</td>${ys.map((y) => `<td class="num">${money(tot[y])}</td>`).join('')}<td class="num">${pct(cagr(tot[first], tot[last], last - first))}</td><td class="num">100%</td></tr></tfoot>`;
-    $('#trend-table').innerHTML = head + `<tbody>${body || `<tr><td colspan="${ys.length + 3}">No mapped lines yet.</td></tr>`}</tbody>` + foot;
+    const drawn = whole ? series.concat(context) : series;
+    $('#trend-legend').innerHTML = drawn.map((s) => `<span><i class="swatch" style="background:${s.color}"></i>${esc(s.name)}</span>`).join('');
+    drawStack(drawn, ys, whole ? all : tot, used, whole ? tot : null);
+    // Table view of the same numbers. Shares are of the DoD total.
+    const swatch = (s) => `<span class="legend"><span><i class="swatch" style="background:${s.color}"></i>${esc(s.name)}</span></span>`;
+    const row = (label, vals, cls = '') => `<tr class="${cls}"><td>${label}</td>${ys.map((y) => `<td class="num">${money(vals[y])}</td>`).join('')}` +
+      `<td class="num">${pct(cagr(vals[first], vals[last], last - first))}</td><td class="num">${pct(all[last] ? vals[last] / all[last] : null, false)}</td></tr>`;
+    const head = `<thead><tr><th>${segFilter ? 'Subsegment' : 'Segment'}</th>${ys.map((y) => `<th class="num">${fyLabel(y)}</th>`).join('')}<th class="num">CAGR</th><th class="num">Share of DoD ${fyLabel(last)}</th></tr></thead>`;
+    let body = series.map((s) => row(swatch(s), s.vals)).join('') || `<tr><td colspan="${ys.length + 3}">No mapped lines yet.</td></tr>`;
+    body += row(`<strong>${esc(techLabel)} subtotal</strong>`, tot, 'subtotal');
+    if (!segFilter) body += context.map((c) => row(swatch(c), c.vals)).join('');
+    const foot = `<tfoot>${row('DoD total', all)}</tfoot>`;
+    $('#trend-table').innerHTML = head + `<tbody>${body}</tbody>` + foot;
     $('#trend-note').textContent = 'Lines split across several subsegments are counted by weight. Each year uses the newest budget book that reports it. ' +
-      (S.mandatory ? 'Reconciliation and supplemental funding are added to the year they were appropriated.' : 'Reconciliation and supplemental funding are excluded.');
+      (S.mandatory ? 'Mandatory (reconciliation) funding is added to each year: requested amounts in request years, enacted or spent amounts otherwise. Supplementals are added to enacted years only, since actuals already include them. ' : 'Mandatory (reconciliation) and supplemental funding are excluded. ') +
+      'Unclassified lines are mostly traditional platforms, operating forces O&M and classified programs that no sector rule covers yet.';
   }
 
   function basisHint() {
-    return S.basis === 'best' ? 'Best available: actuals where published, then enacted, then the request.' : `${VT_LABEL[S.basis]} values only.`;
+    return S.basis === 'best' ? 'Best available: for each year, actuals where published, then enacted (CR level for FY24), then the request.'
+      : S.basis === 'enacted' ? 'Enacted values (CR level where no full-year appropriation was printed).' : `${VT_LABEL[S.basis]} values only.`;
   }
   const kpi = (label, value, sub) => `<div class="kpi"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div><div class="sub">${esc(sub)}</div></div>`;
 
@@ -187,10 +228,10 @@
     return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p;
   }
 
-  function drawStack(series, ys, tot, used) {
+  function drawStack(series, ys, tot, used, techTot) {
     const el = $('#trend-chart');
     // Drawn at the container's pixel width so text stays at its CSS size; narrow screens scroll.
-    const W = Math.max(520, Math.floor(el.clientWidth || 760)), H = 340, m = { t: 22, r: 12, b: 42, l: 64 };
+    const W = Math.max(520, Math.floor(el.clientWidth || 760)), H = 340, m = { t: 22, r: techTot ? 64 : 12, b: 42, l: 64 };
     const iw = W - m.l - m.r, ih = H - m.t - m.b;
     const max = niceMax(Math.max(1, ...ys.map((y) => series.reduce((t, s) => t + Math.max(0, s.vals[y]), 0))));
     const yS = (x) => m.t + ih - (x / max) * ih;
@@ -216,6 +257,11 @@
           segs += `<rect class="seg" fill="${s.color}" x="${x}" y="${y1}" width="${bw}" height="${h}"></rect>`;
         }
       });
+      if (techTot && techTot[y] > 0) {  // bracket marking the defense tech part of the bar
+        const ty = yS(techTot[y]);
+        segs += `<line class="tech-mark" x1="${x - 4}" x2="${x + bw + 4}" y1="${ty}" y2="${ty}"></line>`;
+        if (i === ys.length - 1 || bw > 40) segs += `<text class="tech-label" x="${x + bw + 6}" y="${ty + 4}">${money(techTot[y])}</text>`;
+      }
       const lab = used[y] ? VT_LABEL[used[y]].toLowerCase() : '';
       cols += `<g class="col" data-fy="${y}">${segs}<rect x="${m.l + band * i}" y="${m.t}" width="${band}" height="${ih}" fill="transparent"></rect>` +
         `<text class="total-label" x="${x + bw / 2}" y="${yS(acc) - 6}" text-anchor="middle">${money(tot[y])}</text>` +
@@ -228,7 +274,7 @@
       const y = +c.dataset.fy;
       c.addEventListener('mousemove', (ev) => {
         const items = series.filter((s) => s.vals[y]).slice().reverse();
-        showTip(`<strong>${fyLabel(y)}</strong> · ${money(tot[y])}` + items.map((s) =>
+        showTip(`<strong>${fyLabel(y)}</strong> · ${money(tot[y])}` + (techTot ? `<div class="row"><span>Defense tech</span><b>${money(techTot[y])}</b></div>` : '') + items.map((s) =>
           `<div class="row"><span><i class="swatch" style="display:inline-block;background:${s.color}"></i> ${esc(s.name)}</span><b>${money(s.vals[y])}</b></div>`).join(''), ev);
       });
       c.addEventListener('mouseleave', hideTip);
@@ -457,6 +503,7 @@
     $('#basis').addEventListener('change', (e) => { S.basis = e.target.value; render(); });
     $('#mandatory').addEventListener('change', (e) => { S.mandatory = e.target.checked; render(); });
     $('#trend-segment').addEventListener('change', render);
+    $('#trend-scope').addEventListener('change', render);
     $$('#view-lines select').forEach((s) => s.addEventListener('change', render));
     let t;
     $('#f-q').addEventListener('input', () => { clearTimeout(t); t = setTimeout(render, 120); });

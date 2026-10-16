@@ -248,6 +248,11 @@ rules:
   - id: critical-materials
     title: 'critical (minerals|materials)|rare earth|strategic (and critical )?materials|national defense stockpile|magnet'
     subsegments: {industrial.materials: 1.0}
+  - id: strategic-capital
+    title: 'office of strategic capital|strategic capital credit|\bosc\b'
+    subsegments: {industrial.manufacturing: 1.0}
+    confidence: 0.85
+    note: Office of Strategic Capital loans and credit for critical-technology and industrial-base supply chains.
   - id: industrial-base
     title: 'manufacturing technology|\bmantech\b|industrial base (analysis|fund|policy)|\bibas\b|defense production act|\bdpa\b|manufacturing science|advanced manufacturing|industrial preparedness'
     subsegments: {industrial.manufacturing: 1.0}

@@ -85,3 +85,6 @@
 - {title: Resilient Missile Warning Missile Tracking - Low Earth Orbit (LEO), expect: {space.buses: 0.5, cuas.missiledefense: 0.5}}
 - {title: F-47, expect: null}
 - {title: COLUMBIA Class Submarine, expect: null}
+- {title: Office of Strategic Capital Loan Program, expect: {industrial.manufacturing: 1.0}}
+- {title: Office of Strategic Capital (OSC), expect: {industrial.manufacturing: 1.0}}
+- {title: "Major Equipment, OSD", expect: null}
