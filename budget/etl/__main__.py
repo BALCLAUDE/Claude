@@ -1,7 +1,9 @@
 """CLI: python -m budget.etl <step> [options]
 
 Steps
-  fetch        download R-1/P-1/O-1/M-1 workbooks into budget/raw/ (comptroller.war.gov)
+  fetch        download R-1/P-1/O-1/M-1/RF-1/C-1 workbooks into budget/raw/ (comptroller.war.gov)
+  entities     resolve map companies to USAspending recipients (budget/raw/usaspending/entities.json)
+  awards       fetch DoD award data for resolved companies and sector top recipients (USAspending)
   build        create budget/build/budget.sqlite from taxonomy + exhibits + mandatory funding,
                classify lines, run checks and write the dashboard data file
   all          fetch, then build
@@ -18,7 +20,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from . import budget_exhibits, classify, reconciliation, sample, taxonomy
+from . import awards, budget_exhibits, classify, entities, reconciliation, sample, taxonomy, usaspending
 from .common import (BUDGET_DIR, BUILD_DIR, DEFAULT_DB, FIRST_FY, LAST_FY, RAW_DIR, BuildError, connect,
                      create_db, set_meta)
 
@@ -44,6 +46,9 @@ def build(db_path: Path, raw_dir: Path, allow_mismatch: bool = False, is_sample:
         rows = reconciliation.read() if mandatory_rows is None else mandatory_rows
         m_stats = reconciliation.load(con, rows)
         print(f"  {m_stats}")
+        print("awards")
+        a_stats = awards.load(con, **(sample.sample_awards() if is_sample else {}))
+        print(f"  {a_stats}")
         print("classify")
         c_stats = classify.classify(con)
         stale = c_stats.pop("stale_overrides")
@@ -80,7 +85,8 @@ def write_dashboard_data(db_path: Path, out: Path = DASHBOARD_DATA) -> None:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="python -m budget.etl", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("step", choices=["fetch", "build", "all", "sample", "classify"])
+    ap.add_argument("step", choices=["fetch", "entities", "awards", "build", "all", "sample", "classify"])
+    ap.add_argument("--companies", default="", help="comma-separated company ids to limit entities/awards")
     ap.add_argument("--db", type=Path, default=None, help=f"output database (default {DEFAULT_DB})")
     ap.add_argument("--raw", type=Path, default=RAW_DIR, help="directory of FY<year>/ exhibit workbooks")
     ap.add_argument("--books", default=f"{FIRST_FY}-{LAST_FY}", help="book years to fetch, e.g. 2025-2027")
@@ -97,6 +103,14 @@ def main(argv=None) -> int:
             if failures:
                 print(f"{len(failures)} workbook(s) could not be downloaded; the build uses what is in {args.raw}",
                       file=sys.stderr)
+        only = {c for c in args.companies.split(",") if c} or None
+        if args.step == "entities":
+            comps = [c for c in taxonomy.read()["companies"] if not only or c["id"] in only]
+            res = entities.resolve_all(comps)
+            print(f"resolved {sum(1 for r in res if r['recipients'])} of {len(res)} companies")
+        if args.step in ("awards", "all"):
+            print("awards (USAspending)")
+            print(f"  {usaspending.fetch_all(only=only)}")
         if args.step in ("build", "all"):
             build(args.db or DEFAULT_DB, args.raw, allow_mismatch=args.allow_mismatch, dashboard_data=dash)
         if args.step == "sample":

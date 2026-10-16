@@ -39,6 +39,8 @@
     <button type="button" role="tab" id="tab-trends" data-view="trends" aria-selected="true">Sector trends</button>
     <button type="button" role="tab" id="tab-lines" data-view="lines" aria-selected="false">Line explorer</button>
     <button type="button" role="tab" id="tab-movers" data-view="movers" aria-selected="false">Movers</button>
+    <button type="button" role="tab" id="tab-awards" data-view="awards" aria-selected="false">Awards</button>
+    <button type="button" role="tab" id="tab-company" data-view="company" aria-selected="false">Companies</button>
   </nav>
 </header>
 
@@ -104,6 +106,44 @@
     </div>
     <div class="movers-grid" id="movers"></div>
   </section>
+  <section class="view" id="view-awards" role="tabpanel" aria-labelledby="tab-awards" hidden>
+    <div id="awards-body" class="view-body">
+      <figure class="chart-card">
+        <figcaption>Top DoD recipients by sector over time</figcaption>
+        <div class="filters">
+          <label class="field"><span>Sector (by product/service code)</span><select id="aw-rule"></select></label>
+        </div>
+        <p class="subtle">All DoD contractors, not only companies on the map. Product codes understate startups, whose work is often booked as general hardware or engineering services. The latest fiscal year is partial.</p>
+        <div class="table-wrap"><table class="data" id="aw-universe"></table></div>
+      </figure>
+      <div class="filters">
+        <label class="field grow"><span>Search</span><input type="search" id="aw-q" placeholder="Description, contract number, recipient"></label>
+        <label class="field"><span>Company</span><select id="aw-company"></select></label>
+        <label class="field"><span>Sector</span><select id="aw-segment"></select></label>
+        <label class="field"><span>DoD component</span><select id="aw-agency"></select></label>
+        <label class="field"><span>Type</span><select id="aw-type"></select></label>
+        <label class="field"><span>Started</span><select id="aw-from"></select></label>
+        <label class="field"><span>Size</span>
+          <select id="aw-min"><option value="0">Any size</option><option value="1000000">$1M or more</option>
+            <option value="10000000">$10M or more</option><option value="100000000">$100M or more</option><option value="1000000000">$1B or more</option></select>
+        </label>
+      </div>
+      <div class="table-bar"><span id="aw-count" class="count"></span></div>
+      <div class="table-wrap"><table class="data" id="aw-table"></table></div>
+      <p class="subtle">The 100 largest DoD contract awards for each company on the map, from USAspending. Amounts are total obligations to date.</p>
+    </div>
+  </section>
+
+  <section class="view" id="view-company" role="tabpanel" aria-labelledby="tab-company" hidden>
+    <div class="filters">
+      <label class="field"><span>Company</span><select id="co-picker"></select></label>
+      <label class="field grow"><span>Filter the list</span><input type="search" id="co-q" placeholder="Company name"></label>
+      <label class="field"><span>Status</span>
+        <select id="co-status"><option value="">Public and private</option><option value="public">Public</option><option value="private">Private</option></select>
+      </label>
+    </div>
+    <div id="co-body" class="view-body"></div>
+  </section>
 </main>
 
 <dialog id="detail" aria-labelledby="detail-title">
@@ -123,5 +163,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.13.0/sql-asm.js"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
+<script src="awards.js"></script>
 </body>
 </html>

@@ -186,13 +186,78 @@ CREATE TABLE entity_aliases (
   parent_uei TEXT,
   name       TEXT NOT NULL,
   company_id TEXT NOT NULL REFERENCES companies(id),
+  level      TEXT,                        -- USAspending recipient level: P parent, C child, R recipient
+  method     TEXT,                        -- name (pattern match), parent (child of a matched parent), curated
+  evidence   TEXT,
+  amount_all_agencies REAL,               -- lifetime obligations across all agencies, for review
   valid_from TEXT,
   valid_to   TEXT,
   note       TEXT
 );
 
+-- DoD obligations per company (all award types), by month and by product/service code.
+CREATE TABLE company_obligations_month (
+  company_id TEXT NOT NULL REFERENCES companies(id),
+  fy         INTEGER NOT NULL,
+  month      INTEGER NOT NULL,             -- fiscal month, 1 = October
+  obligated  REAL NOT NULL,                -- dollars
+  contracts  REAL,
+  other      REAL,
+  PRIMARY KEY (company_id, fy, month)
+);
+
+CREATE TABLE company_psc_fy (
+  company_id TEXT NOT NULL REFERENCES companies(id),
+  fy         INTEGER NOT NULL,
+  psc        TEXT NOT NULL,
+  psc_name   TEXT,
+  obligated  REAL NOT NULL,
+  PRIMARY KEY (company_id, fy, psc)
+);
+
+-- company_psc_fy spread over subsegments (award_sectors.py).
+CREATE TABLE company_sector_fy (
+  company_id    TEXT NOT NULL REFERENCES companies(id),
+  fy            INTEGER NOT NULL,
+  subsegment_id TEXT NOT NULL REFERENCES subsegments(id),
+  obligated     REAL NOT NULL,
+  method        TEXT NOT NULL,             -- psc, psc+company, company
+  PRIMARY KEY (company_id, fy, subsegment_id, method)
+);
+
+-- IDVs carrying a company's largest awards: order totals and the ceiling where reported.
+CREATE TABLE idv_vehicles (
+  idv_id             TEXT PRIMARY KEY,
+  company_id         TEXT REFERENCES companies(id),
+  piid               TEXT,
+  description        TEXT,
+  type               TEXT,
+  agency             TEXT,
+  date_signed        TEXT,
+  last_date_to_order TEXT,
+  ceiling            REAL,
+  orders             INTEGER,
+  orders_obligated   REAL,
+  orders_potential   REAL
+);
+
+-- Top recipients per sector and FY across all DoD contractors, by product/service code.
+CREATE TABLE sector_recipients_fy (
+  rule_id       TEXT NOT NULL,
+  subsegment_id TEXT REFERENCES subsegments(id),
+  fy            INTEGER NOT NULL,
+  rank          INTEGER NOT NULL,
+  recipient     TEXT,
+  uei           TEXT,
+  company_id    TEXT REFERENCES companies(id),
+  obligated     REAL,
+  PRIMARY KEY (rule_id, fy, rank)
+);
+
 CREATE TABLE awards (
   award_id        TEXT PRIMARY KEY,       -- USAspending generated id, or source-specific key
+  psc_name        TEXT,
+  sector_method   TEXT,
   piid            TEXT,
   parent_idv      TEXT,
   award_type      TEXT,                   -- contract, idv, ota, sbir, grant

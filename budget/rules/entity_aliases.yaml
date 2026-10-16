@@ -1,0 +1,276 @@
+# Map company → USAspending recipients. Read by budget/etl/entities.py.
+#
+# By default a company is searched by its map name and matches recipients whose normalized name
+# starts with that name as whole words ("ROCKET LAB USA, INC." for Rocket Lab). Normalized means
+# upper case, punctuation removed and "&" as AND. List a company here when the default is wrong:
+#   search:  keywords sent to the USAspending recipient search
+#   match:   regexes on the normalized recipient name (any one matches)
+#   exclude: regexes that veto a match
+#   include_ueis / exclude_ueis: explicit overrides after review
+#   skip: true to leave the company unresolved (name too generic to match safely)
+#   note: why
+# Subsidiaries that contract under their own names (Sikorsky, Electric Boat, Collins Aerospace...)
+# are listed under the parent company as extra patterns. USAspending's parent -> children lists are
+# off by default because they keep historical links (set parents: true only after review).
+
+companies:
+  # ---------------------------------------------------------------- primes
+  lockheed-martin:
+    search: [LOCKHEED MARTIN, SIKORSKY]
+    match: ['^LOCKHEED MARTIN\b', '^SIKORSKY\b']
+  rtx:
+    search: [RAYTHEON, RTX, PRATT & WHITNEY, COLLINS AEROSPACE, ROCKWELL COLLINS]
+    match: ['^RAYTHEON\b', '^RTX\b', '^PRATT AND WHITNEY\b', '^COLLINS AEROSPACE\b', '^ROCKWELL COLLINS\b']
+  northrop-grumman:
+    search: [NORTHROP GRUMMAN, ORBITAL ATK, ORBITAL SCIENCES]
+    match: ['^NORTHROP GRUMMAN\b', '^ORBITAL ATK\b', '^ORBITAL SCIENCES\b', '^ALLIANT TECHSYSTEMS\b', '^ATK (LAUNCH|SPACE)\b']
+  general-dynamics:
+    search: [GENERAL DYNAMICS, ELECTRIC BOAT, BATH IRON WORKS, NATIONAL STEEL AND SHIPBUILDING, GULFSTREAM AEROSPACE, CSRA]
+    match: ['^GENERAL DYNAMICS\b', '^ELECTRIC BOAT\b', '^BATH IRON WORKS\b', '^NATIONAL STEEL AND SHIPBUILDING\b', '^GULFSTREAM AEROSPACE\b', '^CSRA (INC|LLC)\b']
+  boeing:
+    search: [BOEING, INSITU, AURORA FLIGHT SCIENCES, MILLENNIUM SPACE SYSTEMS, ARGON ST, AVIALL]
+    match: ['^(THE )?BOEING\b', '^INSITU\b', '^AURORA FLIGHT SCIENCES\b', '^MILLENNIUM SPACE SYSTEMS\b', '^ARGON ST\b', '^AVIALL\b']
+    exclude: ['^BOEING (EMPLOYEES|FEDERAL CREDIT)']
+  l3harris:
+    search: [L3HARRIS, L3 TECHNOLOGIES, L-3 COMMUNICATIONS, HARRIS CORPORATION, AEROJET ROCKETDYNE, EXELIS]
+    match: ['^L3HARRIS\b', '^L3 TECHNOLOGIES\b', '^L 3 ', '^L3 ', '^HARRIS CORP', '^HARRIS GLOBAL COMMUNICATIONS\b', '^AEROJET ROCKETDYNE\b', '^EXELIS\b']
+  hii:
+    search: [HUNTINGTON INGALLS, NEWPORT NEWS SHIPBUILDING, INGALLS SHIPBUILDING, HII MISSION, AMSEC, ALION SCIENCE]
+    match: ['^HUNTINGTON INGALLS\b', '^NEWPORT NEWS SHIPBUILDING\b', '^INGALLS SHIPBUILDING\b', '^HII\b', '^AMSEC\b', '^ALION SCIENCE\b']
+  leidos:
+    search: [LEIDOS, DYNETICS, 1901 GROUP]
+    match: ['^LEIDOS\b', '^DYNETICS\b', '^1901 GROUP\b']
+  caci:
+    match: ['^CACI\b']
+  booz-allen:
+    search: [BOOZ ALLEN]
+    match: ['^BOOZ ALLEN\b']
+  textron:
+    search: [TEXTRON, BELL TEXTRON, BELL HELICOPTER, BEECHCRAFT]
+    match: ['^TEXTRON\b', '^BELL TEXTRON\b', '^BELL HELICOPTER TEXTRON\b', '^AAI CORP', '^BEECHCRAFT\b']
+  teledyne:
+    search: [TELEDYNE, FLIR]
+    match: ['^TELEDYNE\b', '^FLIR\b']
+  mercury:
+    search: [MERCURY SYSTEMS, MERCURY MISSION SYSTEMS]
+    match: ['^MERCURY (SYSTEMS|MISSION SYSTEMS|DEFENSE SYSTEMS)\b']
+  bae-systems:
+    search: [BAE SYSTEMS]
+    match: ['^BAE SYSTEMS\b']
+    note: US contracts go to BAE Systems Inc. and its operating units.
+  rheinmetall:
+    search: [RHEINMETALL, AMERICAN RHEINMETALL]
+    match: ['^(AMERICAN )?RHEINMETALL\b']
+  thales:
+    search: [THALES]
+    match: ['^THALES\b']
+    exclude: ['^THALES AND CO\b']
+  leonardo:
+    search: [LEONARDO DRS, DRS NETWORK, DRS LAUREL, DRS SUSTAINMENT, DRS SIGNAL, LEONARDO ELECTRONICS, AGUSTAWESTLAND]
+    match: ['^LEONARDO (DRS|ELECTRONICS|US|S ?P ?A|HELICOPTERS)\b', '^DRS (NETWORK|LAUREL|SUSTAINMENT|SIGNAL|ENVIRONMENTAL|NAVAL|DAYLIGHT|C3|RADA|TACTICAL|TRAINING|TECHNOLOGIES)\b', '^AGUSTAWESTLAND\b']
+  saab:
+    search: [SAAB]
+    match: ['^SAAB\b']
+    exclude: ['^SAAB AUTOMOBILE\b', '^SAAB SITE CONTRACTORS\b']
+  kongsberg:
+    match: ['^KONGSBERG\b']
+  hensoldt:
+    match: ['^HENSOLDT\b']
+  elbit:
+    search: [ELBIT, SPARTON]
+    match: ['^ELBIT\b', '^SPARTON\b']
+  hanwha-aerospace:
+    search: [HANWHA]
+    match: ['^HANWHA (AEROSPACE|DEFENSE|SYSTEMS|OCEAN|PHILLY)\b']
+  mitsubishi-heavy:
+    search: [MITSUBISHI HEAVY]
+    match: ['^MITSUBISHI HEAVY\b']
+  general-atomics:
+    match: ['^GENERAL ATOMICS\b']
+  kratos:
+    search: [KRATOS]
+    match: ['^KRATOS\b']
+  aerovironment:
+    search: [AEROVIRONMENT, BLUEHALO, BLUE HALO, ARCTURUS UAV]
+    match: ['^AEROVIRONMENT\b', '^BLUE ?HALO\b', '^ARCTURUS UAV\b']
+  karman:
+    search: [KARMAN SPACE, KARMAN MISSILES, KARMAN DEFENSE]
+    match: ['^KARMAN (SPACE|MISSILES|DEFENSE)\b']
+  austal:
+    search: [AUSTAL]
+    match: ['^AUSTAL\b']
+  bwxt:
+    search: [BWX, BWXT]
+    match: ['^BWX\b', '^BWXT\b']
+  aevex:
+    match: ['^AEVEX\b']
+
+  # ---------------------------------------------------------------- brand names that differ from the legal name
+  spacex:
+    search: [SPACE EXPLORATION TECHNOLOGIES, SPACEX, STARLINK, PIONEER AEROSPACE]
+    match: ['^SPACE EXPLORATION TECHNOLOGIES\b', '^SPACEX\b', '^STARLINK\b', '^PIONEER AEROSPACE CORP']
+  vantor:
+    search: [MAXAR, VANTOR, DIGITALGLOBE]
+    match: ['^MAXAR\b', '^VANTOR\b', '^DIGITALGLOBE\b']
+    note: Maxar Intelligence renamed itself Vantor in 2025.
+  voyager:
+    search: [VOYAGER TECHNOLOGIES, NANORACKS, VALLEY TECH SYSTEMS, THE LAUNCH COMPANY]
+    match: ['^VOYAGER TECHNOLOGIES\b', '^NANORACKS\b', '^VALLEY TECH SYSTEMS\b', '^THE LAUNCH COMPANY\b']
+  shield-ai:
+    search: [SHIELD AI, HERON SYSTEMS, MARTIN UAV]
+    match: ['^SHIELD AI\b', '^HERON SYSTEMS\b', '^MARTIN UAV\b']
+  benchmark-space:
+    search: [BENCHMARK SPACE SYSTEMS, ALAMEDA APPLIED SCIENCES]
+    match: ['^BENCHMARK SPACE SYSTEMS\b', '^ALAMEDA APPLIED SCIENCES\b']
+  redwire:
+    search: [REDWIRE, LOADPATH]
+    match: ['^REDWIRE\b', '^LOADPATH\b']
+  viasat:
+    search: [VIASAT, TRELLISWARE, RIGNET]
+    match: ['^VIASAT\b', '^TRELLISWARE\b', '^RIGNET\b']
+  thayermahan:
+    search: [THAYERMAHAN, OCEAN ACOUSTICAL SERVICES]
+    match: ['^THAYERMAHAN\b', '^OCEAN ACOUSTICAL SERVICES\b']
+  bigbear-ai:
+    search: [BIGBEAR, PROMODEL]
+    match: ['^BIGBEAR\b', '^PROMODEL\b']
+  persistent-systems:
+    search: [PERSISTENT SYSTEMS]
+    match: ['^PERSISTENT SYSTEMS L ?L ?C\b']
+    note: Persistent Systems Ltd (India) and its subsidiaries are a different company.
+  forterra:
+    search: [FORTERRA SYSTEMS]
+    match: ['^FORTERRA SYSTEMS\b']
+  zipline:
+    search: [ZIPLINE INTERNATIONAL]
+    match: ['^ZIPLINE INTERNATIONAL\b']
+  helsing:
+    skip: true
+    note: 'Only unrelated "Helsing Junction" recipients match; Helsing has no US recipient record.'
+  caracol:
+    skip: true
+    note: 'Only unrelated "Caracol" broadcasters match.'
+  dominion-dynamics:
+    skip: true
+    note: 'The US "Dominion Dynamics Consulting" is not the Canadian Dominion Dynamics.'
+  palladyne-ai:
+    search: [PALLADYNE, SARCOS]
+    match: ['^PALLADYNE\b', '^SARCOS\b']
+  red-cat:
+    search: [RED CAT, TEAL DRONES]
+    match: ['^RED CAT\b', '^TEAL DRONES\b']
+  ondas:
+    search: [ONDAS, AMERICAN ROBOTICS, AIROBOTICS]
+    match: ['^ONDAS\b', '^AMERICAN ROBOTICS INC', '^AIROBOTICS\b']
+  pdw:
+    search: [PERFORMANCE DRONE WORKS]
+  airo-group:
+    search: [AIRO GROUP]
+    match: ['^AIRO GROUP\b']
+  kraken-robotics:
+    search: [KRAKEN ROBOTIC]
+    match: ['^KRAKEN ROBOTIC']
+  kraken-technology:
+    search: [KRAKEN TECHNOLOGY GROUP]
+  eos:
+    search: [ELECTRO OPTIC SYSTEMS, EOS DEFENSE]
+    match: ['^ELECTRO OPTIC SYSTEMS\b', '^EOS DEFENSE\b']
+  dji:
+    search: [DJI, DA JIANG, SZ DJI]
+    match: ['^(SZ )?DJI\b', '^DA ?JIANG\b']
+  mda-space:
+    search: [MDA SPACE, MACDONALD DETTWILER]
+    match: ['^MDA SPACE\b', '^MACDONALD DETTWILER\b', '^MDA US SYSTEMS\b']
+  gitai:
+    search: [GITAI]
+    match: ['^GITAI\b']
+  planet:
+    search: [PLANET LABS]
+  nextvision:
+    search: [NEXTVISION]
+    match: ['^NEXT ?VISION STABILIZED\b']
+  ramon-space:
+    search: [RAMON SPACE, RAMON.SPACE]
+    match: ['^RAMON ?SPACE\b']
+  x-energy:
+    search: [X-ENERGY, X ENERGY]
+    match: ['^X ?ENERGY\b']
+  iridium:
+    match: ['^IRIDIUM (SATELLITE|GOVERNMENT|COMMUNICATIONS)\b']
+  3d-systems:
+    search: [3D SYSTEMS]
+    match: ['^3D SYSTEMS\b']
+  materialise:
+    match: ['^MATERIALISE\b']
+  proto-labs:
+    search: [PROTO LABS, PROTOLABS]
+    match: ['^PROTO ?LABS\b']
+
+  # ---------------------------------------------------------------- generic names: anchor on the full legal name
+  apex:
+    search: [APEX SPACE]
+    match: ['^APEX SPACE\b']
+  twenty:
+    skip: true
+    note: '"Twenty" is too generic to match safely; add include_ueis after review.'
+  covenant:
+    skip: true
+    note: '"Covenant" is too generic to match safely; add include_ueis after review.'
+  merlin:
+    search: [MERLIN LABS]
+    match: ['^MERLIN LABS\b']
+  radiant:
+    search: [RADIANT INDUSTRIES]
+    match: ['^RADIANT INDUSTRIES\b']
+  antares:
+    search: [ANTARES INDUSTRIES, ANTARES NUCLEAR]
+    match: ['^ANTARES (INDUSTRIES|NUCLEAR)\b']
+  stark:
+    search: [STARK DEFENCE, STARK DEFENSE]
+    match: ['^STARK DEFEN[CS]E\b']
+  freeform:
+    search: [FREEFORM FUTURE]
+    match: ['^FREEFORM FUTURE\b']
+  havoc:
+    search: [HAVOC AI]
+    match: ['^HAVOC AI\b']
+  albedo:
+    search: [ALBEDO SPACE]
+    match: ['^ALBEDO SPACE\b']
+  umbra:
+    search: [UMBRA LAB]
+    match: ['^UMBRA LAB']
+  rune:
+    search: [RUNE TECHNOLOGIES]
+  auria:
+    search: [AURIA SPACE]
+    match: ['^AURIA SPACE\b']
+  neros:
+    search: [NEROS TECHNOLOGIES, NEROS INC]
+    match: ['^NEROS (TECHNOLOGIES|INC)\b']
+  hadrian:
+    search: [HADRIAN AUTOMATION]
+    match: ['^HADRIAN AUTOMATION\b']
+  fortify:
+    skip: true
+    note: '"Fortify" is too generic to match safely; add include_ueis after review.'
+  albacore:
+    skip: true
+    note: '"Albacore" is too generic to match safely; add include_ueis after review.'
+  antaris:
+    search: [ANTARIS]
+    match: ['^ANTARIS (INC|LABS|SPACE)\b', '^ANTARIS$']
+  quindar:
+    match: ['^QUINDAR\b']
+  sphinx-defense:
+    search: [SPHINX DEFENSE]
+  cx2:
+    search: [CX2]
+    match: ['^CX2\b']
+  long-wall:
+    search: [LONG WALL]
+    match: ['^LONG WALL (INC|LLC|TECHNOLOGIES)?$', '^LONGWALL\b']
+  stoke-space:
+    search: [STOKE SPACE]
+  impinj:
+    match: ['^IMPINJ\b']

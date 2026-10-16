@@ -214,3 +214,15 @@ dialog::backdrop { background: rgba(9, 15, 20, 0.45); }
   dialog { padding: 14px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Awards and company views */
+.view-body { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.view-body h3 { margin-top: 4px; }
+.co-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 8px 16px; }
+.co-links { display: flex; gap: 14px; font-size: var(--step--1); }
+a { color: var(--accent); }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px; }
+.two-col section { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.chart-card .filters { margin-bottom: 8px; }
+.data td.sectors { white-space: normal; min-width: 140px; max-width: 260px; }
+.data td.sectors .chip { margin: 1px 0; }

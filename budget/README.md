@@ -1,6 +1,6 @@
 # Defense Budget Tracker
 
-A companion database and dashboard for the defense tech market map. It classifies DoD budget lines into the map's segments and subsegments and tracks them from FY2021 through the FY2027 request. The full design is in [PLAN.md](PLAN.md). **Phase 1** is built: the foundation and the budget views. Awards come in Phase 2.
+A companion database and dashboard for the defense tech market map. It classifies DoD budget lines into the map's segments and subsegments and tracks them from FY2021 through the FY2027 request. The full design is in [PLAN.md](PLAN.md). **Phases 1 and 2** are built: the budget foundation and views, then USAspending awards, entity resolution and the Awards and Companies views.
 
 ## Quick start
 
@@ -110,9 +110,52 @@ These are empty in this commit. They are meant to be filled from the source docu
 
 **Toggles.** Values can be shown as best available (actual → enacted → request), request only, enacted only or actual only. Reconciliation and supplementals can be included or excluded.
 
+## Phase 2: awards (USAspending)
+
+```sh
+python -m budget.etl entities   # company -> USAspending recipients, written to budget/raw/usaspending/entities.json
+python -m budget.etl awards     # DoD award data for matched companies, written to budget/raw/usaspending/
+npm run budget:build            # loads both into the database
+```
+
+Both steps cache raw API responses under `budget/build/cache/` and accept `--companies a,b` to refresh a few companies. Their outputs in `budget/raw/usaspending/` are committed, so a build needs no network.
+
+**Entity resolution** (`etl/entities.py`, `rules/entity_aliases.yaml`):
+- Each company is searched by its map name, or by the curated search terms in the YAML.
+- A recipient counts when its normalized name matches the company's patterns. Patterns default to the map name as whole words.
+- Subsidiaries with other names are listed explicitly: Sikorsky, Electric Boat, Collins, Aerojet Rocketdyne, Arcturus, Heron Systems and so on.
+- USAspending's parent → children lists are **not** used by default. They keep historical links, such as Lockheed Martin → Leidos and RTX → Sikorsky. `parents: true` turns them on per company.
+- A UEI matched by two companies goes to the one that matched by name, otherwise to neither, and is recorded under `conflicts`.
+- Generic names (Twenty, Covenant, Fortify, Albacore) and false matches (Helsing, Caracol, Dominion Dynamics) are skipped until someone adds `include_ueis` after review.
+- Every match records how it was made, shown in the Company view.
+
+**What is fetched per company** (DoD as the awarding agency, FY2021 to date):
+- monthly obligations, all award types;
+- obligations by product/service code (PSC) for each fiscal year;
+- the 100 largest contract awards;
+- order totals and reported ceilings for the 10 contract vehicles (IDVs) carrying the most of those awards.
+
+Separately, the top 25 recipients across all DoD contractors are fetched for each sector-specific PSC rule and fiscal year.
+
+**Award sectors** (`etl/award_sectors.py`, `rules/psc_rules.yaml`):
+- A PSC that names a sector decides it, e.g. 1840 → Launch.
+- A broad code, such as an R&D or IT code, goes to the company's own map subsegments in that segment.
+- Otherwise the amount is split evenly across the company's map subsegments; Primes stay in the Primes column.
+- PSC is a weak signal for startups, whose work is often coded as general hardware (5340) or engineering support (R425).
+
+**Dashboard:**
+- **Awards:** top recipients by sector over time, across all DoD contractors, with companies on the map marked. Below it, the largest awards, filterable by company, sector, DoD component, type, start year and size, each linked to its USAspending page.
+- **Companies:** a leaderboard by last-12-months obligations. Each company page (`#company-<id>`) shows:
+  - obligations by sector and fiscal year;
+  - award momentum: the last 12 months against the 12 before;
+  - largest contracts;
+  - contract vehicles: obligated on orders, order potential, and the reported ceiling;
+  - PSC mix;
+  - the matched recipients, each with its evidence.
+- **Data lag:** DoD contract data reaches USAspending after a 90-day delay. The dashboard measures "data through" from the last month at or above half the trailing average.
+
 ## Not built yet (later phases)
 
-- **Phase 2:** awards, entity resolution and the company view.
 - **Phase 3:** announcements, subawards, SBIR and OTAs.
 - **Phase 4:** the Claude classification pass, exposure scores, the weekly digest and scheduled refreshes.
 

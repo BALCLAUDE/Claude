@@ -228,3 +228,39 @@ SAMPLE_MANDATORY = [
      "counted_in_exhibits": "0", "source_url": "", "source_page": "synthetic sample row",
      "notes": "Synthetic demo row, not real data."},
 ]
+
+
+def sample_awards() -> dict:
+    """Synthetic USAspending-shaped data for three map companies (NOT REAL AWARDS)."""
+    companies = [("anduril", "SAMPLEUEI0001", 40e6, 0.06, [("5340", "HARDWARE, COMMERCIAL", 0.5), ("1550", "DRONES", 0.3), ("R425", "ENGINEERING SUPPORT", 0.2)]),
+                 ("shield-ai", "SAMPLEUEI0002", 8e6, 0.03, [("AC12", "AIRCRAFT R&D", 0.7), ("7A21", "SOFTWARE", 0.3)]),
+                 ("lockheed-martin", "SAMPLEUEI0003", 3500e6, 0.005, [("1410", "GUIDED MISSILES", 0.4), ("1510", "AIRCRAFT", 0.4), ("1810", "SPACE VEHICLES", 0.2)])]
+    ents, data = [], []
+    for cid, uei, base, growth, pscs in companies:
+        ents.append({"company_id": cid, "name": cid, "recipients": [{"uei": uei, "name": f"{cid.upper()} (SAMPLE)", "level": "C",
+                     "method": "name", "evidence": "synthetic sample", "amount_all_agencies": base * 60}]})
+        rng = random.Random(cid)
+        months = []
+        for fy in range(2021, 2027):
+            for m in range(1, 13):
+                k = (fy - 2021) * 12 + m
+                months.append({"fy": fy, "month": m, "obligated": round(base * (1 + growth) ** k * rng.uniform(0.5, 1.5), 2),
+                               "contracts": 0, "other": 0})
+        psc = [{"fy": fy, "psc": code, "name": name, "obligated": sum(x["obligated"] for x in months if x["fy"] == fy) * share}
+               for fy in range(2021, 2027) for code, name, share in pscs]
+        awards = [{"award_id": f"CONT_AWD_SAMPLE{cid.upper()}{i}_9700_SAMPLEIDV{cid.upper()}_9700", "piid": f"SAMPLE{i:04d}",
+                   "recipient_name": f"{cid.upper()} (SAMPLE)", "recipient_uei": uei, "obligated": base * rng.uniform(1, 12),
+                   "description": f"SYNTHETIC SAMPLE AWARD {i} FOR {cid.upper()}", "start_date": f"{2021 + i % 5}-03-01",
+                   "end_date": f"{2025 + i % 3}-09-30", "sub_agency": ["Department of the Army", "Department of the Navy", "Department of the Air Force"][i % 3],
+                   "award_type": ["DELIVERY ORDER", "DEFINITIVE CONTRACT"][i % 2], "naics": "336411", "psc": pscs[i % len(pscs)][0],
+                   "psc_name": pscs[i % len(pscs)][1], "parent_idv": f"CONT_IDV_SAMPLEIDV{cid.upper()}_9700" if i % 2 == 0 else None}
+                  for i in range(12)]
+        vehicles = [{"idv_id": f"CONT_IDV_SAMPLEIDV{cid.upper()}_9700", "piid": f"SAMPLEIDV{cid.upper()}", "description": "SYNTHETIC SAMPLE IDV",
+                     "type": "IDIQ", "agency": "Department of the Army", "date_signed": "2022-01-01", "last_date_to_order": "2030-12-31",
+                     "ceiling": base * 200, "orders": 6, "orders_obligated": base * 30, "orders_potential": base * 45}]
+        data.append({"company_id": cid, "ueis": [uei], "months": months, "psc": psc, "awards": awards, "vehicles": vehicles})
+    universe = [{"rule": "unmanned-aircraft", "fy": fy, "rank": r + 1, "recipient": n, "uei": u, "obligated": amt * (1.1 ** (fy - 2021))}
+                for fy in range(2021, 2027)
+                for r, (n, u, amt) in enumerate([("GENERAL ATOMICS (SAMPLE)", "SAMPLEUEI0009", 900e6), ("ANDURIL (SAMPLE)", "SAMPLEUEI0001", 120e6),
+                                                 ("TEXTRON (SAMPLE)", "SAMPLEUEI0008", 80e6)])]
+    return {"ents": ents, "companies": data, "universe": universe}

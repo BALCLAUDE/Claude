@@ -454,17 +454,25 @@
   }
 
   // ---------------------------------------------------------------- shell
-  function setView(view) {
-    if (!['trends', 'lines', 'movers'].includes(view)) view = 'trends';
+  // Views added by other scripts (awards.js) register here: {render(param), populate(), bind()}.
+  const EXTRA = {};
+  // Hashes are bare tokens: "#lines", or "#company-anduril" for a view with a parameter.
+  function setView(hash) {
+    let [view, ...rest] = String(hash || '').split('-');
+    let param = rest.join('-') || null;
+    if (!['trends', 'lines', 'movers', ...Object.keys(EXTRA)].includes(view)) { view = 'trends'; param = null; }
     S.view = view;
+    S.param = param;
     $$('.tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.view === view)));
     $$('.view').forEach((v) => { v.hidden = v.id !== `view-${view}`; });
-    if (location.hash !== `#${view}`) history.replaceState(null, '', `#${view}`);
+    const want = `#${view}${param ? '-' + param : ''}`;
+    if (location.hash !== want) history.replaceState(null, '', want);
     render();
   }
   function render() {
     if (!D.db) return;
-    if (S.view === 'trends') renderTrends();
+    if (EXTRA[S.view]) EXTRA[S.view].render(S.param);
+    else if (S.view === 'trends') renderTrends();
     else if (S.view === 'lines') renderLines();
     else renderMovers();
   }
@@ -488,6 +496,7 @@
     const years = D.requestYears.slice().reverse().map((y) => [y, `FY${y}`]);
     fill('#f-by', years, false);
     fill('#m-by', years, false);
+    Object.values(EXTRA).forEach((x) => x.populate && x.populate());
     const sample = D.meta.sample === '1';
     $('#sample-banner').hidden = !sample;
     $('#foot').textContent = `Database built ${D.meta.built || '?'} from budget books FY${(D.meta.books || '').split(',').join(', FY')}. ` +
@@ -552,6 +561,7 @@
       return;
     }
     $('#loader').hidden = true;
+    if (!S.extraBound) { Object.values(EXTRA).forEach((x) => x.bind && x.bind()); S.extraBound = true; }
     populate();
     setView(location.hash.slice(1) || 'trends');
   }
@@ -582,6 +592,12 @@
     $('#loader').hidden = false;
   }
 
-  window.BudgetApp = { D, S, render, setView };
-  boot();
+  window.BudgetApp = {
+    D, S, render, setView,
+    register(name, view) { EXTRA[name] = view; },
+    h: { $, $$, esc, money, pct, fyLabel, rows, kpi, showTip, hideTip, store }
+  };
+  // Wait for the other page scripts (awards.js) so their views are registered before the first render.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
 })();

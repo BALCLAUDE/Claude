@@ -1,0 +1,63 @@
+# Product and service codes (PSC) → map sectors. Read by budget/etl/award_sectors.py.
+#
+# Award obligations are assigned to sectors with three signals, strongest first:
+#   1. this file, when the PSC names a specific subsegment (1840 space launchers → space.launch);
+#   2. the company's own subsegments on the map, which decide segment-level codes (an R&D code
+#      for "missile and space systems" goes to whichever of those segments the company is in);
+#   3. otherwise the company's subsegments split evenly (Primes stay in the Primes column).
+# PSC alone is a weak signal for startups (much of their work is booked as "5340 hardware,
+# commercial" or "R425 engineering support"), which is why the company signal comes second.
+#
+# Each rule: codes (exact 4-character PSCs, or a prefix ending in *), and either
+#   subsegments: {id: weight}  for specific codes, or
+#   segments: [id, ...]        for broad codes resolved through the company's subsegments.
+# First matching rule wins. `universe: true` rules also drive the "top recipients by sector" view.
+
+rules:
+  # ---------------------------------------------------------------- space
+  - {id: space-launch, codes: ['1840', '1850'], subsegments: {space.launch: 1.0}, universe: true}
+  - {id: space-vehicles, codes: ['1810', '1820'], subsegments: {space.buses: 1.0}, universe: true}
+  - {id: space-ground, codes: ['1830'], subsegments: {space.ground: 1.0}, universe: true}
+  - {id: space-rnd, codes: ['AR*'], segments: [space]}
+
+  # ---------------------------------------------------------------- missiles & munitions
+  - {id: rocket-engines, codes: ['2845'], subsegments: {missiles.propulsion: 1.0}, universe: true}
+  - {id: guided-missiles, codes: ['1410', '1420', '1427', '1440'], segments: [missiles, cuas], universe: true,
+     universe_subsegments: {missiles.strike: 1.0}}
+  - {id: rockets, codes: ['1340'], subsegments: {missiles.strike: 1.0}}
+  - {id: ammunition, codes: ['1305', '1310', '1315', '1320', '1325', '1330', '1336', '1337', '1338', '1345', '1350', '1351', '1352', '1353', '1355', '1360', '1361', '1365', '1367', '1370', '1375', '1376', '1377', '1385', '1386', '1390', '1395', '1398'],
+     subsegments: {missiles.energetics: 1.0}, universe: true}
+
+  # ---------------------------------------------------------------- drones
+  - {id: unmanned-aircraft, codes: ['1550'], segments: [uas], universe: true, universe_subsegments: {uas.tactical: 1.0}}
+  - {id: aircraft-rnd, codes: ['AC1*'], segments: [uas]}
+
+  # ---------------------------------------------------------------- maritime & ground
+  - {id: underwater-sound, codes: ['5845'], subsegments: {maritime.uuv: 1.0}, universe: true}
+  - {id: ships, codes: ['1905', '1910', '1915', '1920', '1925', '1930', '1935', '1940', '1945', '1950', '1955', '1990', '2010', '2020', '2030', '2040', '2050', '2060', '2090'],
+     segments: [maritime], universe: true, universe_subsegments: {maritime.shipbuilding: 1.0}}
+  - {id: ship-rnd, codes: ['AC3*'], segments: [maritime]}
+  - {id: ground-vehicle-rnd, codes: ['AC4*'], segments: [maritime]}
+
+  # ---------------------------------------------------------------- sensors, EW & comms
+  - {id: radar, codes: ['5840', '5841'], subsegments: {sensors.radar: 1.0}, universe: true}
+  - {id: ew, codes: ['5865'], subsegments: {sensors.ew: 1.0}, universe: true}
+  - {id: navigation, codes: ['5825', '5826', '6605', '6615'], subsegments: {sensors.pnt: 1.0}, universe: true}
+  - {id: comms, codes: ['5805', '5815', '5820', '5821', '5830', '5831', '5835', '5895', '5810', '5811'],
+     subsegments: {sensors.comms: 1.0}, universe: true}
+  - {id: electronics-rnd, codes: ['AC6*'], segments: [sensors, software, cuas]}
+  - {id: missile-space-rnd, codes: ['AC2*'], segments: [missiles, space, cuas]}
+  - {id: weapons-rnd, codes: ['AC5*'], segments: [missiles, cuas]}
+
+  # ---------------------------------------------------------------- software & IT
+  - {id: it-security, codes: ['DJ*', '7J*', 'D310'], subsegments: {software.cyber: 1.0}, universe: true}
+  - {id: it-software, codes: ['7A*', 'DA*', 'D307', 'D308', 'D399'], segments: [software], universe: true,
+     universe_subsegments: {software.intel: 1.0}}
+  - {id: it-other, codes: ['7B*', '7C*', '7E*', '7F*', '7G*', '7H*', '7K*', 'DB*', 'DC*', 'DD*', 'DE*', 'DF*', 'DG*', 'DH*', 'DK*'],
+     segments: [software]}
+
+  # ---------------------------------------------------------------- manufacturing & energy
+  - {id: batteries, codes: ['6130', '6135', '6140'], subsegments: {industrial.power: 1.0}, universe: true}
+  - {id: generators, codes: ['6115', '6116', '6117'], subsegments: {industrial.power: 1.0}}
+  - {id: nuclear-reactors, codes: ['4470'], subsegments: {industrial.nuclear: 1.0}, universe: true}
+  - {id: base-metals, codes: ['9650', '9660', '9670'], subsegments: {industrial.materials: 1.0}, universe: true}

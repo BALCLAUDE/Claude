@@ -112,3 +112,34 @@ test('phone width has no horizontal page scroll', async () => {
   assert.ok(over <= 0, `page scrolls sideways by ${over}px`);
   await page.close();
 });
+
+test('awards view lists awards, filters them and shows sector top recipients', async () => {
+  const { page, errors } = await open('#awards');
+  await page.waitForSelector('#aw-table tbody tr');
+  const all = await page.locator('#aw-table tbody tr').count();
+  assert.equal(all, 36);
+  await page.selectOption('#aw-company', 'shield-ai');
+  assert.equal(await page.locator('#aw-table tbody tr').count(), 12);
+  await page.selectOption('#aw-company', '');
+  await page.selectOption('#aw-min', '1000000000');
+  assert.ok(await page.locator('#aw-table tbody tr').count() < all);
+  assert.match(await page.locator('#aw-universe').textContent(), /GENERAL ATOMICS \(SAMPLE\)/);
+  assert.match(await page.locator('#aw-universe').textContent(), /on map/);  // Anduril's UEI resolves to the map company
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('company view ranks companies and opens a company page', async () => {
+  const { page, errors } = await open('#company');
+  await page.waitForSelector('#co-body tr[data-company]');
+  assert.equal(await page.locator('#co-body tr[data-company]').count(), 3);
+  assert.equal(await page.locator('#co-body tr[data-company]').first().getAttribute('data-company'), 'lockheed-martin');
+  await page.locator('#co-body tr[data-company="anduril"] td').nth(1).click();
+  await page.waitForSelector('#co-chart svg');
+  assert.match(page.url(), /#company-anduril$/);
+  const text = await page.locator('#co-body').textContent();
+  for (const s of ['Largest contracts', 'Contract vehicles', 'Matched recipients', 'SAMPLEUEI0001']) assert.ok(text.includes(s), s);
+  assert.ok(await page.locator('#co-chart rect.seg').count() > 0);
+  assert.deepEqual(errors, []);
+  await page.close();
+});
