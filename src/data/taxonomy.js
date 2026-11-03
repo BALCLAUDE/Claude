@@ -12,7 +12,7 @@ DTM.meta = {
 
 DTM.segments = [
   {
-    id: 'space', code: 'SPC', name: 'Space',
+    id: 'space', code: 'SPC', name: 'Space', short: 'Space',
     blurb: 'Launch, spacecraft, and the sensing and maneuvering capabilities that make space a warfighting domain.',
     subsegments: [
       { id: 'space.launch', name: 'Launch', blurb: 'Small, medium and heavy lift, including responsive launch for national security payloads.' },
@@ -26,7 +26,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'missiles', code: 'MSL', name: 'Missiles & Munitions',
+    id: 'missiles', code: 'MSL', name: 'Missiles & Munitions', short: 'Missiles',
     blurb: 'Affordable mass, long-range fires and the propulsion and energetics supply chain behind them.',
     subsegments: [
       { id: 'missiles.propulsion', name: 'Propulsion & Rocket Motors', blurb: 'Solid rocket motors and liquid engines for missiles and interceptors.' },
@@ -38,7 +38,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'uas', code: 'UAS', name: 'Drones & Air Autonomy',
+    id: 'uas', code: 'UAS', name: 'Drones & Air Autonomy', short: 'Drones & Air',
     blurb: 'Uncrewed aircraft from FPV quadcopters to collaborative combat aircraft, and the autonomy stacks that fly them.',
     subsegments: [
       { id: 'uas.small', name: 'Small UAS & FPV', blurb: 'Group 1–2 quadcopters, FPV and short-range reconnaissance drones.' },
@@ -51,7 +51,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'cuas', code: 'C-UAS', name: 'Counter-UAS & Air Defense',
+    id: 'cuas', code: 'C-UAS', name: 'Counter-UAS & Air Defense', short: 'Counter-UAS',
     blurb: 'Detecting and defeating drones and missiles at a cost per shot that matches the threat.',
     subsegments: [
       { id: 'cuas.kinetic', name: 'Kinetic Interceptors', blurb: 'Hit-to-kill drones, low-cost interceptor missiles and gun-based defeat.' },
@@ -62,7 +62,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'maritime', code: 'MAR', name: 'Maritime & Ground Robotics',
+    id: 'maritime', code: 'MAR', name: 'Maritime & Ground Robotics', short: 'Maritime & Ground',
     blurb: 'Autonomous vessels, undersea systems, ground robots and a rebuilt naval industrial base.',
     subsegments: [
       { id: 'maritime.usv', name: 'Uncrewed Surface Vessels', blurb: 'Autonomous boats from expendable attack craft to ocean-going USVs.' },
@@ -72,7 +72,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'software', code: 'AI', name: 'Defense Software & AI',
+    id: 'software', code: 'AI', name: 'Defense Software & AI', short: 'Software & AI',
     blurb: 'Command and control, intelligence analytics and the digital backbone of modern forces.',
     subsegments: [
       { id: 'software.c2', name: 'C2 & Battle Management', blurb: 'Command-and-control software that fuses sensors and shooters.' },
@@ -83,7 +83,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'sensors', code: 'SNS', name: 'Sensors, EW & Comms',
+    id: 'sensors', code: 'SNS', name: 'Sensors, EW & Comms', short: 'Sensors & Comms',
     blurb: 'The sensing, spectrum and networking layer every other system depends on.',
     subsegments: [
       { id: 'sensors.radar', name: 'Radar', blurb: 'Software-defined, ESA and multistatic radar.' },
@@ -93,7 +93,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'industrial', code: 'MFG', name: 'Manufacturing & Energy',
+    id: 'industrial', code: 'MFG', name: 'Manufacturing & Energy', short: 'Manufacturing',
     blurb: 'Factories, materials and power that let the industrial base produce at wartime rates.',
     subsegments: [
       { id: 'industrial.manufacturing', name: 'Advanced Manufacturing', blurb: 'Automated machining, additive and software-defined factories.' },
@@ -104,7 +104,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'primes', code: 'PRM', name: 'Primes & Mid-Tier',
+    id: 'primes', code: 'PRM', name: 'Primes & Mid-Tier', short: 'Primes',
     blurb: 'Established contractors that integrate the largest programs of record.',
     subsegments: [
       { id: 'primes.us', name: 'US Primes', blurb: 'The largest US defense prime contractors.' },
@@ -114,6 +114,18 @@ DTM.segments = [
     ]
   }
 ];
+
+/* Segment focus used by the toggle above the map and by PNG export. The three named groups come first;
+   every other segment gets its own entry so each column can be shown on its own. */
+DTM.focusGroups = [
+  { id: 'all', name: 'All segments', short: 'All', segments: null },
+  { id: 'unmanned', name: 'Unmanned Systems', short: 'Unmanned', segments: ['uas', 'maritime'], featured: true },
+  { id: 'space', name: 'Space', short: 'Space', segments: ['space'], featured: true },
+  { id: 'manufacturing', name: 'Manufacturing & Energy', short: 'Manufacturing', segments: ['industrial'], featured: true }
+].concat(['uas', 'maritime', 'missiles', 'cuas', 'software', 'sensors', 'primes'].map((id) => {
+  const seg = DTM.segments.find((s) => s.id === id);
+  return { id, name: seg.name, short: seg.short, segments: [id] };
+}));
 
 /* Country → region used by the country filter. */
 DTM.regions = [

@@ -179,6 +179,51 @@ test('compare tray collects companies and opens a side-by-side table', async () 
   await page.close();
 });
 
+test('segment toggle shows only the focused columns, and the table follows', async () => {
+  const { page, errors } = await open();
+  await page.locator('label[for="focus-unmanned"]').click();
+  const cols = await page.locator('section.segment').evaluateAll((ss) => ss.map((s) => s.getAttribute('aria-labelledby')));
+  assert.deepEqual(cols, ['seg-uas', 'seg-maritime']);
+  assert.equal(await page.evaluate(() => location.hash), '#focus=unmanned');
+  const expected = await page.evaluate(() => window.DTMApp.companies.filter((c) => c.segs.includes('uas') || c.segs.includes('maritime')).length);
+  assert.match(await page.locator('#result-count').textContent(), new RegExp(`Showing ${expected} of ${expected} companies in Unmanned`));
+  await page.locator('label[for="view-table"]').click();
+  await page.waitForSelector('.data-table');
+  assert.equal(await page.locator('.data-table tbody tr').count(), expected);
+  await page.locator('label[for="focus-all"]').click();
+  assert.equal(await page.evaluate(() => location.hash), '');
+  assert.deepEqual(errors, []);
+  await page.close();
+
+  const deep = await open({}, '#focus=space');
+  assert.deepEqual(await deep.page.locator('section.segment').evaluateAll((ss) => ss.map((s) => s.getAttribute('aria-labelledby'))), ['seg-space']);
+  await deep.page.close();
+});
+
+test('poster export renders PNGs for the main segment groups', async () => {
+  const { page, errors } = await open();
+  for (const [group, width] of [['unmanned', 1600], ['space', 2400], ['manufacturing', 1600]]) {
+    const r = await page.evaluate(async ({ group, width }) => {
+      const { canvas, model } = await window.DTMExport.renderPoster({ group, width });
+      const blob = await window.DTMExport.toBlob(canvas);
+      const sig = Array.from(new Uint8Array(await blob.slice(0, 8).arrayBuffer()));
+      return { w: canvas.width, h: canvas.height, size: blob.size, sig, n: model.cos.length, segs: model.sections.map((s) => s.seg.id) };
+    }, { group, width });
+    assert.equal(r.w, width * 2, `${group} width`);
+    assert.ok(r.h > 1000 && r.size > 100000, `${group} image is substantial`);
+    assert.deepEqual(r.sig, [137, 80, 78, 71, 13, 10, 26, 10], `${group} is a PNG`);
+    assert.ok(r.n > 20, `${group} has companies`);
+    if (group === 'unmanned') assert.deepEqual(r.segs, ['uas', 'maritime']);
+  }
+  await page.locator('#export-btn').click();
+  await page.locator('#export-dialog').waitFor({ state: 'visible' });
+  await page.locator('#export-preview img').waitFor();
+  assert.equal(await page.locator('#export-download').isDisabled(), false);
+  assert.equal(await page.locator('#export-group').inputValue(), 'unmanned');
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
 test('phone width has no horizontal page scroll', async () => {
   const { page } = await open({ width: 390 });
   const [sw, iw] = await page.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);

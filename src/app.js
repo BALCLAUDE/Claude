@@ -161,9 +161,15 @@
 
   /* ---------------------------------------------------------------- state */
   const state = {
-    q: '', own: 'all', region: '', lens: '', group: 'sub', sort: 'value', scale: false, view: 'map',
+    q: '', own: 'all', region: '', lens: '', group: 'sub', sort: 'value', scale: false, view: 'map', focus: 'all',
     tableSort: { key: 'value', dir: -1 }, compare: [], open: null, tab: 'overview'
   };
+
+  /* Segment focus: All, a named group (Unmanned, Space, Manufacturing) or a single segment column. */
+  const focusIndex = Object.fromEntries((D.focusGroups || [{ id: 'all', name: 'All segments', short: 'All', segments: null }]).map((g) => [g.id, g]));
+  const focusGroup = () => focusIndex[state.focus] || focusIndex.all;
+  const segInFocus = (segId) => { const g = focusGroup(); return !g.segments || g.segments.includes(segId); };
+  const inFocus = (c) => { const g = focusGroup(); return !g.segments || c.segs.some((s) => g.segments.includes(s)); };
 
   function matches(c) {
     if (state.own !== 'all' && c.status !== state.own) return false;
@@ -232,7 +238,7 @@
     board.classList.toggle('is-scaled', state.scale);
     board.classList.toggle('has-lens', !!state.lens);
     let html = '';
-    D.segments.forEach((seg) => {
+    D.segments.filter((seg) => segInFocus(seg.id)).forEach((seg) => {
       const inSeg = visible.filter((c) => c.segs.includes(seg.id));
       if (!inSeg.length) return;
       let groups;
@@ -313,8 +319,12 @@
 
   /* ---------------------------------------------------------------- top-level render */
   function render() {
-    const visible = companies.filter(matches);
-    $('#result-count').textContent = `Showing ${visible.length} of ${companies.length} companies`;
+    const scope = companies.filter(inFocus);
+    const visible = scope.filter(matches);
+    const g = focusGroup();
+    $('#result-count').textContent = `Showing ${visible.length} of ${scope.length} companies${g.segments ? ' in ' + g.short : ''}`;
+    renderFocusBar();
+    renderHeadline(scope);
     const filtered = state.q || state.own !== 'all' || state.region || state.lens;
     $('#reset-btn').hidden = !filtered;
     $('#empty').hidden = visible.length > 0;
@@ -324,6 +334,26 @@
     renderLensBanner(visible);
     renderTray();
   }
+
+  function renderFocusBar() {
+    const bar = $('#focus-bar');
+    if (!bar) return;
+    if (!bar.childElementCount) {
+      const groups = Object.values(focusIndex);
+      const chip = (g) => `<input type="radio" name="focus" id="focus-${g.id}" value="${g.id}"><label for="focus-${g.id}"${g.featured ? ' class="is-featured"' : ''} title="${esc(g.name)}${g.segments && g.segments.length > 1 ? ': ' + g.segments.map((id) => D.segments.find((x) => x.id === id).name).join(' + ') : ''}">${esc(g.short)}</label>`;
+      bar.innerHTML = `<span class="focus-label">Segment</span>${groups.filter((g) => !g.segments || g.featured).map(chip).join('')}<span class="focus-sep" aria-hidden="true"></span>${groups.filter((g) => g.segments && !g.featured).map(chip).join('')}`;
+    }
+    const r = $(`#focus-${state.focus}`);
+    if (r && !r.checked) r.checked = true;
+  }
+  function setFocus(id, { write = true } = {}) {
+    if (!focusIndex[id]) id = 'all';
+    state.focus = id;
+    store.set('dtm-focus', id);
+    if (write && !state.open) setHash(id !== 'all' ? `focus=${id}` : '');
+    render();
+  }
+  const focusHash = () => (state.focus !== 'all' ? `focus=${state.focus}` : '');
 
   function renderLensBanner(visible) {
     const banner = $('#lens-banner');
@@ -336,14 +366,15 @@
     banner.innerHTML = `<strong>${esc(p.name)}</strong><span>${n} ${n === 1 ? 'company' : 'companies'} highlighted · ${esc(p.customer)}</span><span>${esc(p.blurb)}</span><button class="link-btn" type="button" data-action="clear-lens">Clear lens</button>`;
   }
 
-  function renderHeadline() {
-    const pub = companies.filter((c) => c.isPublic);
-    const priv = companies.filter((c) => !c.isPublic);
+  function renderHeadline(scope = companies) {
+    const pub = scope.filter((c) => c.isPublic);
+    const priv = scope.filter((c) => !c.isPublic);
+    const g = focusGroup();
     const cap = pub.reduce((a, c) => a + (c.value || 0), 0);
     const raised = priv.reduce((a, c) => a + (c.value || 0), 0);
     $('#headline-stats').innerHTML = `
-      <div><dt>Companies</dt><dd>${companies.length}</dd></div>
-      <div><dt>Segments</dt><dd>${D.segments.length}</dd></div>
+      <div><dt>Companies${g.segments ? ' · ' + esc(g.short) : ''}</dt><dd>${scope.length}</dd></div>
+      <div><dt>Segments</dt><dd>${g.segments ? g.segments.length : D.segments.length}</dd></div>
       <div class="is-public"><dt>Public market cap · ${pub.length} cos</dt><dd>${money(cap)}</dd></div>
       <div class="is-private"><dt>Private capital raised · ${priv.length} cos</dt><dd>${money(raised)}</dd></div>`;
     $('#edition').textContent = `${D.meta.edition} edition`;
@@ -686,7 +717,7 @@
   $('#detail').addEventListener('close', () => {
     if ($('#detail').open) return; // reopened before the queued close event ran
     state.open = null;
-    setHash('');
+    setHash(focusHash());
     hideChartTip();
   });
 
@@ -699,6 +730,7 @@
   function readHash() {
     const h = decodeURIComponent((location.hash || '').slice(1));
     if (!h) return;
+    if (h.startsWith('focus=')) { setFocus(h.slice(6), { write: false }); return; }
     const [id, tab] = h.split('.');
     if (byId[id]) openCompany(id, { tab });
   }
@@ -765,6 +797,7 @@
     const q = $('#q');
     let qTimer;
     q.addEventListener('input', () => { clearTimeout(qTimer); qTimer = setTimeout(() => { state.q = q.value.trim(); render(); }, 80); });
+    $('#focus-bar').addEventListener('change', (e) => { if (e.target.name === 'focus') setFocus(e.target.value); });
     $$('input[name="own"]').forEach((r) => r.addEventListener('change', () => { state.own = r.value; render(); }));
     $$('input[name="view"]').forEach((r) => r.addEventListener('change', () => { state.view = r.value; store.set('dtm-view', r.value); render(); }));
     $('#region').addEventListener('change', (e) => { state.region = e.target.value; render(); });
@@ -872,6 +905,7 @@
     setView('map');
     render();
     const seg = subIndex[sub] && subIndex[sub].seg.id;
+    if (seg && !segInFocus(seg)) setFocus('all');
     const el = seg && document.getElementById(`seg-${seg}`);
     if (el) el.closest('.segment').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -898,13 +932,14 @@
   /* ---------------------------------------------------------------- boot */
   const savedTheme = store.get('dtm-theme');
   if (savedTheme === 'dark' || savedTheme === 'light') document.documentElement.dataset.theme = savedTheme;
+  const savedFocus = store.get('dtm-focus');
+  if (savedFocus && focusIndex[savedFocus]) state.focus = savedFocus;
   const savedView = store.get('dtm-view');
   if (savedView === 'table') setView('table');
   populateControls();
-  renderHeadline();
   bind();
   render();
   readHash();
   probeRemoteLogos();
-  window.DTMApp = { state, render, openCompany, companies, byId };
+  window.DTMApp = { state, render, openCompany, companies, byId, setFocus, focusIndex, monogram, hue, money, metricText, date };
 })();

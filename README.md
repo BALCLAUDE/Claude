@@ -28,6 +28,8 @@ An interactive market map of the US and allied defense technology sector. It shi
 
 ## Features
 
+- **Segment toggle:** show All, **Unmanned** (Drones & Air Autonomy + Maritime & Ground Robotics), **Space**, **Manufacturing**, or any single segment column. The table view, counts and headline stats follow it, and the choice is kept in the link, e.g. `defense-tech-map.html#focus=unmanned`. Groups are defined in `DTM.focusGroups` in `src/data/taxonomy.js`.
+- **Export PNG:** renders a shareable market-map poster for any segment group: title, totals, public/private legend, subsegment blocks of logo tiles and a sources footer. Choose all, public-only or private-only companies and a Standard (3-column, 3200 px) or Wide (4-column, 4800 px) layout. The poster is drawn from the data (`src/export.js`), so it looks the same whatever the screen, theme or filters. In the published claude.ai version, saving asks you to confirm the download.
 - Search across names, tickers, programs, investors and products. Press `/` to focus the search box.
 - Filters for Public / Private and for region (US, UK, Europe, Israel, Asia-Pacific, Canada, and China for non-allied companies).
 - **Program Lens:** highlight every company on a program such as Golden Dome, CCA, SDA PWSA, NSSL, Replicator or Affordable Mass Missiles.

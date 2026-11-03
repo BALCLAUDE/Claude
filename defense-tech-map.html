@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Built 2026-10-09 from src/ by scripts/build.mjs. Edit the source files, then run npm run build. -->
+<!-- Built 2026-11-03 from src/ by scripts/build.mjs. Edit the source files, then run npm run build. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -295,6 +295,104 @@ button { cursor: pointer; }
   background: var(--panel);
 }
 .icon-btn svg { width: 18px; height: 18px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.btn svg { width: 18px; height: 18px; flex: none; }
+.btn:hover { border-color: var(--ink-3); }
+.btn:focus-visible, .icon-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.btn-primary { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.btn-primary:hover { border-color: var(--ink); opacity: 0.9; }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+
+/* ---------- Segment focus chips ---------- */
+.focus-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 2px;
+  min-width: 0;
+}
+.focus-label {
+  flex: none;
+  margin-right: 4px;
+  font-size: var(--step--2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.focus-bar input { position: absolute; opacity: 0; pointer-events: none; }
+.focus-bar label {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--ink-2);
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.focus-bar label.is-featured { color: var(--ink); border-color: var(--ink-3); }
+.focus-bar label:hover { border-color: var(--ink-3); color: var(--ink); }
+.focus-bar input:checked + label { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.focus-bar input:focus-visible + label { outline: 2px solid var(--focus); outline-offset: 2px; }
+.focus-sep { flex: none; width: 1px; height: 20px; margin: 0 4px; background: var(--rule-strong); }
+
+/* ---------- Export dialog ---------- */
+.export-dialog {
+  width: min(1100px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: var(--shadow-2);
+}
+.export-dialog::backdrop { background: var(--scrim); }
+.export-inner { display: flex; flex-direction: column; max-height: calc(100dvh - 32px); margin: 0; }
+.export-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px 0; flex-shrink: 0; }
+.export-head h2 { margin: 0; font-family: var(--font-display); font-size: var(--step-2); letter-spacing: 0.01em; text-transform: uppercase; }
+.export-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 14px 20px; border-bottom: 1px solid var(--rule); flex-shrink: 0; }
+.export-controls .field select { max-width: 260px; }
+.export-preview {
+  flex: 1 1 auto;
+  min-height: 200px;
+  overflow: auto;
+  padding: 16px 20px;
+  background: var(--panel-3);
+}
+.export-preview img { display: block; width: 100%; height: auto; border-radius: 6px; box-shadow: var(--shadow-1); background: #fff; }
+.export-status { margin: 40px 0; text-align: center; color: var(--ink-3); font-size: var(--step--1); }
+.export-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 12px 20px 16px; border-top: 1px solid var(--rule); flex-shrink: 0; }
+.export-note { flex: 1 1 260px; margin: 0; color: var(--ink-3); font-size: var(--step--2); }
+.export-note.is-warn { color: var(--bad); }
+@media (max-width: 640px) {
+  .export-head, .export-controls, .export-preview, .export-foot { padding-left: 14px; padding-right: 14px; }
+  .btn span { display: none; }
+  .btn { padding: 0 10px; }
+  .export-foot .btn span { display: inline; }
+}
 
 .field { display: inline-flex; align-items: center; gap: 8px; font-size: var(--step--1); }
 .field span {
@@ -1019,6 +1117,7 @@ button.chip:hover { border-color: var(--ink); color: var(--ink); }
   </header>
 
   <div class="toolbar" id="toolbar" role="search">
+    <div class="focus-bar" id="focus-bar" role="radiogroup" aria-label="Segment"></div>
     <div class="toolbar-row">
       <label class="search" for="q">
         <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -1034,6 +1133,10 @@ button.chip:hover { border-color: var(--ink); color: var(--ink); }
         <input type="radio" name="view" id="view-map" value="map" checked><label for="view-map">Map</label>
         <input type="radio" name="view" id="view-table" value="table"><label for="view-table">Table</label>
       </div>
+      <button class="btn" id="export-btn" type="button" aria-label="Export PNG" title="Export the focused segment as a PNG market-map image">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0l-3.5-3.5M10 12l3.5-3.5M4 14.5v1.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Export PNG</span>
+      </button>
       <button class="icon-btn" id="theme-btn" type="button" aria-label="Switch color theme" title="Switch color theme">
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5a7.5 7.5 0 1 0 0 15z" fill="currentColor"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
       </button>
@@ -1097,6 +1200,32 @@ button.chip:hover { border-color: var(--ink); color: var(--ink); }
 
 <div class="compare-tray" id="compare-tray" hidden></div>
 
+<dialog class="export-dialog" id="export-dialog" aria-labelledby="export-title">
+  <form method="dialog" class="export-inner" id="export-form">
+    <header class="export-head">
+      <h2 id="export-title">Export market map image</h2>
+      <button class="icon-btn" value="close" aria-label="Close">✕</button>
+    </header>
+    <div class="export-controls">
+      <label class="field" for="export-group"><span>Segment</span><select id="export-group"></select></label>
+      <div class="seg" role="radiogroup" aria-label="Companies to include">
+        <input type="radio" name="export-own" id="export-own-all" value="all" checked><label for="export-own-all">All</label>
+        <input type="radio" name="export-own" id="export-own-public" value="public"><label for="export-own-public"><i class="swatch swatch-public"></i>Public</label>
+        <input type="radio" name="export-own" id="export-own-private" value="private"><label for="export-own-private"><i class="swatch swatch-private"></i>Private</label>
+      </div>
+      <div class="seg" role="radiogroup" aria-label="Image layout">
+        <input type="radio" name="export-size" id="export-size-1600" value="1600" checked><label for="export-size-1600" title="3-column layout, 3200 px wide">Standard</label>
+        <input type="radio" name="export-size" id="export-size-2400" value="2400"><label for="export-size-2400" title="4-column layout, 4800 px wide">Wide</label>
+      </div>
+    </div>
+    <div class="export-preview" id="export-preview" aria-live="polite"><p class="export-status">Rendering…</p></div>
+    <footer class="export-foot">
+      <p class="export-note" id="export-note">Rendered at 2× for sharp text. Figures carry the as-of dates shown in each profile.</p>
+      <button class="btn btn-primary" id="export-download" type="button" disabled>Download PNG</button>
+    </footer>
+  </form>
+</dialog>
+
 <script>/* data/taxonomy.js */
 /* Segment → subsegment taxonomy. Columns render in this order.
    Subsegment ids are globally unique ("segment.sub") and are what companies reference. */
@@ -1112,7 +1241,7 @@ DTM.meta = {
 
 DTM.segments = [
   {
-    id: 'space', code: 'SPC', name: 'Space',
+    id: 'space', code: 'SPC', name: 'Space', short: 'Space',
     blurb: 'Launch, spacecraft, and the sensing and maneuvering capabilities that make space a warfighting domain.',
     subsegments: [
       { id: 'space.launch', name: 'Launch', blurb: 'Small, medium and heavy lift, including responsive launch for national security payloads.' },
@@ -1126,7 +1255,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'missiles', code: 'MSL', name: 'Missiles & Munitions',
+    id: 'missiles', code: 'MSL', name: 'Missiles & Munitions', short: 'Missiles',
     blurb: 'Affordable mass, long-range fires and the propulsion and energetics supply chain behind them.',
     subsegments: [
       { id: 'missiles.propulsion', name: 'Propulsion & Rocket Motors', blurb: 'Solid rocket motors and liquid engines for missiles and interceptors.' },
@@ -1138,7 +1267,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'uas', code: 'UAS', name: 'Drones & Air Autonomy',
+    id: 'uas', code: 'UAS', name: 'Drones & Air Autonomy', short: 'Drones & Air',
     blurb: 'Uncrewed aircraft from FPV quadcopters to collaborative combat aircraft, and the autonomy stacks that fly them.',
     subsegments: [
       { id: 'uas.small', name: 'Small UAS & FPV', blurb: 'Group 1–2 quadcopters, FPV and short-range reconnaissance drones.' },
@@ -1151,7 +1280,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'cuas', code: 'C-UAS', name: 'Counter-UAS & Air Defense',
+    id: 'cuas', code: 'C-UAS', name: 'Counter-UAS & Air Defense', short: 'Counter-UAS',
     blurb: 'Detecting and defeating drones and missiles at a cost per shot that matches the threat.',
     subsegments: [
       { id: 'cuas.kinetic', name: 'Kinetic Interceptors', blurb: 'Hit-to-kill drones, low-cost interceptor missiles and gun-based defeat.' },
@@ -1162,7 +1291,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'maritime', code: 'MAR', name: 'Maritime & Ground Robotics',
+    id: 'maritime', code: 'MAR', name: 'Maritime & Ground Robotics', short: 'Maritime & Ground',
     blurb: 'Autonomous vessels, undersea systems, ground robots and a rebuilt naval industrial base.',
     subsegments: [
       { id: 'maritime.usv', name: 'Uncrewed Surface Vessels', blurb: 'Autonomous boats from expendable attack craft to ocean-going USVs.' },
@@ -1172,7 +1301,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'software', code: 'AI', name: 'Defense Software & AI',
+    id: 'software', code: 'AI', name: 'Defense Software & AI', short: 'Software & AI',
     blurb: 'Command and control, intelligence analytics and the digital backbone of modern forces.',
     subsegments: [
       { id: 'software.c2', name: 'C2 & Battle Management', blurb: 'Command-and-control software that fuses sensors and shooters.' },
@@ -1183,7 +1312,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'sensors', code: 'SNS', name: 'Sensors, EW & Comms',
+    id: 'sensors', code: 'SNS', name: 'Sensors, EW & Comms', short: 'Sensors & Comms',
     blurb: 'The sensing, spectrum and networking layer every other system depends on.',
     subsegments: [
       { id: 'sensors.radar', name: 'Radar', blurb: 'Software-defined, ESA and multistatic radar.' },
@@ -1193,7 +1322,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'industrial', code: 'MFG', name: 'Manufacturing & Energy',
+    id: 'industrial', code: 'MFG', name: 'Manufacturing & Energy', short: 'Manufacturing',
     blurb: 'Factories, materials and power that let the industrial base produce at wartime rates.',
     subsegments: [
       { id: 'industrial.manufacturing', name: 'Advanced Manufacturing', blurb: 'Automated machining, additive and software-defined factories.' },
@@ -1204,7 +1333,7 @@ DTM.segments = [
     ]
   },
   {
-    id: 'primes', code: 'PRM', name: 'Primes & Mid-Tier',
+    id: 'primes', code: 'PRM', name: 'Primes & Mid-Tier', short: 'Primes',
     blurb: 'Established contractors that integrate the largest programs of record.',
     subsegments: [
       { id: 'primes.us', name: 'US Primes', blurb: 'The largest US defense prime contractors.' },
@@ -1214,6 +1343,18 @@ DTM.segments = [
     ]
   }
 ];
+
+/* Segment focus used by the toggle above the map and by PNG export. The three named groups come first;
+   every other segment gets its own entry so each column can be shown on its own. */
+DTM.focusGroups = [
+  { id: 'all', name: 'All segments', short: 'All', segments: null },
+  { id: 'unmanned', name: 'Unmanned Systems', short: 'Unmanned', segments: ['uas', 'maritime'], featured: true },
+  { id: 'space', name: 'Space', short: 'Space', segments: ['space'], featured: true },
+  { id: 'manufacturing', name: 'Manufacturing & Energy', short: 'Manufacturing', segments: ['industrial'], featured: true }
+].concat(['uas', 'maritime', 'missiles', 'cuas', 'software', 'sensors', 'primes'].map((id) => {
+  const seg = DTM.segments.find((s) => s.id === id);
+  return { id, name: seg.name, short: seg.short, segments: [id] };
+}));
 
 /* Country → region used by the country filter. */
 DTM.regions = [
@@ -7193,9 +7334,15 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
 
   /* ---------------------------------------------------------------- state */
   const state = {
-    q: '', own: 'all', region: '', lens: '', group: 'sub', sort: 'value', scale: false, view: 'map',
+    q: '', own: 'all', region: '', lens: '', group: 'sub', sort: 'value', scale: false, view: 'map', focus: 'all',
     tableSort: { key: 'value', dir: -1 }, compare: [], open: null, tab: 'overview'
   };
+
+  /* Segment focus: All, a named group (Unmanned, Space, Manufacturing) or a single segment column. */
+  const focusIndex = Object.fromEntries((D.focusGroups || [{ id: 'all', name: 'All segments', short: 'All', segments: null }]).map((g) => [g.id, g]));
+  const focusGroup = () => focusIndex[state.focus] || focusIndex.all;
+  const segInFocus = (segId) => { const g = focusGroup(); return !g.segments || g.segments.includes(segId); };
+  const inFocus = (c) => { const g = focusGroup(); return !g.segments || c.segs.some((s) => g.segments.includes(s)); };
 
   function matches(c) {
     if (state.own !== 'all' && c.status !== state.own) return false;
@@ -7264,7 +7411,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     board.classList.toggle('is-scaled', state.scale);
     board.classList.toggle('has-lens', !!state.lens);
     let html = '';
-    D.segments.forEach((seg) => {
+    D.segments.filter((seg) => segInFocus(seg.id)).forEach((seg) => {
       const inSeg = visible.filter((c) => c.segs.includes(seg.id));
       if (!inSeg.length) return;
       let groups;
@@ -7345,8 +7492,12 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
 
   /* ---------------------------------------------------------------- top-level render */
   function render() {
-    const visible = companies.filter(matches);
-    $('#result-count').textContent = `Showing ${visible.length} of ${companies.length} companies`;
+    const scope = companies.filter(inFocus);
+    const visible = scope.filter(matches);
+    const g = focusGroup();
+    $('#result-count').textContent = `Showing ${visible.length} of ${scope.length} companies${g.segments ? ' in ' + g.short : ''}`;
+    renderFocusBar();
+    renderHeadline(scope);
     const filtered = state.q || state.own !== 'all' || state.region || state.lens;
     $('#reset-btn').hidden = !filtered;
     $('#empty').hidden = visible.length > 0;
@@ -7356,6 +7507,26 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     renderLensBanner(visible);
     renderTray();
   }
+
+  function renderFocusBar() {
+    const bar = $('#focus-bar');
+    if (!bar) return;
+    if (!bar.childElementCount) {
+      const groups = Object.values(focusIndex);
+      const chip = (g) => `<input type="radio" name="focus" id="focus-${g.id}" value="${g.id}"><label for="focus-${g.id}"${g.featured ? ' class="is-featured"' : ''} title="${esc(g.name)}${g.segments && g.segments.length > 1 ? ': ' + g.segments.map((id) => D.segments.find((x) => x.id === id).name).join(' + ') : ''}">${esc(g.short)}</label>`;
+      bar.innerHTML = `<span class="focus-label">Segment</span>${groups.filter((g) => !g.segments || g.featured).map(chip).join('')}<span class="focus-sep" aria-hidden="true"></span>${groups.filter((g) => g.segments && !g.featured).map(chip).join('')}`;
+    }
+    const r = $(`#focus-${state.focus}`);
+    if (r && !r.checked) r.checked = true;
+  }
+  function setFocus(id, { write = true } = {}) {
+    if (!focusIndex[id]) id = 'all';
+    state.focus = id;
+    store.set('dtm-focus', id);
+    if (write && !state.open) setHash(id !== 'all' ? `focus=${id}` : '');
+    render();
+  }
+  const focusHash = () => (state.focus !== 'all' ? `focus=${state.focus}` : '');
 
   function renderLensBanner(visible) {
     const banner = $('#lens-banner');
@@ -7368,14 +7539,15 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     banner.innerHTML = `<strong>${esc(p.name)}</strong><span>${n} ${n === 1 ? 'company' : 'companies'} highlighted · ${esc(p.customer)}</span><span>${esc(p.blurb)}</span><button class="link-btn" type="button" data-action="clear-lens">Clear lens</button>`;
   }
 
-  function renderHeadline() {
-    const pub = companies.filter((c) => c.isPublic);
-    const priv = companies.filter((c) => !c.isPublic);
+  function renderHeadline(scope = companies) {
+    const pub = scope.filter((c) => c.isPublic);
+    const priv = scope.filter((c) => !c.isPublic);
+    const g = focusGroup();
     const cap = pub.reduce((a, c) => a + (c.value || 0), 0);
     const raised = priv.reduce((a, c) => a + (c.value || 0), 0);
     $('#headline-stats').innerHTML = `
-      <div><dt>Companies</dt><dd>${companies.length}</dd></div>
-      <div><dt>Segments</dt><dd>${D.segments.length}</dd></div>
+      <div><dt>Companies${g.segments ? ' · ' + esc(g.short) : ''}</dt><dd>${scope.length}</dd></div>
+      <div><dt>Segments</dt><dd>${g.segments ? g.segments.length : D.segments.length}</dd></div>
       <div class="is-public"><dt>Public market cap · ${pub.length} cos</dt><dd>${money(cap)}</dd></div>
       <div class="is-private"><dt>Private capital raised · ${priv.length} cos</dt><dd>${money(raised)}</dd></div>`;
     $('#edition').textContent = `${D.meta.edition} edition`;
@@ -7718,7 +7890,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
   $('#detail').addEventListener('close', () => {
     if ($('#detail').open) return; // reopened before the queued close event ran
     state.open = null;
-    setHash('');
+    setHash(focusHash());
     hideChartTip();
   });
 
@@ -7731,6 +7903,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
   function readHash() {
     const h = decodeURIComponent((location.hash || '').slice(1));
     if (!h) return;
+    if (h.startsWith('focus=')) { setFocus(h.slice(6), { write: false }); return; }
     const [id, tab] = h.split('.');
     if (byId[id]) openCompany(id, { tab });
   }
@@ -7797,6 +7970,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     const q = $('#q');
     let qTimer;
     q.addEventListener('input', () => { clearTimeout(qTimer); qTimer = setTimeout(() => { state.q = q.value.trim(); render(); }, 80); });
+    $('#focus-bar').addEventListener('change', (e) => { if (e.target.name === 'focus') setFocus(e.target.value); });
     $$('input[name="own"]').forEach((r) => r.addEventListener('change', () => { state.own = r.value; render(); }));
     $$('input[name="view"]').forEach((r) => r.addEventListener('change', () => { state.view = r.value; store.set('dtm-view', r.value); render(); }));
     $('#region').addEventListener('change', (e) => { state.region = e.target.value; render(); });
@@ -7904,6 +8078,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     setView('map');
     render();
     const seg = subIndex[sub] && subIndex[sub].seg.id;
+    if (seg && !segInFocus(seg)) setFocus('all');
     const el = seg && document.getElementById(`seg-${seg}`);
     if (el) el.closest('.segment').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -7930,15 +8105,505 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
   /* ---------------------------------------------------------------- boot */
   const savedTheme = store.get('dtm-theme');
   if (savedTheme === 'dark' || savedTheme === 'light') document.documentElement.dataset.theme = savedTheme;
+  const savedFocus = store.get('dtm-focus');
+  if (savedFocus && focusIndex[savedFocus]) state.focus = savedFocus;
   const savedView = store.get('dtm-view');
   if (savedView === 'table') setView('table');
   populateControls();
-  renderHeadline();
   bind();
   render();
   readHash();
   probeRemoteLogos();
-  window.DTMApp = { state, render, openCompany, companies, byId };
+  window.DTMApp = { state, render, openCompany, companies, byId, setFocus, focusIndex, monogram, hue, money, metricText, date };
+})();
+
+</script>
+<script>/* export.js */
+/* Poster PNG export: draws a shareable market-map image for one segment group on a canvas.
+   Drawn from the data, not the screen, so filters, theme and window size never change the result.
+   Saves through the claude.ai "downloads" capability when the page is published there, or a plain
+   download link when the file is opened directly. */
+(function () {
+  'use strict';
+
+  const D = window.DTM;
+  const app = () => window.DTMApp;
+  const $ = (sel) => document.querySelector(sel);
+
+  // The poster always uses the light palette so every export looks the same.
+  const C = {
+    bg: '#eef1f2', panel: '#ffffff', ink: '#0e1a22', ink2: '#44535d', ink3: '#66747e', rule: '#d8dfe3', ruleStrong: '#b7c2c9',
+    public: '#2459d3', publicWash: '#eaf0fc', private: '#d9560f', privateWash: '#fcefe5', privatePill: '#b2460b',
+    flag: '#b3261e', logoDark: '#131c23', logoInk: '#f3f6f8'
+  };
+  const F = {
+    display: '"Saira Condensed", "Arial Narrow", "Roboto Condensed", sans-serif',
+    body: '"Public Sans", "Segoe UI", system-ui, -apple-system, sans-serif',
+    data: '"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace'
+  };
+
+  /* ---------------------------------------------------------------- assets */
+  async function fontsReady() {
+    if (!document.fonts || !document.fonts.load) return;
+    const faces = ['800 64px "Saira Condensed"', '700 30px "Saira Condensed"', '700 13px "Public Sans"', '600 12px "Public Sans"',
+      '400 13px "Public Sans"', '600 11px "IBM Plex Mono"', '500 12px "IBM Plex Mono"'];
+    const all = Promise.all(faces.map((f) => document.fonts.load(f).catch(() => null)));
+    await Promise.race([all, new Promise((r) => setTimeout(r, 2500))]);
+  }
+  const imgCache = {};
+  function loadImg(src) {
+    if (!imgCache[src]) {
+      imgCache[src] = new Promise((resolve) => {
+        const i = new Image();
+        i.onload = () => resolve(i);
+        i.onerror = () => resolve(null);
+        i.src = src;
+      });
+    }
+    return imgCache[src];
+  }
+
+  /* ---------------------------------------------------------------- drawing helpers */
+  function rrect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    if (ctx.roundRect) { ctx.roundRect(x, y, w, h, r); return; }
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+  function setFont(ctx, f, spacing) {
+    ctx.font = f;
+    if ('letterSpacing' in ctx) ctx.letterSpacing = spacing || '0px';
+  }
+  function ellipsize(ctx, text, maxW) {
+    if (ctx.measureText(text).width <= maxW) return text;
+    let t = text;
+    while (t.length > 1 && ctx.measureText(t + '…').width > maxW) t = t.slice(0, -1);
+    return t.trimEnd() + '…';
+  }
+  function wrapLines(ctx, text, maxW, maxLines) {
+    const words = String(text).split(/\s+/);
+    const lines = [];
+    let cur = '';
+    for (const w of words) {
+      const t = cur ? cur + ' ' + w : w;
+      if (!cur || ctx.measureText(t).width <= maxW) cur = t;
+      else { lines.push(cur); cur = w; }
+    }
+    if (cur) lines.push(cur);
+    if (lines.length > maxLines) {
+      const keep = lines.slice(0, maxLines);
+      keep[maxLines - 1] = lines.slice(maxLines - 1).join(' ');
+      return keep.map((l) => ellipsize(ctx, l, maxW));
+    }
+    return lines.map((l) => ellipsize(ctx, l, maxW));
+  }
+
+  /* ---------------------------------------------------------------- model */
+  const byValue = (a, b) => (b.value == null ? -1 : b.value) - (a.value == null ? -1 : a.value) || a.name.localeCompare(b.name);
+
+  function buildModel(groupId, own) {
+    const A = app();
+    const g = A.focusIndex[groupId] || A.focusIndex.unmanned;
+    const segIds = g.segments || D.segments.map((s) => s.id);
+    const pick = (c) => own === 'all' || c.status === own;
+    const sections = segIds.map((id) => {
+      const seg = D.segments.find((s) => s.id === id);
+      const blocks = seg.subsegments
+        .map((sub) => ({ sub, items: A.companies.filter((c) => c.subs.includes(sub.id) && pick(c)).sort(byValue) }))
+        .filter((b) => b.items.length);
+      const cos = new Set(blocks.flatMap((b) => b.items));
+      return { seg, blocks, cos: [...cos] };
+    }).filter((s) => s.blocks.length);
+    const cos = [...new Set(sections.flatMap((s) => s.cos))];
+    const sum = (list, pub) => list.filter((c) => c.isPublic === pub && c.value).reduce((a, c) => a + c.value, 0);
+    return {
+      g, own, sections, cos,
+      nPub: cos.filter((c) => c.isPublic).length, nPriv: cos.filter((c) => !c.isPublic).length,
+      cap: sum(cos, true), raised: sum(cos, false),
+      tiles: sections.reduce((a, s) => a + s.blocks.reduce((b, x) => b + x.items.length, 0), 0)
+    };
+  }
+
+  /* ---------------------------------------------------------------- layout */
+  function layout(model, width) {
+    const L = { W: width, P: 56, GAP: 16, headH: 196, secHeadH: 58, secGap: 30, footH: 96 };
+    L.K = width >= 2400 ? 4 : 3;
+    L.colW = (width - 2 * L.P - (L.K - 1) * L.GAP) / L.K;
+    L.pad = 14; L.blockHead = 40; L.tg = 8; L.TH = 120;
+    L.r = Math.max(3, Math.floor((L.colW - 2 * L.pad + L.tg) / (100 + L.tg)));
+    L.TW = (L.colW - 2 * L.pad - (L.r - 1) * L.tg) / L.r;
+    let y = L.P + L.headH;
+    // A single-segment poster already names the segment in its title, so it skips the section header.
+    const secHead = model.sections.length > 1 ? L.secHeadH : 0;
+    L.showSecHead = secHead > 0;
+    model.sections.forEach((s) => {
+      s.y = y;
+      const cols = new Array(L.K).fill(0);
+      s.blocks.forEach((b) => {
+        const rows = Math.ceil(b.items.length / L.r);
+        b.h = L.blockHead + rows * L.TH + (rows - 1) * L.tg + L.pad;
+        let col = 0;
+        for (let i = 1; i < L.K; i++) if (cols[i] < cols[col] - 0.5) col = i;
+        b.x = L.P + col * (L.colW + L.GAP);
+        b.y = y + secHead + cols[col];
+        cols[col] += b.h + L.GAP;
+      });
+      s.h = secHead + Math.max(...cols) - L.GAP;
+      y += s.h + L.secGap;
+    });
+    L.footY = y - L.secGap + 28;
+    L.H = Math.ceil(L.footY + L.footH + L.P / 2);
+    return L;
+  }
+
+  /* ---------------------------------------------------------------- render */
+  async function renderPoster({ group = 'unmanned', own = 'all', width = 1600, scale = 2 } = {}) {
+    const A = app();
+    await fontsReady();
+    const model = buildModel(group, own);
+    const L = layout(model, width);
+    const logoIds = model.cos.filter((c) => D.logos && D.logos[c.id]).map((c) => c.id);
+    const imgs = {};
+    await Promise.all(logoIds.map(async (id) => { imgs[id] = await loadImg(D.logos[id].src); }));
+
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(L.W * scale);
+    canvas.height = Math.round(L.H * scale);
+    const ctx = canvas.getContext('2d');
+    ctx.scale(scale, scale);
+    ctx.textBaseline = 'alphabetic';
+
+    // Page
+    ctx.fillStyle = C.bg;
+    ctx.fillRect(0, 0, L.W, L.H);
+    drawHeader(ctx, model, L, A);
+    model.sections.forEach((s) => drawSection(ctx, s, L, A, imgs));
+    drawFooter(ctx, model, L, A);
+    return { canvas, model, layout: L };
+  }
+
+  function drawHeader(ctx, m, L, A) {
+    const x = L.P;
+    let y = L.P;
+    setFont(ctx, `500 13px ${F.data}`, '1.5px');
+    ctx.fillStyle = C.ink3;
+    ctx.fillText(`${D.meta.edition.toUpperCase()} EDITION · COMPILED ${A.date(D.meta.asOf, true).toUpperCase()}`, x, y + 12);
+    setFont(ctx, `800 64px ${F.display}`, '0.5px');
+    ctx.fillStyle = C.ink;
+    const title = m.g.name.toUpperCase();
+    ctx.fillText(title, x, y + 78);
+    setFont(ctx, `400 19px ${F.body}`);
+    ctx.fillStyle = C.ink2;
+    const segNames = m.sections.map((s) => s.seg.name).join(' + ');
+    const scope = m.own === 'public' ? ' · public companies only' : m.own === 'private' ? ' · private companies only' : '';
+    ctx.fillText(ellipsize(ctx, `Defense Tech Market Map · ${segNames}${scope}`, L.W * 0.55), x, y + 112);
+
+    // Legend
+    let lx = x;
+    const ly = y + 148;
+    [[C.public, 'Public · market cap'], [C.private, 'Private · total raised']].forEach(([col, label]) => {
+      ctx.fillStyle = col;
+      rrect(ctx, lx, ly - 11, 12, 12, 3);
+      ctx.fill();
+      setFont(ctx, `600 13px ${F.body}`);
+      ctx.fillStyle = C.ink2;
+      ctx.fillText(label, lx + 18, ly);
+      lx += 18 + ctx.measureText(label).width + 26;
+    });
+
+    // Stats, right-aligned
+    const stats = [
+      ['COMPANIES', String(m.cos.length), C.ink],
+      [`PUBLIC MARKET CAP · ${m.nPub}`, m.nPub ? A.money(m.cap) : '—', C.public],
+      [`PRIVATE RAISED · ${m.nPriv}`, m.nPriv ? A.money(m.raised) : '—', C.private]
+    ];
+    let sx = L.W - L.P;
+    stats.slice().reverse().forEach(([label, value, col]) => {
+      setFont(ctx, `700 40px ${F.display}`);
+      const vw = ctx.measureText(value).width;
+      setFont(ctx, `500 11px ${F.data}`, '1px');
+      const lw = ctx.measureText(label).width;
+      const w = Math.max(vw, lw);
+      ctx.fillStyle = C.ink3;
+      ctx.textAlign = 'right';
+      ctx.fillText(label, sx, y + 42);
+      setFont(ctx, `700 40px ${F.display}`);
+      ctx.fillStyle = col;
+      ctx.fillText(value, sx, y + 86);
+      ctx.textAlign = 'left';
+      sx -= w + 40;
+    });
+
+    ctx.fillStyle = C.ink;
+    ctx.fillRect(x, y + L.headH - 22, L.W - 2 * L.P, 2);
+  }
+
+  function drawSection(ctx, s, L, A, imgs) {
+    if (!L.showSecHead) { s.blocks.forEach((b) => drawBlock(ctx, b, L, A, imgs)); return; }
+    const x = L.P;
+    const y = s.y;
+    // Section header: code chip, name and totals
+    setFont(ctx, `600 12px ${F.data}`, '1px');
+    const code = s.seg.code;
+    const cw = ctx.measureText(code).width + 14;
+    ctx.strokeStyle = C.ink;
+    ctx.lineWidth = 1.5;
+    rrect(ctx, x, y + 8, cw, 22, 5);
+    ctx.stroke();
+    ctx.fillStyle = C.ink;
+    ctx.fillText(code, x + 7, y + 23);
+    setFont(ctx, `700 30px ${F.display}`, '0.5px');
+    ctx.fillText(s.seg.name.toUpperCase(), x + cw + 12, y + 30);
+    const pub = s.cos.filter((c) => c.isPublic && c.value).reduce((a, c) => a + c.value, 0);
+    const priv = s.cos.filter((c) => !c.isPublic && c.value).reduce((a, c) => a + c.value, 0);
+    setFont(ctx, `500 12px ${F.data}`);
+    ctx.textAlign = 'right';
+    let rx = L.W - L.P;
+    [[priv ? `${A.money(priv)} raised` : '', C.private], [pub ? `${A.money(pub)} market cap` : '', C.public], [`${s.cos.length} companies`, C.ink3]].forEach(([t, col]) => {
+      if (!t) return;
+      ctx.fillStyle = col;
+      ctx.fillText(t, rx, y + 26);
+      rx -= ctx.measureText(t).width + 18;
+    });
+    ctx.textAlign = 'left';
+
+    s.blocks.forEach((b) => drawBlock(ctx, b, L, A, imgs));
+  }
+
+  function drawBlock(ctx, b, L, A, imgs) {
+    ctx.fillStyle = C.panel;
+    rrect(ctx, b.x, b.y, L.colW, b.h, 12);
+    ctx.fill();
+    ctx.strokeStyle = C.rule;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    setFont(ctx, `500 12px ${F.data}`);
+    const count = String(b.items.length);
+    const cwid = ctx.measureText(count).width;
+    ctx.fillStyle = C.ink3;
+    ctx.fillText(count, b.x + L.colW - L.pad - cwid, b.y + 25);
+    setFont(ctx, `700 12px ${F.body}`, '0.8px');
+    ctx.fillStyle = C.ink2;
+    ctx.fillText(ellipsize(ctx, b.sub.name.toUpperCase(), L.colW - 2 * L.pad - cwid - 10), b.x + L.pad, b.y + 25);
+    b.items.forEach((c, i) => {
+      const col = i % L.r, row = Math.floor(i / L.r);
+      drawTile(ctx, c, b.x + L.pad + col * (L.TW + L.tg), b.y + L.blockHead + row * (L.TH + L.tg), L.TW, L.TH, A, imgs);
+    });
+  }
+
+  function drawTile(ctx, c, x, y, w, h, A, imgs) {
+    ctx.fillStyle = c.isPublic ? C.publicWash : C.privateWash;
+    rrect(ctx, x, y, w, h, 10);
+    ctx.fill();
+    if (c.flag) {
+      ctx.save();
+      ctx.setLineDash([4, 3]);
+      ctx.strokeStyle = C.flag;
+      ctx.lineWidth = 1;
+      rrect(ctx, x + 0.5, y + 0.5, w - 1, h - 1, 10);
+      ctx.stroke();
+      ctx.restore();
+    }
+    // Logo square
+    const ls = 46, lx = x + (w - ls) / 2, ly = y + 11;
+    const logo = D.logos && D.logos[c.id];
+    const img = imgs[c.id];
+    if (logo && img) {
+      ctx.fillStyle = logo.dark ? C.logoDark : '#ffffff';
+      rrect(ctx, lx, ly, ls, ls, 11);
+      ctx.fill();
+      const inset = 9, box = ls - 2 * inset;
+      const r = Math.min(box / (img.naturalWidth || box), box / (img.naturalHeight || box));
+      const iw = (img.naturalWidth || box) * r, ih = (img.naturalHeight || box) * r;
+      ctx.drawImage(img, lx + (ls - iw) / 2, ly + (ls - ih) / 2, iw, ih);
+    } else {
+      const hh = 190 + (A.hue(c.id) % 110);
+      const grad = ctx.createLinearGradient(lx, ly, lx + ls, ly + ls);
+      grad.addColorStop(0, `hsl(${hh} 32% 27%)`);
+      grad.addColorStop(1, `hsl(${hh + 14} 38% 13%)`);
+      ctx.fillStyle = grad;
+      rrect(ctx, lx, ly, ls, ls, 11);
+      ctx.fill();
+      const mono = A.monogram(c.short || c.name);
+      setFont(ctx, `700 ${mono.length >= 3 ? 15 : 20}px ${F.display}`, '0.5px');
+      ctx.fillStyle = C.logoInk;
+      ctx.textAlign = 'center';
+      ctx.fillText(mono, lx + ls / 2, ly + ls / 2 + (mono.length >= 3 ? 5 : 7));
+      ctx.textAlign = 'left';
+    }
+    // Flag tag
+    if (c.flag) {
+      const t = c.flagShort || '!';
+      setFont(ctx, `700 9px ${F.data}`, '0.5px');
+      const tw = ctx.measureText(t).width + 8;
+      ctx.fillStyle = C.flag;
+      rrect(ctx, x + w - tw - 4, y + 4, tw, 14, 3);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(t, x + w - tw, y + 14);
+    }
+    // Name, up to two lines
+    setFont(ctx, `600 12px ${F.body}`);
+    ctx.fillStyle = C.ink;
+    ctx.textAlign = 'center';
+    const lines = wrapLines(ctx, c.short || c.name, w - 10, 2);
+    lines.forEach((ln, i) => ctx.fillText(ln, x + w / 2, y + 74 + i * 14));
+    // Metric pill
+    const undisclosed = c.value == null;
+    const text = A.metricText(c);
+    // Long labels ("Privately held") shrink to fit before falling back to an ellipsis.
+    let size = 11;
+    setFont(ctx, `600 ${size}px ${F.data}`);
+    while (size > 8 && ctx.measureText(text).width + 14 > w - 10) setFont(ctx, `600 ${--size}px ${F.data}`);
+    const pw = Math.min(w - 10, ctx.measureText(text).width + 14);
+    const px = x + (w - pw) / 2, py = y + h - 25;
+    if (undisclosed) {
+      ctx.save();
+      ctx.setLineDash([3, 2]);
+      ctx.strokeStyle = C.ruleStrong;
+      rrect(ctx, px, py, pw, 18, 9);
+      ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle = C.ink3;
+    } else {
+      ctx.fillStyle = c.isPublic ? C.public : C.privatePill;
+      rrect(ctx, px, py, pw, 18, 9);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+    }
+    ctx.fillText(ellipsize(ctx, text, pw - 8), x + w / 2, py + 13);
+    ctx.textAlign = 'left';
+  }
+
+  function drawFooter(ctx, m, L, A) {
+    const y = L.footY;
+    ctx.fillStyle = C.rule;
+    ctx.fillRect(L.P, y, L.W - 2 * L.P, 1);
+    setFont(ctx, `400 13px ${F.body}`);
+    ctx.fillStyle = C.ink2;
+    const notes = [
+      'Public companies show market capitalization; private companies show total funding raised to date. Companies that span several subsegments appear in each.',
+      'Each figure carries its own as-of date and source in the interactive map; figures copied from undated sheets are marked there. Logos are trademarks of their owners.'
+    ];
+    notes.forEach((n, i) => ctx.fillText(ellipsize(ctx, n, L.W - 2 * L.P - 280), L.P, y + 30 + i * 20));
+    setFont(ctx, `600 12px ${F.data}`, '1px');
+    ctx.fillStyle = C.ink3;
+    ctx.textAlign = 'right';
+    ctx.fillText(`${m.cos.length} COMPANIES · ${m.tiles} TILES`, L.W - L.P, y + 30);
+    ctx.fillText(`DEFENSE TECH MARKET MAP · ${D.meta.edition.toUpperCase()}`, L.W - L.P, y + 50);
+    ctx.textAlign = 'left';
+  }
+
+  function toBlob(canvas) {
+    return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('PNG encoding failed'))), 'image/png'));
+  }
+
+  /* ---------------------------------------------------------------- saving */
+  // Inside the claude.ai viewer, frame code can't download directly: the downloads capability asks the viewer instead.
+  let downloads = null;
+  const inViewer = !!(window.claude && typeof window.claude.use === 'function');
+  if (inViewer) {
+    try { window.claude.use('downloads').then((x) => { downloads = x; }, () => {}); } catch (e) { /* not served */ }
+  }
+  async function save(blob, filename) {
+    if (downloads) return downloads.save({ filename, data: blob });
+    if (inViewer) { const err = new Error('unavailable'); err.code = 'unavailable'; throw err; }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    return { status: 'saved' };
+  }
+
+  /* ---------------------------------------------------------------- dialog */
+  const ui = { blob: null, url: null, filename: '', token: 0 };
+  const opts = () => ({
+    group: $('#export-group').value,
+    own: (document.querySelector('input[name="export-own"]:checked') || {}).value || 'all',
+    width: Number((document.querySelector('input[name="export-size"]:checked') || {}).value || 1600)
+  });
+  function note(text, warn) {
+    const n = $('#export-note');
+    n.textContent = text;
+    n.classList.toggle('is-warn', !!warn);
+  }
+  async function refresh() {
+    const token = ++ui.token;
+    const o = opts();
+    const preview = $('#export-preview');
+    $('#export-download').disabled = true;
+    preview.innerHTML = '<p class="export-status">Rendering…</p>';
+    try {
+      const { canvas, model } = await renderPoster(o);
+      const blob = await toBlob(canvas);
+      if (token !== ui.token) return;
+      if (ui.url) URL.revokeObjectURL(ui.url);
+      ui.blob = blob;
+      ui.url = URL.createObjectURL(blob);
+      const month = new Date().toISOString().slice(0, 7);
+      ui.filename = `defense-tech-map-${model.g.id}${o.own !== 'all' ? '-' + o.own : ''}-${month}.png`;
+      preview.innerHTML = `<img src="${ui.url}" alt="${model.g.name} market map: ${model.cos.length} companies">`;
+      $('#export-download').disabled = false;
+      note(`${canvas.width} × ${canvas.height} px · ${model.cos.length} companies · ${(blob.size / 1048576).toFixed(1)} MB. Rendered at 2× for sharp text.`);
+    } catch (e) {
+      if (token !== ui.token) return;
+      preview.innerHTML = '<p class="export-status">The image could not be rendered in this browser.</p>';
+      note(String(e && e.message || e), true);
+    }
+  }
+  async function download() {
+    if (!ui.blob) return;
+    const btn = $('#export-download');
+    btn.disabled = true;
+    try {
+      await save(ui.blob, ui.filename);
+      note(`Saved ${ui.filename}.`);
+    } catch (e) {
+      const code = e && e.code;
+      if (code === 'declined') note('Download cancelled.');
+      else if (code === 'rate_limited') note('A save prompt is already open. Try again in a moment.', true);
+      else note('Saving isn\'t available in this view. Right-click (or long-press) the preview and choose “Save image”.', true);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+  function openDialog() {
+    const A = app();
+    const sel = $('#export-group');
+    if (!sel.options.length) {
+      Object.values(A.focusIndex).filter((g) => g.segments).forEach((g) => {
+        const o = document.createElement('option');
+        o.value = g.id;
+        o.textContent = g.featured ? g.name : `${g.name} (segment)`;
+        sel.appendChild(o);
+      });
+    }
+    sel.value = A.state.focus !== 'all' ? A.state.focus : 'unmanned';
+    const dlg = $('#export-dialog');
+    if (!dlg.open) dlg.showModal();
+    refresh();
+  }
+
+  function bind() {
+    const btn = $('#export-btn');
+    if (!btn || !$('#export-dialog')) return;
+    btn.addEventListener('click', openDialog);
+    $('#export-group').addEventListener('change', refresh);
+    document.querySelectorAll('input[name="export-own"], input[name="export-size"]').forEach((r) => r.addEventListener('change', refresh));
+    $('#export-download').addEventListener('click', download);
+    $('#export-dialog').addEventListener('close', () => { ui.token++; });
+  }
+  bind();
+
+  window.DTMExport = { renderPoster, toBlob, buildModel, open: openDialog };
 })();
 
 </script>
