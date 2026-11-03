@@ -69,6 +69,7 @@ Both tabs share the segment toggle, and the link keeps the view: `#dashboard/unm
   - Companies are matched to recipients by name. `scripts/recipient-aliases.mjs` maps companies recorded under another legal name (Forterra as Robotic Research OpCo, Govini as Poplicus) and limits generic names to exact matches. Large groups include named subsidiaries; non-US groups show only their US subsidiaries.
   - Not captured: OTs booked to consortium managers, unreported subcontracts, reseller and marketplace sales, classified work, and awards to non-US parents. The dashboard flags likely undercounts.
   - Matched recipient names are listed in each profile so a reader can check them.
+  - **Cross-check:** 51 companies also appear in the Defense Tech Signals dataset, and 45 of them land within 10% (or $2M) of its totals. The other six differ for known reasons: OTs signed in mid-2026 (Sierra Space, True Anomaly, Umbra), federal subsidiaries included here (Relativity Federal, Divergent Industries), and CesiumAstro OTs recorded under its own UEI.
 
 ## Editing the data
 
