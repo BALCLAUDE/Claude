@@ -26,9 +26,20 @@ An interactive market map of the US and allied defense technology sector. It shi
   - **Key programs**
   - **Peers**
 
+## Two tabs
+
+- **Capital vs. Contracts** (the default tab) asks who is actually getting paid. For every company in the selected segment it sets capital raised (private) or market cap (public) against federal obligations from FY2020 to FY2026:
+  - Five headline tiles and a one-line takeaway.
+  - A log-log bubble chart with a $1-per-$1 parity line, bubble area for valuation (private) or revenue (public), and dashed outlines where obligations are likely understated. Hover for detail, click to open the profile, or type a name to find it.
+  - A sortable, filterable table with contracts, Other Transactions and subawards per company, plus a methodology note.
+  - The approach follows Defense Tech Signals' [Capital vs. Contracts](https://dtscontracts.netlify.app/) dashboard of the NatSec100, applied here to the companies on this map.
+- **Market map**: the segment columns of company tiles, with search, filters, Program Lens, table view, compare and PNG export.
+
+Both tabs share the segment toggle, and the link keeps the view: `#dashboard/unmanned`, `#dashboard/space/public`, `#map/manufacturing`. Company links like `#anduril.programs` open the map with that profile.
+
 ## Features
 
-- **Segment toggle:** show All, **Unmanned** (Drones & Air Autonomy + Maritime & Ground Robotics), **Space**, **Manufacturing**, or any single segment column. The table view, counts and headline stats follow it, and the choice is kept in the link, e.g. `defense-tech-map.html#focus=unmanned`. Groups are defined in `DTM.focusGroups` in `src/data/taxonomy.js`.
+- **Segment toggle:** show All, **Unmanned** (Drones & Air Autonomy + Maritime & Ground Robotics), **Space**, **Manufacturing**, or any single segment column. The map, table, dashboard, counts and headline stats follow it. Groups are defined in `DTM.focusGroups` in `src/data/taxonomy.js`.
 - **Export PNG:** renders a shareable market-map poster for any segment group: title, totals, public/private legend, subsegment blocks of logo tiles and a sources footer. Choose all, public-only or private-only companies and a Standard (3-column, 3200 px) or Wide (4-column, 4800 px) layout. The poster is drawn from the data (`src/export.js`), so it looks the same whatever the screen, theme or filters. In the published claude.ai version, saving asks you to confirm the download.
 - Search across names, tickers, programs, investors and products. Press `/` to focus the search box.
 - Filters for Public / Private and for region (US, UK, Europe, Israel, Asia-Pacific, Canada, and China for non-allied companies).
@@ -52,6 +63,12 @@ An interactive market map of the US and allied defense technology sector. It shi
 - **Public names sheet and private names list.** Public companies added from the shared public names sheet show that sheet's market cap and multiples, labeled undated. Profiles for names added from the private names list are concise: one paragraph, a sourced funding total and a program where one was found. Founding years that couldn't be confirmed are left blank and shown as "not compiled".
 - **Comps sheet.** The shared public comps sheet is stored in `src/data/consensus.js` and shown as street estimates in the Valuation tab. The sheet is undated, so its prices and market caps may differ from the dated market cap on the tile.
 - **Non-allied companies.** DJI is included for completeness because it appears in the drone funding table. Its tile carries a red "CN" flag, and its profile explains the US restrictions on it.
+- **Federal obligations** (Capital vs. Contracts tab and each profile's Key programs tab) come from public award data, Oct 1, 2019 – Sep 30, 2026:
+  - USAspending prime contracts, IDVs and grants to each company's own-name recipients, plus subawards it received.
+  - FPDS Other Transaction agreements, OT IDVs and OT orders, which USAspending's contract data doesn't include.
+  - Companies are matched to recipients by name. `scripts/recipient-aliases.mjs` maps companies recorded under another legal name (Forterra as Robotic Research OpCo, Govini as Poplicus) and limits generic names to exact matches. Large groups include named subsidiaries; non-US groups show only their US subsidiaries.
+  - Not captured: OTs booked to consortium managers, unreported subcontracts, reseller and marketplace sales, classified work, and awards to non-US parents. The dashboard flags likely undercounts.
+  - Matched recipient names are listed in each profile so a reader can check them.
 
 ## Editing the data
 
@@ -87,6 +104,15 @@ npm test           # Playwright smoke tests (Chromium)
 ```
 
 During editing you can open `src/index.html` directly. It loads the source files without a build step.
+
+To refresh federal obligations (writes `src/data/obligations.js`, caches API responses in `.cache/`, and writes a review file listing every matched recipient):
+
+```bash
+NODE_USE_ENV_PROXY=1 node scripts/obligations.mjs                 # all companies
+NODE_USE_ENV_PROXY=1 node scripts/obligations.mjs --only anduril   # one or more ids
+```
+
+`NODE_USE_ENV_PROXY=1` is only needed behind an HTTPS proxy. Check the review file for same-name recipients that aren't the company, and add them to `exclude` in `scripts/recipient-aliases.mjs`.
 
 ### Logos
 

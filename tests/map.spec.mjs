@@ -19,8 +19,9 @@ async function open(opts = {}, hash = '') {
   page.on('pageerror', (e) => errors.push(e.message));
   // Keep tests offline and deterministic: block fonts and favicon lookups.
   await page.route(/^https?:/, (route) => route.abort());
-  await page.goto(url + hash);
-  await page.waitForSelector('.tile');
+  // The dashboard is the default tab; map tests open the map tab explicitly.
+  await page.goto(url + (hash || '#map'));
+  await page.waitForSelector(opts.dashboard ? '#dash-tiles .dash-tile' : '.tile');
   return { page, errors };
 }
 
@@ -184,20 +185,55 @@ test('segment toggle shows only the focused columns, and the table follows', asy
   await page.locator('label[for="focus-unmanned"]').click();
   const cols = await page.locator('section.segment').evaluateAll((ss) => ss.map((s) => s.getAttribute('aria-labelledby')));
   assert.deepEqual(cols, ['seg-uas', 'seg-maritime']);
-  assert.equal(await page.evaluate(() => location.hash), '#focus=unmanned');
+  assert.equal(await page.evaluate(() => location.hash), '#map/unmanned');
   const expected = await page.evaluate(() => window.DTMApp.companies.filter((c) => c.segs.includes('uas') || c.segs.includes('maritime')).length);
   assert.match(await page.locator('#result-count').textContent(), new RegExp(`Showing ${expected} of ${expected} companies in Unmanned`));
   await page.locator('label[for="view-table"]').click();
   await page.waitForSelector('.data-table');
   assert.equal(await page.locator('.data-table tbody tr').count(), expected);
   await page.locator('label[for="focus-all"]').click();
-  assert.equal(await page.evaluate(() => location.hash), '');
+  assert.equal(await page.evaluate(() => location.hash), '#map');
   assert.deepEqual(errors, []);
   await page.close();
 
+  // Legacy #focus= links still open the map with that focus.
   const deep = await open({}, '#focus=space');
   assert.deepEqual(await deep.page.locator('section.segment').evaluateAll((ss) => ss.map((s) => s.getAttribute('aria-labelledby'))), ['seg-space']);
   await deep.page.close();
+});
+
+test('Capital vs. Contracts dashboard follows the segment toggle and ownership view', async () => {
+  const { page, errors } = await open({ dashboard: true }, '#dashboard/unmanned');
+  assert.equal(await page.locator('#page-tab-dashboard').getAttribute('aria-selected'), 'true');
+  assert.equal(await page.locator('#main').isHidden(), true);
+  const expected = await page.evaluate(() => window.DTMDashboard.rows());
+  const scope = await page.evaluate(() => window.DTMApp.companies.filter((c) => !c.isPublic && (c.segs.includes('uas') || c.segs.includes('maritime'))).length);
+  assert.equal(expected.length, scope, 'rows are the private Unmanned companies');
+  assert.equal(await page.locator('#dash-table tbody tr').count(), scope);
+  const plotted = await page.evaluate(() => window.DTMDashboard.rows().filter((r) => r.incl).length);
+  assert.equal(await page.locator('#dash-chart circle').count(), plotted);
+  assert.equal(await page.locator('#dash-tiles .dash-tile').first().locator('.dash-tv').textContent(), String(plotted));
+
+  await page.locator('label[for="dash-mode-public"]').click();
+  assert.equal(await page.evaluate(() => location.hash), '#dashboard/unmanned/public');
+  const pub = await page.evaluate(() => window.DTMApp.companies.filter((c) => c.isPublic && (c.segs.includes('uas') || c.segs.includes('maritime'))).length);
+  assert.equal(await page.locator('#dash-table tbody tr').count(), pub);
+
+  // Sorting, filtering, and a row click opens the company profile.
+  await page.locator('[data-dsort="name"]').click();
+  await page.fill('#dash-q', 'kratos');
+  assert.equal(await page.locator('#dash-table tbody tr').count(), 1);
+  await page.locator('#dash-table tbody tr').first().click();
+  await page.locator('#detail').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#detail-name').textContent(), 'Kratos Defense & Security');
+  await page.keyboard.press('Escape');
+
+  // Switching tabs keeps the segment and updates the link.
+  await page.locator('#page-tab-map').click();
+  assert.equal(await page.evaluate(() => location.hash), '#map/unmanned');
+  assert.deepEqual(await page.locator('section.segment').evaluateAll((ss) => ss.map((s) => s.getAttribute('aria-labelledby'))), ['seg-uas', 'seg-maritime']);
+  assert.deepEqual(errors, []);
+  await page.close();
 });
 
 test('poster export renders PNGs for the main segment groups', async () => {

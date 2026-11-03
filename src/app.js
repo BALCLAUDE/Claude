@@ -161,7 +161,7 @@
 
   /* ---------------------------------------------------------------- state */
   const state = {
-    q: '', own: 'all', region: '', lens: '', group: 'sub', sort: 'value', scale: false, view: 'map', focus: 'all',
+    q: '', own: 'all', region: '', lens: '', group: 'sub', sort: 'value', scale: false, view: 'map', focus: 'all', page: 'dashboard', dashMode: 'private',
     tableSort: { key: 'value', dir: -1 }, compare: [], open: null, tab: 'overview'
   };
 
@@ -330,7 +330,9 @@
     $('#empty').hidden = visible.length > 0;
     $('#board').hidden = state.view !== 'map' || !visible.length;
     $('#table-view').hidden = state.view !== 'table' || !visible.length;
-    if (state.view === 'map') renderBoard(visible); else renderTable(visible);
+    if (state.page === 'dashboard') {
+      if (window.DTMDashboard) window.DTMDashboard.render();
+    } else if (state.view === 'map') renderBoard(visible); else renderTable(visible);
     renderLensBanner(visible);
     renderTray();
   }
@@ -350,10 +352,38 @@
     if (!focusIndex[id]) id = 'all';
     state.focus = id;
     store.set('dtm-focus', id);
-    if (write && !state.open) setHash(id !== 'all' ? `focus=${id}` : '');
+    if (write && !state.open) setHash(pageHash());
     render();
   }
-  const focusHash = () => (state.focus !== 'all' ? `focus=${state.focus}` : '');
+  /* Page hash: #map, #map/unmanned, #dashboard/space, #dashboard/unmanned/public (public view of the dashboard). */
+  function pageHash() {
+    const parts = [state.page];
+    if (state.focus !== 'all') parts.push(state.focus);
+    if (state.page === 'dashboard' && state.dashMode === 'public') { if (state.focus === 'all') parts.push('all'); parts.push('public'); }
+    return parts.join('/');
+  }
+  function setPage(page, { write = true, focusTab = false } = {}) {
+    if (page !== 'map' && page !== 'dashboard') page = 'dashboard';
+    state.page = page;
+    store.set('dtm-page', page);
+    $$('.app-tab').forEach((t) => {
+      const on = t.dataset.page === page;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      if (on && focusTab) t.focus();
+    });
+    $('#panel-dashboard').hidden = page !== 'dashboard';
+    $('#main').hidden = page !== 'map';
+    $('#map-controls').hidden = page !== 'map';
+    document.body.dataset.page = page;
+    if (write && !state.open) setHash(pageHash());
+    render();
+  }
+  function setDashMode(mode) {
+    state.dashMode = mode === 'public' ? 'public' : 'private';
+    if (!state.open) setHash(pageHash());
+    render();
+  }
 
   function renderLensBanner(visible) {
     const banner = $('#lens-banner');
@@ -612,10 +642,27 @@
     </div>${chart}${srcHTML(k.src, null)}`;
   }
 
+  // Federal obligations pulled from USAspending and FPDS by scripts/obligations.mjs (see the Capital vs. Contracts tab).
+  function obligationsHTML(c) {
+    const O = D.obligations;
+    const o = O && O.byId && O.byId[c.id];
+    if (!o) return '';
+    const parts = [['Contracts, IDVs & grants', o.prime], ['Other Transactions', o.ot], ['Subawards received', o.sub]];
+    return `<div class="section obl-box">
+      <h3 class="section-title">Federal obligations · ${esc(O.window.split(' (')[0])}</h3>
+      <div class="stat-grid">
+        <div class="stat"><span class="stat-label">Total obligated</span><span class="stat-value">${o.total ? money(o.total) : '—'}</span><span class="stat-note">${o.total ? 'To own-name recipients' : 'None found under its own name'}</span></div>
+        ${parts.map(([l, v]) => `<div class="stat"><span class="stat-label">${esc(l)}</span><span class="stat-value">${v ? money(v) : '—'}</span></div>`).join('')}
+      </div>
+      <p class="src">${o.recipients && o.recipients.length ? `Recipients matched: ${esc(o.recipients.join('; '))}. ` : ''}${o.flag ? esc(o.flag) + '. ' : ''}Source: USAspending.gov and FPDS, pulled ${esc(date(O.asOf, true))}.</p>
+    </div>`;
+  }
+
   function programsHTML(c) {
     const ps = c.programs || [];
-    if (!ps.length) return `<p class="na">No major program awards disclosed yet.</p>`;
-    return `<div class="programs">${ps.map((p) => {
+    const obl = obligationsHTML(c);
+    if (!ps.length) return `${obl}<p class="na">No major program awards disclosed yet.</p>`;
+    return `${obl}<div class="programs">${ps.map((p) => {
       const ref = p.ref && programIndex[p.ref];
       const meta = [p.customer && `<span><b>Customer</b> ${esc(p.customer)}</span>`, p.role && `<span><b>Role</b> ${esc(p.role)}</span>`, p.year && `<span><b>Awarded</b> ${esc(p.year)}</span>`].filter(Boolean).join('');
       return `<article class="program">
@@ -717,7 +764,7 @@
   $('#detail').addEventListener('close', () => {
     if ($('#detail').open) return; // reopened before the queued close event ran
     state.open = null;
-    setHash(focusHash());
+    setHash(pageHash());
     hideChartTip();
   });
 
@@ -730,9 +777,17 @@
   function readHash() {
     const h = decodeURIComponent((location.hash || '').slice(1));
     if (!h) return;
-    if (h.startsWith('focus=')) { setFocus(h.slice(6), { write: false }); return; }
+    // Legacy #focus=space links open the map with that focus.
+    if (h.startsWith('focus=')) { state.focus = focusIndex[h.slice(6)] ? h.slice(6) : 'all'; setPage('map', { write: false }); return; }
+    const parts = h.split('/');
+    if (parts[0] === 'map' || parts[0] === 'dashboard') {
+      state.focus = focusIndex[parts[1]] ? parts[1] : 'all';
+      state.dashMode = parts.includes('public') ? 'public' : 'private';
+      setPage(parts[0], { write: false });
+      return;
+    }
     const [id, tab] = h.split('.');
-    if (byId[id]) openCompany(id, { tab });
+    if (byId[id]) { if (state.page !== 'map') setPage('map', { write: false }); openCompany(id, { tab }); }
   }
 
   /* ---------------------------------------------------------------- compare */
@@ -807,6 +862,13 @@
     $('#scale').addEventListener('change', (e) => { state.scale = e.target.checked; render(); });
     $('#reset-btn').addEventListener('click', resetFilters);
     $('#theme-btn').addEventListener('click', toggleTheme);
+    const tabs = $$('.app-tab');
+    tabs.forEach((t) => t.addEventListener('click', () => setPage(t.dataset.page)));
+    $('.app-tabs').addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const i = tabs.findIndex((t) => t.dataset.page === state.page);
+      setPage(tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length].dataset.page, { focusTab: true });
+    });
 
     document.addEventListener('click', (e) => {
       const tile = e.target.closest('.tile');
@@ -927,19 +989,22 @@
     const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
     store.set('dtm-theme', next);
+    if (state.page === 'dashboard') render(); // dashboard chart colors come from the theme tokens
   }
 
   /* ---------------------------------------------------------------- boot */
   const savedTheme = store.get('dtm-theme');
   if (savedTheme === 'dark' || savedTheme === 'light') document.documentElement.dataset.theme = savedTheme;
+  const savedPage = store.get('dtm-page');
+  if (savedPage === 'map' || savedPage === 'dashboard') state.page = savedPage;
   const savedFocus = store.get('dtm-focus');
   if (savedFocus && focusIndex[savedFocus]) state.focus = savedFocus;
   const savedView = store.get('dtm-view');
   if (savedView === 'table') setView('table');
   populateControls();
   bind();
-  render();
+  setPage(state.page, { write: false });
   readHash();
   probeRemoteLogos();
-  window.DTMApp = { state, render, openCompany, companies, byId, setFocus, focusIndex, monogram, hue, money, metricText, date };
+  window.DTMApp = { state, render, openCompany, companies, byId, setFocus, setPage, setDashMode, focusIndex, monogram, hue, money, metricText, date, esc, mult };
 })();

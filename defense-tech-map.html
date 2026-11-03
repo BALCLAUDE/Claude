@@ -394,6 +394,101 @@ button { cursor: pointer; }
   .export-foot .btn span { display: inline; }
 }
 
+/* ---------- Page tabs ---------- */
+.app-bar { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--rule); margin-bottom: 2px; }
+.app-tabs { display: flex; gap: 4px; min-width: 0; overflow-x: auto; }
+.app-tab {
+  flex: none;
+  padding: 8px 14px 10px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--ink-3);
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.app-tab:hover { color: var(--ink); }
+.app-tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+.app-tab:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.app-bar .icon-btn { margin-bottom: 6px; flex: none; }
+.map-controls { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.map-controls[hidden] { display: none; }
+
+/* ---------- Capital vs. Contracts dashboard ---------- */
+.dash { display: flex; flex-direction: column; gap: 16px; padding-top: 20px; }
+.dash[hidden] { display: none; }
+.dash-head { display: grid; gap: 8px; }
+.dash-eyebrow { margin: 0; font-family: var(--font-data); font-size: var(--step--2); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--private); }
+.dash-title { margin: 0; font-family: var(--font-display); font-size: var(--step-3); font-weight: 800; line-height: 1.02; letter-spacing: 0.005em; text-transform: uppercase; }
+.dash-lede { margin: 0; max-width: 72ch; color: var(--ink-2); font-size: var(--step-0); line-height: 1.55; }
+.dash-modes { justify-self: start; margin-top: 4px; }
+.dash-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 10px; }
+.dash-tile { display: grid; gap: 4px; padding: 14px 16px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; }
+.dash-tl { font-size: var(--step--2); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.dash-tv { font-family: var(--font-display); font-size: var(--step-3); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.dash-tile.is-private .dash-tv { color: var(--private); }
+.dash-tile.is-public .dash-tv { color: var(--public); }
+.dash-tn { font-size: var(--step--2); color: var(--ink-3); }
+.dash-card { position: relative; min-width: 0; padding: 18px; background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; }
+.dash-h { margin: 0 0 4px; font-family: var(--font-display); font-size: var(--step-2); font-weight: 700; letter-spacing: 0.01em; text-transform: uppercase; }
+.dash-note { margin: 0 0 12px; max-width: 90ch; color: var(--ink-3); font-size: var(--step--1); line-height: 1.5; }
+.dash-find { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 8px; }
+.dash-find input, .dash-filter {
+  height: 36px; width: min(320px, 100%); padding: 0 12px;
+  border: 1px solid var(--rule-strong); border-radius: 8px; background: var(--panel); color: var(--ink); font-size: var(--step--1);
+}
+.dash-find input:focus, .dash-filter:focus { outline: none; border-color: var(--focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 20%, transparent); }
+#dash-cqmsg { color: var(--ink-3); font-size: var(--step--2); }
+.dash-chart { position: relative; min-height: 400px; }
+.dash-chart svg { display: block; font-family: var(--font-body); overflow: visible; }
+.dash-chart circle:focus-visible { outline: none; stroke-width: 3; }
+.dash-tip {
+  position: absolute; z-index: 2; display: grid; gap: 3px; max-width: 320px; padding: 10px 12px;
+  background: var(--panel); border: 1px solid var(--rule-strong); border-radius: 8px; box-shadow: var(--shadow-2);
+  font-size: var(--step--1); line-height: 1.4; pointer-events: none;
+}
+.dash-tip[hidden] { display: none; }
+.dash-tip b { font-size: var(--step-0); }
+.dash-tip span { color: var(--ink-2); }
+.dash-tip .dash-tip-flag { color: var(--bad); }
+.dash-tip .dash-tip-hint { color: var(--ink-3); font-size: var(--step--2); }
+.dash-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 8px; color: var(--ink-2); font-size: var(--step--1); }
+.dash-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.dl-dot { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 35%, transparent); }
+.dl-dot.is-private { --c: var(--private); }
+.dl-dot.is-public { --c: var(--public); }
+.dl-dot.is-under { border-style: dashed; }
+.dl-dot.is-hollow { background: none; }
+.dash-filter { margin-bottom: 10px; }
+.dash-tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; max-height: 640px; overflow-y: auto; }
+.dash-table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
+.dash-table th { position: sticky; top: 0; z-index: 1; background: var(--panel-2); text-align: left; white-space: nowrap; border-bottom: 1px solid var(--rule); }
+.dash-table th button { width: 100%; padding: 8px 10px; border: 0; background: none; color: var(--ink-3); font: inherit; font-size: var(--step--2); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; text-align: inherit; cursor: pointer; }
+.dash-table th.is-sorted button { color: var(--ink); }
+.dash-table th.num, .dash-table td.num { text-align: right; }
+.dash-table td { padding: 7px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; font-variant-numeric: tabular-nums; }
+.dash-table td.num { font-family: var(--font-data); font-size: var(--step--2); white-space: nowrap; }
+.dash-table td.co { white-space: nowrap; }
+.dash-table td.note { min-width: 220px; color: var(--ink-3); font-size: var(--step--2); }
+.dash-table td.note .is-under { color: var(--bad); }
+.dash-table tbody tr { cursor: pointer; }
+.dash-table tbody tr:hover { background: var(--panel-2); }
+.dash-table tbody tr:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.dash-table tr.is-out td { opacity: 0.5; }
+.dash-method ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 8px; color: var(--ink-2); font-size: var(--step--1); line-height: 1.55; max-width: 90ch; }
+.dash-sources { margin: 0; color: var(--ink-3); font-size: var(--step--2); }
+.dash-sources a { color: var(--focus); }
+.obl-box .stat-grid { margin-bottom: 6px; }
+@media (max-width: 640px) {
+  .app-tab { padding: 8px 10px 10px; font-size: var(--step-0); }
+  .dash-card { padding: 14px; }
+  .dash-tv { font-size: var(--step-2); }
+}
+
 .field { display: inline-flex; align-items: center; gap: 8px; font-size: var(--step--1); }
 .field span {
   font-size: var(--step--2);
@@ -1116,8 +1211,18 @@ button.chip:hover { border-color: var(--ink); color: var(--ink); }
     <dl class="headline-stats" id="headline-stats"></dl>
   </header>
 
-  <div class="toolbar" id="toolbar" role="search">
+  <div class="toolbar" id="toolbar">
+    <div class="app-bar">
+      <div class="app-tabs" role="tablist" aria-label="Views">
+        <button class="app-tab" role="tab" type="button" id="page-tab-dashboard" data-page="dashboard" aria-controls="panel-dashboard" aria-selected="false" tabindex="-1">Capital vs. Contracts</button>
+        <button class="app-tab" role="tab" type="button" id="page-tab-map" data-page="map" aria-controls="main" aria-selected="true">Market map</button>
+      </div>
+      <button class="icon-btn" id="theme-btn" type="button" aria-label="Switch color theme" title="Switch color theme">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5a7.5 7.5 0 1 0 0 15z" fill="currentColor"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
     <div class="focus-bar" id="focus-bar" role="radiogroup" aria-label="Segment"></div>
+    <div class="map-controls" id="map-controls" role="search">
     <div class="toolbar-row">
       <label class="search" for="q">
         <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -1136,9 +1241,6 @@ button.chip:hover { border-color: var(--ink); color: var(--ink); }
       <button class="btn" id="export-btn" type="button" aria-label="Export PNG" title="Export the focused segment as a PNG market-map image">
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0l-3.5-3.5M10 12l3.5-3.5M4 14.5v1.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>Export PNG</span>
-      </button>
-      <button class="icon-btn" id="theme-btn" type="button" aria-label="Switch color theme" title="Switch color theme">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5a7.5 7.5 0 1 0 0 15z" fill="currentColor"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
       </button>
     </div>
     <div class="toolbar-row toolbar-row-secondary">
@@ -1169,9 +1271,12 @@ button.chip:hover { border-color: var(--ink); color: var(--ink); }
       <button class="link-btn" id="reset-btn" type="button" hidden>Reset filters</button>
     </div>
     <div class="lens-banner" id="lens-banner" hidden></div>
+    </div>
   </div>
 
-  <main id="main">
+  <section class="dash" id="panel-dashboard" role="tabpanel" aria-labelledby="page-tab-dashboard" hidden></section>
+
+  <main id="main" role="tabpanel" aria-labelledby="page-tab-map">
     <div class="board" id="board" aria-label="Market map"></div>
     <div class="table-wrap" id="table-view" hidden></div>
     <p class="empty" id="empty" hidden>No companies match these filters. <button class="link-btn" type="button" data-action="reset">Reset filters</button></p>
@@ -7073,6 +7178,11 @@ DTM.programs = [
 })();
 
 </script>
+<script>/* data/obligations.js */
+/* Generated by scripts/obligations.mjs. Do not edit by hand; rerun the script instead. */
+DTM.obligations = {"asOf":"2026-11-03","window":"FY2020–FY2026 (Oct 1, 2019 – Sep 30, 2026)","method":"USAspending prime contracts, IDVs and grants plus subawards received; FPDS Other Transaction agreements, IDVs and orders. Matched to each company by recipient name; see scripts/recipient-aliases.mjs.","sources":[{"t":"USAspending.gov API","u":"https://api.usaspending.gov"},{"t":"FPDS-NG ATOM feed","u":"https://www.fpds.gov"}],"byId":{"sierra-space":{"prime":376.2,"contracts":69.8,"idvs":304.4,"grants":2.1,"ot":1068.6,"sub":10.5,"total":1455.3,"recipients":["SIERRA SPACE CORP"]},"castelion":{"prime":263,"contracts":263,"idvs":0,"grants":0,"ot":85.1,"sub":0,"total":348.1,"recipients":["CASTELION CORPORATION"]},"shield-ai":{"prime":101.4,"contracts":101.4,"idvs":0,"grants":0,"ot":56.9,"sub":26,"total":184.3,"recipients":["SHIELD AI INC"]},"epirus":{"prime":4.3,"contracts":4.1,"idvs":0,"grants":0.2,"ot":137.6,"sub":4,"total":145.9,"recipients":["EPIRUS, INC"]},"saronic":{"prime":29.3,"contracts":29.3,"idvs":0,"grants":0,"ot":396.2,"sub":0,"total":425.5,"recipients":["SARONIC TECHNOLOGIES, INC"]},"forterra":{"prime":13.1,"contracts":13.1,"idvs":0,"grants":0,"ot":131.3,"sub":66.3,"total":210.7,"recipients":["ROBOTIC RESEARCH OPCO, LLC"],"flag":"Recorded as Robotic Research OpCo"},"anduril":{"prime":2974.1,"contracts":2974.1,"idvs":0,"grants":0,"ot":1555.2,"sub":149.9,"total":4679.2,"recipients":["ANDURIL INDUSTRIES, INC."]}}};
+
+</script>
 <script>/* data/logos.js */
 /* Generated by scripts/build.mjs from /logos. Do not edit by hand. */
 DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZmIiByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+Qm9laW5nPC90aXRsZT48cGF0aCBkPSJNNi45MDQ0IDE3LjI4NjZhNi4wNTEyIDYuMDUxMiAwIDAxLTMuNzU5NS0xLjMwMDhjMS4yMDQ4LTIuNzE0NiAzLjY1NDUtNi4zNTgxIDYuOTk4LTkuOTE2NmE2LjA3MDIgNi4wNzAyIDAgMDEyLjI2MTcgNy43MjljLTEuMDU5OS0uNDktMi4wNDk3LTEuMTA2LTIuODg3Ni0xLjg3OThsMS44MzA3IDMuNDM3NWE2LjA1ODIgNi4wNTgyIDAgMDEtNC40NDMzIDEuOTMwN00uODI5MiAxMS4yMTE1YTYuMDc1MiA2LjA3NTIgMCAwMTYuMDc2Mi02LjA3NzJjLjg5OTggMCAxLjc1MjcuMTk2IDIuNTIyNi41NDYtMy4yOTM1IDIuOTA5NS01Ljg0MzIgNi4yOTMtNy4zNTMgOS4yMTc3YTYuMDUxMiA2LjA1MTIgMCAwMS0xLjI0NTgtMy42ODc1bTEyLjM0MDMgMi45MTI2YTYuODYyIDYuODYyIDAgMDAuNjQxOS0yLjkxMjZjMC0yLjM5OTctMS4yMjQ4LTQuNTE0NC0zLjA4NDYtNS43NTMyYTQ5LjYwNzIgNDkuNjA3MiAwIDAxMy41ODI1LTMuMzQxNkEzMS4xNzI3IDMxLjE3MjcgMCAwMDEwLjExIDUuMDkwM2E2LjkwNyA2LjkwNyAwIDAwLTguNDM2OCAxMC42MjY1Qy4zNDkzIDE4LjU3OTUuMTE5MyAyMC44NzgxIDEuMjg1IDIxLjY1NGMxLjI0ODkuODMyIDMuOTYyNS0uNjc2OSA1LjU5MDMtMy4xMzQ1IDAgMC0yLjUxNzcgMi4yNzM2LTMuOTAxNSAxLjc1MTctLjg1MTktLjMyMi0uODU0OS0xLjYyNDgtLjE1Mi0zLjQ5MjVhNi44NzEgNi44NzEgMCAwMDQuMDgzNSAxLjMzNzhjMS44OTM3IDAgMy42MDY1LS43NTk5IDQuODUzMy0xLjk5MTdsLjI0NS40NjJjMy4wMDk1LS4yNDUgMTEuOTk2My0uNDgzIDExLjk5NjMtLjQ4MyAwLS40MzEtNS45NTAyLS4wNC0xMC44MzI1LTEuOTc5NyIvPjwvc3ZnPg==","dark":true},"palantir":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZmIiByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+UGFsYW50aXI8L3RpdGxlPjxwYXRoIGQ9Ik0yMC4xNDcgMThMMTIgMjEuMTc4IDMuODUzIDE4IDIuNSAyMC4zNDMgMTIgMjRsOS41LTMuNjU3TDIwLjE0NyAxOHpNMTIgMGE5LjUgOS41IDAgMSAwIDAgMTkgOS41IDkuNSAwIDAgMCAwLTE5em0wIDE2LjA3OGE2LjU2OCA2LjU2OCAwIDEgMSAwLTEzLjEzNiA2LjU2OCA2LjU2OCAwIDAgMSAwIDEzLjEzNnoiLz48L3N2Zz4=","dark":true},"planet":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZmIiByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+UGxhbmV0PC90aXRsZT48cGF0aCBkPSJNMTIuODkxIDYuNTgyYy0xLjE1OSAwLTIuNC40NTctMy4yMTcgMS42MzNoLS4wMzNhMS41OSAxLjU5IDAgMCAwLTEuNTktMS41OWgtLjA0OHYxMC44NmExLjc5MiAxLjc5MiAwIDAgMCAxLjc4NCAxLjc4NHYtNC43MDNoLjAzNGMuMzQzLjU3MSAxLjI5IDEuNTM2IDMuMTg1IDEuNTM2IDIuODU3IDAgNC41NzItMi4zNTIgNC41NzItNC42MzguMDAyLTIuNDE2LTEuNjE2LTQuODgyLTQuNjg3LTQuODgyem0tLjA2NiA3Ljk3NWMtMS43MTQgMC0zLjA3LTEuMzg4LTMuMDctMy4yMTcgMC0xLjY2NiAxLjI0Mi0zLjIgMy4wMjMtMy4yIDEuODQ1IDAgMy4xMDMgMS42MTYgMy4xMDMgMy4yMzMtLjAwMSAxLjkwNS0xLjQ1NSAzLjE4NC0zLjA1NiAzLjE4NHpNMTIuMDAxIDI0QTEyIDEyIDAgMSAxIDI0IDEyLjAwMSAxMi4wMTMgMTIuMDEzIDAgMCAxIDEyLjAwMSAyNHptMC0yMi44NTZhMTAuODYxIDEwLjg2MSAwIDEgMCAxMC44NjEgMTAuODYyIDEwLjg3IDEwLjg3IDAgMCAwLTEwLjg2LTEwLjg2MnoiLz48L3N2Zz4=","dark":true},"spacex":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZmIiByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+U3BhY2VYPC90aXRsZT48cGF0aCBkPSJNMjQgNy40MTdDOC44ODIgOC4yODcgMS44OSAxNC43NS4zMjEgMTYuMjhMMCAxNi41ODNoMi43OTdDMTAuMzU2IDkuMDA1IDIxLjIyMiA3LjY2MyAyNCA3LjQxN3ptLTE3LjA0NiA2LjM1Yy0uNDcyLjMyMS0uOTQ1LjY4LTEuMzk4IDEuMDJsMi40NTcgMS43OTZoMi43Nzh6TTIuOTQ4IDEwLjhILjE4OWwzLjI1IDIuMzgxYy40NzMtLjMyMSAxLjAyLS42NjEgMS41MTItLjk0NVoiLz48L3N2Zz4=","dark":true}};
@@ -7334,7 +7444,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
 
   /* ---------------------------------------------------------------- state */
   const state = {
-    q: '', own: 'all', region: '', lens: '', group: 'sub', sort: 'value', scale: false, view: 'map', focus: 'all',
+    q: '', own: 'all', region: '', lens: '', group: 'sub', sort: 'value', scale: false, view: 'map', focus: 'all', page: 'dashboard', dashMode: 'private',
     tableSort: { key: 'value', dir: -1 }, compare: [], open: null, tab: 'overview'
   };
 
@@ -7503,7 +7613,9 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     $('#empty').hidden = visible.length > 0;
     $('#board').hidden = state.view !== 'map' || !visible.length;
     $('#table-view').hidden = state.view !== 'table' || !visible.length;
-    if (state.view === 'map') renderBoard(visible); else renderTable(visible);
+    if (state.page === 'dashboard') {
+      if (window.DTMDashboard) window.DTMDashboard.render();
+    } else if (state.view === 'map') renderBoard(visible); else renderTable(visible);
     renderLensBanner(visible);
     renderTray();
   }
@@ -7523,10 +7635,38 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     if (!focusIndex[id]) id = 'all';
     state.focus = id;
     store.set('dtm-focus', id);
-    if (write && !state.open) setHash(id !== 'all' ? `focus=${id}` : '');
+    if (write && !state.open) setHash(pageHash());
     render();
   }
-  const focusHash = () => (state.focus !== 'all' ? `focus=${state.focus}` : '');
+  /* Page hash: #map, #map/unmanned, #dashboard/space, #dashboard/unmanned/public (public view of the dashboard). */
+  function pageHash() {
+    const parts = [state.page];
+    if (state.focus !== 'all') parts.push(state.focus);
+    if (state.page === 'dashboard' && state.dashMode === 'public') { if (state.focus === 'all') parts.push('all'); parts.push('public'); }
+    return parts.join('/');
+  }
+  function setPage(page, { write = true, focusTab = false } = {}) {
+    if (page !== 'map' && page !== 'dashboard') page = 'dashboard';
+    state.page = page;
+    store.set('dtm-page', page);
+    $$('.app-tab').forEach((t) => {
+      const on = t.dataset.page === page;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      if (on && focusTab) t.focus();
+    });
+    $('#panel-dashboard').hidden = page !== 'dashboard';
+    $('#main').hidden = page !== 'map';
+    $('#map-controls').hidden = page !== 'map';
+    document.body.dataset.page = page;
+    if (write && !state.open) setHash(pageHash());
+    render();
+  }
+  function setDashMode(mode) {
+    state.dashMode = mode === 'public' ? 'public' : 'private';
+    if (!state.open) setHash(pageHash());
+    render();
+  }
 
   function renderLensBanner(visible) {
     const banner = $('#lens-banner');
@@ -7785,10 +7925,27 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     </div>${chart}${srcHTML(k.src, null)}`;
   }
 
+  // Federal obligations pulled from USAspending and FPDS by scripts/obligations.mjs (see the Capital vs. Contracts tab).
+  function obligationsHTML(c) {
+    const O = D.obligations;
+    const o = O && O.byId && O.byId[c.id];
+    if (!o) return '';
+    const parts = [['Contracts, IDVs & grants', o.prime], ['Other Transactions', o.ot], ['Subawards received', o.sub]];
+    return `<div class="section obl-box">
+      <h3 class="section-title">Federal obligations · ${esc(O.window.split(' (')[0])}</h3>
+      <div class="stat-grid">
+        <div class="stat"><span class="stat-label">Total obligated</span><span class="stat-value">${o.total ? money(o.total) : '—'}</span><span class="stat-note">${o.total ? 'To own-name recipients' : 'None found under its own name'}</span></div>
+        ${parts.map(([l, v]) => `<div class="stat"><span class="stat-label">${esc(l)}</span><span class="stat-value">${v ? money(v) : '—'}</span></div>`).join('')}
+      </div>
+      <p class="src">${o.recipients && o.recipients.length ? `Recipients matched: ${esc(o.recipients.join('; '))}. ` : ''}${o.flag ? esc(o.flag) + '. ' : ''}Source: USAspending.gov and FPDS, pulled ${esc(date(O.asOf, true))}.</p>
+    </div>`;
+  }
+
   function programsHTML(c) {
     const ps = c.programs || [];
-    if (!ps.length) return `<p class="na">No major program awards disclosed yet.</p>`;
-    return `<div class="programs">${ps.map((p) => {
+    const obl = obligationsHTML(c);
+    if (!ps.length) return `${obl}<p class="na">No major program awards disclosed yet.</p>`;
+    return `${obl}<div class="programs">${ps.map((p) => {
       const ref = p.ref && programIndex[p.ref];
       const meta = [p.customer && `<span><b>Customer</b> ${esc(p.customer)}</span>`, p.role && `<span><b>Role</b> ${esc(p.role)}</span>`, p.year && `<span><b>Awarded</b> ${esc(p.year)}</span>`].filter(Boolean).join('');
       return `<article class="program">
@@ -7890,7 +8047,7 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
   $('#detail').addEventListener('close', () => {
     if ($('#detail').open) return; // reopened before the queued close event ran
     state.open = null;
-    setHash(focusHash());
+    setHash(pageHash());
     hideChartTip();
   });
 
@@ -7903,9 +8060,17 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
   function readHash() {
     const h = decodeURIComponent((location.hash || '').slice(1));
     if (!h) return;
-    if (h.startsWith('focus=')) { setFocus(h.slice(6), { write: false }); return; }
+    // Legacy #focus=space links open the map with that focus.
+    if (h.startsWith('focus=')) { state.focus = focusIndex[h.slice(6)] ? h.slice(6) : 'all'; setPage('map', { write: false }); return; }
+    const parts = h.split('/');
+    if (parts[0] === 'map' || parts[0] === 'dashboard') {
+      state.focus = focusIndex[parts[1]] ? parts[1] : 'all';
+      state.dashMode = parts.includes('public') ? 'public' : 'private';
+      setPage(parts[0], { write: false });
+      return;
+    }
     const [id, tab] = h.split('.');
-    if (byId[id]) openCompany(id, { tab });
+    if (byId[id]) { if (state.page !== 'map') setPage('map', { write: false }); openCompany(id, { tab }); }
   }
 
   /* ---------------------------------------------------------------- compare */
@@ -7980,6 +8145,13 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     $('#scale').addEventListener('change', (e) => { state.scale = e.target.checked; render(); });
     $('#reset-btn').addEventListener('click', resetFilters);
     $('#theme-btn').addEventListener('click', toggleTheme);
+    const tabs = $$('.app-tab');
+    tabs.forEach((t) => t.addEventListener('click', () => setPage(t.dataset.page)));
+    $('.app-tabs').addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const i = tabs.findIndex((t) => t.dataset.page === state.page);
+      setPage(tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length].dataset.page, { focusTab: true });
+    });
 
     document.addEventListener('click', (e) => {
       const tile = e.target.closest('.tile');
@@ -8100,21 +8272,24 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
     const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
     store.set('dtm-theme', next);
+    if (state.page === 'dashboard') render(); // dashboard chart colors come from the theme tokens
   }
 
   /* ---------------------------------------------------------------- boot */
   const savedTheme = store.get('dtm-theme');
   if (savedTheme === 'dark' || savedTheme === 'light') document.documentElement.dataset.theme = savedTheme;
+  const savedPage = store.get('dtm-page');
+  if (savedPage === 'map' || savedPage === 'dashboard') state.page = savedPage;
   const savedFocus = store.get('dtm-focus');
   if (savedFocus && focusIndex[savedFocus]) state.focus = savedFocus;
   const savedView = store.get('dtm-view');
   if (savedView === 'table') setView('table');
   populateControls();
   bind();
-  render();
+  setPage(state.page, { write: false });
   readHash();
   probeRemoteLogos();
-  window.DTMApp = { state, render, openCompany, companies, byId, setFocus, focusIndex, monogram, hue, money, metricText, date };
+  window.DTMApp = { state, render, openCompany, companies, byId, setFocus, setPage, setDashMode, focusIndex, monogram, hue, money, metricText, date, esc, mult };
 })();
 
 </script>
@@ -8604,6 +8779,375 @@ DTM.logos = {"boeing":{"src":"data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmZmZm
   bind();
 
   window.DTMExport = { renderPoster, toBlob, buildModel, open: openDialog };
+})();
+
+</script>
+<script>/* dashboard.js */
+/* Capital vs. Contracts: private capital raised (or public market cap) against federal obligations, FY2020–FY2026.
+   The approach follows Defense Tech Signals' "Capital vs. Contracts" dashboard, rebuilt on this map's companies,
+   segment toggle and design system. Obligations come from DTM.obligations (scripts/obligations.mjs). */
+(function () {
+  'use strict';
+
+  const D = window.DTM;
+  const A = () => window.DTMApp;
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const SVG = 'http://www.w3.org/2000/svg';
+  const panel = $('#panel-dashboard');
+  if (!panel) return;
+  const local = { sortKey: 'obl', sortDir: -1, q: '', cq: '', built: false, lastWidth: 0 };
+
+  /* ---------------------------------------------------------------- data */
+  const US_GOV = /\b(US|U\.S\.|Army|Navy|Air Force|Space Force|Marine|USMC|DoD|Department of (War|Defense)|DIU|DARPA|AFRL|AFWERX|SpaceWERX|SDA|Space Development|Missile Defense|NASA|SOCOM|JIATF|DHS|CBP|NGA|NRO|ONR|DLA|DOE|Pentagon|Cyber Command|CDAO|Coast Guard)\b/i;
+  function underFlag(c, o) {
+    if (!o) return 'Federal obligations not yet pulled';
+    if (o.flag) return o.flag;
+    if (o.capped) return 'More Other Transaction records than the pull limit; OT total is partial';
+    if (c.country !== 'US') return 'Non-US company: only awards recorded to US entities appear';
+    if (/^Acquired/i.test(c.stage || '')) return 'Acquired: later awards may be recorded under the buyer';
+    const usPrograms = (c.programs || []).filter((p) => US_GOV.test(p.customer || ''));
+    if (o.total < 1 && usPrograms.length) return 'Announced US awards not visible under its own name (likely via primes, consortium OTs or resellers)';
+    return '';
+  }
+  function scope() {
+    const app = A();
+    const g = app.focusIndex[app.state.focus] || app.focusIndex.all;
+    const pub = app.state.dashMode === 'public';
+    return { g, pub };
+  }
+  function rows() {
+    const app = A();
+    const { g, pub } = scope();
+    const O = (D.obligations && D.obligations.byId) || {};
+    return app.companies
+      .filter((c) => c.isPublic === pub && (!g.segments || c.segs.some((s) => g.segments.includes(s))))
+      .map((c) => {
+        const o = O[c.id] || null;
+        const size = pub ? (c.latestRevenue ? c.latestRevenue.usdM : null) : (c.lastPost ? c.lastPost.postUsdM : null);
+        const flag = underFlag(c, o);
+        const seg = D.segments.find((s) => s.id === c.segs[0]);
+        return {
+          c, o, size, flag, seg,
+          y: c.value, obl: o ? o.total : null, prime: o ? o.prime : null, ot: o ? o.ot : null, sub: o ? o.sub : null,
+          under: !!flag && !/^Recorded (as|under)/i.test(flag),
+          incl: c.value != null && c.value > 0 && !!o
+        };
+      });
+  }
+
+  /* ---------------------------------------------------------------- formatting */
+  const money = (v) => A().money(v);
+  const ratio = (a, b) => (b > 0 ? (a / b >= 100 ? Math.round(a / b) : (a / b).toFixed(1)) + '×' : '—');
+  const esc = (s) => A().esc(s);
+  const fmt$ = (v) => (v >= 1e6 ? '$' + v / 1e6 + 'T' : v >= 1000 ? '$' + v / 1000 + 'B' : '$' + v + 'M');
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  /* ---------------------------------------------------------------- skeleton */
+  function build() {
+    panel.innerHTML = `
+      <header class="dash-head">
+        <p class="dash-eyebrow">Capital vs. Contracts</p>
+        <h2 class="dash-title" id="dash-title"></h2>
+        <p class="dash-lede" id="dash-lede"></p>
+        <div class="dash-modes seg" role="radiogroup" aria-label="Companies">
+          <input type="radio" name="dash-mode" id="dash-mode-private" value="private"><label for="dash-mode-private"><i class="swatch swatch-private"></i>Private · capital raised</label>
+          <input type="radio" name="dash-mode" id="dash-mode-public" value="public"><label for="dash-mode-public"><i class="swatch swatch-public"></i>Public · market cap</label>
+        </div>
+      </header>
+      <div class="dash-tiles" id="dash-tiles"></div>
+      <section class="dash-card">
+        <h3 class="dash-h" id="dash-chart-title"></h3>
+        <p class="dash-note" id="dash-chart-note"></p>
+        <div class="dash-find">
+          <input id="dash-cq" type="search" list="dash-cos" placeholder="Find a company on the chart" autocomplete="off" aria-label="Find a company on the chart">
+          <datalist id="dash-cos"></datalist><span id="dash-cqmsg" aria-live="polite"></span>
+        </div>
+        <div class="dash-chart" id="dash-chart"><div class="dash-tip" id="dash-tip" hidden></div></div>
+        <div class="dash-legend" id="dash-legend"></div>
+      </section>
+      <section class="dash-card">
+        <h3 class="dash-h">All companies</h3>
+        <p class="dash-note">$M unless noted. Faded rows have no disclosed figure and are left out of the chart and totals. Click a header to sort, or a row to open the profile.</p>
+        <input class="dash-filter" id="dash-q" type="search" placeholder="Filter companies" aria-label="Filter companies">
+        <div class="dash-tablewrap"><table class="dash-table" id="dash-table"><thead></thead><tbody></tbody></table></div>
+      </section>
+      <section class="dash-card dash-method">
+        <h3 class="dash-h">How this was built</h3>
+        <ul id="dash-method"></ul>
+      </section>
+      <p class="dash-sources" id="dash-sources"></p>`;
+    panel.addEventListener('change', (e) => { if (e.target.name === 'dash-mode') A().setDashMode(e.target.value); });
+    $('#dash-q').addEventListener('input', (e) => { local.q = e.target.value; renderTable(rows()); });
+    const cq = $('#dash-cq');
+    cq.addEventListener('input', () => { local.cq = cq.value; highlight(); });
+    cq.addEventListener('keydown', (e) => { if (e.key === 'Escape') { cq.value = ''; local.cq = ''; highlight(); } });
+    $('#dash-table').addEventListener('click', (e) => {
+      const th = e.target.closest('[data-dsort]');
+      if (!th) return;
+      const k = th.dataset.dsort;
+      local.sortDir = local.sortKey === k ? -local.sortDir : (k === 'name' || k === 'seg' || k === 'flag' ? 1 : -1);
+      local.sortKey = k;
+      renderTable(rows());
+    });
+    let t;
+    window.addEventListener('resize', () => {
+      clearTimeout(t);
+      t = setTimeout(() => { if (!panel.hidden && $('#dash-chart').clientWidth !== local.lastWidth) drawChart(rows()); }, 150);
+    });
+    local.built = true;
+  }
+
+  /* ---------------------------------------------------------------- render */
+  function render() {
+    if (panel.hidden) return;
+    if (!local.built) build();
+    const { g, pub } = scope();
+    const all = rows();
+    const s = all.filter((r) => r.incl);
+    const R = s.reduce((a, r) => a + r.y, 0);
+    const O = s.reduce((a, r) => a + r.obl, 0);
+    const above = s.filter((r) => r.obl > r.y).length;
+    const where = g.segments ? ` ${g.short}` : '';
+    $(`#dash-mode-${pub ? 'public' : 'private'}`).checked = true;
+    $('#dash-title').textContent = pub ? 'How much contract money do public defense companies take in?' : 'Who is actually getting paid in defense tech?';
+    const x = O > 0 ? (R / O).toFixed(1) : '—';
+    const one = above === 1;
+    $('#dash-lede').textContent = pub
+      ? `Across ${s.length} public${where} companies on the map, about ${money(R)} of market value sits against ${money(O)} in visible federal obligations since FY2020, roughly ${x} dollars of market cap per government dollar. ${above ? `${above} ${one ? 'has' : 'have'} been obligated more than ${one ? 'its' : 'their'} market cap.` : 'None has been obligated more than its market cap.'}`
+      : `Across ${s.length} private${where} companies on the map, about ${money(R)} of private capital sits against ${money(O)} in visible federal obligations since FY2020, roughly ${x} private dollars per government dollar. ${above ? `Only ${above} ${one ? 'has' : 'have'} been obligated more than ${one ? 'it has' : "they've"} raised.` : "None has been obligated more than it's raised."}`;
+    const tiles = [
+      ['Companies shown', String(s.length), `${g.segments ? g.name : 'All segments'} · ${pub ? 'public' : 'private'}`],
+      [pub ? 'Market cap' : 'Capital raised', money(R), pub ? 'Latest in each profile' : 'Cumulative, as compiled'],
+      ['Federal obligations', money(O), 'FY2020–FY2026'],
+      [pub ? 'Market cap per $1 obligated' : 'Raised per $1 obligated', O > 0 ? x + '×' : '—', 'Across companies shown'],
+      [pub ? 'Obligated more than market cap' : 'Obligated more than raised', String(above), 'Below the parity line']
+    ];
+    $('#dash-tiles').innerHTML = tiles.map(([l, v, n], i) => `<div class="dash-tile${i === 1 ? (pub ? ' is-public' : ' is-private') : ''}"><span class="dash-tl">${esc(l)}</span><span class="dash-tv">${esc(v)}</span><span class="dash-tn">${esc(n)}</span></div>`).join('');
+    $('#dash-chart-title').textContent = pub ? 'Federal obligations vs. market cap' : 'Federal obligations vs. capital raised';
+    $('#dash-chart-note').textContent = `Both axes log scale. Bubble area = ${pub ? 'latest annual revenue' : 'latest disclosed post-money valuation'}; hollow rings = not ${pub ? 'compiled' : 'disclosed'}. Dashed outline = obligations likely understated. Dashed line = $1 ${pub ? 'of market cap' : 'raised'} per $1 obligated. Hover a bubble for detail, click to open the profile, or type a name to find it.`;
+    $('#dash-legend').innerHTML = `
+      <span><i class="dl-dot is-${pub ? 'public' : 'private'}"></i>Obligations look complete</span>
+      <span><i class="dl-dot is-${pub ? 'public' : 'private'} is-under"></i>Obligations likely understated</span>
+      <span><i class="dl-dot is-${pub ? 'public' : 'private'} is-hollow"></i>${pub ? 'Revenue not compiled' : 'Valuation not disclosed'}</span>`;
+    $('#dash-cos').innerHTML = s.map((r) => `<option value="${esc(r.c.short || r.c.name)}">`).join('');
+    drawChart(all);
+    renderTable(all);
+    renderMethod(pub);
+  }
+
+  /* ---------------------------------------------------------------- chart */
+  let chartState = null;
+  function drawChart(all) {
+    const box = $('#dash-chart');
+    const tip = $('#dash-tip');
+    box.querySelectorAll('svg').forEach((n) => n.remove());
+    tip.hidden = true;
+    const W = box.clientWidth;
+    local.lastWidth = W;
+    if (!W) return;
+    const { pub } = scope();
+    const H = Math.round(Math.max(400, Math.min(720, W * 0.62)));
+    const m = { t: 16, r: 16, b: 52, l: 64 }, floor = 0.5;
+    const pts = all.filter((r) => r.incl).map((r) => ({ r, x: Math.max(r.obl, floor), y: Math.max(r.y, 1), v: r.size }));
+    if (!pts.length) { chartState = null; return; }
+    const log = Math.log10;
+    const xMax = Math.pow(10, Math.ceil(log(Math.max(8000, Math.max(...pts.map((p) => p.x)) * 1.3))));
+    const yMin = Math.pow(10, Math.floor(log(Math.min(5, Math.min(...pts.map((p) => p.y))))));
+    const yMax = Math.pow(10, Math.ceil(log(Math.max(20000, Math.max(...pts.map((p) => p.y)) * 1.3))));
+    const xd = [floor * 0.8, xMax], yd = [yMin, yMax];
+    const sx = (v) => m.l + (log(Math.min(Math.max(v, xd[0]), xd[1])) - log(xd[0])) / (log(xd[1]) - log(xd[0])) * (W - m.l - m.r);
+    const sy = (v) => H - m.b - (log(Math.min(Math.max(v, yd[0]), yd[1])) - log(yd[0])) / (log(yd[1]) - log(yd[0])) * (H - m.t - m.b);
+    const sizes = pts.map((p) => p.v || 0);
+    const maxV = Math.max(1, ...sizes);
+    const maxR = Math.max(16, Math.min(44, W / 24));
+    const R = (p) => (p.v ? Math.max(4, Math.sqrt(p.v / maxV) * maxR) : 3.5);
+    const col = css(pub ? '--public' : '--private');
+    const grid = css('--chart-grid'), ink = css('--ink'), muted = css('--ink-3'), panelBg = css('--panel');
+
+    const svg = document.createElementNS(SVG, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', String(H));
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', `${pub ? 'Market cap' : 'Capital raised'} against federal obligations for ${pts.length} companies; the table below lists every value.`);
+    box.insertBefore(svg, tip); // attached first: label layout measures text with getComputedTextLength
+    const el = (tag, attrs, parent = svg) => { const n = document.createElementNS(SVG, tag); Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v)); parent.appendChild(n); return n; };
+    const text = (str, attrs, parent) => { const t = el('text', attrs, parent); t.textContent = str; return t; };
+
+    const decades = (lo, hi) => { const out = []; for (let v = Math.pow(10, Math.ceil(log(lo))); v <= hi; v *= 10) out.push(v); return out; };
+    const xt = decades(1, xd[1]), yt = decades(Math.max(1, yd[0]), yd[1]);
+    xt.forEach((v) => el('line', { x1: sx(v), x2: sx(v), y1: m.t, y2: H - m.b, stroke: grid }));
+    yt.forEach((v) => el('line', { y1: sy(v), y2: sy(v), x1: m.l, x2: W - m.r, stroke: grid }));
+    const lo = Math.max(xd[0], yd[0], 1), hi = Math.min(xd[1], yd[1]);
+    el('line', { x1: sx(lo), y1: sy(lo), x2: sx(hi), y2: sy(hi), stroke: muted, 'stroke-dasharray': '4 4' });
+    // Parity label a quarter of the way along the line (log space), below it; company labels avoid its box.
+    const lblAt = Math.pow(10, log(lo) + 0.28 * (log(hi) - log(lo)));
+    const parity = text(`$1 ${pub ? 'of market cap' : 'raised'} per $1 obligated`, { x: sx(lblAt) + 8, y: sy(lblAt) + 16, fill: muted, 'font-size': 11 });
+    const parityBox = [sx(lblAt) + 8, sy(lblAt) + 5, sx(lblAt) + 8 + parity.getComputedTextLength(), sy(lblAt) + 18];
+    const thin = W < 520;
+    xt.forEach((v, i) => { if (!thin || i % 2 === 0) text(fmt$(v), { x: sx(v), y: H - m.b + 18, 'text-anchor': 'middle', fill: muted, 'font-size': 11 }); });
+    if (!thin) text('none', { x: sx(floor), y: H - m.b + 18, 'text-anchor': 'middle', fill: muted, 'font-size': 11 });
+    yt.forEach((v) => text(fmt$(v), { x: m.l - 8, y: sy(v) + 4, 'text-anchor': 'end', fill: muted, 'font-size': 11 }));
+    text('Federal obligations, FY2020–FY2026', { x: (m.l + W - m.r) / 2, y: H - 10, 'text-anchor': 'middle', fill: muted, 'font-size': 12 });
+    text(pub ? 'Market cap' : 'Capital raised (cumulative)', { transform: `translate(14,${(m.t + H - m.b) / 2}) rotate(-90)`, 'text-anchor': 'middle', fill: muted, 'font-size': 12 });
+
+    const dotsG = el('g', {});
+    const sorted = pts.slice().sort((a, b) => R(b) - R(a));
+    const dots = sorted.map((p) => {
+      const c = el('circle', {
+        cx: sx(p.x), cy: sy(p.y), r: R(p), fill: p.v ? col : 'none', 'fill-opacity': 0.35, stroke: col, 'stroke-width': 1.25,
+        'data-id': p.r.c.id, tabindex: 0, role: 'button', 'aria-label': `${p.r.c.name}: ${pub ? 'market cap' : 'raised'} ${money(p.r.y)}, obligated ${p.r.obl ? money(p.r.obl) : 'none found'}`
+      }, dotsG);
+      if (p.r.under) c.setAttribute('stroke-dasharray', '3 2');
+      c.style.cursor = 'pointer';
+      p.node = c;
+      return p;
+    });
+
+    // Labels: companies obligated more than they raised first, then the largest; skip any that would collide.
+    const lg = el('g', {});
+    const fs = W < 600 ? 9.5 : 10.5, maxL = W < 600 ? 14 : 36;
+    const prio = pts.slice().sort((a, b) => ((b.r.obl > b.r.y) - (a.r.obl > a.r.y)) || (Math.max(b.v || 0, b.r.y) - Math.max(a.v || 0, a.r.y)));
+    const placed = [parityBox];
+    const circles = pts.map((p) => [sx(p.x), sy(p.y), R(p), p]);
+    const hitBox = (b) => placed.some((o) => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
+    const hitDot = (b, p) => circles.some(([cx, cy, r, q]) => q !== p && cx + r > b[0] && cx - r < b[2] && cy + r > b[1] && cy - r < b[3]);
+    let n = 0;
+    for (const p of prio) {
+      if (n >= maxL) break;
+      const t = text(p.r.c.short || p.r.c.name, { 'font-size': fs, fill: ink, 'paint-order': 'stroke', stroke: panelBg, 'stroke-width': 3, 'stroke-linejoin': 'round' }, lg);
+      const w = t.getComputedTextLength(), h = fs + 1, cx = sx(p.x), cy = sy(p.y), r = R(p);
+      const opts = [[cx + r + 3, cy + h / 3, 'start', [cx + r + 3, cy - h / 2, cx + r + 3 + w, cy + h / 2]],
+        [cx - r - 3, cy + h / 3, 'end', [cx - r - 3 - w, cy - h / 2, cx - r - 3, cy + h / 2]],
+        [cx, cy - r - 3, 'middle', [cx - w / 2, cy - r - 3 - h, cx + w / 2, cy - r - 3]],
+        [cx, cy + r + h, 'middle', [cx - w / 2, cy + r + 1, cx + w / 2, cy + r + 1 + h]]];
+      const ok = opts.find((o) => o[3][0] >= m.l && o[3][2] <= W - 2 && o[3][1] >= 0 && o[3][3] <= H - m.b && !hitBox(o[3]) && !hitDot(o[3], p));
+      if (!ok) { t.remove(); continue; }
+      placed.push(ok[3]);
+      n++;
+      t.setAttribute('x', ok[0]); t.setAttribute('y', ok[1]); t.setAttribute('text-anchor', ok[2]);
+    }
+    const hl = el('g', {});
+    chartState = { svg, dots, sx, sy, R, hl, lg, W, pub, panelBg, ink, box };
+
+    const fillTip = (p) => {
+      const r = p.r;
+      tip.innerHTML = `<b>${esc(r.c.name)}</b>
+        <span>${pub ? 'Market cap' : 'Raised'} ${money(r.y)} · ${pub ? 'Revenue' : 'Valuation'} ${p.v ? money(p.v) : (pub ? 'not compiled' : 'not disclosed')}</span>
+        <span>Obligated ${r.obl ? money(r.obl) : 'none found'} (contracts ${r.prime ? money(r.prime) : '$0'}, OTs ${r.ot ? money(r.ot) : '$0'}, subawards ${r.sub ? money(r.sub) : '$0'})</span>
+        ${r.flag ? `<span class="dash-tip-flag">⚑ ${esc(r.flag)}</span>` : ''}
+        <span class="dash-tip-hint">Click for the full profile</span>`;
+      tip.hidden = false;
+    };
+    const placeTip = (px, py) => {
+      tip.style.left = Math.min(Math.max(0, px + 14), box.clientWidth - tip.offsetWidth) + 'px';
+      tip.style.top = Math.max(0, py - tip.offsetHeight - 10) + 'px';
+    };
+    const pointFor = (node) => dots.find((d) => d.node === node);
+    svg.addEventListener('pointermove', (e) => {
+      const p = e.target.tagName === 'circle' && pointFor(e.target);
+      if (!p) return;
+      const rect = box.getBoundingClientRect();
+      fillTip(p);
+      placeTip(e.clientX - rect.left, e.clientY - rect.top);
+    });
+    svg.addEventListener('pointerleave', () => highlight());
+    svg.addEventListener('click', (e) => { const p = e.target.tagName === 'circle' && pointFor(e.target); if (p) A().openCompany(p.r.c.id); });
+    svg.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.tagName === 'circle') A().openCompany(e.target.dataset.id); });
+    svg.addEventListener('focusin', (e) => { const p = e.target.tagName === 'circle' && pointFor(e.target); if (p) { fillTip(p); placeTip(sx(p.x) + R(p), sy(p.y) - R(p)); } });
+    chartState.fillTip = fillTip;
+    chartState.placeTip = placeTip;
+    highlight();
+  }
+  function highlight() {
+    const st = chartState;
+    const msg = $('#dash-cqmsg');
+    const tip = $('#dash-tip');
+    if (!st) { if (msg) msg.textContent = ''; return; }
+    const q = local.cq.trim().toLowerCase();
+    st.hl.innerHTML = '';
+    if (!q) {
+      st.dots.forEach((d) => { d.node.setAttribute('opacity', 1); d.node.setAttribute('stroke-width', 1.25); });
+      st.lg.setAttribute('opacity', 1);
+      tip.hidden = true;
+      msg.textContent = '';
+      return;
+    }
+    const name = (d) => (d.r.c.short || d.r.c.name).toLowerCase();
+    const exact = st.dots.filter((d) => name(d) === q || d.r.c.name.toLowerCase() === q);
+    const found = exact.length ? exact : st.dots.filter((d) => name(d).includes(q) || d.r.c.name.toLowerCase().includes(q));
+    const set = new Set(found);
+    st.dots.forEach((d) => { d.node.setAttribute('opacity', !found.length || set.has(d) ? 1 : 0.12); d.node.setAttribute('stroke-width', set.has(d) ? 3 : 1.25); });
+    found.forEach((d) => d.node.parentNode.appendChild(d.node));
+    st.lg.setAttribute('opacity', found.length ? 0.15 : 1);
+    found.slice(0, 12).forEach((d) => {
+      const cx = st.sx(d.x), cy = st.sy(d.y), r = st.R(d);
+      const t = document.createElementNS(SVG, 'text');
+      t.textContent = d.r.c.short || d.r.c.name;
+      Object.entries({ 'font-size': 12, 'font-weight': 700, fill: st.ink, 'paint-order': 'stroke', stroke: st.panelBg, 'stroke-width': 4, 'stroke-linejoin': 'round' }).forEach(([k, v]) => t.setAttribute(k, v));
+      st.hl.appendChild(t);
+      const w = t.getComputedTextLength();
+      const right = cx + r + 6 + w <= st.W - 2;
+      t.setAttribute('x', right ? cx + r + 6 : cx - r - 6);
+      t.setAttribute('y', cy + 4);
+      t.setAttribute('text-anchor', right ? 'start' : 'end');
+    });
+    if (found.length === 1) { const d = found[0]; st.fillTip(d); st.placeTip(st.sx(d.x) + st.R(d), st.sy(d.y) - st.R(d)); } else tip.hidden = true;
+    if (found.length) msg.textContent = found.length === 1 ? '' : `${found.length} matches${found.length > 12 ? ' (first 12 labeled)' : ''}`;
+    else {
+      const any = rows().find((r) => (r.c.short || r.c.name).toLowerCase().includes(q));
+      msg.textContent = any ? `${any.c.name} has no disclosed ${scope().pub ? 'market cap' : 'funding total'}, so it isn't plotted` : 'No company matches in this view';
+    }
+  }
+
+  /* ---------------------------------------------------------------- table */
+  function renderTable(all) {
+    const { pub } = scope();
+    const cols = [
+      ['name', 'Company', 0], ['seg', 'Segment', 0], ['y', pub ? 'Market cap' : 'Raised', 1], ['size', pub ? 'Revenue' : 'Valuation', 1],
+      ['obl', 'Obligated', 1], ['prime', 'Contracts', 1], ['ot', 'OTs', 1], ['sub', 'Subawards', 1],
+      ['ratio', pub ? 'Mkt cap per $1' : 'Raised per $1', 1], ['flag', 'Obligations note', 0]
+    ];
+    const val = (r, k) => (k === 'name' ? (r.c.short || r.c.name) : k === 'seg' ? (r.seg ? r.seg.short : '') : k === 'ratio' ? (r.incl && r.obl > 0 ? r.y / r.obl : null) : k === 'flag' ? r.flag : r[k]);
+    $('#dash-table thead').innerHTML = `<tr>${cols.map(([k, l, num]) => `<th class="${num ? 'num' : ''}${local.sortKey === k ? ' is-sorted' : ''}" aria-sort="${local.sortKey === k ? (local.sortDir > 0 ? 'ascending' : 'descending') : 'none'}"><button type="button" data-dsort="${k}">${esc(l)}${local.sortKey === k ? (local.sortDir > 0 ? ' ↑' : ' ↓') : ''}</button></th>`).join('')}</tr>`;
+    const q = local.q.trim().toLowerCase();
+    const list = all.filter((r) => !q || [r.c.name, r.c.short, r.seg && r.seg.name, r.flag, ...(r.o && r.o.recipients || [])].join(' ').toLowerCase().includes(q))
+      .sort((a, b) => {
+        const av = val(a, local.sortKey), bv = val(b, local.sortKey);
+        if (typeof av === 'string' || typeof bv === 'string') return String(av || '').localeCompare(String(bv || '')) * local.sortDir || 0;
+        return ((av == null ? -1 : av) - (bv == null ? -1 : bv)) * local.sortDir;
+      });
+    const m = (v) => (v == null ? '—' : v === 0 ? '0' : A().money(v));
+    $('#dash-table tbody').innerHTML = list.map((r) => `<tr data-id="${r.c.id}" class="${r.incl ? '' : 'is-out'}" tabindex="0">
+      <td class="co"><b>${esc(r.c.short || r.c.name)}</b></td>
+      <td>${esc(r.seg ? r.seg.short : '')}</td>
+      <td class="num">${r.y == null ? esc(pub ? 'n/a' : (r.c.funding && r.c.funding.label) || 'Undisclosed') : m(r.y)}</td>
+      <td class="num">${m(r.size)}</td>
+      <td class="num"><b>${m(r.obl)}</b></td>
+      <td class="num">${m(r.prime)}</td>
+      <td class="num">${m(r.ot)}</td>
+      <td class="num">${m(r.sub)}</td>
+      <td class="num">${r.incl && r.obl > 0 ? ratio(r.y, r.obl) : '—'}</td>
+      <td class="note">${r.flag ? `<span class="${r.under ? 'is-under' : ''}">${esc(r.flag)}</span>` : ''}</td>
+    </tr>`).join('');
+  }
+
+  /* ---------------------------------------------------------------- methodology */
+  function renderMethod(pub) {
+    const O = D.obligations || {};
+    const items = [
+      ['Companies', `every ${pub ? 'public' : 'private'} company on this map in the selected segment. ${pub ? 'Market caps' : 'Funding totals'} with no disclosed figure are listed but not plotted.`],
+      ['Obligations', `USAspending prime contracts, IDVs and grants to each company's own-name recipients, plus subawards it received; FPDS Other Transaction agreements, OT IDVs and OT orders. Window ${O.window || 'FY2020–FY2026'}; pulled ${O.asOf ? A().date(O.asOf, true) : '—'}. Recipient names matched to each company are listed in its profile.`],
+      ['Undercounts', 'OTs booked to consortium managers, work done as an unreported subcontractor, reseller and marketplace sales, classified work and awards to non-US parents are not captured. The Obligations note column flags likely undercounts.'],
+      [pub ? 'Market cap' : 'Capital raised', pub ? 'the dated market cap in each profile; sheet figures are undated. Bubble area is the latest full-year revenue in USD.' : 'cumulative funding as compiled in each profile, with its own source and as-of date; some totals include debt. Bubble area is the latest disclosed post-money valuation.'],
+      ['Approach', 'adapted from Defense Tech Signals’ “Capital vs. Contracts” dashboard of the NatSec100, applied here to the companies on this map.']
+    ];
+    $('#dash-method').innerHTML = items.map(([k, v]) => `<li><b>${esc(k)}:</b> ${esc(v)}</li>`).join('');
+    $('#dash-sources').innerHTML = `Sources: USAspending.gov; FPDS-NG; company filings, announcements and press reporting linked in each profile. Approach: <a href="https://dtscontracts.netlify.app/" target="_blank" rel="noopener">Defense Tech Signals, Capital vs. Contracts</a>.`;
+  }
+
+  window.DTMDashboard = { render, rows };
+  if (A() && A().state.page === 'dashboard') render();
 })();
 
 </script>

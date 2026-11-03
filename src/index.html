@@ -21,8 +21,18 @@
     <dl class="headline-stats" id="headline-stats"></dl>
   </header>
 
-  <div class="toolbar" id="toolbar" role="search">
+  <div class="toolbar" id="toolbar">
+    <div class="app-bar">
+      <div class="app-tabs" role="tablist" aria-label="Views">
+        <button class="app-tab" role="tab" type="button" id="page-tab-dashboard" data-page="dashboard" aria-controls="panel-dashboard" aria-selected="false" tabindex="-1">Capital vs. Contracts</button>
+        <button class="app-tab" role="tab" type="button" id="page-tab-map" data-page="map" aria-controls="main" aria-selected="true">Market map</button>
+      </div>
+      <button class="icon-btn" id="theme-btn" type="button" aria-label="Switch color theme" title="Switch color theme">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5a7.5 7.5 0 1 0 0 15z" fill="currentColor"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
     <div class="focus-bar" id="focus-bar" role="radiogroup" aria-label="Segment"></div>
+    <div class="map-controls" id="map-controls" role="search">
     <div class="toolbar-row">
       <label class="search" for="q">
         <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -41,9 +51,6 @@
       <button class="btn" id="export-btn" type="button" aria-label="Export PNG" title="Export the focused segment as a PNG market-map image">
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m0 0l-3.5-3.5M10 12l3.5-3.5M4 14.5v1.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>Export PNG</span>
-      </button>
-      <button class="icon-btn" id="theme-btn" type="button" aria-label="Switch color theme" title="Switch color theme">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5a7.5 7.5 0 1 0 0 15z" fill="currentColor"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
       </button>
     </div>
     <div class="toolbar-row toolbar-row-secondary">
@@ -74,9 +81,12 @@
       <button class="link-btn" id="reset-btn" type="button" hidden>Reset filters</button>
     </div>
     <div class="lens-banner" id="lens-banner" hidden></div>
+    </div>
   </div>
 
-  <main id="main">
+  <section class="dash" id="panel-dashboard" role="tabpanel" aria-labelledby="page-tab-dashboard" hidden></section>
+
+  <main id="main" role="tabpanel" aria-labelledby="page-tab-map">
     <div class="board" id="board" aria-label="Market map"></div>
     <div class="table-wrap" id="table-view" hidden></div>
     <p class="empty" id="empty" hidden>No companies match these filters. <button class="link-btn" type="button" data-action="reset">Reset filters</button></p>
@@ -143,9 +153,11 @@
 <script src="data/companies/industrial.js"></script>
 <script src="data/companies/primes.js"></script>
 <script src="data/consensus.js"></script>
+<script src="data/obligations.js"></script>
 <script src="data/logos.js"></script>
 <script src="charts.js"></script>
 <script src="app.js"></script>
 <script src="export.js"></script>
+<script src="dashboard.js"></script>
 </body>
 </html>
