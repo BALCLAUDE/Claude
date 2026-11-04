@@ -818,7 +818,7 @@
   });
 
   DTM.add({
-    id: 'sophia-space', name: 'Sophia Space', status: 'private', stage: 'Seed',
+    id: 'sophia-space', name: 'Sophia Space', domain: 'sophia.space', status: 'private', stage: 'Seed',
     hq: 'Pasadena, CA', country: 'US', founded: 2024,
     subsegments: ['space.buses', 'sensors.comms'],
     oneLiner: 'Orbital edge computing: satellites built to process data in space.',
@@ -861,7 +861,7 @@
   });
 
   DTM.add({
-    id: 'fortastra', name: 'Fortastra', status: 'private', stage: 'Seed',
+    id: 'fortastra', name: 'Fortastra', domain: 'fortastra.com', status: 'private', stage: 'Seed',
     hq: '', country: 'US', founded: 2025,
     subsegments: ['space.counterspace'],
     oneLiner: 'Maneuverable bodyguard satellites that inspect and defend high-value spacecraft.',
@@ -1033,7 +1033,7 @@
   });
 
   DTM.add({
-    id: 'sphinx-defense', name: 'Sphinx Defense', status: 'private', stage: 'Early',
+    id: 'sphinx-defense', name: 'Sphinx Defense', domain: 'sphinxdefense.com', status: 'private', stage: 'Early',
     hq: 'Washington, DC', country: 'US', founded: 2020,
     subsegments: ['space.ground'],
     oneLiner: 'Vehicle-agnostic ground communications that let operators use many antenna networks.',

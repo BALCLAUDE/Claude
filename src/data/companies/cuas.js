@@ -4,7 +4,7 @@
 
   /* ---------------- Kinetic interceptors ---------------- */
   DTM.add({
-    id: 'cambridge-aerospace', name: 'Cambridge Aerospace', status: 'private', stage: 'Series C',
+    id: 'cambridge-aerospace', name: 'Cambridge Aerospace', domain: 'cambridgeaerospace.com', status: 'private', stage: 'Series C',
     hq: 'Cambridge', country: 'UK', founded: 2024,
     subsegments: ['cuas.kinetic'],
     oneLiner: 'Skyhammer low-cost interceptors for drones and cruise missiles, scaling to thousands a month.',
@@ -48,7 +48,7 @@
   });
 
   DTM.add({
-    id: 'frankenburg', name: 'Frankenburg Technologies', short: 'Frankenburg', status: 'private', stage: 'Series A',
+    id: 'frankenburg', name: 'Frankenburg Technologies', domain: 'frankenburg.tech', short: 'Frankenburg', status: 'private', stage: 'Series A',
     hq: 'Tallinn', country: 'EE', founded: 2024,
     subsegments: ['cuas.kinetic'],
     oneLiner: 'Mass-producible mini-missiles to shoot down drones at drone-like prices.',
@@ -67,7 +67,7 @@
   });
 
   DTM.add({
-    id: 'tytan', name: 'Tytan Technologies', short: 'Tytan', status: 'private', stage: 'Series A',
+    id: 'tytan', name: 'Tytan Technologies', domain: 'tytan.tech', short: 'Tytan', status: 'private', stage: 'Series A',
     hq: 'Munich', country: 'DE', founded: 2023,
     subsegments: ['cuas.kinetic'],
     oneLiner: 'AI-guided interceptor drones for European air defense, backed by the NATO Innovation Fund.',
@@ -270,7 +270,7 @@
     });
 
     DTM.add({
-      id: 'aurelius-systems', name: 'Aurelius Systems', short: 'Aurelius', status: 'private', stage: 'Series A',
+      id: 'aurelius-systems', name: 'Aurelius Systems', domain: 'aureliussystems.com', short: 'Aurelius', status: 'private', stage: 'Series A',
       hq: 'San Francisco, CA', country: 'US', founded: 2024,
       subsegments: ['cuas.de'],
       oneLiner: 'Archimedes, an autonomous laser turret for vehicles or fixed sites that destroys small drones beyond one kilometer.',
@@ -298,7 +298,7 @@
     });
 
     DTM.add({
-      id: 'attalon', name: 'Attalon', status: 'private', stage: 'PE-owned (Advent)',
+      id: 'attalon', name: 'Attalon', domain: 'attalon.com', status: 'private', stage: 'PE-owned (Advent)',
       hq: 'Philadelphia, PA', country: 'US', founded: 2026,
       subsegments: ['cuas.de'],
       oneLiner: 'Valaris beam-combined high-energy lasers, precision optics and coatings, carved out of Coherent by Advent in 2026.',
@@ -373,7 +373,7 @@
   /* ---------------- Added from the private names list provided for this map (Oct 2026) ---------------- */
   {
     DTM.add({
-      id: 'skapion', name: 'Skapion', status: 'private', stage: 'Seed', hq: 'Washington, DC', country: 'US', founded: 2025,
+      id: 'skapion', name: 'Skapion', domain: 'skapion.com', status: 'private', stage: 'Seed', hq: 'Washington, DC', country: 'US', founded: 2025,
       subsegments: ['cuas.kinetic'],
       oneLiner: 'Mobile counter-swarm air defense from former Iron Dome program leaders; $36M seed from Khosla and UP.Partners.',
       description: ['Skapion, founded in late 2025 with headquarters in Washington, DC and R&D in Ramat Gan, Israel, is developing a mobile counter-swarm system designed for hundreds of simultaneous engagements at a much lower cost per intercept than conventional air defense. Its chief architect is retired Brig. Gen. Pini Yungman, former head of Rafael\'s air and missile defense division. It emerged from stealth in July 2026 with a $36M seed co-led by Khosla Ventures and UP.Partners.'],

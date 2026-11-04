@@ -209,7 +209,7 @@
   });
 
   DTM.add({
-    id: 'karman', name: 'Karman Space & Defense', short: 'Karman', status: 'public', ticker: 'KRMN', exchange: 'NYSE',
+    id: 'karman', name: 'Karman Space & Defense', domain: 'karman-sd.com', short: 'Karman', status: 'public', ticker: 'KRMN', exchange: 'NYSE',
     hq: 'Huntington Beach, CA', country: 'US', founded: 1977,
     subsegments: ['missiles.propulsion', 'missiles.energetics'],
     oneLiner: 'Mission-critical subsystems for missiles, hypersonics and launch: payload protection, interstages, energetics.',
@@ -232,7 +232,7 @@
 
   /* ---------------- Low-cost strike ---------------- */
   DTM.add({
-    id: 'mach-industries', name: 'Mach Industries', short: 'Mach', status: 'private', stage: 'Series C',
+    id: 'mach-industries', name: 'Mach Industries', domain: 'machindustries.com', short: 'Mach', status: 'private', stage: 'Series C',
     hq: 'Huntington Beach, CA', country: 'US', founded: 2023,
     subsegments: ['missiles.strike'],
     oneLiner: 'Viper, a jet-powered VTOL one-way strike vehicle, and a distributed manufacturing network (Forge).',
@@ -256,7 +256,7 @@
   });
 
   DTM.add({
-    id: 'destinus', name: 'Destinus', status: 'private', stage: 'Pre-IPO',
+    id: 'destinus', name: 'Destinus', domain: 'destinus.com', status: 'private', stage: 'Pre-IPO',
     hq: 'Hoofddorp', country: 'NL', founded: 2021,
     subsegments: ['missiles.strike', 'uas.tactical'],
     oneLiner: 'European long-range strike: Ruta cruise missiles and Hornet drones, with a Rheinmetall joint venture.',
@@ -367,7 +367,7 @@
     });
 
     DTM.add({
-      id: 'hypersonica', name: 'Hypersonica', status: 'private', stage: 'Series A',
+      id: 'hypersonica', name: 'Hypersonica', domain: 'hypersonica.com', status: 'private', stage: 'Series A',
       hq: 'Munich', country: 'DE', founded: 2023,
       subsegments: ['missiles.hypersonics'],
       oneLiner: 'German-British startup building hypersonic strike missiles for Europe; its HS1 prototype flew above Mach 6 in Feb 2026.',
@@ -391,7 +391,7 @@
     });
 
     DTM.add({
-      id: 'longshot-space', name: 'Longshot Space', short: 'Longshot', status: 'private', stage: 'Early',
+      id: 'longshot-space', name: 'Longshot Space', domain: 'longshotspace.com', short: 'Longshot', status: 'private', stage: 'Early',
       hq: 'Alameda, CA', country: 'US', founded: 2020,
       subsegments: ['missiles.hypertest'],
       oneLiner: 'Compressed-gas kinetic launcher offering low-cost hypersonic test shots, with a gun-launched path to orbit as the goal.',
@@ -466,7 +466,7 @@
     });
 
     DTM.add({
-      id: 'canopy-aerospace', name: 'Canopy Aerospace & Defense', short: 'Canopy', status: 'private', stage: 'Acquired (Trive Capital)',
+      id: 'canopy-aerospace', name: 'Canopy Aerospace & Defense', domain: 'canopy-ad.com', short: 'Canopy', status: 'private', stage: 'Acquired (Trive Capital)',
       hq: 'Littleton, CO', country: 'US', founded: 2021,
       subsegments: ['missiles.energetics', 'missiles.hypertest'],
       oneLiner: 'Ceramic tiles and transpiration-cooled thermal protection for reentry and hypersonic vehicles; now owned by Trive Capital.',
@@ -526,7 +526,7 @@
     });
 
     DTM.add({
-      id: 'space-engine-systems', name: 'Space Engine Systems', short: 'SES', status: 'private', stage: 'Self-funded',
+      id: 'space-engine-systems', name: 'Space Engine Systems', domain: 'spaceenginesystems.com', short: 'SES', status: 'private', stage: 'Self-funded',
       hq: 'Edmonton', country: 'CA', founded: 2012,
       subsegments: ['missiles.hypertest', 'missiles.propulsion'],
       oneLiner: 'DASS GNX multi-fuel turbo-ramjet and the Hello-1X Mach 5 demonstrator, a reusable hypersonic test aircraft.',
@@ -627,7 +627,7 @@
   /* ---------------- Added from the private names list provided for this map (Oct 2026) ---------------- */
   {
     DTM.add({
-      id: 'covenant', name: 'Covenant', status: 'private', stage: 'Venture', country: 'US', founded: null,
+      id: 'covenant', name: 'Covenant', domain: 'covenant.ai', status: 'private', stage: 'Venture', country: 'US', founded: null,
       subsegments: ['missiles.strike'],
       oneLiner: 'Anthem ground-launched missile for mass production at a mid-six-figure price; factories in Dallas, Saxony and Israel.',
       description: ['Covenant builds Anthem, a ground-launched missile carrying more than 441 lb of payload, meant to complement weapons such as Tomahawk at a target price in the mid six figures. Anthem first flew in August 2025 and has made more than 200 flights, including US Army tests, and Covenant holds a roughly $70M Navy contract for a maritime version. It plans 5,000 missiles a year from a Dallas factory starting in Q1 2027, plus sites in Saxony, Germany and northern Israel; it reports more than $250M raised and about $150M of orders.'],

@@ -227,7 +227,7 @@
   /* ---------------- Added from the private names list provided for this map (Oct 2026) ---------------- */
   {
     DTM.add({
-      id: 'xocean', name: 'XOCEAN', status: 'private', stage: 'Growth', hq: 'Greenore, Co. Louth', country: 'IE', founded: null,
+      id: 'xocean', name: 'XOCEAN', domain: 'xocean.com', status: 'private', stage: 'Growth', hq: 'Greenore, Co. Louth', country: 'IE', founded: null,
       subsegments: ['maritime.usv'],
       oneLiner: 'Fleet of small uncrewed surface vessels selling ocean survey data for offshore energy and hydrography.',
       description: ['XOCEAN operates a fleet of small uncrewed surface vessels, controlled remotely from shore, that collect seabed and ocean data for offshore wind, oil and gas, hydrography and government customers. It raised €115M in January 2025 from investors including S2G Ventures, Climate Investment and Morgan Stanley\'s 1GT fund, after €30M in June 2024 that included €20M of EIB venture debt.'],
@@ -240,7 +240,7 @@
     });
 
     DTM.add({
-      id: 'thayermahan', name: 'ThayerMahan', status: 'private', stage: 'Privately held', hq: 'Groton, CT', country: 'US', founded: 2016,
+      id: 'thayermahan', name: 'ThayerMahan', domain: 'thayermahan.com', status: 'private', stage: 'Privately held', hq: 'Groton, CT', country: 'US', founded: 2016,
       subsegments: ['maritime.uuv'],
       oneLiner: 'Autonomous maritime sensing for undersea and seabed warfare; $19.3M ONR development contract.',
       description: ['ThayerMahan, founded in Groton, Connecticut in 2016 by Mike Connor and others, builds long-endurance autonomous platforms, acoustic sensors and AI signal processing for maritime surveillance, anti-submarine and seabed warfare, and offers sensing as a service. The Office of Naval Research awarded it a $19.3M contract in October 2023 to develop autonomous mobile maritime systems through October 2027.'],
@@ -250,7 +250,7 @@
     });
 
     DTM.add({
-      id: 'vatn-systems', name: 'Vatn Systems', short: 'Vatn', status: 'private', stage: 'Series A', hq: 'Portsmouth, RI', country: 'US', founded: 2023,
+      id: 'vatn-systems', name: 'Vatn Systems', domain: 'vatn.com', short: 'Vatn', status: 'private', stage: 'Series A', hq: 'Portsmouth, RI', country: 'US', founded: 2023,
       subsegments: ['maritime.uuv'],
       oneLiner: 'Skelmir modular AUVs and underwater effectors with GPS-free INStinct navigation, built in Rhode Island.',
       description: ['Vatn Systems builds the Skelmir S6 modular underwater effector and the larger Skelmir S12, which combines survey AUV functions with lightweight-torpedo maneuverability, both using its INStinct inertial navigation. It sells to the US Navy and Marine Corps and allies, with Singapore its first international customer. It raised a $60M Series A in December 2025 led by BVVC, bringing total funding to $76.5M.'],
@@ -259,7 +259,7 @@
     });
 
     DTM.add({
-      id: 'bedrock-ocean', name: 'Bedrock Ocean Exploration', short: 'Bedrock', status: 'private', stage: 'Series A', country: 'US', founded: 2020,
+      id: 'bedrock-ocean', name: 'Bedrock Ocean Exploration', domain: 'bedrockocean.com', short: 'Bedrock', status: 'private', stage: 'Series A', country: 'US', founded: 2020,
       subsegments: ['maritime.uuv'],
       oneLiner: 'Self-built AUVs and a cloud platform for seafloor mapping, starting with offshore wind sites.',
       description: ['Bedrock, founded in 2020 by Anthony DiMare and Charles Chiau, designs its own autonomous underwater vehicles, each costing under $1M, that map the seafloor with sonar and magnetometers for 12-hour missions, and delivers the data through a cloud platform. It focused first on offshore wind. A $25M Series A-2 in June 2025, led by Primary and Northzone, followed a $25.5M Series A in 2023.'],
@@ -268,7 +268,7 @@
     });
 
     DTM.add({
-      id: 'sea-machines', name: 'Sea Machines Robotics', short: 'Sea Machines', status: 'private', stage: 'Venture', hq: 'Boston, MA', country: 'US', founded: 2015,
+      id: 'sea-machines', name: 'Sea Machines Robotics', domain: 'sea-machines.com', short: 'Sea Machines', status: 'private', stage: 'Venture', hq: 'Boston, MA', country: 'US', founded: 2015,
       subsegments: ['maritime.usv'],
       oneLiner: 'Autonomy kits for vessels and STEAMRACER attack craft in the final round of the Navy\'s MASC program.',
       description: ['Sea Machines Robotics makes autonomy and remote-command systems that turn crewed vessels into autonomous or optionally crewed boats, and has turned toward defense since CEO Chip Wasson joined in late 2024. In February 2026 it advanced to the final competitive evaluation for the Navy\'s Modular Attack Surface Craft program with its STEAMRACER-class vessel. Investors include Toyota, Brunswick and Huntington Ingalls Industries.'],
@@ -277,7 +277,7 @@
     });
 
     DTM.add({
-      id: 'flux-marine', name: 'Flux Marine', status: 'private', stage: 'Series B', hq: 'Bristol, RI', country: 'US', founded: null,
+      id: 'flux-marine', name: 'Flux Marine', domain: 'fluxmarine.com', status: 'private', stage: 'Series B', hq: 'Bristol, RI', country: 'US', founded: null,
       subsegments: ['maritime.usv', 'industrial.power'],
       oneLiner: 'High-voltage electric outboards and powertrains, now also sold for uncrewed boats and aerospace.',
       description: ['Flux Marine builds high-voltage electric outboard motors and powertrains, which began as a Princeton engineering project supported by NSF, Air Force and Massachusetts grants. In November 2025 it raised $15M, with Collide Capital joining existing investors, to ramp production and expand technology sales into uncrewed platforms and aerospace; total funding exceeds $30M.'],
@@ -285,7 +285,7 @@
     });
 
     DTM.add({
-      id: 'terradepth', name: 'Terradepth', status: 'private', stage: 'Series A', hq: 'Cedar Park, TX', country: 'US', founded: 2018,
+      id: 'terradepth', name: 'Terradepth', domain: 'terradepth.com', status: 'private', stage: 'Series A', hq: 'Cedar Park, TX', country: 'US', founded: 2018,
       subsegments: ['maritime.uuv'],
       oneLiner: 'Ocean data platform and AUVs from former Navy SEALs; on a Navy rapid-buy pathway since April 2026.',
       description: ['Terradepth, founded in 2018 by former Navy SEALs Joe Wolfel and Judson Kauffman, combines autonomous underwater vehicles with Absolute Ocean, a cloud platform for subsea data. In April 2026 Absolute Ocean was placed in the Rapid Capabilities Cell Hopper at Naval Information Warfare Center Atlantic, letting a Navy sponsor buy it directly under an OTA for up to 24 months.'],
@@ -303,7 +303,7 @@
     });
 
     DTM.add({
-      id: 'maritime-robotics', name: 'Maritime Robotics', status: 'private', stage: 'Growth', hq: 'Trondheim', country: 'NO', founded: null,
+      id: 'maritime-robotics', name: 'Maritime Robotics', domain: 'maritimerobotics.com', status: 'private', stage: 'Growth', hq: 'Trondheim', country: 'NO', founded: null,
       subsegments: ['maritime.usv'],
       oneLiner: 'Norwegian maker of Otter and Mariner uncrewed surface vessels; supplied survey USVs to Ukraine\'s navy.',
       description: ['Maritime Robotics builds uncrewed surface vessels, from the small Otter survey boat to larger platforms, plus autonomy and control systems for civil and defense users. With Teledyne Marine it delivered USVs to Ukraine\'s navy in 2023. Revenue rose 72% to NOK 258.8M in 2025, and in June 2026 it announced a €28M growth investment led by MS+Partners, after $12M in September 2024.'],
@@ -313,7 +313,7 @@
     });
 
     DTM.add({
-      id: 'albacore', name: 'Albacore', status: 'private', stage: 'Seed', hq: 'Philadelphia, PA', country: 'US', founded: 2025,
+      id: 'albacore', name: 'Albacore', domain: 'albacore.inc', status: 'private', stage: 'Seed', hq: 'Philadelphia, PA', country: 'US', founded: 2025,
       subsegments: ['maritime.uuv'],
       oneLiner: 'Ghostfin long-range UUV (about 1,000 nm, 30 days) carrying kinetic payloads; first Navy order in 2026.',
       description: ['Albacore, a 2025 Y Combinator company founded by John Huddleston and Dante Vaisbort, builds Ghostfin, a roughly 8-foot, 425-pound uncrewed underwater vehicle that can stay out for about 30 days and carry a kinetic payload. It raised a $6.5M seed in October 2025 led by Outlander VC, and the US Navy contracted it to buy Ghostfins in August 2026.'],
@@ -322,7 +322,7 @@
     });
 
     DTM.add({
-      id: 'ocean-aero', name: 'Ocean Aero', status: 'private', stage: 'Venture', hq: 'Gulfport, MS', country: 'US', founded: 2012,
+      id: 'ocean-aero', name: 'Ocean Aero', domain: 'oceanaero.com', status: 'private', stage: 'Venture', hq: 'Gulfport, MS', country: 'US', founded: 2012,
       subsegments: ['maritime.usv', 'maritime.uuv'],
       oneLiner: 'Triton wind- and solar-powered vessel that sails on the surface and dives; four transferred to the Philippine Navy.',
       description: ['Ocean Aero, founded by US Navy veterans in 2012 and based at the Port of Gulfport, builds Triton, an autonomous vessel powered by wind and sun that sails on the surface and submerges for subsea work. Teledyne and Lockheed Martin are investors. In June 2026 four Tritons, funded by the US, were handed to the Philippine Navy\'s Unmanned Surface Vessel Unit One.'],
@@ -332,7 +332,7 @@
     });
 
     DTM.add({
-      id: 'kraken-technology', name: 'Kraken Technology Group', short: 'Kraken Technology', status: 'private', stage: 'Series B', hq: 'London', country: 'UK', founded: 2020,
+      id: 'kraken-technology', name: 'Kraken Technology Group', domain: 'krakentechnologygroup.com', short: 'Kraken Technology', status: 'private', stage: 'Series B', hq: 'London', country: 'UK', founded: 2020,
       subsegments: ['maritime.usv'],
       oneLiner: 'K3 Scout high-speed uncrewed boats, 8 m to 18.6 m; a $1B defense unicorn backed by Rheinmetall and NATO.',
       description: ['Kraken Technology Group, founded in 2020 by former powerboat racer Mal Crease, builds the K3 Scout family of high-speed uncrewed surface vessels, from the 8 m Medium (600 kg payload, 55 knots) to the 18.6 m Max with a 2,000 nm range; K3 Scouts have run on NATO exercises. It raised a $175M Series B at a $1B valuation in July 2026 led by DTCP, with Rheinmetall, the NATO Innovation Fund and the British Business Bank.'],
@@ -341,7 +341,7 @@
     });
 
     DTM.add({
-      id: 'blacksea', name: 'BlackSea Technologies', short: 'BlackSea', status: 'private', stage: 'Acquired (AEVEX)', hq: 'Baltimore, MD', country: 'US', founded: 2022,
+      id: 'blacksea', name: 'BlackSea Technologies', domain: 'blacksea.tech', short: 'BlackSea', status: 'private', stage: 'Acquired (AEVEX)', hq: 'Baltimore, MD', country: 'US', founded: 2022,
       subsegments: ['maritime.usv', 'maritime.uuv'],
       oneLiner: 'GARC drone boats for the Navy and underwater fuel systems; acquired by AEVEX for up to $650M in 2026.',
       description: ['BlackSea builds the 16-foot Global Autonomous Reconnaissance Craft (GARC), operated by the Navy\'s Unmanned Surface Vessel Squadron 3 under a contract worth up to $213M, and won a five-year, $256M Navy contract in 2026 for five Seabased Petroleum Distribution Systems built in Baltimore. AEVEX agreed in August 2026 to buy it for up to $650M ($250M cash, $350M stock and a $50M earnout); it is now AEVEX\'s Maritime Division.'],
@@ -363,7 +363,7 @@
     });
 
     DTM.add({
-      id: 'ocean-infinity', name: 'Ocean Infinity', status: 'private', stage: 'Privately held', country: 'UK', founded: null,
+      id: 'ocean-infinity', name: 'Ocean Infinity', domain: 'oceaninfinity.com', status: 'private', stage: 'Privately held', country: 'UK', founded: null,
       subsegments: ['maritime.uuv', 'maritime.usv'],
       oneLiner: 'Armada fleet of remotely operated robotic ships and AUVs; frontrunner for the UK\'s Atlantic Net ASW service.',
       description: ['Ocean Infinity operates the Armada fleet of 14 remotely operated robotic vessels, completed in December 2025, which deploy AUVs for seabed survey and offshore work. In January 2026 it ordered four more multi-purpose robotic vessels from Vard for over €200M. Janes reports it leads the consortium the UK MoD picked as preferred partner for Atlantic Net, a contractor-run anti-submarine surveillance service in the Greenland-Iceland-UK gap.'],
@@ -372,7 +372,7 @@
     });
 
     DTM.add({
-      id: 'valstad', name: 'Valstad Shipworks', short: 'Valstad', status: 'private', stage: 'Pre-seed', hq: 'Austin, TX', country: 'US', founded: 2025,
+      id: 'valstad', name: 'Valstad Shipworks', domain: 'valstad.com', short: 'Valstad', status: 'private', stage: 'Pre-seed', hq: 'Austin, TX', country: 'US', founded: 2025,
       subsegments: ['maritime.shipbuilding'],
       oneLiner: 'Robotic shipbuilding cells that turn CAD models into welded ship panels and structures automatically.',
       description: ['Valstad Shipworks, founded in 2025, is building robotic factories that combine industrial robots, automated material handling, welding and AI planning software to produce ship panels and structural assemblies directly from CAD models. It is starting by building structures for customers from its Austin facility and raised a $2.6M pre-seed round.'],

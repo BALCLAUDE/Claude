@@ -32,7 +32,7 @@ test('renders every segment column and every company appearance', async () => {
     const n = window.DTMApp.companies.reduce((a, c) => a + c.subsegments.filter((s) => subs.has(s)).length, 0);
     return { segments: window.DTM.segments.length, expectedTiles: n };
   });
-  assert.equal(await page.locator('.segment').count(), segments);
+  assert.equal(await page.locator('.ly-sec').count(), segments);
   assert.equal(await page.locator('.board .tile').count(), expectedTiles);
   assert.match(await page.locator('#result-count').textContent(), /Showing (\d+) of \1 companies/);
   assert.deepEqual(errors, []);
@@ -183,7 +183,7 @@ test('compare tray collects companies and opens a side-by-side table', async () 
 test('segment toggle shows only the focused columns, and the table follows', async () => {
   const { page, errors } = await open();
   await page.locator('label[for="focus-unmanned"]').click();
-  const cols = await page.locator('section.segment').evaluateAll((ss) => ss.map((s) => s.getAttribute('aria-labelledby')));
+  const cols = await page.locator('section.ly-sec').evaluateAll((ss) => ss.map((s) => s.getAttribute('aria-labelledby')));
   assert.deepEqual(cols, ['seg-uas', 'seg-maritime']);
   assert.equal(await page.evaluate(() => location.hash), '#map/unmanned');
   const expected = await page.evaluate(() => window.DTMApp.companies.filter((c) => c.segs.includes('uas') || c.segs.includes('maritime')).length);
@@ -198,7 +198,7 @@ test('segment toggle shows only the focused columns, and the table follows', asy
 
   // Legacy #focus= links still open the map with that focus.
   const deep = await open({}, '#focus=space');
-  assert.deepEqual(await deep.page.locator('section.segment').evaluateAll((ss) => ss.map((s) => s.getAttribute('aria-labelledby'))), ['seg-space']);
+  assert.deepEqual(await deep.page.locator('section.ly-sec').evaluateAll((ss) => ss.map((s) => s.getAttribute('aria-labelledby'))), ['seg-space']);
   await deep.page.close();
 });
 
@@ -231,20 +231,51 @@ test('Capital vs. Contracts dashboard follows the segment toggle and ownership v
   // Switching tabs keeps the segment and updates the link.
   await page.locator('#page-tab-map').click();
   assert.equal(await page.evaluate(() => location.hash), '#map/unmanned');
-  assert.deepEqual(await page.locator('section.segment').evaluateAll((ss) => ss.map((s) => s.getAttribute('aria-labelledby'))), ['seg-uas', 'seg-maritime']);
+  assert.deepEqual(await page.locator('section.ly-sec').evaluateAll((ss) => ss.map((s) => s.getAttribute('aria-labelledby'))), ['seg-uas', 'seg-maritime']);
   assert.deepEqual(errors, []);
   await page.close();
 });
 
-test('poster export renders PNGs for the main segment groups', async () => {
+test('every layout switches from the toolbar, keeps the link and shows embedded logos', async () => {
+  const { page, errors } = await open({}, '#map/space');
+  const logos = await page.evaluate(() => Object.keys(window.DTM.logos).length);
+  assert.ok(logos > 250, `embedded logos: ${logos}`);
+  for (const [id, item] of [['tiers', '.lt-card'], ['leaderboard', '.lb-row'], ['treemap', '.tm-tile'], ['wall', '.lw-cell']]) {
+    await page.locator(`label[for="layout-${id}"]`).click();
+    await page.waitForSelector(`.board[data-layout="${id}"] ${item}`);
+    assert.equal(await page.evaluate(() => location.hash), id === 'wall' ? '#map/space' : `#map/space/${id}`);
+    assert.ok(await page.locator(`.board ${item}`).count() > 20, `${id} renders companies`);
+  }
+  // The treemap counts each private company once; public companies sit in a strip below.
+  await page.locator('label[for="layout-treemap"]').click();
+  await page.waitForSelector('.tm-tile');
+  const ids = await page.locator('.board .tm-tile').evaluateAll((ts) => ts.map((t) => t.dataset.id));
+  assert.equal(new Set(ids).size, ids.length);
+  assert.ok(await page.locator('.tm-pub[data-id="spacex"]').count() === 1);
+  // Private companies are ranked by capital raised in every subsegment.
+  await page.locator('label[for="layout-wall"]').click();
+  const ranked = await page.locator('.lw-panel').first().locator('.lw-cell[data-status="private"]').evaluateAll((ts) => ts.map((t) => window.DTMApp.byId[t.dataset.id].value ?? -1));
+  assert.deepEqual(ranked, ranked.slice().sort((a, b) => b - a));
+  assert.ok(await page.locator('.board .lg-w').count() > 30, 'wordmarks render');
+  // Links carry the layout.
+  await page.evaluate(() => { location.hash = '#map/unmanned/leaderboard'; });
+  await page.waitForSelector('.board[data-layout="leaderboard"]');
+  assert.equal(await page.locator('#layout-leaderboard').isChecked(), true);
+  await page.locator('.board .lb-row').first().click();
+  await page.locator('#detail').waitFor({ state: 'visible' });
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('poster export renders PNGs for every layout', async () => {
   const { page, errors } = await open();
-  for (const [group, width] of [['unmanned', 1600], ['space', 2400], ['manufacturing', 1600]]) {
-    const r = await page.evaluate(async ({ group, width }) => {
-      const { canvas, model } = await window.DTMExport.renderPoster({ group, width });
+  for (const [group, width, layout] of [['unmanned', 1600, 'wall'], ['space', 2400, 'tiers'], ['manufacturing', 1600, 'leaderboard'], ['space', 1600, 'treemap']]) {
+    const r = await page.evaluate(async ({ group, width, layout }) => {
+      const { canvas, model } = await window.DTMExport.renderPoster({ group, width, layout });
       const blob = await window.DTMExport.toBlob(canvas);
       const sig = Array.from(new Uint8Array(await blob.slice(0, 8).arrayBuffer()));
       return { w: canvas.width, h: canvas.height, size: blob.size, sig, n: model.cos.length, segs: model.sections.map((s) => s.seg.id) };
-    }, { group, width });
+    }, { group, width, layout });
     assert.equal(r.w, width * 2, `${group} width`);
     assert.ok(r.h > 1000 && r.size > 100000, `${group} image is substantial`);
     assert.deepEqual(r.sig, [137, 80, 78, 71, 13, 10, 26, 10], `${group} is a PNG`);
@@ -256,6 +287,9 @@ test('poster export renders PNGs for the main segment groups', async () => {
   await page.locator('#export-preview img').waitFor();
   assert.equal(await page.locator('#export-download').isDisabled(), false);
   assert.equal(await page.locator('#export-group').inputValue(), 'unmanned');
+  assert.equal(await page.locator('#export-layout').inputValue(), 'wall');
+  await page.locator('#export-layout').selectOption('treemap');
+  await page.waitForFunction(() => /treemap layout/.test((document.querySelector('#export-preview img') || {}).alt || ''));
   assert.deepEqual(errors, []);
   await page.close();
 });

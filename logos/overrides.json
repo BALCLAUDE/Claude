@@ -1,0 +1,15 @@
+{
+  "_comment": "Hand review of harvested logos. use: icon | none (skip a wrong or broken wordmark); name: true shows the company name beside a symbol-only logo; recolor: true darkens pale artwork for light backgrounds.",
+  "aerovironment": { "name": true },
+  "albacore": { "use": "icon", "note": "harvested wordmark clips the A" },
+  "d-orbit": { "name": true },
+  "elbit": { "name": true },
+  "firehawk": { "name": true },
+  "govini": { "use": "none", "note": "site header shows a product mark, not the Govini logo" },
+  "new-frontier-aerospace": { "name": true },
+  "northrop-grumman": { "use": "icon", "note": "harvested wordmark sits on a grey photo" },
+  "oklo": { "recolor": true },
+  "poseidon-aerospace": { "name": true },
+  "rtx": { "use": "icon", "note": "site header image failed to load" },
+  "saab": { "recolor": true }
+}

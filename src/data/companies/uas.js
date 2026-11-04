@@ -199,7 +199,7 @@
   });
 
   DTM.add({
-    id: 'stark', name: 'Stark', status: 'private', stage: 'Series C',
+    id: 'stark', name: 'Stark', domain: 'stark-defence.com', status: 'private', stage: 'Series C',
     hq: 'Berlin', country: 'DE', founded: 2024,
     subsegments: ['missiles.loitering', 'uas.small'],
     oneLiner: 'Virtus VTOL loitering munition; Bundeswehr contract and a Sequoia and Founders Fund backed €500M round.',
@@ -308,7 +308,7 @@
   });
 
   DTM.add({
-    id: 'scout-ai', name: 'Scout AI', status: 'private', stage: 'Series A',
+    id: 'scout-ai', name: 'Scout AI', domain: 'scoutai.com', status: 'private', stage: 'Series A',
     hq: 'Sunnyvale, CA', country: 'US', founded: 2024,
     subsegments: ['uas.autonomy', 'maritime.ground'],
     oneLiner: 'Fury, a foundation model for controlling uncrewed vehicles across domains.',
@@ -1060,7 +1060,7 @@
     });
 
     DTM.add({
-      id: 'airo-group', name: 'AIRO Group Holdings', short: 'AIRO', status: 'public', ticker: 'AIRO', exchange: 'NASDAQ',
+      id: 'airo-group', name: 'AIRO Group Holdings', domain: 'theairogroup.com', short: 'AIRO', status: 'public', ticker: 'AIRO', exchange: 'NASDAQ',
       hq: 'McLean, VA', country: 'US', founded: 2021,
       subsegments: ['uas.tactical', 'uas.components'],
       oneLiner: 'RQ-35 Heidrun ISR drones (Sky-Watch), avionics, pilot training and eVTOL; Blue UAS listed and flown in Ukraine.',
@@ -1144,7 +1144,7 @@
     });
 
     DTM.add({
-      id: 'cyberhawk', name: 'Cyberhawk', status: 'private', stage: 'Acquired (Ondas)',
+      id: 'cyberhawk', name: 'Cyberhawk', domain: 'thecyberhawk.com', status: 'private', stage: 'Acquired (Ondas)',
       hq: 'Livingston', country: 'UK', founded: 2008,
       subsegments: ['uas.commercial'],
       oneLiner: 'Drone inspection and iHawk asset-data software for power grids and offshore wind; acquired by Ondas in Aug 2026.',
@@ -1204,7 +1204,7 @@
     });
 
     DTM.add({
-      id: 'heven-aerotech', name: 'Heven AeroTech', short: 'Heven', formerly: 'Heven Drones', status: 'private', stage: 'Series B', hq: 'Sterling, VA', country: 'US', founded: null,
+      id: 'heven-aerotech', name: 'Heven AeroTech', domain: 'hevenaerotech.com', short: 'Heven', formerly: 'Heven Drones', status: 'private', stage: 'Series B', hq: 'Sterling, VA', country: 'US', founded: null,
       subsegments: ['uas.tactical'],
       oneLiner: 'Hydrogen-powered heavy drones with long endurance; IonQ-led $100M Series B at a $1B valuation.',
       description: ['Heven AeroTech, which began in Israel as Heven Drones, builds hydrogen fuel-cell drones for long-endurance and heavy-lift missions. It rebranded and moved its headquarters to Sterling, Virginia in 2025, and in September 2026 opened a 56,000 sq ft factory in Winchester, Virginia, adding to production in the Columbia River Gorge. It raised a $100M Series B led by IonQ in late 2025 at a reported $1B valuation.'],
@@ -1212,7 +1212,7 @@
     });
 
     DTM.add({
-      id: 'poseidon-aerospace', name: 'Poseidon Aerospace', short: 'Poseidon', status: 'private', stage: 'Series A', country: 'US', founded: 2024,
+      id: 'poseidon-aerospace', name: 'Poseidon Aerospace', domain: 'poseidonaero.com', short: 'Poseidon', status: 'private', stage: 'Series A', country: 'US', founded: 2024,
       subsegments: ['uas.tactical'],
       oneLiner: 'Egret STOL and Heron seaplane uncrewed cargo aircraft for contested logistics, carrying 2 tons up to 1,500 miles.',
       description: ['Poseidon Aerospace, founded in 2024 by former Amazon and Lockheed Martin engineers David Zagaynov and Parker Tenney, is building two uncrewed cargo aircraft, the Egret short-takeoff plane and the Heron seaplane, each designed to carry up to two tons up to 1,500 miles, for regional air cargo and contested military logistics. It raised a $60M Series A in September 2026 led by TQ Ventures, about ten months after an $11M seed.'],
@@ -1220,7 +1220,7 @@
     });
 
     DTM.add({
-      id: 'elroy-air', name: 'Elroy Air', status: 'private', stage: 'SPAC pending', hq: 'South San Francisco, CA', country: 'US', founded: 2016,
+      id: 'elroy-air', name: 'Elroy Air', domain: 'elroyair.com', status: 'private', stage: 'SPAC pending', hq: 'South San Francisco, CA', country: 'US', founded: 2016,
       subsegments: ['uas.tactical'],
       oneLiner: 'Chaparral hybrid-electric VTOL cargo drone; $46M Army contested-logistics contract and a pending SPAC listing.',
       description: ['Elroy Air builds the Chaparral, a hybrid-electric vertical-takeoff cargo drone for autonomous middle-mile and contested military logistics. The US Army awarded a $46M contract to extend its contested-logistics capabilities, with $5.1M funded in fiscal 2026. It is merging with Inflection Point Acquisition Corp. VII, expected to close in Q4 2026, with PIPE commitments upsized to $175M, including Lockheed Martin Ventures.'],
@@ -1229,7 +1229,7 @@
     });
 
     DTM.add({
-      id: 'infravision', name: 'Infravision', status: 'private', stage: 'Series B', country: 'AU', founded: 2018,
+      id: 'infravision', name: 'Infravision', domain: 'infravisioninc.com', status: 'private', stage: 'Series B', country: 'AU', founded: 2018,
       subsegments: ['uas.commercial'],
       oneLiner: 'Drone-based TX System that strings high-voltage power lines in days; $91M Series B led by GIC.',
       description: ['Infravision builds the TX System, which pairs drones with ground equipment and stringing hardware to string extra-high-voltage transmission lines in days rather than weeks. Founded in Australia in 2018, it is expanding in North America. It raised a $91M Series B in November 2025 led by GIC, after a $23M Series A led by Energy Impact Partners in 2023. It has no disclosed defense work.'],

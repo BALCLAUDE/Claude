@@ -17,9 +17,9 @@ An interactive market map of the US and allied defense technology sector. It shi
   - Manufacturing & Energy
   - Primes & Mid-Tier (a separate column)
 - **Subsegments added in the Q4 2026 update:** Stations, Spaceplanes & Reentry and Ground Systems & Mission Ops (Space); Hypersonic Test & Reentry (Missiles); Commercial, Delivery & Public Safety and Airspace Management & UTM (Drones); Missile Defense (Counter-UAS & Air Defense); and Additive Manufacturing (Manufacturing & Energy).
-- **282 companies.** 76 are public and show their **market cap** (blue). 206 are private and show **total funding raised** (orange).
+- **282 companies**, 275 of them with their logo. 76 are public and show their **market cap** (blue). 206 are private and show **total funding raised** (orange).
 - **Companies that span several subsegments** appear in each one. Hovering one copy highlights the others.
-- **Click any tile** for a profile with these tabs:
+- **Click any company** for a profile with these tabs:
   - **Company description**
   - **Financials:** revenue history, margins, backlog for public companies, and funding rounds for private ones.
   - **Valuation:** multiples with a peer chart for public companies; post-money history and step-ups for private ones. Public companies on the shared comps sheet also show its CY25E/CY26E street estimates and an EV / CY26E sales peer chart.
@@ -33,19 +33,30 @@ An interactive market map of the US and allied defense technology sector. It shi
   - A log-log bubble chart with a $1-per-$1 parity line, bubble area for valuation (private) or revenue (public), and dashed outlines where obligations are likely understated. Hover for detail, click to open the profile, or type a name to find it.
   - A sortable, filterable table with contracts, Other Transactions and subawards per company, plus a methodology note.
   - The approach follows Defense Tech Signals' [Capital vs. Contracts](https://dtscontracts.netlify.app/) dashboard of the NatSec100, applied here to the companies on this map.
-- **Market map**: the segment columns of company tiles, with search, filters, Program Lens, table view, compare and PNG export.
+- **Market map**: every company's logo, ordered by funding, in four switchable layouts (below), plus search, filters, Program Lens, table view, compare and PNG export.
 
-Both tabs share the segment toggle, and the link keeps the view: `#dashboard/unmanned`, `#dashboard/space/public`, `#map/manufacturing`. Company links like `#anduril.programs` open the map with that profile.
+## Four map layouts
+
+Pick one with the **Layout** switcher in the map toolbar. In every layout private companies are ranked by total capital raised and public companies by market cap, and subsegments are ordered by the capital they have raised.
+
+| Layout | What it shows |
+|---|---|
+| **Logo wall** (default) | Subsegment panels with a ranked grid of logos and the amount raised under each. |
+| **Funding tiers** | Subsegment columns; rows group companies by amount raised ($1B+, $250M–1B, $50–250M, under $50M, undisclosed) with public companies on top. Logos grow with the tier. |
+| **Leaderboard** | Ranked lists per subsegment with a square logo, name and a bar on one log scale for the whole view. |
+| **Treemap** | Box area shows capital raised (compressed so small companies stay visible). Each private company appears once, in its primary subsegment; public companies sit in a strip below. |
+
+The layout is remembered and kept in the link: `#map/space/treemap`, `#map/unmanned/leaderboard`, `#map/tiers`.
+
+Both tabs share the segment toggle, and the link keeps the view: `#dashboard/unmanned`, `#dashboard/space/public`, `#map/manufacturing`, `#map/space/treemap`. Company links like `#anduril.programs` open the map with that profile.
 
 ## Features
 
 - **Segment toggle:** show All, **Unmanned** (Drones & Air Autonomy + Maritime & Ground Robotics), **Space**, **Manufacturing**, or any single segment column. The map, table, dashboard, counts and headline stats follow it. Groups are defined in `DTM.focusGroups` in `src/data/taxonomy.js`.
-- **Export PNG:** renders a shareable market-map poster for any segment group: title, totals, public/private legend, subsegment blocks of logo tiles and a sources footer. Choose all, public-only or private-only companies and a Standard (3-column, 3200 px) or Wide (4-column, 4800 px) layout. The poster is drawn from the data (`src/export.js`), so it looks the same whatever the screen, theme or filters. In the published claude.ai version, saving asks you to confirm the download.
+- **Export PNG:** renders a shareable poster of any segment group in any of the four layouts (the leaderboard poster is dark, the others light): title, totals, legend, the layout itself and a sources footer. Choose all, public-only or private-only companies and a Standard (1600 px, saved at 3200 px) or Wide (2400 px, saved at 4800 px) size. Posters are drawn from the data (`src/export.js`), so they look the same whatever the screen, theme or filters. In the published claude.ai version, saving asks you to confirm the download.
 - Search across names, tickers, programs, investors and products. Press `/` to focus the search box.
 - Filters for Public / Private and for region (US, UK, Europe, Israel, Asia-Pacific, Canada, and China for non-allied companies).
 - **Program Lens:** highlight every company on a program such as Golden Dome, CCA, SDA PWSA, NSSL, Replicator or Affordable Mass Missiles.
-- Group by subsegment, founding era or funding stage. Sort by size, name or founding year.
-- **Scale by size** enlarges the largest public companies and the best-funded private companies.
 - **Table view** with sortable columns, including EV / CY26E sales from the comps sheet. Non-USD revenue is converted to USD in this view.
 - **Compare tray:** pin up to four companies for a side-by-side comparison.
 - **Deep links**, e.g. `defense-tech-map.html#anduril.programs`.
@@ -117,10 +128,14 @@ NODE_USE_ENV_PROXY=1 node scripts/obligations.mjs --only anduril   # one or more
 
 ### Logos
 
-Put logo files in `logos/`, named by company id:
-- `anduril.svg` sits on a white square.
-- `anduril.dark.svg` (white artwork) sits on the dark square.
+Logos are collected from each company's website and embedded in the page, so they show everywhere, including the published version.
 
-The build embeds them into the HTML. Four logos are included from [Simple Icons](https://simpleicons.org).
+```bash
+node scripts/logos/harvest.mjs [--only id,id]   # visits each company's site (its `domain`), captures the header logo and site icon into .cache/logos/
+node scripts/logos/process.mjs [--only id,id]   # trims, keys out backgrounds and writes logos/<id>.wm.webp, logos/<id>.icon.webp and logos/logos.json
+npm run build                                    # embeds them
+```
 
-When you open the file locally, other companies use their website favicon. If no logo is available, the tile shows a monogram. Logos are trademarks of their respective owners.
+- `logos/overrides.json` holds the hand review: `use: "icon"` or `"none"` skips a wrong or broken wordmark, `name: true` shows the company name beside a symbol-only logo, and `recolor: true` darkens pale artwork.
+- To supply a logo by hand, put it in `logos/source/<id>.wm.svg` (or `.png`, or `<id>.icon.png`) and rerun `process.mjs`.
+- Companies without a logo show a monogram. The page derives dark-theme versions of the wordmarks itself. Logos are trademarks of their respective owners.

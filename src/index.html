@@ -60,23 +60,13 @@
       <label class="field field-lens" for="lens"><span>Program lens</span>
         <select id="lens"><option value="">None</option></select>
       </label>
-      <label class="field" for="group"><span>Group by</span>
-        <select id="group">
-          <option value="sub">Subsegment</option>
-          <option value="era">Founding era</option>
-          <option value="stage">Stage</option>
-        </select>
-      </label>
-      <label class="field" for="sort"><span>Sort</span>
-        <select id="sort">
-          <option value="value">Largest first</option>
-          <option value="name">A to Z</option>
-          <option value="founded">Newest first</option>
-        </select>
-      </label>
-      <label class="switch" for="scale" title="Enlarges public companies above $25B market cap and private companies that have raised $1.5B or more">
-        <input type="checkbox" id="scale"><span class="switch-track" aria-hidden="true"></span><span>Scale by size</span>
-      </label>
+      <div class="seg seg-layout" role="radiogroup" aria-label="Map layout">
+        <span class="seg-label" aria-hidden="true">Layout</span>
+        <input type="radio" name="layout" id="layout-wall" value="wall" checked><label for="layout-wall" title="Logos ranked by capital raised in each subsegment">Logo wall</label>
+        <input type="radio" name="layout" id="layout-tiers" value="tiers"><label for="layout-tiers" title="Subsegment columns, rows by amount raised">Funding tiers</label>
+        <input type="radio" name="layout" id="layout-leaderboard" value="leaderboard"><label for="layout-leaderboard" title="Ranked lists with bars on one scale">Leaderboard</label>
+        <input type="radio" name="layout" id="layout-treemap" value="treemap"><label for="layout-treemap" title="Area shows capital raised">Treemap</label>
+      </div>
       <p class="result-count" id="result-count" aria-live="polite"></p>
       <button class="link-btn" id="reset-btn" type="button" hidden>Reset filters</button>
     </div>
@@ -123,14 +113,17 @@
     </header>
     <div class="export-controls">
       <label class="field" for="export-group"><span>Segment</span><select id="export-group"></select></label>
+      <label class="field" for="export-layout"><span>Layout</span><select id="export-layout">
+        <option value="wall">Logo wall</option><option value="tiers">Funding tiers</option><option value="leaderboard">Leaderboard</option><option value="treemap">Treemap</option>
+      </select></label>
       <div class="seg" role="radiogroup" aria-label="Companies to include">
         <input type="radio" name="export-own" id="export-own-all" value="all" checked><label for="export-own-all">All</label>
         <input type="radio" name="export-own" id="export-own-public" value="public"><label for="export-own-public"><i class="swatch swatch-public"></i>Public</label>
         <input type="radio" name="export-own" id="export-own-private" value="private"><label for="export-own-private"><i class="swatch swatch-private"></i>Private</label>
       </div>
-      <div class="seg" role="radiogroup" aria-label="Image layout">
-        <input type="radio" name="export-size" id="export-size-1600" value="1600" checked><label for="export-size-1600" title="3-column layout, 3200 px wide">Standard</label>
-        <input type="radio" name="export-size" id="export-size-2400" value="2400"><label for="export-size-2400" title="4-column layout, 4800 px wide">Wide</label>
+      <div class="seg" role="radiogroup" aria-label="Image size">
+        <input type="radio" name="export-size" id="export-size-1600" value="1600" checked><label for="export-size-1600" title="1600 px layout, saved at 3200 px wide">Standard</label>
+        <input type="radio" name="export-size" id="export-size-2400" value="2400"><label for="export-size-2400" title="2400 px layout, saved at 4800 px wide">Wide</label>
       </div>
     </div>
     <div class="export-preview" id="export-preview" aria-live="polite"><p class="export-status">Rendering…</p></div>
@@ -156,6 +149,7 @@
 <script src="data/obligations.js"></script>
 <script src="data/logos.js"></script>
 <script src="charts.js"></script>
+<script src="layouts.js"></script>
 <script src="app.js"></script>
 <script src="export.js"></script>
 <script src="dashboard.js"></script>

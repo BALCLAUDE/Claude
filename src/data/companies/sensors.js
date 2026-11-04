@@ -4,7 +4,7 @@
 
   /* ---------------- Radar ---------------- */
   DTM.add({
-    id: 'chaos-industries', name: 'Chaos Industries', short: 'Chaos', status: 'private', stage: 'Series D',
+    id: 'chaos-industries', name: 'Chaos Industries', domain: 'chaosinc.com', short: 'Chaos', status: 'private', stage: 'Series D',
     hq: 'Los Angeles, CA', country: 'US', founded: 2022,
     subsegments: ['sensors.radar', 'cuas.sensing'],
     oneLiner: 'Vanquish distributed early-warning radar, built expeditionary and relocatable, for drones and missiles.',
@@ -53,7 +53,7 @@
 
   /* ---------------- EW & SIGINT ---------------- */
   DTM.add({
-    id: 'cx2', name: 'CX2', status: 'private', stage: 'Series A',
+    id: 'cx2', name: 'CX2', domain: 'cx2.com', status: 'private', stage: 'Series A',
     hq: 'Los Angeles, CA', country: 'US', founded: 2023,
     subsegments: ['sensors.ew', 'cuas.ew'],
     oneLiner: 'Software-defined electronic warfare for the tactical edge: sensing, jamming and spectrum maneuver.',
@@ -268,7 +268,7 @@
     const CSV = S('Public defense names sheet provided for this map (undated)');
 
     DTM.add({
-      id: 'matrixspace', name: 'MatrixSpace', status: 'private', stage: 'Series B', country: 'US', founded: null,
+      id: 'matrixspace', name: 'MatrixSpace', domain: 'matrixspace.com', status: 'private', stage: 'Series B', country: 'US', founded: null,
       subsegments: ['sensors.radar', 'cuas.sensing'],
       oneLiner: 'Portable low-power AI radar for detecting and classifying drones; L3Harris is a strategic investor.',
       description: ['MatrixSpace builds compact, ultra-low-power radar with onboard AI for persistent detection and classification of drones and other targets, for defense, security and airspace users. It closed a $20M Series B in October 2025, co-led by The Raptor Group and OTB Ventures with L3Harris as a new strategic investor, bringing total funding to $58M.'],

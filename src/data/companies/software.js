@@ -224,7 +224,7 @@
   });
 
   DTM.add({
-    id: 'edgerunner', name: 'EdgeRunner AI', short: 'EdgeRunner', status: 'private', stage: 'Series A',
+    id: 'edgerunner', name: 'EdgeRunner AI', domain: 'edgerunnerai.com', short: 'EdgeRunner', status: 'private', stage: 'Series A',
     hq: 'Seattle, WA', country: 'US', founded: 2023,
     subsegments: ['software.intel'],
     oneLiner: 'Air-gapped, on-device AI agents for warfighters who operate without connectivity.',
@@ -271,7 +271,7 @@
     const CSV = S('Public defense names sheet provided for this map (undated)');
 
     DTM.add({
-      id: 'twenty', name: 'Twenty', status: 'private', stage: 'Series B', country: 'US', founded: 2024,
+      id: 'twenty', name: 'Twenty', domain: 'twenty.io', status: 'private', stage: 'Series B', country: 'US', founded: 2024,
       subsegments: ['software.cyber'],
       oneLiner: 'Venture-backed offensive cyber operations tools for US Cyber Command and the intelligence community.',
       description: ['Twenty, founded in 2024 and co-founded by Joe Lin, previously head of public sector at Expanse, builds offensive cyber capabilities for the US military and intelligence community and calls itself America\'s first venture-backed cyber warfare startup. It emerged in 2025 with a $38M round and raised a $100M Series B led by Accel in June 2026 at a $1B valuation; a further $30M from Khosla Ventures at $1.2B has also been reported.'],
@@ -281,7 +281,7 @@
     });
 
     DTM.add({
-      id: 'picogrid', name: 'Picogrid', status: 'private', stage: 'Series A', hq: 'El Segundo, CA', country: 'US', founded: null,
+      id: 'picogrid', name: 'Picogrid', domain: 'picogrid.com', status: 'private', stage: 'Series A', hq: 'El Segundo, CA', country: 'US', founded: null,
       subsegments: ['software.c2'],
       oneLiner: 'Legion integration platform that connects 100+ sensors, drones and effectors from different vendors.',
       description: ['Picogrid builds Legion, software and edge hardware that connect military sensors, cameras, radars, drones and effectors from different makers into one network, with more than 100 integrated systems from vendors including Skydio, Northrop Grumman, Echodyne, CX2 and Neros. It is deployed with US and allied forces and raised a $45M Series A led by Bessemer Venture Partners in May 2026.'],
@@ -289,7 +289,7 @@
     });
 
     DTM.add({
-      id: 'arkeus', name: 'Arkeus', status: 'private', stage: 'Series A', hq: 'Melbourne', country: 'AU', founded: 2020,
+      id: 'arkeus', name: 'Arkeus', domain: 'arkeus.com', status: 'private', stage: 'Series A', hq: 'Melbourne', country: 'AU', founded: 2020,
       subsegments: ['software.intel', 'uas.components'],
       oneLiner: 'Hyperspectral sensing with onboard AI that lets drones detect and track targets; on AV, Textron, Tekever and Insitu aircraft.',
       description: ['Arkeus, founded in Melbourne in 2020 by CEO Simon Olsen and Dr Jonathan Nebauer, pairs hyperspectral sensors with onboard AI so drones and other autonomous platforms can detect and track objects in real time; its hardware is integrated with drones from AeroVironment, Textron, Tekever and Boeing\'s Insitu. In May 2026 it raised an A$25M (about US$18M) Series A led by QIC Ventures to scale manufacturing.'],
@@ -297,7 +297,7 @@
     });
 
     DTM.add({
-      id: 'dominion-dynamics', name: 'Dominion Dynamics', status: 'private', stage: 'Series A', hq: 'Ottawa', country: 'CA', founded: 2025,
+      id: 'dominion-dynamics', name: 'Dominion Dynamics', domain: 'defendthedominion.com', status: 'private', stage: 'Series A', hq: 'Ottawa', country: 'CA', founded: 2025,
       subsegments: ['software.c2', 'uas.cca'],
       oneLiner: 'AuraNet Arctic sensor network and Scout autonomous aircraft for Canada\'s north; Canada\'s largest defense Series A.',
       description: ['Dominion Dynamics, founded in Ottawa by former Anduril executive Eliot Pence, is building AuraNet, a network of ruggedized sensors and autonomous systems to monitor Canada\'s Arctic, and Scout, an autonomous aircraft meant to fly with fifth-generation fighters. After a C$21M seed in January 2026 it raised a C$139M (about US$100M) Series A in June 2026, the largest Canadian defense-tech Series A.'],

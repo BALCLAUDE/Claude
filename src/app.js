@@ -121,47 +121,20 @@
   function hue(id) { let h = 0; for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 360; return h; }
 
   /* ---------------------------------------------------------------- logos */
-  let remoteLogos = false;
-  const FAVICON = (d) => `https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=128`;
-  function monoHTML(c) {
-    const m = monogram(c.short || c.name);
-    return `<span class="mono${m.length >= 3 ? ' len-3' : ''}">${esc(m)}</span>`;
-  }
+  // Square logo for the table, profile header and compare view. Logo images are embedded (src/data/logos.js)
+  // and applied through CSS classes from layouts.js, so markup never repeats the image data.
   function logoHTML(c) {
     const h = 190 + (hue(c.id) % 110);
     const style = `--mono-bg: linear-gradient(145deg, hsl(${h} 32% 27%), hsl(${h + 14} 38% 13%))`;
-    const local = D.logos && D.logos[c.id];
-    if (local) {
-      return `<span class="logo ${local.dark ? 'is-dark' : 'is-light'}" style="${style}"><img src="${local.src}" alt="" loading="lazy" decoding="async"></span>`;
-    }
-    if (remoteLogos && c.domain) {
-      return `<span class="logo is-light" style="${style}" data-mono="${esc(monogram(c.short || c.name))}"><img src="${FAVICON(c.domain)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"></span>`;
-    }
-    return `<span class="logo" style="${style}">${monoHTML(c)}</span>`;
-  }
-  function fallbackLogo(img) {
-    const box = img.closest('.logo');
-    if (!box || !box.dataset.mono) return;
-    const m = box.dataset.mono;
-    box.classList.remove('is-light');
-    box.innerHTML = `<span class="mono${m.length >= 3 ? ' len-3' : ''}">${esc(m)}</span>`;
-  }
-  document.addEventListener('error', (e) => { if (e.target.tagName === 'IMG' && e.target.closest('.logo')) fallbackLogo(e.target); }, true);
-  document.addEventListener('load', (e) => {
-    const img = e.target;
-    if (img.tagName === 'IMG' && img.closest('.logo[data-mono]') && img.naturalWidth < 32) fallbackLogo(img);
-  }, true);
-  function probeRemoteLogos() {
-    if (window.DTM_REMOTE_LOGOS === false) return;
-    const img = new Image();
-    img.onload = () => { if (img.naturalWidth > 0) { remoteLogos = true; render(); } };
-    img.referrerPolicy = 'no-referrer';
-    img.src = FAVICON('github.com');
+    const cls = window.DTMLayouts ? window.DTMLayouts.logoClass(c) : '';
+    if (cls) return `<span class="logo is-light ${cls}" style="${style}"></span>`;
+    const m = monogram(c.short || c.name);
+    return `<span class="logo" style="${style}"><span class="mono${m.length >= 3 ? ' len-3' : ''}">${esc(m)}</span></span>`;
   }
 
   /* ---------------------------------------------------------------- state */
   const state = {
-    q: '', own: 'all', region: '', lens: '', group: 'sub', sort: 'value', scale: false, view: 'map', focus: 'all', page: 'dashboard', dashMode: 'private',
+    q: '', own: 'all', region: '', lens: '', sort: 'value', layout: 'wall', view: 'map', focus: 'all', page: 'dashboard', dashMode: 'private',
     tableSort: { key: 'value', dir: -1 }, compare: [], open: null, tab: 'overview'
   };
 
@@ -189,23 +162,6 @@
     return bv - av || a.name.localeCompare(b.name);
   }
 
-  const ERAS = [
-    { id: 'pre2000', name: 'Founded before 2000', test: (y) => y != null && y < 2000 },
-    { id: '2000', name: 'Founded 2000–2015', test: (y) => y >= 2000 && y <= 2015 },
-    { id: '2016', name: 'Founded 2016–2019', test: (y) => y >= 2016 && y <= 2019 },
-    { id: '2020', name: 'Founded 2020–2022', test: (y) => y >= 2020 && y <= 2022 },
-    { id: '2023', name: 'Founded 2023 or later', test: (y) => y >= 2023 },
-    { id: 'unknown', name: 'Founding year not compiled', test: (y) => y == null }
-  ];
-  const STAGES = [
-    { id: 'public', name: 'Public', test: (c) => c.isPublic },
-    { id: 'p1b', name: 'Private · $1B+ raised', test: (c) => !c.isPublic && c.value >= 1000 },
-    { id: 'p250', name: 'Private · $250M–$1B raised', test: (c) => !c.isPublic && c.value >= 250 && c.value < 1000 },
-    { id: 'p50', name: 'Private · $50M–$250M raised', test: (c) => !c.isPublic && c.value >= 50 && c.value < 250 },
-    { id: 'p0', name: 'Private · under $50M raised', test: (c) => !c.isPublic && c.value != null && c.value < 50 },
-    { id: 'pna', name: 'Private · undisclosed', test: (c) => !c.isPublic && c.value == null }
-  ];
-
   /* ---------------------------------------------------------------- tiles */
   function metricText(c) {
     if (c.value == null) return c.isPublic ? 'n/a' : (c.funding && c.funding.label) || 'Undisclosed';
@@ -216,61 +172,17 @@
     if (c.value == null) return (c.funding && c.funding.label) || 'Funding undisclosed';
     return `${money(c.value)} raised to date`;
   }
-  function tileHTML(c) {
-    const cls = ['tile'];
-    if (c.isBig) cls.push('is-big');
-    if (state.lens && inLens(c)) cls.push('in-lens');
-    const undisclosed = c.value == null;
-    return `<button class="${cls.join(' ')}" type="button" data-id="${c.id}" data-status="${c.isPublic ? 'public' : 'private'}"${c.flag ? ' data-flag' : ''} aria-label="${esc(`${c.name}, ${c.isPublic ? 'public' : 'private'}, ${metricLong(c)}${c.flag ? ', ' + c.flag : ''}`)}">
-      ${c.flag ? `<span class="tile-flag" title="${esc(c.flag)}">${esc(c.flagShort || '!')}</span>` : ''}${logoHTML(c)}<span class="name">${esc(c.short || c.name)}</span><span class="metric${undisclosed ? ' is-undisclosed' : ''}">${esc(metricText(c))}</span></button>`;
+  const LAYOUT_IDS = (window.DTMLayouts ? window.DTMLayouts.LAYOUTS : []).map((l) => l.id);
+  function layoutHelpers() {
+    return { esc, money, metricText, metricLong, monogram, hue, inLens, lens: state.lens };
   }
 
   /* ---------------------------------------------------------------- board */
-  const segTracks = {};
-  D.segments.forEach((seg) => {
-    let n = 0;
-    seg.subsegments.forEach((sub) => { n += companies.filter((c) => c.subs.includes(sub.id)).length; });
-    segTracks[seg.id] = n <= 8 ? 2 : n <= 20 ? 3 : n <= 34 ? 4 : 5;
-  });
-
   function renderBoard(visible) {
     const board = $('#board');
-    board.classList.toggle('is-scaled', state.scale);
     board.classList.toggle('has-lens', !!state.lens);
-    let html = '';
-    D.segments.filter((seg) => segInFocus(seg.id)).forEach((seg) => {
-      const inSeg = visible.filter((c) => c.segs.includes(seg.id));
-      if (!inSeg.length) return;
-      let groups;
-      if (state.group === 'sub') {
-        groups = seg.subsegments.map((sub) => ({ id: sub.id, name: sub.name, blurb: sub.blurb, items: inSeg.filter((c) => c.subs.includes(sub.id)) }));
-      } else if (state.group === 'era') {
-        groups = ERAS.map((e) => ({ id: e.id, name: e.name, items: inSeg.filter((c) => e.test(c.founded == null ? null : c.founded)) }));
-      } else {
-        groups = STAGES.map((s) => ({ id: s.id, name: s.name, items: inSeg.filter(s.test) }));
-      }
-      groups = groups.filter((g) => g.items.length);
-      const pubCap = inSeg.filter((c) => c.isPublic && c.value).reduce((a, c) => a + c.value, 0);
-      const privRaised = inSeg.filter((c) => !c.isPublic && c.value).reduce((a, c) => a + c.value, 0);
-      const nPub = inSeg.filter((c) => c.isPublic).length;
-      html += `<section class="segment" style="--tracks:${segTracks[seg.id]}" aria-labelledby="seg-${seg.id}">
-        <header class="segment-head">
-          <h2 class="segment-title" id="seg-${seg.id}"><span class="segment-code">${esc(seg.code)}</span>${esc(seg.name)}</h2>
-          <p class="segment-stats">
-            <span>${inSeg.length} cos</span>
-            ${nPub ? `<span class="stat-public" title="Combined market cap of public companies in this segment">${money(pubCap)}</span>` : ''}
-            ${privRaised ? `<span class="stat-private" title="Combined funding raised by private companies in this segment">${money(privRaised)}</span>` : ''}
-          </p>
-        </header>
-        <div class="segment-body">
-          ${groups.map((g) => `<div class="group">
-            <div class="group-head"><h3 class="group-title"${g.blurb ? ` title="${esc(g.blurb)}"` : ''}>${esc(g.name)}</h3><span class="group-count">${g.items.length}</span></div>
-            <div class="tiles">${g.items.slice().sort(sorter).map(tileHTML).join('')}</div>
-          </div>`).join('')}
-        </div>
-      </section>`;
-    });
-    board.innerHTML = html;
+    window.DTMLayouts.render(board, visible, focusGroup().segments, state.layout, layoutHelpers());
+    board.dataset.width = String(board.clientWidth);
   }
 
   /* ---------------------------------------------------------------- table */
@@ -355,10 +267,12 @@
     if (write && !state.open) setHash(pageHash());
     render();
   }
-  /* Page hash: #map, #map/unmanned, #dashboard/space, #dashboard/unmanned/public (public view of the dashboard). */
+  /* Page hash: #map, #map/unmanned, #map/space/treemap (layout), #dashboard/space,
+     #dashboard/unmanned/public (public view of the dashboard). */
   function pageHash() {
     const parts = [state.page];
     if (state.focus !== 'all') parts.push(state.focus);
+    if (state.page === 'map' && state.layout !== 'wall') parts.push(state.layout);
     if (state.page === 'dashboard' && state.dashMode === 'public') { if (state.focus === 'all') parts.push('all'); parts.push('public'); }
     return parts.join('/');
   }
@@ -378,6 +292,15 @@
     document.body.dataset.page = page;
     if (write && !state.open) setHash(pageHash());
     render();
+  }
+  function setLayout(id, { write = true, rerender = true } = {}) {
+    if (!LAYOUT_IDS.includes(id)) id = 'wall';
+    state.layout = id;
+    store.set('dtm-layout', id);
+    const r = document.getElementById(`layout-${id}`);
+    if (r) r.checked = true;
+    if (write && !state.open) setHash(pageHash());
+    if (rerender) render();
   }
   function setDashMode(mode) {
     state.dashMode = mode === 'public' ? 'public' : 'private';
@@ -678,7 +601,7 @@
     return c.subs.map((s) => {
       const peers = companies.filter((p) => p.id !== c.id && p.subs.includes(s)).sort(sorter);
       if (!peers.length) return '';
-      return `<div class="peer-group"><h3 class="section-title">${esc(subIndex[s].seg.name)} · ${esc(subIndex[s].sub.name)}</h3><div class="tiles">${peers.map(tileHTML).join('')}</div></div>`;
+      return `<div class="peer-group"><h3 class="section-title">${esc(subIndex[s].seg.name)} · ${esc(subIndex[s].sub.name)}</h3>${window.DTMLayouts.peerCells(peers, layoutHelpers())}</div>`;
     }).join('') || `<p class="na">No peers in the same subsegment.</p>`;
   }
 
@@ -783,6 +706,8 @@
     if (parts[0] === 'map' || parts[0] === 'dashboard') {
       state.focus = focusIndex[parts[1]] ? parts[1] : 'all';
       state.dashMode = parts.includes('public') ? 'public' : 'private';
+      const lay = parts.find((x) => LAYOUT_IDS.includes(x));
+      if (parts[0] === 'map') setLayout(lay || 'wall', { write: false, rerender: false });
       setPage(parts[0], { write: false });
       return;
     }
@@ -857,9 +782,11 @@
     $$('input[name="view"]').forEach((r) => r.addEventListener('change', () => { state.view = r.value; store.set('dtm-view', r.value); render(); }));
     $('#region').addEventListener('change', (e) => { state.region = e.target.value; render(); });
     $('#lens').addEventListener('change', (e) => { state.lens = e.target.value; render(); });
-    $('#group').addEventListener('change', (e) => { state.group = e.target.value; render(); });
-    $('#sort').addEventListener('change', (e) => { state.sort = e.target.value; render(); });
-    $('#scale').addEventListener('change', (e) => { state.scale = e.target.checked; render(); });
+    $$('input[name="layout"]').forEach((r) => r.addEventListener('change', () => {
+      if (!r.checked) return;
+      if (state.view !== 'map') { setView('map'); store.set('dtm-view', 'map'); }
+      setLayout(r.value);
+    }));
     $('#reset-btn').addEventListener('click', resetFilters);
     $('#theme-btn').addEventListener('click', toggleTheme);
     const tabs = $$('.app-tab');
@@ -923,6 +850,16 @@
     });
     board.addEventListener('focusin', (e) => { const t = e.target.closest('.tile'); if (t) setLinked(t.dataset.id, true); });
     board.addEventListener('focusout', () => setLinked('', false));
+    // The treemap is laid out in pixels, so it is redrawn when the board width changes.
+    let rzTimer;
+    const onResize = () => {
+      clearTimeout(rzTimer);
+      rzTimer = setTimeout(() => {
+        if (state.page !== 'map' || state.view !== 'map' || state.layout !== 'treemap' || board.hidden) return;
+        if (Math.abs(board.clientWidth - Number(board.dataset.width || 0)) > 6) render();
+      }, 120);
+    };
+    if (window.ResizeObserver) new ResizeObserver(onResize).observe(board); else window.addEventListener('resize', onResize);
     window.addEventListener('scroll', hideHover, { passive: true });
 
     $('#detail').addEventListener('pointermove', (e) => {
@@ -963,13 +900,12 @@
   function setView(v) { state.view = v; const r = $(`#view-${v}`); if (r) r.checked = true; }
   function scrollToBoard() { $('#main').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }); }
   function gotoSub(sub) {
-    if (state.group !== 'sub') { state.group = 'sub'; $('#group').value = 'sub'; }
     setView('map');
     render();
     const seg = subIndex[sub] && subIndex[sub].seg.id;
     if (seg && !segInFocus(seg)) setFocus('all');
     const el = seg && document.getElementById(`seg-${seg}`);
-    if (el) el.closest('.segment').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (el) el.closest('.ly-sec').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   function resetFilters() {
     Object.assign(state, { q: '', own: 'all', region: '', lens: '' });
@@ -989,6 +925,7 @@
     const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
     store.set('dtm-theme', next);
+    if (next === 'dark') window.DTMLayouts.ensureDark();
     if (state.page === 'dashboard') render(); // dashboard chart colors come from the theme tokens
   }
 
@@ -1001,10 +938,14 @@
   if (savedFocus && focusIndex[savedFocus]) state.focus = savedFocus;
   const savedView = store.get('dtm-view');
   if (savedView === 'table') setView('table');
+  const savedLayout = store.get('dtm-layout');
+  setLayout(LAYOUT_IDS.includes(savedLayout) ? savedLayout : 'wall', { write: false, rerender: false });
+  window.DTMLayouts.ensureStyles();
+  if (effectiveTheme() === 'dark') window.DTMLayouts.ensureDark();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (effectiveTheme() === 'dark') window.DTMLayouts.ensureDark(); });
   populateControls();
   bind();
   setPage(state.page, { write: false });
   readHash();
-  probeRemoteLogos();
-  window.DTMApp = { state, render, openCompany, companies, byId, setFocus, setPage, setDashMode, focusIndex, monogram, hue, money, metricText, date, esc, mult };
+  window.DTMApp = { state, render, openCompany, companies, byId, setFocus, setPage, setDashMode, setLayout, focusIndex, monogram, hue, money, metricText, metricLong, date, esc, mult };
 })();
