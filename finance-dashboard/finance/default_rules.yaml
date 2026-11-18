@@ -62,6 +62,8 @@ rules:
   # Transfers and payments between your own accounts (also detected automatically by amount matching).
   - {match: '\bAUTOPAY|\bAUTOMATIC PAYMENT|\bPAYMENT THANK YOU|\bPAYMENT - THANK|\bONLINE PAYMENT|\bCARD PAYMENT|\bEPAY|\bCRCARDPMT|\bCC PMT', category: Transfer}
   - {match: '\bONLINE TRANSFER|\bTRANSFER (TO|FROM)|\bXFER|\bINTERNAL TRANSFER|\bFUNDS TRANSFER|\bTO SAVINGS|\bFROM SAVINGS|\bFROM CHECKING|\bTO CHECKING', category: Transfer}
+  # Money to/from an online savings bank whose own statements are balance-only (e.g. Marcus by Goldman Sachs)
+  - {match: '\bMARCUS\b|\bGOLDMAN SACHS BA|\bGS BANK USA|\bGOLDMAN SACHS BANK', category: Transfer}
   - {match: '\bVANGUARD|\bFIDELITY|\bSCHWAB|\bBROKERAGE|\bROBINHOOD|\bWEALTHFRONT|\bBETTERMENT|\bE\*TRADE|\bETRADE|\bM1 FINANCE|\bCOINBASE', category: Investments, when: out}
 
   # Income

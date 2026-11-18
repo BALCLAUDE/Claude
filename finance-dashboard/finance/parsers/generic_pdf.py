@@ -24,8 +24,11 @@ AMT = r"-?\(?\$?\s?[\d,]+\.\d{2}\)?-?(?:\s?CR)?"
 ROW = re.compile(rf"^(\d{{1,2}}/\d{{1,2}}(?:/\d{{2,4}})?)\s+(?:\d{{1,2}}/\d{{1,2}}(?:/\d{{2,4}})?\s+)?(.+?)\s+({AMT})(?:\s+({AMT}))?$")
 PERIOD = re.compile(
     r"(\w{3,9}\.? \d{1,2},? \d{4}|\d{1,2}/\d{1,2}/\d{2,4})\s*(?:-|–|to|through|thru)\s*(\w{3,9}\.? \d{1,2},? \d{4}|\d{1,2}/\d{1,2}/\d{2,4})", re.I)
-OPENING = re.compile(rf"(?:beginning|opening|previous|starting)\s+balance[^\d$(\-]*({AMT})", re.I)
-CLOSING = re.compile(rf"(?:ending|closing|new)\s+balance[^\d$(\-]*({AMT})", re.I)
+_DATE_TXT = r"(\d{1,2}/\d{1,2}/\d{2,4}|[A-Za-z]{3,9}\.? \d{1,2},? \d{4})"
+# "Ending Balance $5,000.00", "Ending balance on 10/31/2026: $5,000.00", "Balance as of October 31, 2026 $5,000.00"
+OPENING = re.compile(rf"(?:beginning|opening|previous|starting)\s+balance(?:\s+(?:on|as of))?\s*(?:{_DATE_TXT})?[^\d$(\-]*({AMT})", re.I)
+CLOSING = re.compile(rf"(?:(?:ending|closing|new)\s+balance(?:\s+(?:on|as of))?|balance\s+as of)\s*(?:{_DATE_TXT})?[^\d$(\-]*({AMT})", re.I)
+STATEMENT_DATE = re.compile(rf"(?:statement (?:closing )?date|closing date|period ending|statement period ending)\s*:?\s*{_DATE_TXT}", re.I)
 
 # Section headings -> sign of the rows that follow, from the account holder's point of view.
 NEGATIVE = re.compile(r"^(purchases?|withdrawals?|debits?|checks? paid|electronic withdrawals|atm\b|fees?\b|other debits|card purchases|interest charged|charges|cash advances)", re.I)
@@ -66,11 +69,17 @@ def parse_lines(lines: list[str], account: dict) -> ParseResult:
             if start and end:
                 break
     opening = closing = None
+    closing_date = None
     for l in lines:
         if opening is None and (m := OPENING.search(l)):
-            opening = parse_amount(m.group(1))
+            opening = parse_amount(m.group(2))
         if closing is None and (m := CLOSING.search(l)):
-            closing = parse_amount(m.group(1))
+            closing = parse_amount(m.group(2))
+            closing_date = parse_date(m.group(1).replace(".", "")) if m.group(1) else None
+    if not end:
+        # No "date - date" range: fall back to a date printed with the ending balance or a statement date.
+        sd = next((parse_date(m.group(1).replace(".", "")) for l in lines[:60] if (m := STATEMENT_DATE.search(l))), None)
+        end = closing_date or sd
 
     sign = None  # unknown until a section heading is seen
     for l in lines:
@@ -98,9 +107,18 @@ def parse_lines(lines: list[str], account: dict) -> ParseResult:
             amt = abs(amt)  # card statements show payments/credits as negative numbers
         res.transactions.append(Txn(d, round(amt, 2), desc))
 
-    if opening is not None and closing is not None:
-        if is_debt:  # statements print what you owe as a positive number
-            opening, closing = -abs(opening), -abs(closing)
+    if closing is not None and is_debt:  # statements print what you owe as a positive number
+        closing = -abs(closing)
+        opening = -abs(opening) if opening is not None else None
+    if closing is not None and not res.transactions:
+        # A balance-only statement (e.g. a savings account that lists just the month-end balance):
+        # nothing to reconcile, but the ending balance is still a useful net worth data point.
+        if end:
+            res.balances.append(Balance(end, closing))
+            res.warnings.append(f"balance-only statement: imported the ending balance {closing:,.2f} on {end}; no transactions read")
+        else:
+            res.warnings.append("found an ending balance but no statement period date, so it could not be placed in time")
+    elif opening is not None and closing is not None:
         total = round(sum(t.amount for t in res.transactions), 2)
         res.reconciled = abs(round(opening + total - closing, 2)) < 0.01
         if not res.reconciled:
@@ -109,6 +127,8 @@ def parse_lines(lines: list[str], account: dict) -> ParseResult:
             res.balances.append(Balance(end, closing))
     else:
         res.warnings.append("no opening/closing balance found, so the import could not be verified")
+        if closing is not None and end:
+            res.balances.append(Balance(end, closing))
     return res
 
 

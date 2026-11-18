@@ -189,3 +189,34 @@ def test_positions_xlsx(tmp_path):
     wb.save(p)
     r = parse_file(p, {"type": "brokerage"})
     assert r.parser == "positions_csv" and r.holdings[0].market_value == 2500 and r.balances[0].date == "2026-10-31"
+
+
+def test_pdf_balance_only_statement_imports_the_ending_balance():
+    lines = ["MARCUS BY GOLDMAN SACHS", "Statement Period October 1, 2026 - October 31, 2026", "Online Savings Account",
+             "Beginning Balance $20,000.00", "Ending Balance $20,066.12", "Interest earned this period $66.12"]
+    r = generic_pdf.parse_lines(lines, {"type": "savings"})
+    assert r.reconciled is None and not r.transactions  # not rejected
+    assert [(b.date, b.balance) for b in r.balances] == [("2026-10-31", 20066.12)]
+    assert "balance-only" in r.warnings[0]
+
+
+def test_pdf_ending_balance_with_its_own_date():
+    r = generic_pdf.parse_lines(["Savings statement", "Ending balance on 09/30/2026: $1,234.56"], {"type": "savings"})
+    assert [(b.date, b.balance) for b in r.balances] == [("2026-09-30", 1234.56)]
+    r = generic_pdf.parse_lines(["Statement Date: Sep 30, 2026", "Balance as of September 30, 2026 $500.00"], {"type": "savings"})
+    assert [(b.date, b.balance) for b in r.balances] == [("2026-09-30", 500.0)]
+
+
+def test_pdf_with_rows_that_do_not_add_up_is_still_rejected():
+    lines = ["Statement Period 10/01/2026 - 10/31/2026", "Beginning Balance $1,000.00", "Deposits", "10/15 TRANSFER IN 500.00",
+             "Ending Balance $2,000.00"]
+    assert generic_pdf.parse_lines(lines, {"type": "savings"}).reconciled is False
+
+
+def test_marcus_transfer_rule():
+    import yaml
+    from finance.categorize import Categorizer
+    from finance.config import PKG_ROOT
+    c = Categorizer({}, yaml.safe_load(open(PKG_ROOT / "finance" / "default_rules.yaml")))
+    for desc in ("GOLDMAN SACHS BA COLLECTION 2026", "MARCUS ONLINE SAVINGS TRANSFER", "GS BANK USA DEPOSIT"):
+        assert c.apply(desc, desc, -500, None)[1] == "Transfer"

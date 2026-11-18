@@ -79,7 +79,7 @@ def ingest(ws: Workspace, force: bool = False, log=print) -> dict:
             status = "verified" if res.reconciled else ("warning" if res.warnings else "ok")
             db.record_import(con, fh, rel, folder.name, res.parser, n, status, "; ".join(res.warnings))
             mark = "✓" if res.reconciled else "•"
-            log(f"{mark} {rel}: {n} rows via {res.parser}" + (" (reconciled)" if res.reconciled else "") +
+            log(f"{mark} {rel}: " + (f"{n} rows" if n or not res.balances else f"{len(res.balances)} balance" + ("s" if len(res.balances) > 1 else "")) + f" via {res.parser}" + (" (reconciled)" if res.reconciled else "") +
                 "".join(f"\n    note: {w}" for w in res.warnings))
             stats["files"] += 1
             stats["rows"] += n
