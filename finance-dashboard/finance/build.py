@@ -8,7 +8,7 @@ from pathlib import Path
 
 import yaml
 
-from . import db, insights, investments, metrics, recurring
+from . import db, insights, investments, metrics, projection, recurring
 from .config import PKG_ROOT, Workspace
 from .ingest import load_manual, process
 
@@ -39,9 +39,10 @@ def compute(ws: Workspace, as_of: str | None = None) -> dict:
     rec = recurring.detect(txns, last)
     manual = bal_cfg.get("manual") or {}
 
+    debts = insights.debts(con, nw, ws.accounts(), manual, txns)
     data = {
         "meta": {"title": settings.get("dashboard_title", "My Finances"), "generated": datetime.now().isoformat(timespec="minutes"),
-                 "as_of": last, "first": min(dates), "settings": {k: settings.get(k) for k in ("expected_return_pct", "fi_multiple", "essential_categories")}},
+                 "as_of": last, "first": min(dates), "settings": {k: settings.get(k) for k in ("fi_multiple", "essential_categories")}},
         "accounts": [{"id": a["id"], "name": a["name"], "type": a["type"], "institution": a["institution"], "tax": a["tax"]} for a in accounts.values()],
         # Compact rows: date, account index, amount, merchant, category, tags, is_transfer, raw description
         "txns": [],
@@ -52,11 +53,12 @@ def compute(ws: Workspace, as_of: str | None = None) -> dict:
         "recurring": rec,
         "budgets": insights.budgets(summary, ws.load("budgets.yaml") or {}, last),
         "runway": insights.runway(summary, txns, nw, accounts, settings.get("essential_categories") or []),
-        "debts": insights.debts(con, nw, ws.accounts(), manual, txns),
+        "debts": debts,
         "alerts": insights.alerts(txns, rec, last, float(settings.get("unusual_multiple", 2.5))),
         "yoy": insights.year_over_year(txns, last),
         "tax": insights.tax_tags(txns),
         "report_cards": insights.report_cards(summary, nw),
+        "projection": projection.inputs(con, summary, nw, alloc, grow, debts, settings, last),
         "imports": [dict(r) for r in con.execute("SELECT path, account_id, parser, rows, status, message, imported_at FROM imports ORDER BY imported_at DESC")],
     }
     idx = {aid: i for i, aid in enumerate(accounts)}
@@ -74,6 +76,7 @@ def render(data: dict) -> str:
     parts = {
         "/*STYLES*/": safe((WEB / "styles.css").read_text(encoding="utf-8")),
         "/*CHARTJS*/": safe((WEB / "vendor" / "chart.umd.min.js").read_text(encoding="utf-8")),
+        "/*PROJECTION*/": safe((WEB / "projection.js").read_text(encoding="utf-8")),
         "/*APP*/": safe((WEB / "app.js").read_text(encoding="utf-8")),
         "/*DATA*/": f"window.FIN = {blob};",
         "%%TITLE%%": data["meta"]["title"].replace("<", "&lt;"),

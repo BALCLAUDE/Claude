@@ -17,6 +17,8 @@ def read_text(path: Path) -> str:
 
 
 def read_rows(path: Path) -> list[list[str]]:
+    if path.suffix.lower() == ".xlsx":
+        return read_xlsx(path)
     text = read_text(path)
     try:
         dialect = csv.Sniffer().sniff(text[:4096], delimiters=",;\t|")
@@ -45,3 +47,27 @@ def col(header: list[str], names) -> int | None:
         if n in normed:
             return normed.index(n)
     return None
+
+
+def read_xlsx(path: Path) -> list[list[str]]:
+    """Excel exports (some brokerages, e.g. NetX Investor, offer .xlsx). Needs openpyxl.
+    Old .xls files are not supported: open them and "Save as" CSV or .xlsx."""
+    try:
+        import openpyxl
+    except ImportError as e:
+        raise RuntimeError("Reading .xlsx needs openpyxl: pip install openpyxl (or save the file as CSV)") from e
+    wb = openpyxl.load_workbook(str(path), read_only=True, data_only=True)
+    ws = wb.worksheets[0]
+    out = []
+    for row in ws.iter_rows(values_only=True):
+        cells = []
+        for v in row:
+            if v is None:
+                cells.append("")
+            elif hasattr(v, "strftime"):
+                cells.append(v.strftime("%Y-%m-%d"))
+            else:
+                cells.append(str(v).strip())
+        out.append(cells)
+    wb.close()
+    return out

@@ -110,7 +110,7 @@ def make_demo(ws: Workspace, end: date | None = None, months: int = 24, seed: in
     for i, ym in enumerate(ms[1:], 1):
         prev = ms[i - 1]
         due = round(sum(a for d, _, a, *_ in card if d.isoformat()[:7] == prev and a > 0), 2)
-        add(card, _d(ym, 25), "AUTOPAY PAYMENT - THANK YOU", -due, None)
+        add(card, _d(ym, 25), "AUTOPAY PAYMENT RECEIVED - THANK YOU", -due, None)
         add(checking, _d(ym, 25), "CHASE CREDIT CRD AUTOPAY PPD ID: 4760039224", -due)
     card_balance = -round(sum(a for _, _, a, *_ in card), 2)  # purchases positive in this export
 
@@ -182,9 +182,9 @@ def make_demo(ws: Workspace, end: date | None = None, months: int = 24, seed: in
 
     # ----- write files -----
     acc = {
-        "everyday-checking": {"name": "Everyday Checking", "institution": "Example Bank", "type": "checking"},
+        "everyday-checking": {"name": "Everyday Checking", "institution": "Example Bank (Wells Fargo-style CSV)", "type": "checking"},
         "high-yield-savings": {"name": "High-Yield Savings", "institution": "Example Online Bank", "type": "savings"},
-        "rewards-card": {"name": "Rewards Card", "institution": "Example Card Co", "type": "credit", "apr": 26.99},
+        "rewards-card": {"name": "Rewards Card", "institution": "Example Card Co (Amex-style CSV)", "type": "credit", "apr": 26.99},
         "store-card": {"name": "Cashback Card", "institution": "Example Card Co", "type": "credit", "apr": 21.49, "min_payment": 35},
         "taxable-brokerage": {"name": "Taxable Brokerage", "institution": "Example Brokerage", "type": "brokerage", "tax": "taxable"},
     }
@@ -192,31 +192,38 @@ def make_demo(ws: Workspace, end: date | None = None, months: int = 24, seed: in
     for k in acc:
         (ws.inbox / k).mkdir(parents=True, exist_ok=True)
 
-    # Checking: quarterly CSV exports, newest first, with running balance (Chase-like layout).
+    # Checking: quarterly exports in Wells Fargo's headerless CSV format (date, amount, *, check #, description).
     checking.sort(key=lambda r: (r[0], -r[2]))
-    run, rows_bal = 6200.0, []
+    run = 6200.0
     for d, desc, a in checking:
         run = round(run + a, 2)
-        rows_bal.append((d, desc, a, run))
+    checking_balance = run
     for q in range(0, len(ms), 3):
         qm = set(ms[q:q + 3])
-        part = [r for r in rows_bal if r[0].isoformat()[:7] in qm][::-1]
-        with open(ws.inbox / "everyday-checking" / f"activity_{ms[q]}.csv", "w", newline="") as f:
-            w = csv.writer(f)
-            w.writerow(["Details", "Posting Date", "Description", "Amount", "Type", "Balance", "Check or Slip #"])
-            for d, desc, a, b in part:
-                w.writerow(["CREDIT" if a > 0 else "DEBIT", d.strftime("%m/%d/%Y"), desc, f"{a:.2f}", "ACH_CREDIT" if a > 0 else "ACH_DEBIT", f"{b:.2f}", ""])
+        part = [r for r in checking if r[0].isoformat()[:7] in qm][::-1]
+        with open(ws.inbox / "everyday-checking" / f"Checking_{ms[q]}.csv", "w", newline="") as f:
+            w = csv.writer(f, quoting=csv.QUOTE_ALL)
+            for d, desc, a in part:
+                w.writerow([d.strftime("%m/%d/%Y"), f"{a:.2f}", "*", "", desc])
 
-    # Rewards card: two overlapping yearly exports (tests dedupe), purchases positive.
+    # Rewards card: two overlapping exports (tests dedupe) in American Express's CSV layout:
+    # purchases positive, payments negative, "Group-Subcategory" categories.
+    amex_cat = {"Groceries": "Merchandise & Supplies-Groceries", "Restaurant": "Restaurant-Restaurant",
+                "Merchandise": "Merchandise & Supplies-General Retail", "Transportation": "Transportation-Taxis & Coach",
+                "Gas": "Transportation-Fuel", "Entertainment": "Entertainment-General Events",
+                "Health Care": "Business Services-Health Care Services", "Airfare": "Travel-Airline", "Lodging": "Travel-Lodging",
+                "Fees & Adjustments": "Fees & Adjustments-Fees & Adjustments"}
     card.sort(key=lambda r: r[0])
     halves = [ms[:14], ms[11:]]
     for n, part_ms in enumerate(halves):
-        with open(ws.inbox / "rewards-card" / f"card_export_{n + 1}.csv", "w", newline="") as f:
+        with open(ws.inbox / "rewards-card" / f"activity_{n + 1}.csv", "w", newline="") as f:
             w = csv.writer(f)
-            w.writerow(["Date", "Description", "Category", "Amount"])
-            for d, desc, a, cat in card:
+            w.writerow(["Date", "Description", "Card Member", "Account #", "Amount", "Extended Details", "Appears On Your Statement As",
+                        "Address", "City/State", "Zip Code", "Country", "Reference", "Category"])
+            for k, (d, desc, a, cat) in enumerate(card):
                 if d.isoformat()[:7] in part_ms:
-                    w.writerow([d.strftime("%m/%d/%Y"), desc, cat or "", f"{a:.2f}"])
+                    w.writerow([d.strftime("%m/%d/%Y"), desc, "A CARDMEMBER", "-91000", f"{a:.2f}", "", desc, "", "", "", "UNITED STATES",
+                                f"'3200{k:07d}'", amex_cat.get(cat, "") if cat else ""])
 
     # Store card: PDF statements.
     _write_pdfs(ws.inbox / "store-card", statements)
@@ -264,9 +271,9 @@ def make_demo(ws: Workspace, end: date | None = None, months: int = 24, seed: in
         "student-loan": {"name": "Student Loan", "type": "loan", "apr": 5.5, "min_payment": 350, "values": loan},
         "car": {"name": "Car (estimate)", "type": "asset", "values": car},
     }
-    anchors = {"rewards-card": {end.isoformat(): card_balance}}
+    anchors = {"rewards-card": {end.isoformat(): card_balance}, "everyday-checking": {end.isoformat(): checking_balance}}
     (ws.config_dir / "balances.yaml").write_text(
-        "# Demo data: manual accounts and an anchor balance for the card whose CSV has no balance column.\n"
+        "# Demo data: manual accounts, and anchor balances for the checking and card exports (they have no balance column).\n"
         + yaml.safe_dump({"manual": manual, "anchors": anchors}, sort_keys=False))
     (ws.config_dir / "rules.yaml").write_text(yaml.safe_dump({"rules": [
         {"match": "NAVIENT", "category": "Debt Payment", "merchant": "Navient (student loan)"},

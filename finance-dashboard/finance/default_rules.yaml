@@ -31,6 +31,32 @@ source_categories:   # categories some card exports include, mapped to ours
   Education: Education
   Gifts & Donations: Gifts & Donations
   Fees & Adjustments: Fees & Interest
+  # American Express ("Group-Subcategory"; subcategory tried first, then group)
+  Merchandise & Supplies-Groceries: Groceries
+  Merchandise & Supplies-Pharmacies: Health
+  Merchandise & Supplies-Hardware Supplies: Home
+  Merchandise & Supplies-Furnishing: Home
+  Merchandise & Supplies: Shopping
+  Restaurant-Bar & Café: Dining
+  Transportation-Fuel: Transport
+  Transportation-Parking Charges: Transport
+  Transportation-Taxis & Coach: Transport
+  Transportation-Auto Services: Auto
+  Transportation: Transport
+  Airline: Travel
+  Lodging: Travel
+  Vehicle Rental: Travel
+  Travel Agencies: Travel
+  Communications-Cable & Internet Comm: Internet & Phone
+  Communications: Internet & Phone
+  Business Services-Health Care Services: Health
+  Business Services-Insurance Services: Insurance
+  Business Services-Utilities: Utilities
+  Health Care Services: Health
+  Entertainment-Associations: Gifts & Donations
+  Other-Charities: Gifts & Donations
+  Charities: Gifts & Donations
+  Other-Government Services: Taxes
 
 rules:
   # Transfers and payments between your own accounts (also detected automatically by amount matching).

@@ -18,9 +18,9 @@ from .csvutil import col, find_header, norm, read_rows
 
 NAME = "generic_csv"
 
-DATE = ["transaction date", "trans date", "date", "posted date", "posting date", "post date", "run date", "settlement date", "trade date"]
-DESC = ["description", "payee", "merchant", "name", "transaction description", "details", "memo", "action", "transaction"]
-AMOUNT = ["amount", "transaction amount", "amount ($)", "amount usd", "net amount", "value"]
+DATE = ["transaction date", "trans date", "date", "posted date", "posting date", "post date", "run date", "process date", "trade date", "settlement date", "activity date"]
+DESC = ["description", "payee", "merchant", "name", "transaction description", "security description", "details", "memo", "action", "transaction"]
+AMOUNT = ["amount", "transaction amount", "amount ($)", "amount usd", "net amount", "net amount ($)", "value"]
 DEBIT = ["debit", "debits", "withdrawal", "withdrawals", "withdrawal amount", "debit amount", "charges", "outflow"]
 CREDIT = ["credit", "credits", "deposit", "deposits", "deposit amount", "credit amount", "payments", "inflow"]
 CATEGORY = ["category", "transaction category"]
@@ -29,7 +29,7 @@ TYPE = ["type", "transaction type", "details"]
 
 
 def detect(path: Path, account: dict) -> bool:
-    if path.suffix.lower() not in (".csv", ".txt"):
+    if path.suffix.lower() not in (".csv", ".txt", ".xlsx"):
         return False
     return find_header(read_rows(path), _required(account)) is not None
 

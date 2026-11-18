@@ -354,7 +354,6 @@
         { label: '3-month', data: roll(3), borderColor: css('--s1'), borderWidth: 2, pointRadius: 0, tension: 0.3 },
         { label: '12-month', data: roll(12), borderColor: css('--s2'), borderWidth: 2, pointRadius: 0, tension: 0.3 }] },
     });
-    renderFI(S);
     renderDebts();
 
     const years = Object.keys(F.tax).sort().reverse();
@@ -362,53 +361,193 @@
       + '<div class="muted small" style="margin-top:8px">Totals of transactions with each tag. Search the Transactions tab for the details. Not tax advice.</div>' : '<div class="empty">Tag transactions in config/rules.yaml, e.g. tags: [business].</div>';
   }
 
-  function renderFI(S) {
-    const last12 = S.slice(-12);
-    const n = Math.max(last12.length, 1);
-    const spend = last12.reduce((s, m) => s + m.spending, 0) / n * 12;
-    const saved = last12.reduce((s, m) => s + m.income - m.spending, 0) / n;
-    const nw = F.networth, li = nw.months.length - 1;
-    const invest = (nw.by_group.Investments[li] || 0) + (nw.by_group.Cash[li] || 0);
-    const st = F.meta.settings;
-    const box = $('#fi-inputs');
-    if (!box.dataset.init) {
-      box.dataset.init = 1;
-      const field = (id, label, v, step) => `<label>${label}<input type="number" id="${id}" value="${Math.round(v)}" step="${step}"></label>`;
-      box.innerHTML = field('fi-start', 'Starting investable assets ($)', invest, 1000) + field('fi-save', 'Saved per month ($)', Math.max(0, saved), 100)
-        + field('fi-spend', 'Annual spending in retirement ($)', spend, 1000) + field('fi-ret', 'Real return per year (%)', st.expected_return_pct ?? 6, 0.5)
-        + field('fi-mult', 'Target (× annual spending)', st.fi_multiple ?? 25, 1)
-        + `<div class="muted small" style="align-self:end;max-width:320px">Pre-filled from your last 12 months. Use a return after inflation, so the result is in today's dollars.</div>`;
-      $$('input', box).forEach((i) => i.addEventListener('input', () => renderFI(S)));
-    }
-    const v = (id) => parseFloat($('#' + id).value) || 0;
-    const start = v('fi-start'), save = v('fi-save'), annual = v('fi-spend'), r = v('fi-ret') / 100, mult = v('fi-mult');
-    const target = annual * mult, mr = Math.pow(1 + r, 1 / 12) - 1;
-    const years = 50, labels = [], vals = [], tgt = [];
-    let bal = start, hit = null;
-    const y0 = new Date(F.meta.as_of).getFullYear();
-    for (let m = 0; m <= years * 12; m++) {
-      if (hit == null && bal >= target) hit = m;
-      if (m % 12 === 0) {
-        if (hit != null && m > Math.max(hit + 60, 120)) break; // show ~5 years past the target
-        labels.push(String(y0 + m / 12)); vals.push(Math.round(bal)); tgt.push(target);
-      }
-      bal = bal * (1 + mr) + save;
-    }
-    chart('c-fi', {
-      type: 'line',
-      data: { labels, datasets: [{ label: 'Projected investable assets', data: vals, borderColor: css('--s1'), backgroundColor: css('--s1') + '33', fill: true, borderWidth: 2, pointRadius: 0, tension: 0.2 },
-        { label: `Target (${mult}× spending)`, data: tgt, borderColor: css('--ink-2'), borderWidth: 2, pointRadius: 0 }] },
-    });
-    $('#fi-result').innerHTML = target <= 0 ? 'Enter your expected annual spending.'
-      : hit === 0 ? `🎉 You are already at ${money(start)}, above the ${money(target)} target.`
-      : hit != null ? `At this pace you reach <b>${money(target)}</b> in about <b>${(hit / 12).toFixed(1)} years</b> (${y0 + Math.floor(hit / 12)}). Saving an extra $500/month would get you there ${yearsSooner(start, save, mr, target, hit)}.`
-      : `Not reached within ${years} years at this pace. Try a higher savings amount.`;
+  // ---------- Projection ----------
+  const PJ = F.projection;
+  const PJ_KEY = 'fin-projection-v1';
+  function pjDefaults() {
+    const d = PJ.defaults, m = PJ.monthly, b = PJ.balances;
+    const r1 = (x) => Math.round(x * 10) / 10;
+    return {
+      cash: Math.round(b.cash), taxable: Math.round(b.taxable), retirement: Math.round(b.retirement), other: Math.round(b.other),
+      income: Math.round(m.income), incomeGrowth: r1(((PJ.income_growth ?? 0.03)) * 100), spending: Math.round(m.spending),
+      spendingGrowth: r1(((PJ.spending_growth ?? d.inflation / 100)) * 100), investShare: Math.round(PJ.invest_share * 100),
+      retireContrib: Math.round(m.retirement_contrib), extraSavings: 0,
+      invReturn: r1(PJ.portfolio.return), vol: r1(PJ.portfolio.volatility), cashYield: d.cash_yield, otherGrowth: d.other_growth, inflation: d.inflation,
+      years: d.years, stopAfter: '', fiMultiple: d.fi_multiple, birthYear: d.birth_year || '', freeDebt: true,
+    };
   }
-  function yearsSooner(start, save, mr, target, hit) {
-    let bal = start, m = 0;
-    while (bal < target && m < 600) { bal = bal * (1 + mr) + save + 500; m++; }
-    const d = (hit - m) / 12;
-    return d >= 0.1 ? `${d.toFixed(1)} years sooner` : 'about as fast';
+  let pj = pjDefaults();
+  try { const saved = JSON.parse(localStorage.getItem(PJ_KEY) || 'null'); if (saved) pj = { ...pj, ...saved }; } catch (e) {}
+
+  function pjFields() {
+    const d = pjDefaults(), m = PJ.monthly, h = PJ.history;
+    const histG = (g) => (g == null ? 'not enough history (needs 2 years)' : `your last year: ${g >= 0 ? '+' : ''}${(g * 100).toFixed(1)}%`);
+    const w = Object.entries(PJ.portfolio.weights).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${Math.round(v * 100)}% ${k}`).join(', ');
+    return [
+      ['Your money today', [
+        ['cash', 'Cash ($)', 1000, 'Checking + savings, minus cards you pay off monthly'],
+        ['taxable', 'Taxable investments ($)', 1000, 'Brokerage accounts'],
+        ['retirement', 'Retirement accounts ($)', 1000, '401(k), IRA, HSA'],
+        ['other', 'Other assets ($)', 1000, 'House, car… (from balances.yaml)'],
+      ]],
+      ['Earning & saving', [
+        ['income', 'Take-home income ($/mo)', 100, `Average of your last ${PJ.basis_months} months`],
+        ['incomeGrowth', 'Income growth (%/yr)', 0.5, histG(PJ.income_growth)],
+        ['spending', 'Spending ($/mo)', 100, `Average of your last ${PJ.basis_months} months, loan payments included`],
+        ['spendingGrowth', 'Spending growth (%/yr)', 0.5, histG(PJ.spending_growth)],
+        ['investShare', 'Share of savings invested (%)', 5, `You moved ${money(m.invested)}/mo of ${money(m.saved)}/mo saved into investments`],
+        ['retireContrib', '401(k) contributions ($/mo)', 50, 'Yours + employer match (from balances.yaml contributions). Grows with income.'],
+        ['extraSavings', 'Extra savings, what-if ($/mo)', 100, 'Added on top of income − spending'],
+      ]],
+      ['Returns & prices', [
+        ['invReturn', 'Investment return (%/yr)', 0.5, `From your allocation${w ? ` (${w})` : ''}. Your history: ${h.xirr != null ? 'XIRR ' + pct(h.xirr) : '–'}${h.twr_annual != null ? ', time-weighted ' + pct(h.twr_annual) + '/yr' : ''} over ${h.months} months`],
+        ['vol', 'Volatility (%/yr)', 1, 'How much a single year can swing (used for the range of outcomes)'],
+        ['cashYield', 'Cash interest (%/yr)', 0.25, 'What your savings accounts pay'],
+        ['otherGrowth', 'Other assets growth (%/yr)', 0.5, 'Negative for a car, ~3% for a house'],
+        ['inflation', 'Inflation (%/yr)', 0.25, 'Used for "today\'s dollars"'],
+      ]],
+      ['Horizon & goals', [
+        ['years', 'Years to project', 1, ''],
+        ['stopAfter', 'Stop working after (years)', 1, 'Leave blank to keep working. After this, spending is paid from savings.'],
+        ['fiMultiple', 'Independence target (× spending)', 1, '25× = the 4% rule'],
+        ['birthYear', 'Birth year (optional)', 1, 'Shows your age on the timeline'],
+        ['freeDebt', 'Save payments of paid-off loans', 0, 'When a loan ends, its payment keeps going to savings'],
+      ]],
+    ].map(([g, fs]) => [g, fs.map(([k, l, step, hint]) => ({ k, l, step, hint, def: d[k] }))]);
+  }
+  function initProjection() {
+    const box = $('#pj-inputs');
+    box.innerHTML = pjFields().map(([g, fs]) => `<fieldset><legend>${esc(g)}</legend>${fs.map((f) => f.k === 'freeDebt'
+      ? `<label class="pj-field" title="${esc(f.hint)}"><span>${esc(f.l)}</span><input type="checkbox" data-k="${f.k}" ${pj[f.k] ? 'checked' : ''} style="justify-self:start;width:auto"><span class="hint">${esc(f.hint)}</span></label>`
+      : `<label class="pj-field" data-f="${f.k}"><span>${esc(f.l)}</span><input type="number" data-k="${f.k}" step="${f.step}" value="${esc(pj[f.k])}"><span class="hint">${esc(f.hint)}</span></label>`).join('')}</fieldset>`).join('');
+    box.addEventListener('input', (e) => {
+      const k = e.target.dataset.k; if (!k) return;
+      pj[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value === '' ? '' : parseFloat(e.target.value);
+      try { localStorage.setItem(PJ_KEY, JSON.stringify(pj)); } catch (err) {}
+      renderProjection();
+    });
+    $('#pj-real').addEventListener('change', renderProjection);
+    $('#pj-reset').addEventListener('click', () => {
+      pj = pjDefaults();
+      try { localStorage.removeItem(PJ_KEY); } catch (err) {}
+      $$('input[data-k]', box).forEach((i) => { if (i.type === 'checkbox') i.checked = !!pj[i.dataset.k]; else i.value = pj[i.dataset.k]; });
+      renderProjection();
+    });
+    const loans = PJ.loans;
+    $('#pj-basis').innerHTML = (loans.length ? `Loans paid down on schedule: ${loans.map((l) => `${esc(l.name)} ${money(l.balance)} at ${l.apr}% (${money(l.payment)}/mo)`).join(', ')}. ` : '')
+      + 'Defaults come from your data. Your changes are remembered in this browser. Blue outline = changed from your data. '
+      + 'Projections are estimates, not predictions: returns are never smooth.';
+  }
+  function pjParams(over = {}) {
+    const v = { ...pj, ...over }, n = (x) => (x === '' || x == null || isNaN(x) ? 0 : +x);
+    return {
+      years: Math.max(1, Math.min(60, Math.round(n(v.years)) || 30)), cash: n(v.cash), taxable: n(v.taxable), retirement: n(v.retirement), other: n(v.other),
+      loans: PJ.loans, income: n(v.income), spending: n(v.spending), incomeGrowth: n(v.incomeGrowth) / 100, spendingGrowth: n(v.spendingGrowth) / 100,
+      investShare: Math.max(0, Math.min(1, n(v.investShare) / 100)), retireContrib: n(v.retireContrib), extraSavings: n(v.extraSavings), spendingChange: n(v.spendingChange),
+      invReturn: n(v.invReturn) / 100, cashYield: n(v.cashYield) / 100, otherGrowth: n(v.otherGrowth) / 100,
+      stopAfter: v.stopAfter === '' || v.stopAfter == null ? null : Math.max(0, Math.round(n(v.stopAfter))), freeDebtPayments: !!v.freeDebt, fiMultiple: n(v.fiMultiple) || 25,
+    };
+  }
+  function renderProjection() {
+    if (!$('#pj-inputs').innerHTML) initProjection();
+    const d = pjDefaults();
+    $$('#pj-inputs .pj-field[data-f]').forEach((el) => { const k = el.dataset.f; el.classList.toggle('changed', String(pj[k]) !== String(d[k])); });
+    const p = pjParams(), real = $('#pj-real').checked, infl = (+pj.inflation || 0) / 100;
+    const rows = FinProjection.project(p), mc = FinProjection.monteCarlo(p, (+pj.vol || 0) / 100, 400);
+    const y0 = new Date(F.meta.as_of).getFullYear();
+    const defl = (v, y) => (real ? v / Math.pow(1 + infl, y) : v);
+    const birth = +pj.birthYear || null;
+    const yearLabel = (y) => String(y0 + y) + (birth ? ` (${y0 + y - birth})` : '');
+    const at = (y) => Math.min(y, p.years);
+    const fi = FinProjection.fiYear(rows, p.fiMultiple);
+    const unit = real ? "today's dollars" : 'future dollars';
+
+    const kp = (y) => tile(`Net worth in ${y} years`, short(defl(mc.p50[at(y)], at(y))), `likely ${short(defl(mc.p10[at(y)], at(y)))} – ${short(defl(mc.p90[at(y)], at(y)))}`);
+    const marks = [5, 10, 20].filter((y) => y < p.years).concat([p.years]);
+    const saveNow = p.income - p.spending + p.extraSavings;
+    $('#pj-kpis').innerHTML = [
+      tile('Saving now', money(saveNow + p.retireContrib) + '/mo', `${p.income > 0 ? pct(saveNow / p.income, 0) + ' of take-home' : ''}${p.retireContrib ? ` + ${money(p.retireContrib)} to 401(k)` : ''}`),
+      ...marks.slice(-3).map(kp),
+      tile('Financially independent', fi == null ? `Not in ${p.years} yrs` : fi === 0 ? 'Already' : String(y0 + fi), fi == null ? 'Try saving more or a longer horizon'
+        : `${fi ? `in ${fi} years${birth ? `, at ${y0 + fi - birth}` : ''} · ` : ''}${pct(mc.fiChance[fi], 0)} chance by then`),
+      ...(p.stopAfter != null ? [tile('Money lasts', pct(mc.lastedChance, 0), `of ${mc.n} simulations never run out after you stop working in ${y0 + p.stopAfter}`, mc.lastedChance < 0.8 ? 'down' : '')] : []),
+    ].join('');
+
+    const end = rows[rows.length - 1];
+    const growthShare = end.invested > 0 ? Math.max(0, end.growth) / (end.investable + Math.max(0, -end.cash) || 1) : 0;
+    $('#pj-summary').innerHTML = `If you keep saving about <b>${money(saveNow + p.retireContrib)}/month</b> and investments return <b>${(+pj.invReturn).toFixed(1)}%</b> a year, `
+      + `your net worth grows from <b>${short(rows[0].netWorth)}</b> to a typical <b>${short(defl(mc.p50[p.years], p.years))}</b> in ${p.years} years (${unit}). `
+      + `There's a 10% chance it ends below ${short(defl(mc.p10[p.years], p.years))}, and a 10% chance above ${short(defl(mc.p90[p.years], p.years))}. `
+      + `On the smooth path below, ${pct(growthShare, 0)} of your investments by then is market growth, not money you put in.`
+      + (end.cash > 2 * end.annualSpending && p.investShare < 0.9
+        ? ` <br>💡 Only ${pct(p.investShare, 0)} of your savings gets invested, so cash grows to ${short(defl(end.cash, p.years))}, earning just ${(+pj.cashYield).toFixed(1)}%. Once you have a solid emergency fund, investing more of it is one of the biggest levers (see "What moves the needle").`
+        : '');
+
+    const labels = rows.map((r) => yearLabel(r.year));
+    const area = (label, data, color) => ({ label, data, fill: true, backgroundColor: color + '66', borderColor: color, borderWidth: 1.5, pointRadius: 0, tension: 0.25, stack: 's' });
+    chart('c-pj-stack', {
+      type: 'line',
+      data: { labels, datasets: [
+        area('Cash', rows.map((r) => defl(r.cash, r.year)), css('--s1')),
+        area('Money you put in', rows.map((r) => defl(Math.min(r.principal, r.invested), r.year)), css('--s7')),
+        area('Investment growth', rows.map((r) => defl(Math.max(0, r.invested - r.principal), r.year)), css('--s3')),
+        area('Other assets', rows.map((r) => defl(r.other, r.year)), css('--s4')),
+        { label: 'Net worth', data: rows.map((r) => defl(r.netWorth, r.year)), borderColor: css('--ink'), borderWidth: 2, pointRadius: 0, fill: false, tension: 0.25 },
+      ] },
+      options: { scales: { y: { stacked: true } }, plugins: { tooltip: { itemSort: (a, b) => b.datasetIndex - a.datasetIndex } } },
+    });
+    $('#pj-mc-note').textContent = `The smooth path above assumes the same return every year; real returns vary, so the typical outcome is a bit lower. ${mc.n} simulations with random yearly returns (average ${(+pj.invReturn).toFixed(1)}%, swings of ±${(+pj.vol).toFixed(0)}%)`;
+    chart('c-pj-mc', {
+      type: 'line',
+      data: { labels, datasets: [
+        { label: 'Bad luck (10th percentile)', data: mc.p10.map((v, i) => defl(v, i)), borderColor: css('--s1') + '88', borderWidth: 1, pointRadius: 0, fill: false, tension: 0.25 },
+        { label: 'Good luck (90th percentile)', data: mc.p90.map((v, i) => defl(v, i)), borderColor: css('--s1') + '88', backgroundColor: css('--s1') + '2a', borderWidth: 1, pointRadius: 0, fill: '-1', tension: 0.25 },
+        { label: 'Typical (median)', data: mc.p50.map((v, i) => defl(v, i)), borderColor: css('--s1'), borderWidth: 2.5, pointRadius: 0, fill: false, tension: 0.25 },
+        { label: `Independence target (${p.fiMultiple}× spending)`, data: rows.map((r) => defl(r.annualSpending * p.fiMultiple, r.year)), borderColor: css('--s2'), borderWidth: 2, pointRadius: 0, fill: false },
+      ] },
+    });
+
+    // Sensitivity: how each change moves net worth at a horizon and the independence year.
+    const H = at(20);
+    const base = defl(rows[H].netWorth, H);
+    const variants = [
+      ['Return 1 point higher', { invReturn: +pj.invReturn + 1 }], ['Return 1 point lower', { invReturn: +pj.invReturn - 1 }],
+      ['Save $500/month more', { extraSavings: (+pj.extraSavings || 0) + 500 }], ['Spend 10% less', { spendingChange: -0.1 * (+pj.spending || 0) }],
+      ['Invest all savings (no extra cash)', { investShare: 100 }], ['Income grows 1 point faster', { incomeGrowth: +pj.incomeGrowth + 1 }],
+      ['Spending grows 1 point faster', { spendingGrowth: +pj.spendingGrowth + 1 }],
+    ].map(([name, o]) => {
+      const r = FinProjection.project(pjParams(o));
+      return { name, nw: defl(r[H].netWorth, H), fi: FinProjection.fiYear(r, p.fiMultiple) };
+    });
+    $('#pj-sens-note').textContent = `Net worth in ${H} years (${unit})`;
+    const fiTxt = (f) => (f == null ? 'not reached' : f === 0 ? 'now' : String(y0 + f));
+    $('#pj-sens').innerHTML = table([{ h: 'If…', f: (r) => esc(r.name) }, { h: 'Net worth', num: 1, f: (r) => short(r.nw) },
+      { h: 'vs. plan', num: 1, f: (r) => `<span class="${r.nw - base < 0 ? 'down' : 'up'}">${signed(r.nw - base, short)}</span>` },
+      { h: 'Independent', num: 1, f: (r) => fiTxt(r.fi) + (r.fi != null && fi != null && r.fi !== fi ? ` <span class="muted small">(${r.fi < fi ? '−' : '+'}${Math.abs(r.fi - fi)} yr)</span>` : '') }],
+      [{ name: 'Your plan', nw: base, fi }, ...variants]);
+
+    // Milestones on the smooth path.
+    const miles = [];
+    for (const t of [100e3, 250e3, 500e3, 1e6, 2e6, 5e6]) {
+      if (defl(rows[0].netWorth, 0) >= t) continue;
+      const r = rows.find((x) => defl(x.netWorth, x.year) >= t);
+      if (r) miles.push({ what: `Net worth reaches ${short(t)}`, y: r.year });
+    }
+    const debtFree = PJ.loans.length ? rows.find((r) => r.debt <= 0.5) : null;
+    if (debtFree) miles.push({ what: 'Loans paid off', y: debtFree.year });
+    const cross = rows.find((r, i) => i > 0 && (r.invested - rows[i - 1].invested - Math.max(0, r.saved) * p.investShare - r.contrib) > Math.max(0, r.saved) + r.contrib && r.saved + r.contrib > 0);
+    if (cross) miles.push({ what: 'Your investments earn more in a year than you save', y: cross.year });
+    if (fi != null) miles.push({ what: `Independence (${p.fiMultiple}× spending)`, y: fi });
+    if (p.stopAfter != null) miles.push({ what: 'You stop working', y: p.stopAfter });
+    if (rows.depleted != null) miles.push({ what: '⚠️ Savings run out (smooth path)', y: rows.depleted });
+    miles.sort((a, b) => a.y - b.y);
+    $('#pj-miles').innerHTML = table([{ h: 'Milestone', f: (m) => esc(m.what) }, { h: 'Year', num: 1, f: (m) => (m.y === 0 ? 'now' : yearLabel(m.y)) }, { h: 'In', num: 1, f: (m) => (m.y === 0 ? '' : m.y + ' yr') }], miles, { empty: 'No milestones within the horizon.' });
+
+    const pick = rows.filter((r) => r.year <= 10 || r.year % 5 === 0 || r.year === p.years);
+    $('#pj-table').innerHTML = table([{ h: 'Year', f: (r) => yearLabel(r.year) }, { h: 'Income', num: 1, f: (r) => (r.year ? short(defl(r.income, r.year)) : '') },
+      { h: 'Spending', num: 1, f: (r) => (r.year ? short(defl(r.spending, r.year)) : '') }, { h: 'Saved + 401(k)', num: 1, f: (r) => (r.year ? short(defl(r.saved + r.contrib, r.year)) : '') },
+      { h: 'Investments', num: 1, f: (r) => short(defl(r.invested, r.year)) }, { h: 'Cash', num: 1, f: (r) => short(defl(r.cash, r.year)) },
+      { h: 'Net worth', num: 1, f: (r) => `<b>${short(defl(r.netWorth, r.year))}</b>` }, { h: 'Likely range', num: 1, f: (r) => r.year ? `<span class="muted">${short(defl(mc.p10[r.year], r.year))} – ${short(defl(mc.p90[r.year], r.year))}</span>` : '' }], pick);
   }
 
   function renderDebts() {
@@ -507,7 +646,7 @@
   }
   function render() {
     syncFilterUI();
-    ({ overview: renderOverview, spending: renderSpending, investments: renderInvestments, planning: renderPlanning, transactions: renderTransactions, data: renderData })[state.tab]();
+    ({ overview: renderOverview, spending: renderSpending, investments: renderInvestments, projection: renderProjection, planning: renderPlanning, transactions: renderTransactions, data: renderData })[state.tab]();
   }
   $('#title').textContent = F.meta.title;
   $('#asof').textContent = `Data through ${F.meta.as_of} · built ${F.meta.generated.replace('T', ' ')}`;

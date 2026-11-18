@@ -35,6 +35,17 @@ class Categorizer:
         src.update(user_cfg.get("source_categories") or {})
         self.source = {k.lower(): v for k, v in src.items()}
 
+    def source_lookup(self, src: str) -> str | None:
+        """Bank-supplied category -> ours. Amex uses "Group-Subcategory" (e.g. "Merchandise &
+        Supplies-Groceries"): try the full name, then the subcategory, then the group."""
+        key = src.strip().lower()
+        if key in self.source:
+            return self.source[key]
+        if "-" in key:
+            group, sub = key.split("-", 1)
+            return self.source.get(sub.strip()) or self.source.get(group.strip())
+        return None
+
     def apply(self, description: str, merchant: str, amount: float, source_category: str | None):
         """Return (merchant, category, tags). The first rule with a category wins. Your rules without a
         category only rename the merchant or add tags, and every one of your rules that matches adds its tags."""
@@ -61,5 +72,5 @@ class Categorizer:
         run(self.user, False)  # every matching user rule adds its tags
         run(self.default, True)  # the defaults stop at the first rule that sets a category
         if cat is None and source_category:
-            cat = self.source.get(source_category.lower())
+            cat = self.source_lookup(source_category)
         return merchant, cat or "Uncategorized", tags

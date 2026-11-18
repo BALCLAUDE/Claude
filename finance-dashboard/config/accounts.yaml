@@ -1,27 +1,39 @@
 # One entry per account. The key is the folder name under inbox/ where you drop that account's files:
-#   inbox/chase-checking/2026-10.csv  ->  account "chase-checking"
+#   inbox/wf-checking/2026-10.csv  ->  account "wf-checking"
 #
 # type: checking | savings | credit | brokerage | retirement | loan | asset
 # tax (investment accounts): taxable | traditional | roth | hsa
 # Optional per-account parser fixes:
 #   parser: generic_csv            # force a parser instead of auto-detect
-#   flip_sign: true                # card CSV lists purchases as positive numbers
+#   flip_sign: true                # card CSV lists purchases as positive numbers (auto-detected)
 #   date_format: "%m/%d/%Y"
 #   columns: {date: "Post Date", description: "Description", amount: "Amount"}   # or debit:/credit:
 #   apr: 24.99                     # credit cards and loans, for the debt payoff planner
 #   min_payment: 35
+#
+# Rename, add or remove entries to match your real accounts. See README "Your institutions" for
+# which file to download from each one.
 accounts:
-  example-checking:
-    name: Everyday Checking
-    institution: Example Bank
-    type: checking
-  example-card:
-    name: Rewards Card
-    institution: Example Card Co
-    type: credit
-    apr: 24.99
-  example-brokerage:
-    name: Taxable Brokerage
-    institution: Example Brokerage
+  wf-checking:
+    name: Wells Fargo Checking
+    institution: Wells Fargo
+    type: checking          # Download Account Activity -> "Comma Delimited" (or QFX, which includes the balance)
+  wf-savings:
+    name: Wells Fargo Savings
+    institution: Wells Fargo
+    type: savings
+  marcus-hysa:
+    name: Marcus High-Yield Savings
+    institution: Marcus by Goldman Sachs
+    type: savings           # monthly PDF statements (Documents -> Statements)
+  amex:
+    name: American Express
+    institution: American Express
+    type: credit            # Statements & Activity -> Download -> CSV, tick "Include all additional transaction details"
+    flip_sign: true         # Amex CSVs list purchases as positive numbers
+    apr: 27.49              # your card's purchase APR (only used if you ever carry a balance)
+  netx-brokerage:
+    name: Brokerage (NetX Investor)
+    institution: Pershing / NetX Investor
     type: brokerage
-    tax: taxable
+    tax: taxable            # Holdings -> export (CSV or .xlsx) monthly, plus Activity/History export

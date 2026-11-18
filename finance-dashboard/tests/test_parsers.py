@@ -1,4 +1,5 @@
 """Parsers, against small synthetic files written in each test (never real statements)."""
+import pytest
 from pathlib import Path
 
 from finance.inspect import redact
@@ -144,3 +145,47 @@ def test_txn_id_distinguishes_same_day_repeats():
     a = txn_id("acct", "2026-10-01", -4.5, "Coffee", 1)
     assert a == txn_id("acct", "2026-10-01", -4.5, "COFFEE ", 1)
     assert a != txn_id("acct", "2026-10-01", -4.5, "Coffee", 2)
+
+
+def test_wells_fargo_headerless_csv(tmp_path):
+    from finance.parsers import wells_fargo_csv
+    p = write(tmp_path, "Checking1.csv", '"10/14/2026","-45.67","*","","PURCHASE AUTHORIZED ON 10/12 SAFEWAY #1234"\n'
+                                         '"10/15/2026","2500.00","*","","ACME PAYROLL"\n"10/16/2026","-100.00","*","1042","CHECK"\n')
+    assert wells_fargo_csv.detect(p, {}) and not generic_csv.detect(p, {})
+    r = parse_file(p, {"type": "checking"})
+    assert r.parser == "wells_fargo_csv"
+    assert [(t.date, t.amount, t.description) for t in r.transactions] == [
+        ("2026-10-14", -45.67, "PURCHASE AUTHORIZED ON 10/12 SAFEWAY #1234"), ("2026-10-15", 2500.0, "ACME PAYROLL"), ("2026-10-16", -100.0, "CHECK CHECK #1042")]
+
+
+def test_amex_csv_layout(tmp_path):
+    p = write(tmp_path, "activity.csv",
+              "Date,Description,Card Member,Account #,Amount,Extended Details,Appears On Your Statement As,Address,City/State,Zip Code,Country,Reference,Category\n"
+              "10/03/2026,TRADER JOE'S,A MEMBER,-91000,52.10,,TRADER JOE'S,,,,US,'1',Merchandise & Supplies-Groceries\n"
+              "10/20/2026,AUTOPAY PAYMENT RECEIVED - THANK YOU,A MEMBER,-91000,-52.10,,,,,,,'2',\n")
+    r = parse_file(p, {"type": "credit", "flip_sign": True})
+    assert [(t.amount, t.category) for t in r.transactions] == [(-52.1, "Merchandise & Supplies-Groceries"), (52.1, None)]
+
+
+def test_amex_group_subcategory_mapping():
+    import yaml
+    from finance.categorize import Categorizer
+    from finance.config import PKG_ROOT
+    c = Categorizer({}, yaml.safe_load(open(PKG_ROOT / "finance" / "default_rules.yaml")))
+    assert c.source_lookup("Merchandise & Supplies-Groceries") == "Groceries"
+    assert c.source_lookup("Restaurant-Restaurant") == "Dining"
+    assert c.source_lookup("Travel-Airline") == "Travel"
+    assert c.source_lookup("Merchandise & Supplies-Electronics Stores") == "Shopping"  # falls back to the group
+
+
+def test_positions_xlsx(tmp_path):
+    openpyxl = pytest.importorskip("openpyxl")
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.append(["Holdings as of 10/31/2026"])
+    ws.append(["Symbol", "Security Description", "Quantity", "Price", "Market Value"])
+    ws.append(["VTI", "VANGUARD TOTAL", 10, 250.0, 2500.0])
+    p = tmp_path / "holdings.xlsx"
+    wb.save(p)
+    r = parse_file(p, {"type": "brokerage"})
+    assert r.parser == "positions_csv" and r.holdings[0].market_value == 2500 and r.balances[0].date == "2026-10-31"

@@ -57,5 +57,10 @@ class Workspace:
 
     def settings(self) -> dict:
         s = self.load_default("settings.yaml")
-        s.update(self.load("settings.yaml") or {})
+        for k, v in (self.load("settings.yaml") or {}).items():
+            if isinstance(v, dict) and isinstance(s.get(k), dict):  # merge nested blocks (e.g. projection)
+                s[k] = {**s[k], **{kk: ({**s[k].get(kk, {}), **vv} if isinstance(vv, dict) and isinstance(s[k].get(kk), dict) else vv)
+                                   for kk, vv in v.items()}}
+            elif v is not None:
+                s[k] = v
         return s

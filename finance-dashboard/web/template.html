@@ -17,6 +17,7 @@
     <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
     <button role="tab" data-tab="spending">Spending</button>
     <button role="tab" data-tab="investments">Investments</button>
+    <button role="tab" data-tab="projection">Projection</button>
     <button role="tab" data-tab="planning">Planning</button>
     <button role="tab" data-tab="transactions">Transactions</button>
     <button role="tab" data-tab="data">Data</button>
@@ -94,6 +95,27 @@
     <div class="card"><div class="card-h"><h2>Per account performance</h2></div><div id="inv-perf"></div></div>
   </section>
 
+  <section id="tab-projection" class="tab" hidden>
+    <div class="card">
+      <div class="card-h"><h2>Assumptions</h2>
+        <span class="small"><label><input type="checkbox" id="pj-real" checked> Show in today's dollars</label>
+        <button class="ghost small" id="pj-reset">Reset to my data</button></span></div>
+      <div class="pj-groups" id="pj-inputs"></div>
+      <div class="muted small" id="pj-basis"></div>
+    </div>
+    <div class="tiles" id="pj-kpis"></div>
+    <p class="callout" id="pj-summary"></p>
+    <div class="card"><div class="card-h"><h2>Where the growth comes from</h2><span class="muted small">Smooth path: the return you set, every year. The net worth line includes debts.</span></div>
+      <div class="chart tall"><canvas id="c-pj-stack"></canvas></div></div>
+    <div class="card"><div class="card-h"><h2>Range of outcomes</h2><span class="muted small" id="pj-mc-note"></span></div>
+      <div class="chart tall"><canvas id="c-pj-mc"></canvas></div></div>
+    <div class="grid2">
+      <div class="card"><div class="card-h"><h2>What moves the needle</h2><span class="muted small" id="pj-sens-note"></span></div><div id="pj-sens"></div></div>
+      <div class="card"><div class="card-h"><h2>Milestones</h2></div><div id="pj-miles"></div></div>
+    </div>
+    <div class="card"><div class="card-h"><h2>Year by year</h2><span class="muted small">Smooth path; "Likely range" is the 10th–90th percentile of the simulations</span></div><div id="pj-table"></div></div>
+  </section>
+
   <section id="tab-planning" class="tab" hidden>
     <div class="grid2">
       <div class="card"><div class="card-h"><h2>Budgets</h2><span class="muted small" id="bud-note"></span></div><div id="pl-budgets"></div></div>
@@ -101,10 +123,6 @@
     </div>
     <div class="card"><div class="card-h"><h2>Savings rate</h2><span class="muted small">Monthly, with 3- and 12-month rolling averages</span></div>
       <div class="chart"><canvas id="c-savings"></canvas></div></div>
-    <div class="card"><div class="card-h"><h2>Financial independence projection</h2></div>
-      <div class="calc" id="fi-inputs"></div>
-      <div class="chart tall"><canvas id="c-fi"></canvas></div>
-      <p id="fi-result" class="callout"></p></div>
     <div class="card"><div class="card-h"><h2>Debt payoff</h2></div>
       <div id="debt-table"></div>
       <div class="calc" id="debt-inputs"></div>
@@ -137,6 +155,7 @@
 <div id="tip" class="tip" role="tooltip" hidden></div>
 <script>/*CHARTJS*/</script>
 <script>/*DATA*/</script>
+<script>/*PROJECTION*/</script>
 <script>/*APP*/</script>
 </body>
 </html>

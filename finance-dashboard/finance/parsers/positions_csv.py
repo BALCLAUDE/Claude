@@ -12,23 +12,23 @@ from pathlib import Path
 
 from ..models import Balance, Holding, ParseResult
 from ..util import parse_amount, parse_date
-from .csvutil import col, find_header, read_rows, read_text
+from .csvutil import col, find_header, read_rows
 
 NAME = "positions_csv"
 
 SYMBOL = ["symbol", "ticker", "symbol/cusip", "investment", "fund symbol"]
 QTY = ["quantity", "shares", "qty", "qty (quantity)", "units", "share balance"]
-VALUE = ["current value", "market value", "value", "mkt val (market value)", "total value", "mkt val", "current balance"]
+VALUE = ["current value", "market value", "market value ($)", "value", "mkt val (market value)", "total value", "mkt val", "current balance"]
 PRICE = ["last price", "price", "share price", "last", "current price", "closing price"]
-NAME_COL = ["description", "name", "security description", "investment name", "security name"]
-COST = ["cost basis total", "cost basis", "total cost basis", "cost basis ($)", "cost"]
+NAME_COL = ["description", "name", "security description", "investment name", "security name", "security"]
+COST = ["cost basis total", "cost basis", "total cost basis", "cost basis ($)", "total cost", "cost"]
 
 CASHLIKE = re.compile(r"^(SPAXX|FDRXX|FCASH|SWVXX|VMFXX|VMMXX|CORE|CASH|MONEY MARKET|PENDING ACTIVITY)", re.I)
 SKIP = re.compile(r"^(ACCOUNT TOTAL|TOTAL|POSITIONS TOTAL|PENDING ACTIVITY)$", re.I)
 
 
 def detect(path: Path, account: dict) -> bool:
-    if path.suffix.lower() != ".csv":
+    if path.suffix.lower() not in (".csv", ".xlsx"):
         return False
     return find_header(read_rows(path), [set(SYMBOL), set(QTY), set(VALUE)]) is not None
 
@@ -36,7 +36,7 @@ def detect(path: Path, account: dict) -> bool:
 def _as_of(path: Path, account: dict, res: ParseResult) -> str:
     if account.get("as_of"):
         return str(account["as_of"])
-    head = read_text(path)[:2000]
+    head = "\n".join(" ".join(r) for r in read_rows(path)[:40])[:3000]
     m = re.search(r"as of\s+([A-Za-z]{3,9}\.? \d{1,2},? \d{4}|\d{1,2}/\d{1,2}/\d{2,4}|\d{4}-\d{2}-\d{2})", head, re.I)
     if m and (d := parse_date(m.group(1).replace(".", ""))):
         return d

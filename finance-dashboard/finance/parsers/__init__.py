@@ -14,17 +14,18 @@ from __future__ import annotations
 from pathlib import Path
 
 from ..models import ParseResult
-from . import generic_csv, generic_pdf, ofx, positions_csv
+from . import generic_csv, generic_pdf, ofx, positions_csv, wells_fargo_csv
 
 REGISTRY = [
     # Institution-specific parsers go here, first.
+    wells_fargo_csv,
     ofx,
     positions_csv,
     generic_csv,
     generic_pdf,
 ]
 
-SUPPORTED_SUFFIXES = {".csv", ".ofx", ".qfx", ".pdf", ".txt"}
+SUPPORTED_SUFFIXES = {".csv", ".ofx", ".qfx", ".pdf", ".txt", ".xlsx"}
 
 
 def parse_file(path: Path, account: dict) -> ParseResult:

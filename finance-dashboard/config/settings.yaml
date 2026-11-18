@@ -2,9 +2,27 @@
 essential_categories: ['Rent/Mortgage', Utilities, 'Internet & Phone', Groceries, Transport, Insurance, Health, Auto, Kids, Taxes]
 # Days apart two opposite amounts can be and still count as a transfer between your accounts.
 transfer_window_days: 4
-# Projection defaults (editable on the dashboard too).
-expected_return_pct: 6
 fi_multiple: 25          # financial independence = this many years of spending (the "4% rule")
 # Flag a charge as unusual when it is this many times a merchant's typical amount.
 unusual_multiple: 2.5
 dashboard_title: My Finances
+
+# Projection tab defaults. Everything here can also be changed on the dashboard itself.
+projection:
+  years: 30
+  birth_year:            # e.g. 1994, to show your age along the projection
+  inflation_pct: 2.5
+  cash_yield_pct: 3.5    # what savings/HYSA earns
+  other_assets_growth_pct: 0   # house, car... (a car loses value; a house may gain)
+  # Expected yearly return and volatility per asset class (nominal, long-run assumptions, not a
+  # forecast). The portfolio's expected return is these, weighted by your current allocation.
+  assumptions:
+    US Stocks: {return: 7.0, volatility: 16}
+    Intl Stocks: {return: 7.0, volatility: 17}
+    Bonds: {return: 4.0, volatility: 6}
+    Cash: {return: 3.5, volatility: 1}
+    Real Estate: {return: 6.0, volatility: 18}
+    Commodities: {return: 4.0, volatility: 15}
+    Crypto: {return: 8.0, volatility: 60}
+    Other: {return: 5.0, volatility: 12}
+    Unclassified: {return: 6.0, volatility: 14}

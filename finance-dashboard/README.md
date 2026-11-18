@@ -48,12 +48,33 @@ Repeat every month: download, drop the files in, `make update`. Re-dropping a fi
 
 CSV/OFX is always more reliable than PDF. Use PDFs only when there is no export.
 
+## Your institutions
+
+`init` creates `config/accounts.yaml` already set up for these. Rename the keys if you like, and make a matching folder under `data/inbox/` for each one.
+
+| Institution | Folder (key) | What to download | How it's read |
+|---|---|---|---|
+| **Wells Fargo** checking & savings | `wf-checking`, `wf-savings` | Account Activity → **Download** → "Comma Delimited" (or "Quicken (QFX)") | Wells Fargo's CSV has no header row and no balance, so it has its own parser (`wells_fargo_csv`). Add one `anchors:` balance per account in `balances.yaml`, or use QFX, which includes the balance. |
+| **American Express** | `amex` | Statements & Activity → **Download** → CSV, with "include all additional transaction details" ticked (or QFX) | Purchases are positive in Amex files (`flip_sign: true` is set). Amex's own categories ("Merchandise & Supplies-Groceries") are used when no rule matches. Add an anchor balance from your statement. |
+| **Marcus by Goldman Sachs** | `marcus-hysa` | Monthly **PDF statements** | Read by the generic PDF reader and checked against the statement's beginning and ending balances. If one doesn't reconcile, run `inspect` on it (see below) and share the redacted layout. You can also just type the month-end balance into `balances.yaml`. |
+| **NetX Investor** (Pershing) brokerage | `netx-brokerage` | **Holdings** export (CSV or .xlsx) each month, plus the **Activity/History** export | Holdings give allocation and value. Put the date in the file name (`holdings_2026-10-31.xlsx`) if the file doesn't say "as of". Activity gives contributions, dividends and fees. |
+| **Fidelity 401(k)** (NetBenefits) | `balances.yaml` → `manual:` | Your balance and contributions from NetBenefits, monthly or quarterly | A commented example (`fidelity-401k`) is in `balances.yaml`. Add `holdings:` with dollars per fund to include it in allocation. |
+
+These parsers were tested on synthetic look-alikes, not on real files from these institutions. If a file is rejected or looks wrong, `python3 -m finance inspect <file>` gives a safe-to-share layout so the parser can be adjusted.
+
 ## The dashboard
 
 - **Overview**: net worth, income, spending, savings rate, and amount invested. Also cash flow by month, net worth by cash/investments/assets/debt, where the money went, alerts, and a monthly report card.
 - **Spending**: categories per month, totals and averages, top merchants, recurring charges and subscriptions (price increases and new ones flagged), and this year vs. last year.
 - **Investments**: value, money put in vs. market growth, time-weighted return and XIRR, allocation vs. your targets with buy/sell amounts to rebalance, allocation by account and by tax treatment, holdings with gains and expense ratios, monthly returns, dividends/interest/fees, and concentration warnings.
-- **Planning**: budgets with month-to-date pace, emergency-fund runway, savings-rate trend, a financial independence projection (editable), debt payoff (avalanche vs. snowball), and tax-time totals by tag.
+- **Projection**: extrapolates your income, spending, savings rate and investment returns month by month. It starts from your real balances and your last 12 months, and every assumption is editable on the page (and remembered in your browser):
+  - **Where the growth comes from**: cash, money you put in, investment growth and other assets, year by year.
+  - **Range of outcomes**: 400 simulations with random yearly returns. Shows the typical case and the 10th–90th percentile band, plus your financial independence target (25× spending by default).
+  - **What moves the needle**: how much each change matters (return ±1 point, saving $500/mo more, spending 10% less, investing all savings...), in dollars and in years to independence.
+  - **Milestones** ($500k, $1M, loans paid off, when your investments earn more than you save, independence) and a **year-by-year table**.
+  - Optional: **stop working after N years** (spending is then drawn from cash, then investments, and it shows the chance your money lasts), your **birth year** (ages on the timeline), and today's vs. future dollars.
+  - The default return is your current allocation weighted by long-run assumptions per asset class (`projection.assumptions` in `settings.yaml`). Your own historical return is shown next to it for reference. These are estimates, not predictions.
+- **Planning**: budgets with month-to-date pace, emergency-fund runway, savings-rate trend, debt payoff (avalanche vs. snowball), and tax-time totals by tag.
 - **Transactions**: search, filter, sort, and export CSV. Clicking a category anywhere jumps here.
 - **Data**: accounts and every imported file with its status.
 
@@ -68,7 +89,7 @@ The date range and account filters at the top apply to cash flow, spending, and 
 | `targets.yaml` | Target allocation and the concentration limit. |
 | `securities.yaml` | Asset class / expense ratio for funds that aren't built in (about 65 common ETFs and funds are). |
 | `balances.yaml` | Manual accounts (house, car, 401k, loans) and anchor balances. |
-| `settings.yaml` | Essential categories, transfer-matching window, projection defaults, title. |
+| `settings.yaml` | Essential categories, transfer-matching window, title, and projection defaults (horizon, birth year, inflation, cash yield, and return/volatility per asset class). |
 
 How the numbers are defined: **income** is categories starting with `Income`. **Spending** is everything else minus refunds, and leaves out `Transfer` (between your own accounts, found automatically by matching amounts) and `Investments` (money moved into brokerage/retirement accounts). **Savings rate** = (income − spending) / income.
 
@@ -94,18 +115,19 @@ For CSVs, a column mapping in `accounts.yaml` usually fixes it without a parser:
 
 ```
 finance/              Python package (python -m finance ...)
-  parsers/            generic_csv, positions_csv, ofx, generic_pdf, _template_pdf
+  parsers/            wells_fargo_csv, generic_csv, positions_csv (CSV/xlsx), ofx, generic_pdf, _template_pdf
   ingest.py           inbox → SQLite, dedupe, manual balances
   categorize.py normalize.py transfers.py recurring.py
   metrics.py          cash flow, net worth
   investments.py      allocation, drift, contributions vs. growth, TWR, XIRR
   insights.py         budgets, runway, debts, alerts, year over year, tax tags, report cards
+  projection.py       starting balances and recent averages for the Projection tab
   build.py            computes everything and inlines it into one HTML file
   sample.py           fake data for the demo and tests
   default_rules.yaml  default_securities.yaml
 config/               templates copied into your workspace by `init`
-web/                  template.html, app.js, styles.css, vendor/chart.umd.min.js (Chart.js 4.4.6, MIT)
+web/                  template.html, app.js, projection.js (the projection engine), styles.css, vendor/chart.umd.min.js (Chart.js 4.4.6, MIT)
 tests/                pytest, on synthetic data only
 ```
 
-Run the tests with `python3 -m pytest -q`.
+Run the tests with `python3 -m pytest -q` (the projection tests need Node).

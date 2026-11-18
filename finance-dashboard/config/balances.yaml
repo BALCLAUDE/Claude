@@ -5,6 +5,16 @@
 # For a retirement account with a monthly contribution you can also add `contributions`, which
 # feed the "contributions vs. growth" chart.
 manual:
+  # Fidelity NetBenefits 401(k): copy the balance from NetBenefits (or your quarterly statement)
+  # each month. Contributions (yours + employer match) feed "money put in vs. growth" and the projection.
+  # fidelity-401k:
+  #   name: Fidelity 401(k)
+  #   type: retirement
+  #   tax: traditional
+  #   values: {2026-09-30: 84250.12, 2026-10-31: 86010.55}
+  #   contributions: {2026-09-30: 1650, 2026-10-31: 1650}
+  #   holdings: {2026-10-31: {FXAIX: 60000, FSPSX: 18000, FXNAX: 8010.55}}   # optional, $ per fund
+  #
   # home:
   #   name: Home (estimate)
   #   type: asset
