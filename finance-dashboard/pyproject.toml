@@ -1,0 +1,18 @@
+[project]
+name = "finance-dashboard"
+version = "0.1.0"
+description = "Turn bank, card and brokerage statements into one offline HTML dashboard. Runs entirely on your computer."
+requires-python = ">=3.10"
+dependencies = ["pyyaml>=6", "pdfplumber>=0.10"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "reportlab>=4"]   # reportlab only fakes PDF statements for the demo
+
+[tool.setuptools]
+packages = ["finance", "finance.parsers"]
+
+[tool.setuptools.package-data]
+finance = ["*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

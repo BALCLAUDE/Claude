@@ -1,0 +1,7 @@
+# Asset class for each holding, used by the allocation charts. Common funds and ETFs are built in
+# (finance/default_securities.yaml); add your own here or override them.
+# asset_class: US Stocks | Intl Stocks | Bonds | Cash | Real Estate | Crypto | Commodities | Other
+# expense_ratio is a percentage (0.03 means 0.03%).
+securities:
+  # ACME: {asset_class: US Stocks, name: Acme Corp (employer stock)}
+  # MYTDF: {asset_class: US Stocks, split: {US Stocks: 0.54, Intl Stocks: 0.36, Bonds: 0.10}, expense_ratio: 0.08}

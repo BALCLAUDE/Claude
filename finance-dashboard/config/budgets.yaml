@@ -1,0 +1,8 @@
+# Monthly spending limits per category. Leave a category out to not budget it.
+budgets:
+  Groceries: 600
+  Dining: 400
+  Shopping: 300
+  Transport: 200
+  Entertainment: 150
+  Subscriptions: 80

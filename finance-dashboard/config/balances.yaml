@@ -1,0 +1,29 @@
+# Accounts that have no statements to import: a house, a car, a 401(k) you only check quarterly,
+# a mortgage, a private loan. Add a dated value whenever you know it, and the net worth chart
+# carries the last value forward. Loans and other debts are negative.
+#
+# For a retirement account with a monthly contribution you can also add `contributions`, which
+# feed the "contributions vs. growth" chart.
+manual:
+  # home:
+  #   name: Home (estimate)
+  #   type: asset
+  #   values: {2026-01-01: 650000, 2026-07-01: 665000}
+  # mortgage:
+  #   name: Mortgage
+  #   type: loan
+  #   apr: 6.25
+  #   values: {2026-01-01: -480000, 2026-10-01: -472500}
+  # work-401k:
+  #   name: Employer 401(k)
+  #   type: retirement
+  #   tax: traditional
+  #   values: {2026-01-31: 82000, 2026-06-30: 91000}
+  #   contributions: {2026-01-31: 1500, 2026-02-28: 1500}
+  #   holdings: {2026-06-30: {FXAIX: 70000, FXNAX: 21000}}   # optional, dollars per fund
+
+# Anchors: one known balance for an imported account whose files have no balance column (many card
+# CSVs). Take it from your latest statement or the bank's website. The other months are worked out
+# from the transactions. Cards and loans are negative (what you owe).
+anchors:
+  # example-card: {2026-10-31: -1234.56}

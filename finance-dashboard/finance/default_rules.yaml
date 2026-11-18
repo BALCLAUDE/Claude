@@ -1,0 +1,88 @@
+# Bundled categorization rules. Your own rules live in <workspace>/config/rules.yaml and win over these.
+# Each rule: match (case-insensitive regex, tested against "raw description || merchant"),
+# category, optional merchant rename, optional tags, optional when: in|out (only inflows/outflows).
+# Income categories start with "Income". "Transfer" means money moving between your own accounts.
+
+source_categories:   # categories some card exports include, mapped to ours
+  Food & Drink: Dining
+  Restaurants: Dining
+  Restaurant: Dining
+  Transportation: Transport
+  Health Care: Health
+  Healthcare: Health
+  Travel/ Entertainment: Travel
+  Bills: Utilities
+  Dining: Dining
+  Groceries: Groceries
+  Supermarkets: Groceries
+  Gas: Transport
+  Gas/Automotive: Transport
+  Travel: Travel
+  Airfare: Travel
+  Lodging: Travel
+  Entertainment: Entertainment
+  Shopping: Shopping
+  Merchandise: Shopping
+  Health & Wellness: Health
+  Bills & Utilities: Utilities
+  Personal: Personal Care
+  Home: Home
+  Automotive: Auto
+  Education: Education
+  Gifts & Donations: Gifts & Donations
+  Fees & Adjustments: Fees & Interest
+
+rules:
+  # Transfers and payments between your own accounts (also detected automatically by amount matching).
+  - {match: '\bAUTOPAY|\bAUTOMATIC PAYMENT|\bPAYMENT THANK YOU|\bPAYMENT - THANK|\bONLINE PAYMENT|\bCARD PAYMENT|\bEPAY|\bCRCARDPMT|\bCC PMT', category: Transfer}
+  - {match: '\bONLINE TRANSFER|\bTRANSFER (TO|FROM)|\bXFER|\bINTERNAL TRANSFER|\bFUNDS TRANSFER|\bTO SAVINGS|\bFROM SAVINGS|\bFROM CHECKING|\bTO CHECKING', category: Transfer}
+  - {match: '\bVANGUARD|\bFIDELITY|\bSCHWAB|\bBROKERAGE|\bROBINHOOD|\bWEALTHFRONT|\bBETTERMENT|\bE\*TRADE|\bETRADE|\bM1 FINANCE|\bCOINBASE', category: Investments, when: out}
+
+  # Income
+  - {match: '\bPAYROLL|\bDIRECT DEP|\bDIR DEP|\bSALARY|\bGUSTO|\bADP |\bPAYCHEX|\bWORKDAY', category: 'Income:Salary', when: in}
+  - {match: '\bINTEREST PAID|\bINTEREST EARNED|\bINTEREST PAYMENT|^INTEREST$|\bINT EARNED', category: 'Income:Interest', when: in}
+  - {match: '\bIRS TREAS|\bTAX REF|\bSTATE TAX REF', category: 'Income:Tax Refund', when: in}
+  - {match: '\bVENMO CASHOUT|\bZELLE FROM|\bVENMO FROM', category: 'Income:Other', when: in}
+
+  # Housing
+  - {match: '\bRENT\b(?!-A-)|\bRENT PAYMENT|\bAPARTMENTS|\bPROPERTY MGMT|\bPROPERTY MANAGEMENT|\bAVALON|\bEQUITY RESIDENTIAL|\bMORTGAGE|\bROCKET MORTGAGE|\bLOAN SERVIC|\bHOA', category: 'Rent/Mortgage'}
+  - {match: '\bELECTRIC|\bPG&E|\bPGE|\bCON ED|\bDUKE ENERGY|\bEDISON|\bWATER (DEPT|DISTRICT|UTIL|AUTH|BILL|SERVICES|CO\b)|\bSEWER|\bGAS CO|\bNATIONAL GRID|\bPSE&G|\bUTILIT|\bXCEL', category: Utilities}
+  - {match: '\bCOMCAST|\bXFINITY|\bVERIZON|\bAT&T|\bATT\*|\bT-MOBILE|\bTMOBILE|\bSPECTRUM|\bCOX COMM|\bGOOGLE FI|\bMINT MOBILE|\bSONIC', category: 'Internet & Phone'}
+  - {match: '\bHOME DEPOT|\bLOWE|\bIKEA|\bWAYFAIR|\bACE HARDWARE|\bBED BATH|\bCRATE|\bWILLIAMS SONOMA|\bPOTTERY BARN', category: Home}
+
+  # Food
+  - {match: '\bSAFEWAY|\bKROGER|\bWHOLE FOODS|\bWHOLEFDS|\bTRADER JOE|\bALDI|\bPUBLIX|\bWEGMANS|\bHEB |\bH-E-B|\bSPROUTS|\bALBERTSONS|\bCOSTCO WHSE|\bCOSTCO|\bGROCERY|\bMARKET BASKET|\bFOOD LION|\bGIANT (FOOD|EAGLE)|\bSTOP & SHOP|\bINSTACART|\bQFC|\bFRED MEYER|\bRALPHS|\bVONS|\bMEIJER|\bHARRIS TEETER', category: Groceries}
+  - {match: '\bSTARBUCKS|\bDUNKIN|\bPEET|\bBLUE BOTTLE|\bCOFFEE|\bCAFE|\bESPRESSO|\bTIM HORTONS|\bPHILZ', category: Dining}
+  - {match: '\bDOORDASH|\bUBER EATS|\bUBEREATS|\bGRUBHUB|\bPOSTMATES|\bSEAMLESS|\bCAVIAR', category: Dining}
+  - {match: '\bRESTAURANT|\bPIZZA|\bSUSHI|\bTACO|\bBURGER|\bGRILL|\bBISTRO|\bKITCHEN|\bCHIPOTLE|\bSWEETGREEN|\bMCDONALD|\bWENDY|\bCHICK-FIL|\bSUBWAY|\bPANERA|\bSHAKE SHACK|\bIN-N-OUT|\bFIVE GUYS|\bDOMINO|\bBAR |\bBREWING|\bBREWERY|\bTAVERN|\bPUB |\bDELI|\bBAKERY|\bRAMEN|\bTHAI|\bNOODLE|\bTST\*|\bTOAST', category: Dining}
+
+  # Getting around
+  - {match: '\bSHELL\b|\bCHEVRON|\bEXXON|\bMOBIL|\bARCO|\b76 |\bBP#|\bBP |\bSUNOCO|\bVALERO|\bCITGO|\bMARATHON|\bSPEEDWAY|\bWAWA|\bCIRCLE K|\bFUEL|\bGAS STATION', category: Transport}
+  - {match: '\bUBER\b(?! ?EATS)|\bLYFT\b|\bTAXI|\bMETRO\b|\bTRANSIT|\bCLIPPER|\bMTA\b|\bBART|\bCALTRAIN|\bAMTRAK|\bPARKING|\bPARKMOBILE|\bSPOTHERO|\bTOLL|\bFASTRAK|\bE-ZPASS|\bEZPASS|\bBIRD\b|\bLIME\b', category: Transport}
+  - {match: '\bGEICO|\bPROGRESSIVE|\bSTATE FARM|\bALLSTATE|\bAUTO INS|\bJIFFY LUBE|\bAUTOZONE|\bO.REILLY|\bTIRE|\bCAR WASH|\bDMV|\bTESLA SUPERCHARGER|\bVALVOLINE|\bMIDAS', category: Auto}
+
+  # Subscriptions & entertainment
+  - {match: '\bNETFLIX|\bHULU|\bDISNEY|\bHBO|\bMAX\.COM|\bSPOTIFY|\bAPPLE MUSIC|\bYOUTUBE PREMIUM|\bPARAMOUNT|\bPEACOCK|\bAUDIBLE|\bSIRIUS|\bPATREON|\bSUBSTACK|\bNYTIMES|\bWSJ|\bICLOUD|\bGOOGLE STORAGE|\bDROPBOX|\bADOBE|\bMICROSOFT 365|\bCHATGPT|\bOPENAI|\bANTHROPIC|\bCLAUDE\.AI|\bGITHUB|\bNOTION|\b1PASSWORD|\bAMAZON PRIME|\bPRIME VIDEO|\bKINDLE UNLTD', category: Subscriptions}
+  - {match: '\bGYM\b|\bFITNESS|\bEQUINOX|\bPELOTON|\bCLASSPASS|\bORANGETHEORY|\b24 HOUR|\bPLANET FITNESS|\bYMCA|\bCLIMBING', category: Health}
+  - {match: '\bTICKETMASTER|\bSTUBHUB|\bEVENTBRITE|\bAMC |\bREGAL|\bCINEMA|\bTHEATER|\bTHEATRE|\bSTEAM|\bPLAYSTATION|\bXBOX|\bNINTENDO|\bBOWL|\bMUSEUM|\bCONCERT', category: Entertainment}
+
+  # Shopping
+  - {match: '\bAMAZON|\bAMZN|\bTARGET|\bWALMART|\bWAL-MART|\bBEST BUY|\bAPPLE STORE|\bAPPLE\.COM|\bEBAY|\bETSY|\bNORDSTROM|\bMACY|\bTJ MAXX|\bMARSHALLS|\bROSS STORES|\bROSS DRESS|\bOLD NAVY|\bGAP |\bUNIQLO|\bZARA|\bH&M|\bNIKE|\bREI |\bLULULEMON|\bSEPHORA|\bULTA|\bCOSTCO\.COM|\bCHEWY', category: Shopping}
+
+  # Travel
+  - {match: '\bAIRLINE|\bAIRLINES|\bDELTA AIR|\bUNITED AIR|\bUNITED 0|\bAMERICAN AIR|\bSOUTHWEST|\bJETBLUE|\bALASKA AIR|\bSPIRIT AIRL|\bFRONTIER|\bMARRIOTT|\bHILTON|\bHYATT|\bIHG|\bAIRBNB|\bVRBO|\bEXPEDIA|\bBOOKING\.COM|\bHOTEL|\bHOTELS\.COM|\bHERTZ|\bAVIS|\bENTERPRISE RENT|\bNATIONAL CAR|\bTSA PRE', category: Travel}
+
+  # Health & insurance
+  - {match: '\bPHARMACY|\bCVS|\bWALGREENS|\bRITE AID|\bDENTAL|\bDENTIST|\bMEDICAL|\bCLINIC|\bHOSPITAL|\bDOCTOR|\bOPTOMETR|\bVISION CENTER|\bLABCORP|\bQUEST DIAG|\bKAISER|\bURGENT CARE|\bTHERAPY|\bPHYSICIAN', category: Health, tags: [medical]}
+  - {match: '\bLEMONADE|\bHEALTH INS|\bLIFE INS|\bRENTERS INS|\bHOMEOWNERS|\bINSURANCE|\bMETLIFE|\bAFLAC|\bNORTHWESTERN MUTUAL', category: Insurance}
+
+  # Everything else
+  - {match: '\bHAIR|\bSALON|\bBARBER|\bSPA |\bNAIL|\bMASSAGE|\bDRY CLEAN|\bLAUNDRY', category: Personal Care}
+  - {match: '\bTUITION|\bUNIVERSITY|\bCOLLEGE|\bCOURSERA|\bUDEMY|\bMASTERCLASS|\bBOOKSTORE|\bSCHOOL', category: Education}
+  - {match: '\bDAYCARE|\bCHILDCARE|\bKINDERCARE|\bBABYSIT|\bTOYS ?R ?US', category: Kids}
+  - {match: '\bPETCO|\bPETSMART|\bVET |\bVETERINAR|\bROVER|\bBARKBOX', category: Pets}
+  - {match: '\bDONATION|\bCHARITY|\bGOFUNDME|\bRED CROSS|\bUNICEF|\bNPR|\bWIKIMEDIA|\bACLU|\bFOUNDATION|\bCHURCH|\bPLANNED PARENTHOOD|\bDONORSCHOOSE|\bST JUDE', category: 'Gifts & Donations', tags: [charitable]}
+  - {match: '\bINTEREST CHARGE|\bFINANCE CHARGE|\bLATE FEE|\bANNUAL FEE|\bSERVICE FEE|\bMONTHLY FEE|\bMAINTENANCE FEE|\bOVERDRAFT|\bNSF\b|\bFOREIGN TRANSACTION|\bFOREIGN TRANS FEE|\bINTL TRANSACTION FEE|\bATM FEE|\bWIRE FEE', category: 'Fees & Interest', tags: [fee]}
+  - {match: '\bIRS\b|\bTAX PAYMENT|\bFRANCHISE TAX|\bDEPT OF REVENUE|\bPROPERTY TAX', category: Taxes, when: out}
+  - {match: '\bATM WITHDRAWAL|\bATM W/D|\bCASH WITHDRAWAL|^ATM', category: 'Cash & ATM'}
+  - {match: '\bVENMO|\bZELLE|\bCASH APP|\bPAYPAL', category: 'Uncategorized', tags: [p2p]}

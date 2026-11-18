@@ -1,0 +1,10 @@
+# Categories that count as essential (used for the emergency-fund runway).
+essential_categories: ['Rent/Mortgage', Utilities, 'Internet & Phone', Groceries, Transport, Insurance, Health, Auto, Kids, Taxes]
+# Days apart two opposite amounts can be and still count as a transfer between your accounts.
+transfer_window_days: 4
+# Projection defaults (editable on the dashboard too).
+expected_return_pct: 6
+fi_multiple: 25          # financial independence = this many years of spending (the "4% rule")
+# Flag a charge as unusual when it is this many times a merchant's typical amount.
+unusual_multiple: 2.5
+dashboard_title: My Finances

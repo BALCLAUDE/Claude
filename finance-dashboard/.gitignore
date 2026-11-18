@@ -1,0 +1,12 @@
+# Your private data never goes into git.
+data/
+demo/
+inbox/
+*.db
+out/
+*.pdf
+*.ofx
+*.qfx
+__pycache__/
+.pytest_cache/
+*.egg-info/

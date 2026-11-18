@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>%%TITLE%%</title>
+<style>/*STYLES*/</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1 id="title"></h1>
+    <span class="muted" id="asof"></span>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
+    <button role="tab" data-tab="spending">Spending</button>
+    <button role="tab" data-tab="investments">Investments</button>
+    <button role="tab" data-tab="planning">Planning</button>
+    <button role="tab" data-tab="transactions">Transactions</button>
+    <button role="tab" data-tab="data">Data</button>
+  </nav>
+  <button class="ghost" id="theme" title="Toggle light/dark" aria-label="Toggle light or dark theme">◐</button>
+</header>
+
+<div class="filters" id="filters">
+  <div class="seg" id="range" role="group" aria-label="Date range">
+    <button data-r="3">3M</button><button data-r="6">6M</button><button data-r="12">12M</button>
+    <button data-r="ytd">YTD</button><button data-r="all">All</button>
+  </div>
+  <label class="field">From <select id="from"></select></label>
+  <label class="field">To <select id="to"></select></label>
+  <details class="dropdown" id="acctdd">
+    <summary>Accounts: <span id="acctlabel">All</span></summary>
+    <div class="dd-body" id="acctlist"></div>
+  </details>
+  <span class="muted small" id="filternote"></span>
+</div>
+
+<main>
+  <section id="tab-overview" class="tab">
+    <div class="tiles" id="kpis"></div>
+    <div class="grid2">
+      <div class="card"><div class="card-h"><h2>Cash flow</h2><span class="muted small">Income vs. spending per month</span></div>
+        <div class="chart"><canvas id="c-cashflow"></canvas></div></div>
+      <div class="card"><div class="card-h"><h2>Net worth</h2><span class="muted small" id="nw-note"></span></div>
+        <div class="chart"><canvas id="c-networth"></canvas></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="card-h"><h2>Where the money went</h2><span class="muted small">Selected range · click a category to see its transactions</span></div>
+        <div id="ov-cats"></div></div>
+      <div class="card"><div class="card-h"><h2>Heads up</h2><span class="muted small">Last 90 days</span></div>
+        <ul class="alerts" id="ov-alerts"></ul></div>
+    </div>
+    <div class="card"><div class="card-h"><h2>Monthly report card</h2><select id="rc-month" aria-label="Month"></select></div>
+      <div id="reportcard"></div></div>
+  </section>
+
+  <section id="tab-spending" class="tab" hidden>
+    <div class="card"><div class="card-h"><h2>Spending by category, per month</h2><span class="muted small">Top categories; the rest are grouped as Other</span></div>
+      <div class="chart tall"><canvas id="c-catmonthly"></canvas></div></div>
+    <div class="grid2">
+      <div class="card"><div class="card-h"><h2>Categories</h2><span class="muted small">Total · monthly average · share</span></div><div id="sp-cats"></div></div>
+      <div class="card"><div class="card-h"><h2>Top merchants</h2></div><div id="sp-merchants"></div></div>
+    </div>
+    <div class="card"><div class="card-h"><h2>Recurring charges and subscriptions</h2><span class="muted small" id="rec-total"></span></div>
+      <div id="sp-recurring"></div></div>
+    <div class="card"><div class="card-h"><h2>This year vs. last year</h2><span class="muted small" id="yoy-note"></span></div>
+      <div id="sp-yoy"></div></div>
+  </section>
+
+  <section id="tab-investments" class="tab" hidden>
+    <div class="tiles" id="inv-kpis"></div>
+    <div class="card"><div class="card-h"><h2>Portfolio growth</h2><span class="muted small">What you put in vs. what the market added</span></div>
+      <div class="chart tall"><canvas id="c-growth"></canvas></div></div>
+    <div class="grid2">
+      <div class="card"><div class="card-h"><h2>Allocation vs. target</h2><span class="muted small" id="alloc-note"></span></div>
+        <div id="inv-alloc"></div></div>
+      <div class="card"><div class="card-h"><h2>Rebalancing</h2><span class="muted small">To get back to your targets</span></div>
+        <div id="inv-rebal"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="card-h"><h2>By account</h2></div><div id="inv-acct"></div></div>
+      <div class="card"><div class="card-h"><h2>By tax treatment</h2></div><div id="inv-tax"></div></div>
+    </div>
+    <div class="card"><div class="card-h"><h2>Holdings</h2><span class="muted small" id="hold-note"></span></div><div id="inv-holdings"></div></div>
+    <div class="grid2">
+      <div class="card"><div class="card-h"><h2>Monthly returns</h2><span class="muted small">Time-weighted, all investment accounts</span></div>
+        <div class="chart"><canvas id="c-returns"></canvas></div></div>
+      <div class="card"><div class="card-h"><h2>Dividends, interest and fees</h2></div>
+        <div class="chart"><canvas id="c-income"></canvas></div></div>
+    </div>
+    <div class="card"><div class="card-h"><h2>Per account performance</h2></div><div id="inv-perf"></div></div>
+  </section>
+
+  <section id="tab-planning" class="tab" hidden>
+    <div class="grid2">
+      <div class="card"><div class="card-h"><h2>Budgets</h2><span class="muted small" id="bud-note"></span></div><div id="pl-budgets"></div></div>
+      <div class="card"><div class="card-h"><h2>Emergency fund</h2></div><div id="pl-runway"></div></div>
+    </div>
+    <div class="card"><div class="card-h"><h2>Savings rate</h2><span class="muted small">Monthly, with 3- and 12-month rolling averages</span></div>
+      <div class="chart"><canvas id="c-savings"></canvas></div></div>
+    <div class="card"><div class="card-h"><h2>Financial independence projection</h2></div>
+      <div class="calc" id="fi-inputs"></div>
+      <div class="chart tall"><canvas id="c-fi"></canvas></div>
+      <p id="fi-result" class="callout"></p></div>
+    <div class="card"><div class="card-h"><h2>Debt payoff</h2></div>
+      <div id="debt-table"></div>
+      <div class="calc" id="debt-inputs"></div>
+      <div id="debt-result"></div></div>
+    <div class="card"><div class="card-h"><h2>Tax-time totals</h2><span class="muted small">From tags in your rules (charitable, medical, business, ...)</span></div>
+      <div id="pl-tax"></div></div>
+  </section>
+
+  <section id="tab-transactions" class="tab" hidden>
+    <div class="card">
+      <div class="toolbar">
+        <input type="search" id="tx-search" placeholder="Search merchant or description" aria-label="Search transactions">
+        <select id="tx-cat" aria-label="Category"></select>
+        <label class="small"><input type="checkbox" id="tx-transfers"> show transfers</label>
+        <span class="muted small" id="tx-count"></span>
+        <button class="ghost small" id="tx-csv">Download CSV</button>
+      </div>
+      <div class="tablewrap"><table class="tbl" id="tx-table"><thead><tr>
+        <th data-k="0">Date</th><th data-k="3">Merchant</th><th data-k="4">Category</th><th data-k="1">Account</th><th data-k="2" class="num">Amount</th>
+      </tr></thead><tbody></tbody></table></div>
+      <button class="ghost" id="tx-more" hidden>Show more</button>
+    </div>
+  </section>
+
+  <section id="tab-data" class="tab" hidden>
+    <div class="card"><div class="card-h"><h2>Accounts</h2></div><div id="dt-accounts"></div></div>
+    <div class="card"><div class="card-h"><h2>Imported files</h2><span class="muted small">✓ verified against statement balances · • imported · ✗ not imported</span></div><div id="dt-imports"></div></div>
+  </section>
+</main>
+<div id="tip" class="tip" role="tooltip" hidden></div>
+<script>/*CHARTJS*/</script>
+<script>/*DATA*/</script>
+<script>/*APP*/</script>
+</body>
+</html>

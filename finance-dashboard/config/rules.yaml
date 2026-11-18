@@ -1,0 +1,16 @@
+# Your categorization rules. They run before the bundled defaults (finance/default_rules.yaml),
+# so anything here wins. `python -m finance review` lists what is still uncategorized.
+#
+#   match:    regex, case-insensitive, tested against "raw description || cleaned merchant"
+#   category: any name you like. Names starting with "Income" count as income.
+#             "Transfer" = money moving between your own accounts (never counted as spend or income)
+#   merchant: optional nicer name
+#   tags:     optional list, e.g. [business], [charitable], [medical], [reimbursable]
+#   when:     optional "in" (only money arriving) or "out" (only money leaving)
+rules:
+  # - {match: 'ACME CORP PAYROLL', category: 'Income:Salary', merchant: 'Acme (salary)'}
+  # - {match: 'FIGMA|ZOOM', category: Subscriptions, tags: [business]}
+  # - {match: 'VENMO.*ROOMMATE', category: 'Rent/Mortgage'}
+
+# Map categories your bank's CSV already provides onto yours (overrides the defaults).
+source_categories: {}

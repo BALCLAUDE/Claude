@@ -1,0 +1,74 @@
+# Built-in asset classes for common funds. index: true marks broad funds exempt from the
+# concentration warning. expense_ratio in percent.
+securities:
+  CASH: {asset_class: Cash, index: true}
+  # US total market / large cap
+  VTI: {asset_class: US Stocks, index: true, expense_ratio: 0.03, name: Vanguard Total Stock Market ETF}
+  VTSAX: {asset_class: US Stocks, index: true, expense_ratio: 0.04}
+  VOO: {asset_class: US Stocks, index: true, expense_ratio: 0.03}
+  VFIAX: {asset_class: US Stocks, index: true, expense_ratio: 0.04}
+  IVV: {asset_class: US Stocks, index: true, expense_ratio: 0.03}
+  SPY: {asset_class: US Stocks, index: true, expense_ratio: 0.0945}
+  SPLG: {asset_class: US Stocks, index: true, expense_ratio: 0.02}
+  ITOT: {asset_class: US Stocks, index: true, expense_ratio: 0.03}
+  SCHB: {asset_class: US Stocks, index: true, expense_ratio: 0.03}
+  SCHX: {asset_class: US Stocks, index: true, expense_ratio: 0.03}
+  SWTSX: {asset_class: US Stocks, index: true, expense_ratio: 0.03}
+  SWPPX: {asset_class: US Stocks, index: true, expense_ratio: 0.02}
+  FXAIX: {asset_class: US Stocks, index: true, expense_ratio: 0.015}
+  FSKAX: {asset_class: US Stocks, index: true, expense_ratio: 0.015}
+  FZROX: {asset_class: US Stocks, index: true, expense_ratio: 0.0}
+  QQQ: {asset_class: US Stocks, index: true, expense_ratio: 0.20}
+  QQQM: {asset_class: US Stocks, index: true, expense_ratio: 0.15}
+  VUG: {asset_class: US Stocks, index: true, expense_ratio: 0.04}
+  VTV: {asset_class: US Stocks, index: true, expense_ratio: 0.04}
+  SCHD: {asset_class: US Stocks, index: true, expense_ratio: 0.06}
+  VB: {asset_class: US Stocks, index: true, expense_ratio: 0.05}
+  VO: {asset_class: US Stocks, index: true, expense_ratio: 0.04}
+  IJR: {asset_class: US Stocks, index: true, expense_ratio: 0.06}
+  AVUV: {asset_class: US Stocks, index: true, expense_ratio: 0.25}
+  # International
+  VXUS: {asset_class: Intl Stocks, index: true, expense_ratio: 0.05}
+  VTIAX: {asset_class: Intl Stocks, index: true, expense_ratio: 0.09}
+  VEA: {asset_class: Intl Stocks, index: true, expense_ratio: 0.05}
+  VWO: {asset_class: Intl Stocks, index: true, expense_ratio: 0.07}
+  IXUS: {asset_class: Intl Stocks, index: true, expense_ratio: 0.07}
+  IEFA: {asset_class: Intl Stocks, index: true, expense_ratio: 0.07}
+  IEMG: {asset_class: Intl Stocks, index: true, expense_ratio: 0.09}
+  SCHF: {asset_class: Intl Stocks, index: true, expense_ratio: 0.03}
+  FTIHX: {asset_class: Intl Stocks, index: true, expense_ratio: 0.06}
+  FZILX: {asset_class: Intl Stocks, index: true, expense_ratio: 0.0}
+  FSPSX: {asset_class: Intl Stocks, index: true, expense_ratio: 0.035}
+  AVDV: {asset_class: Intl Stocks, index: true, expense_ratio: 0.36}
+  # Global
+  VT: {asset_class: US Stocks, index: true, expense_ratio: 0.06, split: {US Stocks: 0.62, Intl Stocks: 0.38}}
+  VTWAX: {asset_class: US Stocks, index: true, expense_ratio: 0.10, split: {US Stocks: 0.62, Intl Stocks: 0.38}}
+  # Bonds
+  BND: {asset_class: Bonds, index: true, expense_ratio: 0.03}
+  VBTLX: {asset_class: Bonds, index: true, expense_ratio: 0.04}
+  AGG: {asset_class: Bonds, index: true, expense_ratio: 0.03}
+  BNDX: {asset_class: Bonds, index: true, expense_ratio: 0.07}
+  SCHZ: {asset_class: Bonds, index: true, expense_ratio: 0.03}
+  FXNAX: {asset_class: Bonds, index: true, expense_ratio: 0.025}
+  VGIT: {asset_class: Bonds, index: true, expense_ratio: 0.04}
+  VGSH: {asset_class: Bonds, index: true, expense_ratio: 0.04}
+  SGOV: {asset_class: Cash, index: true, expense_ratio: 0.09}
+  BIL: {asset_class: Cash, index: true, expense_ratio: 0.1356}
+  TLT: {asset_class: Bonds, index: true, expense_ratio: 0.15}
+  VTIP: {asset_class: Bonds, index: true, expense_ratio: 0.04}
+  SCHP: {asset_class: Bonds, index: true, expense_ratio: 0.03}
+  MUB: {asset_class: Bonds, index: true, expense_ratio: 0.05}
+  VTEB: {asset_class: Bonds, index: true, expense_ratio: 0.05}
+  # Real estate / other
+  VNQ: {asset_class: Real Estate, index: true, expense_ratio: 0.13}
+  SCHH: {asset_class: Real Estate, index: true, expense_ratio: 0.07}
+  GLD: {asset_class: Commodities, index: true, expense_ratio: 0.40}
+  IAU: {asset_class: Commodities, index: true, expense_ratio: 0.25}
+  IBIT: {asset_class: Crypto, expense_ratio: 0.25}
+  FBTC: {asset_class: Crypto, expense_ratio: 0.25}
+  BTC: {asset_class: Crypto}
+  ETH: {asset_class: Crypto}
+  # Target date funds (approximate blends)
+  VFFVX: {asset_class: US Stocks, index: true, expense_ratio: 0.08, split: {US Stocks: 0.54, Intl Stocks: 0.36, Bonds: 0.10}}
+  VTTSX: {asset_class: US Stocks, index: true, expense_ratio: 0.08, split: {US Stocks: 0.54, Intl Stocks: 0.36, Bonds: 0.10}}
+  VTHRX: {asset_class: US Stocks, index: true, expense_ratio: 0.08, split: {US Stocks: 0.42, Intl Stocks: 0.28, Bonds: 0.30}}

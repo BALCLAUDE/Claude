@@ -1,0 +1,9 @@
+# Target allocation across all investment accounts. Percentages should add up to 100.
+targets:
+  US Stocks: 60
+  Intl Stocks: 25
+  Bonds: 10
+  Cash: 5
+# Warn when one holding (an individual stock or fund) is more than this % of the portfolio.
+# Broad index funds are exempt.
+concentration_limit: 10

@@ -1,0 +1,111 @@
+# Personal Finance Dashboard
+
+Drop in your bank, credit card, and brokerage statements, run one command, and get a single `dashboard.html` file. It shows where your money goes, what you earn, how your net worth and investments are growing, and what to watch.
+
+**Everything runs on your computer.** Statements are read by local Python code, stored in a local SQLite file, and turned into an HTML file that works offline. Nothing is uploaded anywhere, and the dashboard loads no external scripts. Your data folder is gitignored.
+
+## Quick start
+
+```bash
+cd finance-dashboard
+python3 -m pip install -e ".[dev]"     # pyyaml + pdfplumber (+ pytest, reportlab for the demo)
+python3 -m finance demo --open         # try it on two years of fake data first
+```
+
+Then set it up for your own money:
+
+```bash
+python3 -m finance init                # creates ./data with inbox/ and config/
+```
+
+1. In `data/config/accounts.yaml`, list your accounts. The key is a folder name:
+   ```yaml
+   accounts:
+     chase-checking: {name: Chase Checking, institution: Chase, type: checking}
+     amex-gold:      {name: Amex Gold, institution: Amex, type: credit, apr: 27.49}
+     fidelity-brk:   {name: Fidelity Brokerage, institution: Fidelity, type: brokerage, tax: taxable}
+     fidelity-roth:  {name: Roth IRA, institution: Fidelity, type: retirement, tax: roth}
+   ```
+2. Make one folder per account under `data/inbox/` and drop that account's files in it, for example `data/inbox/chase-checking/2026-10.csv`.
+3. Run:
+   ```bash
+   python3 -m finance ingest            # import anything new (files already imported are skipped)
+   python3 -m finance build --open      # write and open data/out/dashboard.html
+   python3 -m finance review            # what is still uncategorized + import problems
+   ```
+
+Repeat every month: download, drop the files in, `make update`. Re-dropping a file, or exports that overlap, never double count.
+
+## What to download from each institution
+
+| Account | Best file | Notes |
+|---|---|---|
+| Checking / savings | **CSV** or **OFX/QFX** ("Download transactions", "Quicken/Web Connect") | Files with a running balance column give you net worth automatically. |
+| Credit cards | **CSV** or **OFX/QFX** | Purchases-as-positive exports are detected and flipped. If the file has no balance column, add one `anchors:` balance in `balances.yaml`. |
+| Brokerage / IRA | **Positions CSV** (holdings) plus an **activity/history CSV**, or **OFX/QFX** | Positions give allocation and value. Put the date in the file name (`positions_2026-10-31.csv`). Activity gives contributions, dividends and fees. |
+| PDF statements | Works for text PDFs | Each one is **checked**: opening balance + transactions must equal the closing balance, or the file is not imported. |
+| 401(k), house, car, mortgage, loans | `config/balances.yaml` | Type in a value whenever you check it. It is carried forward. |
+
+CSV/OFX is always more reliable than PDF. Use PDFs only when there is no export.
+
+## The dashboard
+
+- **Overview**: net worth, income, spending, savings rate, and amount invested. Also cash flow by month, net worth by cash/investments/assets/debt, where the money went, alerts, and a monthly report card.
+- **Spending**: categories per month, totals and averages, top merchants, recurring charges and subscriptions (price increases and new ones flagged), and this year vs. last year.
+- **Investments**: value, money put in vs. market growth, time-weighted return and XIRR, allocation vs. your targets with buy/sell amounts to rebalance, allocation by account and by tax treatment, holdings with gains and expense ratios, monthly returns, dividends/interest/fees, and concentration warnings.
+- **Planning**: budgets with month-to-date pace, emergency-fund runway, savings-rate trend, a financial independence projection (editable), debt payoff (avalanche vs. snowball), and tax-time totals by tag.
+- **Transactions**: search, filter, sort, and export CSV. Clicking a category anywhere jumps here.
+- **Data**: accounts and every imported file with its status.
+
+The date range and account filters at the top apply to cash flow, spending, and transactions.
+
+## Customizing (all in `data/config/`)
+
+| File | What it controls |
+|---|---|
+| `rules.yaml` | Your categorization rules (regex → category, merchant name, tags). They override the ~35 built-in rules. Every rule re-applies to all history on each build. |
+| `budgets.yaml` | Monthly limits per category. |
+| `targets.yaml` | Target allocation and the concentration limit. |
+| `securities.yaml` | Asset class / expense ratio for funds that aren't built in (about 65 common ETFs and funds are). |
+| `balances.yaml` | Manual accounts (house, car, 401k, loans) and anchor balances. |
+| `settings.yaml` | Essential categories, transfer-matching window, projection defaults, title. |
+
+How the numbers are defined: **income** is categories starting with `Income`. **Spending** is everything else minus refunds, and leaves out `Transfer` (between your own accounts, found automatically by matching amounts) and `Investments` (money moved into brokerage/retirement accounts). **Savings rate** = (income − spending) / income.
+
+## Adding a parser for your bank, without sharing your statements
+
+If a file isn't recognised, or a PDF doesn't reconcile:
+
+```bash
+python3 -m finance inspect data/inbox/mybank/statement.pdf > layout.txt
+```
+
+This prints the file's **layout only**: every digit becomes `9`, and every word becomes `x`'s, except common statement words like "Balance" and "Purchases". Read it, then share `layout.txt` (not the statement) to get a parser written. Copy `finance/parsers/_template_pdf.py`, add it to `REGISTRY` in `finance/parsers/__init__.py`, and add a test with a synthetic copy of the layout.
+
+For CSVs, a column mapping in `accounts.yaml` usually fixes it without a parser:
+```yaml
+  mybank-checking:
+    type: checking
+    columns: {date: "Post Date", description: "Payee", debit: "Withdrawals", credit: "Deposits"}
+    date_format: "%d/%m/%Y"
+```
+
+## Project layout
+
+```
+finance/              Python package (python -m finance ...)
+  parsers/            generic_csv, positions_csv, ofx, generic_pdf, _template_pdf
+  ingest.py           inbox → SQLite, dedupe, manual balances
+  categorize.py normalize.py transfers.py recurring.py
+  metrics.py          cash flow, net worth
+  investments.py      allocation, drift, contributions vs. growth, TWR, XIRR
+  insights.py         budgets, runway, debts, alerts, year over year, tax tags, report cards
+  build.py            computes everything and inlines it into one HTML file
+  sample.py           fake data for the demo and tests
+  default_rules.yaml  default_securities.yaml
+config/               templates copied into your workspace by `init`
+web/                  template.html, app.js, styles.css, vendor/chart.umd.min.js (Chart.js 4.4.6, MIT)
+tests/                pytest, on synthetic data only
+```
+
+Run the tests with `python3 -m pytest -q`.
