@@ -11,6 +11,11 @@ rules:
   # - {match: 'ACME CORP PAYROLL', category: 'Income:Salary', merchant: 'Acme (salary)'}
   # - {match: 'FIGMA|ZOOM', category: Subscriptions, tags: [business]}
   # - {match: 'VENMO.*ROOMMATE', category: 'Rent/Mortgage'}
+  #
+  # Money from a business account you don't track, as household income (it would otherwise be a transfer):
+  # - {match: 'TRANSFER FROM .*BUSINESS CHECKING', category: 'Income:Business', when: in}
+  # Payments to a credit card you don't import, counted as spending (one line per payment):
+  # - {match: 'ACTIVE CASH VISA', category: 'Credit Card (untracked)', when: out}
 
 # Map categories your bank's CSV already provides onto yours (overrides the defaults).
 source_categories: {}

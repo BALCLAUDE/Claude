@@ -26,6 +26,11 @@
   const mlabel = (ym) => { const [y, m] = ym.split('-'); return new Date(+y, +m - 1, 1).toLocaleString('en-US', { month: 'short', year: '2-digit' }); };
   const mlong = (ym) => { const [y, m] = ym.split('-'); return new Date(+y, +m - 1, 1).toLocaleString('en-US', { month: 'long', year: 'numeric' }); };
   const isIncome = (c) => c.startsWith('Income');
+  // Investment accounts valued from deposits before their first statement (see funded_by in accounts.yaml).
+  const EST = F.networth.estimated_until || {};
+  const acctName = (id) => (F.accounts.find((a) => a.id === id) || { name: id }).name;
+  const estimatedIn = (ym) => Object.entries(EST).filter(([, until]) => until == null || ym < until.slice(0, 7)).map(([id]) => acctName(id));
+  const estText = (id) => EST[id] === null ? 'estimated from deposits (no statement yet)' : `estimated from deposits before ${EST[id]}`;
 
   // ---------- theme tokens ----------
   const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -185,7 +190,8 @@
         areaDs('Debt', g('Debt'), css('--s8')),
         { label: 'Net worth', data: nw.total.slice(i0, i1 + 1), borderColor: css('--ink'), borderWidth: 2, pointRadius: 0, fill: false, tension: 0.2 },
       ] },
-      options: { scales: { y: { stacked: true } }, plugins: { tooltip: { itemSort: (a, b) => b.datasetIndex - a.datasetIndex } } },
+      options: { scales: { y: { stacked: true } }, plugins: { tooltip: { itemSort: (a, b) => b.datasetIndex - a.datasetIndex,
+        callbacks: { footer: (items) => { const e = estimatedIn(sl[items[0].dataIndex]); return e.length ? `Estimated from deposits (no statement yet): ${e.join(', ')}` : ''; } } } } },
     });
     $('#nw-note').textContent = `${money(nwEnd)} at end of ${mlabel(state.to)}`;
 
@@ -279,6 +285,9 @@
       tile('Fund costs', a.annual_fee_cost != null ? money(a.annual_fee_cost) + '/yr' : '–', a.weighted_expense_ratio != null ? `${a.weighted_expense_ratio.toFixed(3)}% weighted expense ratio` : 'Add expense ratios in securities.yaml'),
     ].join('');
 
+    const est = Object.keys(EST);
+    $('#inv-est').hidden = !est.length;
+    $('#inv-est').innerHTML = est.map((id) => `<b>${esc(acctName(id))}</b>: ${esc(estText(id))}. Those months count only the money you moved in, with no market gains, so there's no gap before the first statement.`).join('<br>');
     const idx = g.value.map((v, i) => i).filter((i) => g.value[i]);
     const lab = idx.map((i) => mlabel(g.months[i]));
     chart('c-growth', {
@@ -629,7 +638,13 @@
     const nw = F.networth, li = nw.months.length - 1;
     $('#dt-accounts').innerHTML = table([{ h: 'Account', f: (a) => esc(a.name) }, { h: 'Institution', f: (a) => esc(a.institution || '') }, { h: 'Type', f: (a) => esc(a.type) + (a.tax ? ` · ${esc(a.tax)}` : '') },
       { h: 'Transactions', num: 1, f: (a) => F.txns.filter((t) => ACCT_IDX[t[1]] === a.id).length || '–' },
-      { h: 'Latest balance', num: 1, f: (a) => { const v = (nw.by_account[a.id] || [])[li]; return v == null ? '<span class="muted" title="No balance known. Add an anchor in balances.yaml">not in net worth</span>' : money(v); } }], ACCTS);
+      { h: 'Latest balance', num: 1, f: (a) => { const v = (nw.by_account[a.id] || [])[li]; return v == null ? '<span class="muted" title="No balance known. Add an anchor in balances.yaml">not in net worth</span>' : money(v); } },
+      { h: 'Notes', f: (a) => (a.id in EST ? `<span class="small muted">${esc(estText(a.id))}</span>` : '') }], ACCTS);
+    const um = F.unmatched_transfers || [];
+    $('#dt-unmatched-card').hidden = !um.length;
+    $('#dt-unmatched').innerHTML = table([{ h: 'Payee', f: (r) => esc(r.merchant) }, { h: 'From', f: (r) => esc(r.account) }, { h: 'Count', num: 1, f: (r) => r.n },
+      { h: 'Total', num: 1, f: (r) => money(r.total) }, { h: 'Dates', f: (r) => `${r.first} – ${r.last}` }], um)
+      + '<div class="notice">These are treated as transfers, so they aren\'t counted as spending. If they pay an account you haven\'t imported (for example a second credit card), import it so its purchases are counted, or add a rule in rules.yaml that gives these payments a spending category.</div>';
     const mark = { verified: '✓', ok: '•', warning: '•', unreconciled: '✗', error: '✗' };
     $('#dt-imports').innerHTML = table([{ h: '', f: (r) => `<span title="${esc(r.status)}">${mark[r.status] || ''}</span>` },
       { h: 'File', f: (r) => esc(r.path) }, { h: 'Parser', f: (r) => esc(r.parser) }, { h: 'Rows', num: 1, f: (r) => r.rows }, { h: 'Notes', f: (r) => `<span class="small muted">${esc(r.message || '')}</span>` }], F.imports);

@@ -95,6 +95,8 @@ def inputs(con, summary, nw, alloc, growth, debts, settings, as_of) -> dict:
     contrib = 0.0
     if ret_ids:
         q = f"SELECT SUM(amount) FROM investment_flows WHERE type='contribution' AND account_id IN ({','.join('?' * len(ret_ids))}) AND substr(date,1,7) >= ? AND substr(date,1,7) <= ?"
+        # money that came from a bank account is already in income - spending; count payroll contributions only
+        q += " AND id NOT LIKE 'fund:%' AND id NOT IN (SELECT transfer_pair FROM transactions WHERE transfer_pair IS NOT NULL)"
         contrib = (con.execute(q, (*ret_ids, first12, rows[-1]["month"] if rows else as_of[:7])).fetchone()[0] or 0.0) / n
 
     table = {k: {"return": float(v["return"]), "volatility": float(v["volatility"])} for k, v in (proj.get("assumptions") or {}).items()}

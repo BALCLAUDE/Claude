@@ -66,6 +66,8 @@ def parse(path: Path, account: dict) -> ParseResult:
     c_cat = _pick(header, ov.get("category"), CATEGORY)
     c_bal = _pick(header, ov.get("balance"), BALANCE)
     c_action = col(header, ["action", "activity", "transaction type"])
+    c_status = col(header, ["status", "transaction status"])
+    pending = 0
     c_type = col(header, TYPE)
     if c_type in (c_desc, c_cat):
         c_type = None
@@ -77,6 +79,9 @@ def parse(path: Path, account: dict) -> ParseResult:
     bal_points: dict[str, float] = {}
     for row in rows[hi + 1:]:
         if not row or len(row) <= c_date:
+            continue
+        if c_status is not None and c_status < len(row) and row[c_status].strip().lower() == "pending":
+            pending += 1  # it will come back as posted (often with a different date) in a later export
             continue
         d = parse_date(row[c_date], fmt)
         if not d:
@@ -104,6 +109,8 @@ def parse(path: Path, account: dict) -> ParseResult:
             if b is not None:
                 bal_points.setdefault(d, b)  # most exports are newest-first; keep the first seen per day
 
+    if pending:
+        res.warnings.append(f"skipped {pending} pending transaction(s); they are imported once posted")
     res.transactions = _fix_sign(res.transactions, account, res)
     if bal_points:
         # Running balances: keep the latest point per month (enough for the net worth chart).

@@ -16,12 +16,15 @@ from .csvutil import col, find_header, read_rows
 
 NAME = "positions_csv"
 
-SYMBOL = ["symbol", "ticker", "symbol/cusip", "investment", "fund symbol"]
+SYMBOL = ["symbol", "ticker", "symbol/cusip", "investment", "fund symbol", "security id", "security symbol"]
 QTY = ["quantity", "shares", "qty", "qty (quantity)", "units", "share balance"]
 VALUE = ["current value", "market value", "market value ($)", "value", "mkt val (market value)", "total value", "mkt val", "current balance"]
 PRICE = ["last price", "price", "share price", "last", "current price", "closing price"]
 NAME_COL = ["description", "name", "security description", "investment name", "security name", "security"]
 COST = ["cost basis total", "cost basis", "total cost basis", "cost basis ($)", "total cost", "cost"]
+GAIN = ["gain/loss $", "gain/loss ($)", "unrealized gain/loss $", "unrealized gain/loss", "total gain/loss dollar", "gain/loss"]
+ASSET_CLASS = ["asset classification", "asset class", "security type", "asset type"]
+CASH_CLASS = re.compile(r"^(cash|money (market|fund)|sweep)", re.I)
 
 CASHLIKE = re.compile(r"^(SPAXX|FDRXX|FCASH|SWVXX|VMFXX|VMMXX|CORE|CASH|MONEY MARKET|PENDING ACTIVITY)", re.I)
 SKIP = re.compile(r"^(ACCOUNT TOTAL|TOTAL|POSITIONS TOTAL|PENDING ACTIVITY)$", re.I)
@@ -37,7 +40,7 @@ def _as_of(path: Path, account: dict, res: ParseResult) -> str:
     if account.get("as_of"):
         return str(account["as_of"])
     head = "\n".join(" ".join(r) for r in read_rows(path)[:40])[:3000]
-    m = re.search(r"as of\s+([A-Za-z]{3,9}\.? \d{1,2},? \d{4}|\d{1,2}/\d{1,2}/\d{2,4}|\d{4}-\d{2}-\d{2})", head, re.I)
+    m = re.search(r"as of\s*:?\s*([A-Za-z]{3,9}\.? \d{1,2},? \d{4}|\d{1,2}/\d{1,2}/\d{2,4}|\d{4}-\d{2}-\d{2})", head, re.I)
     if m and (d := parse_date(m.group(1).replace(".", ""))):
         return d
     m = re.search(r"(\d{4})[-_]?(\d{2})[-_]?(\d{2})", path.stem)
@@ -56,12 +59,13 @@ def parse(path: Path, account: dict) -> ParseResult:
     header = rows[hi]
     cs, cq, cv = col(header, SYMBOL), col(header, QTY), col(header, VALUE)
     cp, cn, cc = col(header, PRICE), col(header, NAME_COL), col(header, COST)
+    cg, ca, cu = col(header, GAIN), col(header, ASSET_CLASS), col(header, ["cusip"])
     res = ParseResult(parser=NAME)
     as_of = _as_of(path, account, res)
     seen: dict[str, Holding] = {}
     for row in rows[hi + 1:]:
         get = lambda i: row[i] if i is not None and i < len(row) else ""
-        sym = get(cs).strip().strip("*").upper()
+        sym = (get(cs) or get(cu)).strip().strip("*").upper()
         if not sym or SKIP.match(sym):
             continue
         mv = parse_amount(get(cv))
@@ -69,19 +73,22 @@ def parse(path: Path, account: dict) -> ParseResult:
             continue
         qty = parse_amount(get(cq))
         price = parse_amount(get(cp))
-        if CASHLIKE.match(sym):
+        if CASHLIKE.match(sym) or CASH_CLASS.match(get(ca)):  # sweep funds are named by class, not ticker
             sym, qty, price = "CASH", mv, 1.0
         if qty is None:
             qty = mv if price in (None, 0) else mv / price
         if price is None:
             price = mv / qty if qty else 0.0
+        cost = parse_amount(get(cc))
+        if cost is None and sym != "CASH" and (gain := parse_amount(get(cg))) is not None:
+            cost = mv - gain  # exports without a cost column still show the gain
         h = seen.get(sym)
         if h:  # the same symbol listed twice (e.g. two lots): combine
             h.quantity += qty
             h.market_value += mv
-            h.cost_basis = (h.cost_basis or 0) + (parse_amount(get(cc)) or 0)
+            h.cost_basis = (h.cost_basis or 0) + (cost or 0)
         else:
-            seen[sym] = Holding(as_of, sym, get(cn) or sym, qty, price, mv, parse_amount(get(cc)))
+            seen[sym] = Holding(as_of, sym, get(cn) or sym, qty, price, mv, cost)
     res.holdings = list(seen.values())
     total = round(sum(h.market_value for h in res.holdings), 2)
     res.balances = [Balance(as_of, total)]

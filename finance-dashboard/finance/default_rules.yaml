@@ -53,28 +53,33 @@ source_categories:   # categories some card exports include, mapped to ours
   Business Services-Insurance Services: Insurance
   Business Services-Utilities: Utilities
   Health Care Services: Health
-  Entertainment-Associations: Gifts & Donations
+  Entertainment-Associations: Subscriptions   # memberships and dues
   Other-Charities: Gifts & Donations
   Charities: Gifts & Donations
-  Other-Government Services: Taxes
+  Other-Government Services: Government & Fees
+  Other-Education: Education
+  Business Services-Other Services: Services
+  Business Services-Professional Services: Services
+  Business Services-Contracting Services: Home
+  Business Services-Office Supplies: Shopping
 
 rules:
   # Transfers and payments between your own accounts (also detected automatically by amount matching).
-  - {match: '\bAUTOPAY|\bAUTOMATIC PAYMENT|\bPAYMENT THANK YOU|\bPAYMENT - THANK|\bONLINE PAYMENT|\bCARD PAYMENT|\bEPAY|\bCRCARDPMT|\bCC PMT', category: Transfer}
+  - {match: '\bAUTOPAY|\bAUTOMATIC PAYMENT|\bPAYMENT THANK YOU|\bPAYMENT - THANK|\bONLINE PAYMENT|\bCARD PAYMENT|\bEPAY|\bCRCARDPMT|\bCC PMT|\bAMERICAN EXPRESS ACH PMT|\bAMERICAN EXPRESS RETRY PYMT|\bAMEX EPAYMENT', category: Transfer}
   - {match: '\bONLINE TRANSFER|\bTRANSFER (TO|FROM)|\bXFER|\bINTERNAL TRANSFER|\bFUNDS TRANSFER|\bTO SAVINGS|\bFROM SAVINGS|\bFROM CHECKING|\bTO CHECKING', category: Transfer}
   # Money to/from an online savings bank whose own statements are balance-only (e.g. Marcus by Goldman Sachs)
   - {match: '\bMARCUS\b|\bGOLDMAN SACHS BA|\bGS BANK USA|\bGOLDMAN SACHS BANK', category: Transfer}
-  - {match: '\bVANGUARD|\bFIDELITY|\bSCHWAB|\bBROKERAGE|\bROBINHOOD|\bWEALTHFRONT|\bBETTERMENT|\bE\*TRADE|\bETRADE|\bM1 FINANCE|\bCOINBASE', category: Investments, when: out}
+  - {match: '\bVANGUARD|\bFIDELITY|\bSCHWAB|\bBROKERAGE|\bROBINHOOD|\bWEALTHFRONT|\bBETTERMENT|\bE\*TRADE|\bETRADE|\bM1 FINANCE|\bCOINBASE|\bPERSHING|\bNETX|\bFID BKG SVC', category: Investments, when: out}
 
   # Income
   - {match: '\bPAYROLL|\bDIRECT DEP|\bDIR DEP|\bSALARY|\bGUSTO|\bADP |\bPAYCHEX|\bWORKDAY', category: 'Income:Salary', when: in}
   - {match: '\bINTEREST PAID|\bINTEREST EARNED|\bINTEREST PAYMENT|^INTEREST$|\bINT EARNED', category: 'Income:Interest', when: in}
   - {match: '\bIRS TREAS|\bTAX REF|\bSTATE TAX REF', category: 'Income:Tax Refund', when: in}
-  - {match: '\bVENMO CASHOUT|\bZELLE FROM|\bVENMO FROM', category: 'Income:Other', when: in}
+  - {match: '\bVENMO CASHOUT|\bZELLE FROM|\bVENMO FROM|\bMOBILE DEPOSIT', category: 'Income:Other', when: in}
 
   # Housing
-  - {match: '\bRENT\b(?!-A-)|\bRENT PAYMENT|\bAPARTMENTS|\bPROPERTY MGMT|\bPROPERTY MANAGEMENT|\bAVALON|\bEQUITY RESIDENTIAL|\bMORTGAGE|\bROCKET MORTGAGE|\bLOAN SERVIC|\bHOA', category: 'Rent/Mortgage'}
-  - {match: '\bELECTRIC|\bPG&E|\bPGE|\bCON ED|\bDUKE ENERGY|\bEDISON|\bWATER (DEPT|DISTRICT|UTIL|AUTH|BILL|SERVICES|CO\b)|\bSEWER|\bGAS CO|\bNATIONAL GRID|\bPSE&G|\bUTILIT|\bXCEL', category: Utilities}
+  - {match: '\bRENT\b(?!-A-)|\bRENT PAYMENT|\bAPARTMENTS|\bPROPERTY MGMT|\bPROPERTY MANAGEMENT|\bAVALON|\bEQUITY RESIDENTIAL|\bMORTGAGE|\bROCKET MORTGAGE|\bLOAN SERVIC|\bHOA|\bMTG PYMT|\bMTG\b', category: 'Rent/Mortgage'}
+  - {match: '\bELECTRIC|\bPG&E|\bPGE|\bCON ED|\bDUKE ENERGY|\bEDISON|\bWATER (DEPT|DISTRICT|UTIL|AUTH|BILL|SERVICES|CO\b)|\bSEWER|\bGAS CO|\bNATIONAL GRID|\bPSE&G|\bUTILIT|\bXCEL|\bENERGY\b', category: Utilities}
   - {match: '\bCOMCAST|\bXFINITY|\bVERIZON|\bAT&T|\bATT\*|\bT-MOBILE|\bTMOBILE|\bSPECTRUM|\bCOX COMM|\bGOOGLE FI|\bMINT MOBILE|\bSONIC', category: 'Internet & Phone'}
   - {match: '\bHOME DEPOT|\bLOWE|\bIKEA|\bWAYFAIR|\bACE HARDWARE|\bBED BATH|\bCRATE|\bWILLIAMS SONOMA|\bPOTTERY BARN', category: Home}
 

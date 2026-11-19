@@ -10,6 +10,9 @@
 #   columns: {date: "Post Date", description: "Description", amount: "Amount"}   # or debit:/credit:
 #   apr: 24.99                     # credit cards and loans, for the debt payoff planner
 #   min_payment: 35
+#   funded_by: 'PERSHING'          # investment accounts: pattern for the bank transfers that fund it.
+#                                  # Those become contributions, and months before the account's first
+#                                  # statement are valued at the money put in so far (no gap in the charts).
 #
 # Rename, add or remove entries to match your real accounts. See README "Your institutions" for
 # which file to download from each one.
@@ -37,3 +40,11 @@ accounts:
     institution: Pershing / NetX Investor
     type: brokerage
     tax: taxable            # Holdings -> export (CSV or .xlsx) monthly, plus Activity/History export
+    funded_by: 'PERSHING'   # transfers from Wells Fargo to the brokerage show as "PERSHING ... BROKERAGE"
+  fidelity-ira:
+    name: Fidelity IRA
+    institution: Fidelity
+    type: retirement
+    tax: roth               # change to traditional if it's a traditional IRA
+    funded_by: 'FID BKG SVC'   # transfers from Wells Fargo show as "FID BKG SVC LLC MONEYLINE"
+    # Until you add a Fidelity positions export (inbox/fidelity-ira/), its value is the money put in.

@@ -75,13 +75,18 @@ def monthly_summary(txns: list[dict]) -> list[dict]:
     return out
 
 
-def account_balance_series(con, months: list[str], anchors: dict | None = None) -> dict[str, list[float | None]]:
+def account_balance_series(con, months: list[str], anchors: dict | None = None, estimates: dict | None = None) -> dict[str, list[float | None]]:
     """Month-end balance per account.
 
     For accounts with transactions, balances between statements are rebuilt from the transactions
     (balance at month end = nearest known balance adjusted by the transactions in between), so the
     chart moves every month instead of jumping at each statement. Other accounts carry their last
     known value forward. Months before an account's first data are None.
+
+    Investment accounts also use their contributions/withdrawals (activity files, balances.yaml, or bank
+    transfers matched by `funded_by`): money added after the latest statement is included, and months
+    before the first statement are valued at the money put in so far (no gains assumed). Those months
+    are reported in `estimates` as {account: first statement date, or None if there is none yet}.
     """
     accts = [dict(r) for r in con.execute("SELECT * FROM accounts")]
     points: dict[str, list[tuple[str, float]]] = defaultdict(list)
@@ -94,11 +99,21 @@ def account_balance_series(con, months: list[str], anchors: dict | None = None) 
     txns: dict[str, list[tuple[str, float]]] = defaultdict(list)
     for r in con.execute("SELECT account_id, date, amount FROM transactions ORDER BY date"):
         txns[r["account_id"]].append((r["date"], r["amount"]))
+    flows: dict[str, list[tuple[str, float]]] = defaultdict(list)
+    for r in con.execute("SELECT account_id, date, amount FROM investment_flows WHERE type IN ('contribution','withdrawal') ORDER BY date"):
+        flows[r["account_id"]].append((r["date"], r["amount"]))
 
     series = {}
     for a in accts:
         aid = a["id"]
         pts, tx = points.get(aid, []), txns.get(aid, [])
+        if a["type"] in INVEST_TYPES and flows.get(aid):
+            series[aid] = _invest_series(pts, flows[aid], months)
+            first_bal = pts[0][0] if pts else None
+            if first_bal is None or flows[aid][0][0] < first_bal[:7] + "-01":
+                if estimates is not None:
+                    estimates[aid] = first_bal
+            continue
         if not pts:
             continue  # no balance information: cannot place this account in net worth
         first_data = min([p[0] for p in pts] + [t[0] for t in tx])
@@ -117,6 +132,21 @@ def account_balance_series(con, months: list[str], anchors: dict | None = None) 
     return series
 
 
+def _invest_series(pts, flows, months) -> list[float | None]:
+    out = []
+    for ym in months:
+        end = month_end(ym)
+        prior = [(d, v) for d, v in pts if d <= end]
+        if prior:
+            d0, v0 = prior[-1]
+            out.append(round(v0 + sum(a for d, a in flows if d0 < d <= end), 2))
+        elif flows[0][0] <= end:
+            out.append(round(sum(a for d, a in flows if d <= end), 2))  # before the first statement
+        else:
+            out.append(None)
+    return out
+
+
 def _rebuild(pts, tx, end: str) -> float:
     prior = [(d, v) for d, v in pts if d <= end]
     if prior:
@@ -128,7 +158,8 @@ def _rebuild(pts, tx, end: str) -> float:
 
 def net_worth(con, months: list[str], anchors=None) -> dict:
     accts = {r["id"]: dict(r) for r in con.execute("SELECT * FROM accounts")}
-    per = account_balance_series(con, months, anchors)
+    estimates: dict = {}
+    per = account_balance_series(con, months, anchors, estimates)
     groups = {"Cash": CASH_TYPES, "Investments": INVEST_TYPES, "Other assets": ("asset",), "Debt": DEBT_TYPES}
     by_group = {g: [0.0] * len(months) for g in groups}
     for aid, vals in per.items():
@@ -143,6 +174,8 @@ def net_worth(con, months: list[str], anchors=None) -> dict:
         "by_group": {g: [round(x, 2) for x in v] for g, v in by_group.items()},
         "by_account": per,
         "total": total,
+        # account -> date of its first real statement (None = none yet): earlier months are estimates
+        "estimated_until": estimates,
     }
 
 

@@ -61,6 +61,8 @@ def make_demo(ws: Workspace, end: date | None = None, months: int = 24, seed: in
         add(checking, _d(ym, 2), "ONLINE TRANSFER TO SAV XXXXXX4821", -600)
         add(savings, _d(ym, 2), "ONLINE TRANSFER FROM CHK XXXXXX1937", 600)
         add(checking, _d(ym, 16), "VANGUARD BUY INVESTMENT EFT", -1000)
+        if i >= months - 4:  # a Roth IRA opened recently: funded from checking, no statement downloaded yet
+            add(checking, _d(ym, 20), "EXAMPLE INVEST MONEYLINE IRA CONTRIB", -500)
         if rnd.random() < 0.7:
             add(checking, _d(ym, rnd.randint(3, 27)), "ATM WITHDRAWAL 004521 MAIN ST", -rnd.choice([60, 80, 100, 200]))
         if rnd.random() < 0.5:
@@ -187,6 +189,8 @@ def make_demo(ws: Workspace, end: date | None = None, months: int = 24, seed: in
         "rewards-card": {"name": "Rewards Card", "institution": "Example Card Co (Amex-style CSV)", "type": "credit", "apr": 26.99},
         "store-card": {"name": "Cashback Card", "institution": "Example Card Co", "type": "credit", "apr": 21.49, "min_payment": 35},
         "taxable-brokerage": {"name": "Taxable Brokerage", "institution": "Example Brokerage", "type": "brokerage", "tax": "taxable"},
+        "roth-ira": {"name": "Roth IRA (no statement yet)", "institution": "Example Brokerage", "type": "retirement", "tax": "roth",
+                     "funded_by": "EXAMPLE INVEST MONEYLINE"},
     }
     (ws.config_dir / "accounts.yaml").write_text(yaml.safe_dump({"accounts": acc}, sort_keys=False))
     for k in acc:

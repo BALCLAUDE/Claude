@@ -9,24 +9,35 @@ from __future__ import annotations
 from datetime import date
 
 
+PAIRABLE = ("Transfer", "Investments", "Uncategorized")
+
+
 def _d(s):
     return date.fromisoformat(s)
 
 
 def match_transfers(con, window_days: int = 4) -> int:
-    txns = [dict(r) for r in con.execute("SELECT id, account_id, date, amount, category FROM transactions ORDER BY date")]
+    # Already linked (e.g. to an investment account by its `funded_by` pattern) -> leave alone.
+    txns = [dict(r) for r in con.execute(
+        "SELECT id, account_id, date, amount, category FROM transactions WHERE transfer_pair IS NULL ORDER BY date")]
+    # Contributions typed into balances.yaml are payroll deductions; they never pass through a bank account.
     flows = [dict(r) for r in con.execute(
-        "SELECT id, account_id, date, amount FROM investment_flows WHERE type IN ('contribution','withdrawal')")]
+        "SELECT id, account_id, date, amount FROM investment_flows WHERE type IN ('contribution','withdrawal') "
+        "AND id NOT LIKE 'manual:%' AND id NOT LIKE 'fund:%'")]
     by_amount: dict[float, list[dict]] = {}
     for t in txns:
-        by_amount.setdefault(round(t["amount"], 2), []).append(t)
+        # Only transactions that could be a transfer: income (e.g. deposits from a business account
+        # you don't track) or spending your rules categorized (e.g. paying a card you don't track)
+        # must never be paired away.
+        if t["category"] in PAIRABLE:
+            by_amount.setdefault(round(t["amount"], 2), []).append(t)
     used: set[str] = set()
     pairs = 0
 
     # Cash/credit <-> cash/credit
     candidates = []
     for t in txns:
-        if t["amount"] >= 0:
+        if t["amount"] >= 0 or t["category"] not in PAIRABLE:
             continue
         for o in by_amount.get(round(-t["amount"], 2), []):
             if o["account_id"] == t["account_id"]:

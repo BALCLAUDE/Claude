@@ -152,10 +152,13 @@ def test_demo_numbers_are_consistent(demo):
     last = len(g["value"]) - 1
     assert g["contributed"][last] + g["growth"][last] == pytest.approx(g["value"][last], abs=0.05)
     assert g["value"][last] == pytest.approx(a["total"], abs=1)  # growth series and allocation agree
+    assert 0 < g["xirr"] < 0.3  # deposits made earlier in the first statement's month don't erase its starting value
     for i in range(len(nw["months"])):
         assert sum(v[i] for v in nw["by_group"].values()) == pytest.approx(nw["total"][i], abs=0.05)
     # Rebalancing trades net to zero.
-    assert sum(r["rebalance"] for r in a["by_class"] if r.get("rebalance") is not None) == pytest.approx(0, abs=1)
+    # Rebalancing trades net to the value of classes without a target (here the IRA with no statement yet).
+    untargeted = sum(r["value"] for r in a["by_class"] if r.get("target_pct") is None)
+    assert sum(r["rebalance"] for r in a["by_class"] if r.get("rebalance") is not None) == pytest.approx(untargeted, abs=1)
 
 
 def test_demo_insights(demo):
@@ -166,6 +169,10 @@ def test_demo_insights(demo):
     assert {x["name"]: x["paid_in_full"] for x in d["debts"] if x["type"] == "credit"} == {"Rewards Card": True, "Cashback Card": True}
     assert d["allocation"]["guessed"] == ["NVDA"]
     assert d["yoy"]["has_last_year"]
+    # The recently opened IRA has no statement: valued at deposits, flagged as estimated, no empty months.
+    ira = d["networth"]["by_account"]["roth-ira"]
+    assert d["networth"]["estimated_until"] == {"roth-ira": None}
+    assert [v for v in ira if v is not None] == [500, 1000, 1500, 1500]  # the November deposit is after 'today'
 
 
 def test_render_is_self_contained(demo):

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 from collections import Counter
 from pathlib import Path
 
@@ -154,5 +155,50 @@ def process(con, ws: Workspace):
         m, c, tags = cat.apply(r["description_raw"], clean_merchant(r["description_raw"]), r["amount"], r["source_category"])
         con.execute("UPDATE transactions SET merchant=?, category=?, tags=?, is_transfer=?, transfer_pair=NULL WHERE id=?",
                     (m, c, ",".join(tags), 1 if c == "Transfer" else 0, r["id"]))
-    match_transfers(con, window_days=int(ws.settings().get("transfer_window_days", 4)))
+    window = int(ws.settings().get("transfer_window_days", 4))
+    link_funding(con, ws, window)
+    match_transfers(con, window_days=window)
     con.commit()
+
+
+def link_funding(con, ws: Workspace, window: int = 4) -> int:
+    """`funded_by` on an investment account (accounts.yaml) is a pattern for the bank transactions that
+    move money into it, e.g. 'PERSHING' for a NetX Investor brokerage. Each match becomes a contribution
+    (or withdrawal) on that account, so its money-in history and value exist even for months before its
+    first statement, and the bank side counts as money invested, not spending.
+    Rebuilt on every run, so editing the pattern applies to all history."""
+    con.execute("DELETE FROM investment_flows WHERE id LIKE 'fund:%'")
+    funded = {}
+    for aid, cfg in ws.accounts().items():
+        pat = (cfg or {}).get("funded_by")
+        if not pat:
+            continue
+        if cfg.get("type") not in INVEST_TYPES:
+            raise SystemExit(f"accounts.yaml: {aid} has funded_by but type {cfg.get('type')!r}; funded_by is for brokerage/retirement accounts")
+        db.upsert_account(con, aid, cfg)  # may have no files yet (e.g. an IRA you haven't downloaded)
+        funded[aid] = re.compile(pat, re.I)
+    if not funded:
+        return 0
+    own = {aid: [dict(r) for r in con.execute(
+        "SELECT id, date, amount FROM investment_flows WHERE account_id=? AND type IN ('contribution','withdrawal') AND id NOT LIKE 'manual:%'", (aid,))]
+        for aid in funded}
+    n = 0
+    rows = con.execute(f"""SELECT t.id, t.date, t.amount, t.description_raw, t.account_id FROM transactions t
+                           JOIN accounts a ON a.id=t.account_id WHERE a.type NOT IN {INVEST_TYPES} ORDER BY t.date""").fetchall()
+    for r in rows:
+        aid = next((a for a, rx in funded.items() if rx.search(r["description_raw"])), None)
+        if aid is None:
+            continue
+        amt = round(-r["amount"], 2)  # money leaving the bank arrives in the account
+        same = next((f for f in own[aid] if abs(f["amount"] - amt) < 0.005
+                     and abs((date.fromisoformat(f["date"]) - date.fromisoformat(r["date"])).days) <= window), None)
+        if same:  # the account's own activity file already has it
+            own[aid].remove(same)
+            fid = same["id"]
+        else:
+            fid = f"fund:{r['id']}"
+            con.execute("INSERT INTO investment_flows VALUES (?,?,?,?,?,?,?)",
+                        (fid, aid, r["date"], "contribution" if amt > 0 else "withdrawal", amt, "", "from bank: funded_by"))
+        con.execute("UPDATE transactions SET category='Investments', is_transfer=1, transfer_pair=? WHERE id=?", (fid, r["id"]))
+        n += 1
+    return n

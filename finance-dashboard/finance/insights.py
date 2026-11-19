@@ -180,3 +180,17 @@ def report_cards(summary: list[dict], nw: dict) -> list[dict]:
                       "net_worth_change": round(nwc, 2) if nwc is not None else None, "changes": changes[:4],
                       "top_categories": list(m["by_category"].items())[:5]})
     return cards
+
+
+def unmatched_transfers(con, min_count: int = 3) -> list[dict]:
+    """Transfers with no matching transaction in another imported account, grouped by merchant.
+    A long list for one payee usually means an account you pay into but haven't imported (e.g. a
+    second card), whose spending is then missing; import it, or add a rule to count those payments
+    as spending."""
+    rows = con.execute(
+        """SELECT t.merchant, a.name AS account, COUNT(*) AS n, ROUND(SUM(t.amount), 2) AS total,
+                  MIN(t.date) AS first, MAX(t.date) AS last
+           FROM transactions t JOIN accounts a ON a.id=t.account_id
+           WHERE t.category='Transfer' AND t.transfer_pair IS NULL
+           GROUP BY t.merchant, a.name HAVING COUNT(*) >= ? ORDER BY ABS(SUM(t.amount)) DESC LIMIT 15""", (min_count,)).fetchall()
+    return [dict(r) for r in rows]

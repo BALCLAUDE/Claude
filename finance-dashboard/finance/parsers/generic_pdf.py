@@ -48,7 +48,9 @@ def extract_lines(path: Path) -> list[str]:
     lines = []
     with pdfplumber.open(str(path)) as pdf:
         for page in pdf.pages:
-            text = page.extract_text() or ""
+            # A tight x_tolerance keeps word spacing in PDFs that place letters closely (otherwise
+            # "Beginning Balance" can come out as "BeginningBalance").
+            text = page.extract_text(x_tolerance=1) or ""
             lines.extend(l.strip() for l in text.splitlines() if l.strip())
     if not lines:
         raise ValueError("no text in PDF (scanned image?). Download the CSV/OFX export for this account instead.")
@@ -82,6 +84,9 @@ def parse_lines(lines: list[str], account: dict) -> ParseResult:
         end = closing_date or sd
 
     sign = None  # unknown until a section heading is seen
+    # With a running balance column, each row's sign is the change in balance. That is exact, and works
+    # for statements that put credits and debits in separate columns (the text alone can't tell them apart).
+    prev_bal = opening
     for l in lines:
         m = ROW.match(l)
         if not m:
@@ -90,8 +95,10 @@ def parse_lines(lines: list[str], account: dict) -> ParseResult:
             elif POSITIVE.match(l):
                 sign = 1
             continue
-        d_raw, desc, amt_raw = m.group(1), m.group(2).strip(), m.group(3)
+        d_raw, desc, amt_raw, bal_raw = m.group(1), m.group(2).strip(), m.group(3), m.group(4)
         if SKIP_DESC.match(desc):
+            if re.match(r"(beginning|opening|previous|starting)", desc, re.I):
+                prev_bal = parse_amount(bal_raw or amt_raw)
             continue
         year = _year_for(d_raw, start, end)
         d = parse_date(d_raw, year_hint=year)
@@ -99,6 +106,15 @@ def parse_lines(lines: list[str], account: dict) -> ParseResult:
         if not d or amt is None:
             continue
         explicit = "-" in amt_raw or "(" in amt_raw
+        bal = parse_amount(bal_raw) if bal_raw else None
+        if bal is not None and prev_bal is not None and abs(abs(bal - prev_bal) - abs(amt)) < 0.01:
+            # Debts print the amount owed, so a rising balance is a charge.
+            amt = (prev_bal - bal) if is_debt else (bal - prev_bal)
+            prev_bal = bal
+            res.transactions.append(Txn(d, round(amt, 2), desc))
+            continue
+        if bal is not None:
+            prev_bal = bal
         if sign is not None and not explicit:
             amt = sign * abs(amt)
         elif sign is None and not explicit and is_debt:

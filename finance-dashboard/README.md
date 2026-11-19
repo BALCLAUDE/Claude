@@ -57,8 +57,22 @@ CSV/OFX is always more reliable than PDF. Use PDFs only when there is no export.
 | **Wells Fargo** checking & savings | `wf-checking`, `wf-savings` | Account Activity → **Download** → "Comma Delimited" (or "Quicken (QFX)") | Wells Fargo's CSV has no header row and no balance, so it has its own parser (`wells_fargo_csv`). Add one `anchors:` balance per account in `balances.yaml`, or use QFX, which includes the balance. |
 | **American Express** | `amex` | Statements & Activity → **Download** → CSV, with "include all additional transaction details" ticked (or QFX) | Purchases are positive in Amex files (`flip_sign: true` is set). Amex's own categories ("Merchandise & Supplies-Groceries") are used when no rule matches. Add an anchor balance from your statement. |
 | **Marcus by Goldman Sachs** | `marcus-hysa` | Monthly **PDF statements**: drop in one per month, as far back as you want history | A statement that only shows balances (no transaction list) imports its ending balance as that month's data point; months in between carry forward. A statement that lists transactions is checked against its beginning and ending balances. Transfers to and from Marcus on the Wells Fargo side are marked as transfers (check `review` in case Wells Fargo words them differently). If a PDF is rejected, run `inspect` on it (see below). Or skip the PDFs and type month-end balances into `balances.yaml` under `manual:` with `type: savings`. |
-| **NetX Investor** (Pershing) brokerage | `netx-brokerage` | **Holdings** export (CSV or .xlsx) each month, plus the **Activity/History** export | Holdings give allocation and value. Put the date in the file name (`holdings_2026-10-31.xlsx`) if the file doesn't say "as of". Activity gives contributions, dividends and fees. |
+| **NetX Investor** (Pershing) brokerage | `netx-brokerage` | **Holdings** export (.xlsx or CSV) each month, plus the **Activity/History** export if you want dividends | Holdings give allocation, value and gains (the "as of" date is read from the file). `funded_by: 'PERSHING'` turns your Wells Fargo transfers into contributions, so the months **before your first statement** are filled in with the money you put in (marked "estimated", no gains assumed), and there is no gap. |
+| **Fidelity IRA** | `fidelity-ira` | A Fidelity positions export, once you have one | Until then `funded_by: 'FID BKG SVC'` values it at the money you've moved in. Set `tax:` to `roth` or `traditional`. |
 | **Fidelity 401(k)** (NetBenefits) | `balances.yaml` → `manual:` | Your balance and contributions from NetBenefits, monthly or quarterly | A commented example (`fidelity-401k`) is in `balances.yaml`. Add `holdings:` with dollars per fund to include it in allocation. |
+
+**Wells Fargo exports now include a header row and a STATUS column**; pending rows are skipped (they're imported once posted). The Marcus PDF reader uses the running balance column to tell credits from debits, and checks every statement against its beginning and ending balance.
+
+### Transfers between your accounts
+
+Money moving between accounts you import (checking ↔ savings, checking → Amex, savings ↔ Marcus) is matched automatically by amount and date, and is never counted as spending or income. Two kinds of money need one rule each in **your** `config/rules.yaml` (examples are in the file):
+
+- **Deposits from a business account you don't import** count as household income: `{match: 'TRANSFER FROM .*BUSINESS CHECKING', category: 'Income:Business', when: in}`
+- **Payments to a card you don't import** count as spending: `{match: 'ACTIVE CASH VISA', category: 'Credit Card (untracked)', when: out}`
+
+`python3 -m finance review` and the Data tab list **transfers with no match**: money sent to an account that isn't imported. If you see many payments to a card with no match, you likely have a second card (for example another Amex). Import it so its purchases count, or add a rule like the one above.
+
+Checking, savings and Amex CSVs have no balance column. Add one known balance per account under `anchors:` in `balances.yaml` (or download Wells Fargo as QFX, which includes it), otherwise they aren't in your net worth.
 
 These parsers were tested on synthetic look-alikes, not on real files from these institutions. If a file is rejected or looks wrong, `python3 -m finance inspect <file>` gives a safe-to-share layout so the parser can be adjusted.
 

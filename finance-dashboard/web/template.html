@@ -73,6 +73,7 @@
 
   <section id="tab-investments" class="tab" hidden>
     <div class="tiles" id="inv-kpis"></div>
+    <div class="notice" id="inv-est" hidden></div>
     <div class="card"><div class="card-h"><h2>Portfolio growth</h2><span class="muted small">What you put in vs. what the market added</span></div>
       <div class="chart tall"><canvas id="c-growth"></canvas></div></div>
     <div class="grid2">
@@ -149,6 +150,7 @@
 
   <section id="tab-data" class="tab" hidden>
     <div class="card"><div class="card-h"><h2>Accounts</h2></div><div id="dt-accounts"></div></div>
+    <div class="card" id="dt-unmatched-card"><div class="card-h"><h2>Transfers with no match</h2><span class="muted small">Money moved to or from an account that isn't imported</span></div><div id="dt-unmatched"></div></div>
     <div class="card"><div class="card-h"><h2>Imported files</h2><span class="muted small">✓ verified against statement balances · • imported · ✗ not imported</span></div><div id="dt-imports"></div></div>
   </section>
 </main>

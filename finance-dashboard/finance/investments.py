@@ -49,9 +49,14 @@ def allocation(con, secs: Securities, targets: dict, concentration_limit: float 
         if aid in with_holdings:
             continue
         r = con.execute("SELECT date, balance FROM balances WHERE account_id=? ORDER BY date DESC LIMIT 1", (aid,)).fetchone()
+        label = "no holdings detail"
+        if not r:  # no statement yet: count the money deposited so far (funded_by / contributions)
+            f = con.execute("SELECT MAX(date) AS date, SUM(amount) AS balance FROM investment_flows WHERE account_id=? "
+                            "AND type IN ('contribution','withdrawal')", (aid,)).fetchone()
+            r, label = (f, "estimated from deposits, no statement yet") if f and f["balance"] else (None, label)
         if r and r["balance"]:
             no_breakdown.append({"account_id": aid, "account_name": a["name"], "tax": a["tax"], "account_type": a["type"],
-                                 "symbol": UNKNOWN, "name": f"{a['name']} (no holdings detail)", "market_value": r["balance"],
+                                 "symbol": UNKNOWN, "name": f"{a['name']} ({label})", "market_value": r["balance"],
                                  "as_of": r["date"], "cost_basis": None, "quantity": None, "price": None})
 
     by_class, by_account, by_tax = defaultdict(float), defaultdict(float), defaultdict(float)
@@ -183,10 +188,18 @@ def growth(con, months: list[str], balance_series: dict[str, list]) -> dict:
 
     for aid, a in accts.items():
         vals = balance_series.get(aid)
-        if not vals or aid not in first_obs:
+        cflows = [f for f in flows.get(aid, []) if f["type"] in ("contribution", "withdrawal")]
+        first_bal, first_flow = first_obs.get(aid), (cflows[0]["date"] if cflows else None)
+        if not vals or (first_bal is None and first_flow is None):
             continue
-        start = first_obs[aid]
-        start_val = next((v for v in vals if v is not None), 0.0)
+        # Same test as metrics.account_balance_series: a month-end before the first statement was valued
+        # from deposits alone. (A deposit earlier in the statement's own month is in the statement value.)
+        if first_flow and (first_bal is None or first_flow[:7] < first_bal[:7]):
+            # Money went in before the first statement: start from zero and count every deposit.
+            start, start_val, counts = first_flow, 0.0, (lambda d, s=first_flow: d >= s)
+        else:
+            start, start_val = first_bal, next((v for v in vals if v is not None), 0.0)
+            counts = lambda d, s=first_bal: d > s
         cum = 0.0
         acct_ext = [0.0] * n
         acct_cfs = [(start, -start_val)]
@@ -194,7 +207,7 @@ def growth(con, months: list[str], balance_series: dict[str, list]) -> dict:
             if f["type"] in ("dividend", "interest", "fee") and f["date"][:7] in month_idx:
                 key = {"dividend": "dividends", "interest": "interest", "fee": "fees"}[f["type"]]
                 income[f["date"][:7]][key] += f["amount"]
-            if f["type"] not in ("contribution", "withdrawal") or f["date"] <= start:
+            if f["type"] not in ("contribution", "withdrawal") or not counts(f["date"]):
                 continue
             i = month_idx.get(f["date"][:7])
             if i is not None:
