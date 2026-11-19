@@ -60,6 +60,7 @@ def compute(ws: Workspace, as_of: str | None = None) -> dict:
         "report_cards": insights.report_cards(summary, nw),
         "projection": projection.inputs(con, summary, nw, alloc, grow, debts, settings, last),
         "unmatched_transfers": insights.unmatched_transfers(con),
+        "unmatched_counted": insights.unmatched_counted(con),
         "imports": [dict(r) for r in con.execute("SELECT path, account_id, parser, rows, status, message, imported_at FROM imports ORDER BY imported_at DESC")],
     }
     idx = {aid: i for i, aid in enumerate(accounts)}

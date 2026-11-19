@@ -181,3 +181,37 @@ def test_business_income_and_untracked_card(household):
     pairs = con.execute("SELECT COUNT(*) FROM transactions WHERE category='Transfer' AND transfer_pair IS NOT NULL").fetchone()[0]
     assert pairs == 2                                        # the Aug checking->savings pair only
     assert d["unmatched_transfers"] == []                    # nothing repeated enough to flag
+
+
+def test_payments_to_a_card_that_is_not_imported(tmp_path):
+    """Two cards paid with the same wording: payments that pair with the imported card stay transfers,
+    the rest count as spending, except near the edges of the imported card's dates."""
+    ws = Workspace(tmp_path / "w")
+    ws.init()
+    (ws.config_dir / "accounts.yaml").write_text(yaml.safe_dump({"accounts": {
+        "chk": {"name": "Checking", "type": "checking"}, "card": {"name": "Card", "type": "credit", "flip_sign": True}}}))
+    (ws.config_dir / "rules.yaml").write_text(yaml.safe_dump({"rules": [
+        {"match": "EXAMPLE CARD (ACH PMT|RETRY PYMT)", "category": "Transfer", "if_unmatched": "Card (spouse)", "pairs_with": "card"}]}))
+    for k in ("chk", "card"):
+        (ws.inbox / k).mkdir(parents=True)
+    write_wf(ws.inbox / "chk" / "Checking.csv", [
+        ("09/10/2026", "EXAMPLE CARD ACH PMT 000000", -300), ("10/10/2026", "EXAMPLE CARD ACH PMT 000000", -400),  # pay my card
+        ("09/20/2026", "EXAMPLE CARD ACH PMT 000000", -250), ("10/22/2026", "EXAMPLE CARD RETRY PYMT 000000", -175),  # spouse's card
+        ("12/05/2026", "EXAMPLE CARD ACH PMT 000000", -500),  # after the card file ends: can't tell, stays a transfer
+    ])
+    (ws.inbox / "card" / "activity.csv").write_text(
+        "Date,Description,Amount\n09/01/2026,STORE,300.00\n09/11/2026,MOBILE PAYMENT - THANK YOU,-300.00\n"
+        "10/01/2026,STORE,400.00\n10/11/2026,MOBILE PAYMENT - THANK YOU,-400.00\n11/15/2026,STORE,20.00\n")
+    ingest(ws, log=lambda m: None)
+    con = db.connect(ws.db_path)
+    rows = {(r["date"], r["amount"]): (r["category"], r["is_transfer"]) for r in con.execute(
+        "SELECT date, amount, category, is_transfer FROM transactions WHERE account_id='chk'")}
+    assert rows[("2026-09-10", -300)] == ("Transfer", 1) and rows[("2026-10-10", -400)] == ("Transfer", 1)
+    assert rows[("2026-09-20", -250)] == ("Card (spouse)", 0) and rows[("2026-10-22", -175)] == ("Card (spouse)", 0)
+    assert rows[("2026-12-05", -500)] == ("Transfer", 1)
+    d = compute(ws, as_of="2026-12-31")
+    spend = {m["month"]: m["by_category"].get("Card (spouse)", 0) for m in d["summary"]}
+    assert spend["2026-09"] == 250 and spend["2026-10"] == 175 and sum(spend.values()) == 425  # counted once
+    assert d["unmatched_counted"] == [{"category": "Card (spouse)", "n": 2, "total": 425.0, "first": "2026-09-20", "last": "2026-10-22"}]
+    # The card's own purchases are still its own spending; the paired payments are not counted twice.
+    assert sum(m["by_category"].get("Uncategorized", 0) for m in d["summary"]) == 720

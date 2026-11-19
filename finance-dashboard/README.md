@@ -70,6 +70,8 @@ Money moving between accounts you import (checking ↔ savings, checking → Ame
 - **Deposits from a business account you don't import** count as household income: `{match: 'TRANSFER FROM .*BUSINESS CHECKING', category: 'Income:Business', when: in}`
 - **Payments to a card you don't import** count as spending: `{match: 'ACTIVE CASH VISA', category: 'Credit Card (untracked)', when: out}`
 
+- **Two cards paid with the same wording, one not imported** (for example your Amex and your spouse's): payments that match a payment in your imported card stay transfers, and the rest count as spending: `{match: 'AMERICAN EXPRESS (ACH PMT|RETRY PYMT)', category: Transfer, if_unmatched: "Amex (spouse's card)", pairs_with: amex}`. Payments within a few days of either end of your card's export stay transfers, since their match may simply be outside the file. The Data tab and `review` show how many payments were counted this way.
+
 `python3 -m finance review` and the Data tab list **transfers with no match**: money sent to an account that isn't imported. If you see many payments to a card with no match, you likely have a second card (for example another Amex). Import it so its purchases count, or add a rule like the one above.
 
 Checking, savings and Amex CSVs have no balance column. Add one known balance per account under `anchors:` in `balances.yaml` (or download Wells Fargo as QFX, which includes it), otherwise they aren't in your net worth.

@@ -194,3 +194,11 @@ def unmatched_transfers(con, min_count: int = 3) -> list[dict]:
            WHERE t.category='Transfer' AND t.transfer_pair IS NULL
            GROUP BY t.merchant, a.name HAVING COUNT(*) >= ? ORDER BY ABS(SUM(t.amount)) DESC LIMIT 15""", (min_count,)).fetchall()
     return [dict(r) for r in rows]
+
+
+def unmatched_counted(con) -> list[dict]:
+    """Payments moved to spending by an `if_unmatched` rule, per category (shown on the Data tab and in review)."""
+    rows = con.execute(
+        """SELECT category, COUNT(*) AS n, ROUND(-SUM(amount), 2) AS total, MIN(date) AS first, MAX(date) AS last
+           FROM transactions WHERE ',' || tags || ',' LIKE '%,unmatched-payment,%' GROUP BY category ORDER BY n DESC""").fetchall()
+    return [dict(r) for r in rows]

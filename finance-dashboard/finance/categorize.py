@@ -16,6 +16,8 @@ class Rule:
     merchant: str | None
     tags: list[str]
     amount_sign: int  # 0 any, 1 only inflows, -1 only outflows
+    if_unmatched: str | None = None  # category to use when this "Transfer" finds no matching transaction
+    pairs_with: str | None = None    # ...but only within this account's imported date range
 
 
 def compile_rules(raw: list[dict]) -> list[Rule]:
@@ -23,7 +25,8 @@ def compile_rules(raw: list[dict]) -> list[Rule]:
     for r in raw or []:
         sign = {"in": 1, "out": -1}.get(r.get("when"), 0)
         tags = r.get("tags") or []
-        out.append(Rule(re.compile(r["match"], re.I), r.get("category"), r.get("merchant"), [tags] if isinstance(tags, str) else tags, sign))
+        out.append(Rule(re.compile(r["match"], re.I), r.get("category"), r.get("merchant"), [tags] if isinstance(tags, str) else tags, sign,
+                        r.get("if_unmatched"), r.get("pairs_with")))
     return out
 
 
@@ -34,6 +37,9 @@ class Categorizer:
         src = dict(default_cfg.get("source_categories") or {})
         src.update(user_cfg.get("source_categories") or {})
         self.source = {k.lower(): v for k, v in src.items()}
+
+    def unmatched_rules(self) -> list[Rule]:
+        return [r for r in self.user if r.if_unmatched]
 
     def source_lookup(self, src: str) -> str | None:
         """Bank-supplied category -> ours. Amex uses "Group-Subcategory" (e.g. "Merchandise &

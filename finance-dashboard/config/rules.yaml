@@ -16,6 +16,10 @@ rules:
   # - {match: 'TRANSFER FROM .*BUSINESS CHECKING', category: 'Income:Business', when: in}
   # Payments to a credit card you don't import, counted as spending (one line per payment):
   # - {match: 'ACTIVE CASH VISA', category: 'Credit Card (untracked)', when: out}
+  # Two cards paid with the same wording, only one imported (e.g. your Amex and your spouse's):
+  # payments that match your imported card stay transfers, the others count as spending.
+  # pairs_with = the imported card's account key; near the edges of its dates, payments stay transfers.
+  # - {match: 'AMERICAN EXPRESS (ACH PMT|RETRY PYMT)', category: Transfer, if_unmatched: "Amex (spouse's card)", pairs_with: amex}
 
 # Map categories your bank's CSV already provides onto yours (overrides the defaults).
 source_categories: {}

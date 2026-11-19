@@ -93,7 +93,10 @@ def review(ws: Workspace, n: int):
         for r in rows[:3]:
             word = r["merchant"].split()[0].upper() if r["merchant"] else ""
             print(f"  - {{match: '{word}', category: <Category>}}")
-    from .insights import unmatched_transfers
+    from .insights import unmatched_counted, unmatched_transfers
+    for r in unmatched_counted(con):
+        print(f"\n{r['n']} payments counted as spending in {r['category']!r} because they matched no imported account "
+              f"(if_unmatched rule; {r['first']} to {r['last']}, {r['total']:,.2f}).")
     um = unmatched_transfers(con)
     if um:
         print("\nTransfers with no match in another imported account (a missing account? its spending isn't counted):")

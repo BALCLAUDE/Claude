@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import re
-from datetime import date
+from datetime import date, timedelta
 from collections import Counter
 from pathlib import Path
 
@@ -158,7 +158,45 @@ def process(con, ws: Workspace):
     window = int(ws.settings().get("transfer_window_days", 4))
     link_funding(con, ws, window)
     match_transfers(con, window_days=window)
+    apply_unmatched(con, cat.unmatched_rules(), window)
     con.commit()
+
+
+UNMATCHED_TAG = "unmatched-payment"
+
+
+def apply_unmatched(con, rules, window: int = 4) -> int:
+    """Rules with `if_unmatched`: a payment that looks like a transfer (e.g. to an Amex card) but has no
+    matching payment in any imported account goes to the rule's spending category instead. That is how
+    payments to a card you don't import (a spouse's card paid with the same wording as yours) are counted.
+    With `pairs_with: <account>` it only applies within that account's imported dates (minus the transfer
+    window at each end), because near the edges the matching payment may simply be outside the export."""
+    if not rules:
+        return 0
+    ranges = {}
+    for r in rules:
+        if r.pairs_with and r.pairs_with not in ranges:
+            lo, hi = con.execute("SELECT MIN(date), MAX(date) FROM transactions WHERE account_id=?", (r.pairs_with,)).fetchone()
+            ranges[r.pairs_with] = None if lo is None else (
+                (date.fromisoformat(lo) + timedelta(days=window)).isoformat(), (date.fromisoformat(hi) - timedelta(days=window)).isoformat())
+    n = 0
+    rows = con.execute("SELECT id, date, amount, description_raw, merchant, tags FROM transactions "
+                       "WHERE category='Transfer' AND transfer_pair IS NULL").fetchall()
+    for t in rows:
+        for r in rules:
+            if r.amount_sign and (t["amount"] > 0) != (r.amount_sign > 0):
+                continue
+            if not r.rx.search(f"{t['description_raw']} || {t['merchant']}"):
+                continue
+            if r.pairs_with:
+                rng = ranges.get(r.pairs_with)
+                if rng is None or not (rng[0] <= t["date"] <= rng[1]):
+                    break  # can't tell yet: leave it as a transfer
+            tags = ",".join(filter(None, [t["tags"], UNMATCHED_TAG]))
+            con.execute("UPDATE transactions SET category=?, is_transfer=0, tags=? WHERE id=?", (r.if_unmatched, tags, t["id"]))
+            n += 1
+            break
+    return n
 
 
 def link_funding(con, ws: Workspace, window: int = 4) -> int:

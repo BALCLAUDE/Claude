@@ -640,11 +640,12 @@
       { h: 'Transactions', num: 1, f: (a) => F.txns.filter((t) => ACCT_IDX[t[1]] === a.id).length || '–' },
       { h: 'Latest balance', num: 1, f: (a) => { const v = (nw.by_account[a.id] || [])[li]; return v == null ? '<span class="muted" title="No balance known. Add an anchor in balances.yaml">not in net worth</span>' : money(v); } },
       { h: 'Notes', f: (a) => (a.id in EST ? `<span class="small muted">${esc(estText(a.id))}</span>` : '') }], ACCTS);
-    const um = F.unmatched_transfers || [];
-    $('#dt-unmatched-card').hidden = !um.length;
+    const um = F.unmatched_transfers || [], uc = F.unmatched_counted || [];
+    $('#dt-unmatched-card').hidden = !um.length && !uc.length;
     $('#dt-unmatched').innerHTML = table([{ h: 'Payee', f: (r) => esc(r.merchant) }, { h: 'From', f: (r) => esc(r.account) }, { h: 'Count', num: 1, f: (r) => r.n },
       { h: 'Total', num: 1, f: (r) => money(r.total) }, { h: 'Dates', f: (r) => `${r.first} – ${r.last}` }], um)
-      + '<div class="notice">These are treated as transfers, so they aren\'t counted as spending. If they pay an account you haven\'t imported (for example a second credit card), import it so its purchases are counted, or add a rule in rules.yaml that gives these payments a spending category.</div>';
+      + (um.length ? '<div class="notice">These are treated as transfers, so they aren\'t counted as spending. If they pay an account you haven\'t imported (for example a second credit card), import it so its purchases are counted, or add a rule in rules.yaml that gives these payments a spending category.</div>' : '')
+      + uc.map((r) => `<div class="notice">✓ ${r.n} payments (${money(r.total)}, ${r.first} – ${r.last}) are counted as spending in <b>${esc(r.category)}</b>, because they matched no payment in an imported account.</div>`).join('');
     const mark = { verified: '✓', ok: '•', warning: '•', unreconciled: '✗', error: '✗' };
     $('#dt-imports').innerHTML = table([{ h: '', f: (r) => `<span title="${esc(r.status)}">${mark[r.status] || ''}</span>` },
       { h: 'File', f: (r) => esc(r.path) }, { h: 'Parser', f: (r) => esc(r.parser) }, { h: 'Rows', num: 1, f: (r) => r.rows }, { h: 'Notes', f: (r) => `<span class="small muted">${esc(r.message || '')}</span>` }], F.imports);
